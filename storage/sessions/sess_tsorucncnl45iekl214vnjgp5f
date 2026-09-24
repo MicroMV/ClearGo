@@ -1,0 +1,1 @@
+csrf_token|s:64:"2ba8840daed1fe2c5355fe89a345013e570009db42955b95c9e9bbb469d691b2";authenticated_user|a:3:{s:2:"id";i:1;s:5:"email";s:32:"student01@thelewiscollege.edu.ph";s:4:"role";s:7:"STUDENT";}

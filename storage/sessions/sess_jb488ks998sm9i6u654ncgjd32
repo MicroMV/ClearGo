@@ -1,0 +1,1 @@
+csrf_token|s:64:"977957736c31f18688893b6a852e6b6394a82b3d85c7583c151d7c38794335f5";authenticated_user|a:3:{s:2:"id";i:31;s:5:"email";s:22:"orgstaff01@school.test";s:4:"role";s:9:"ORG_STAFF";}
