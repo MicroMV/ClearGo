@@ -33,7 +33,7 @@ try {
         setFlashMessage('Required event created. Students can now record attendance when you open its QR code.');
     } elseif ($action === 'open_qr') {
         $eventId = filter_var($_POST['event_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-        $minutes = filter_var($_POST['minutes'] ?? 10, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 60]]);
+        $minutes = filter_var($_POST['minutes'] ?? 10, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 720]]);
         if ($eventId === false || $minutes === false) { throw new RuntimeException('Select a valid event and QR duration.'); }
         $qr = openEventQr($database, $user['id'], (int) $organization['id'], (int) $eventId, (int) $minutes);
         startSecureSession();

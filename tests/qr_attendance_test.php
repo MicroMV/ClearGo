@@ -36,8 +36,11 @@ try {
         null,
         null
     );
-    $qr = openEventQr($database, (int) $candidate['staff_user_id'], (int) $candidate['organization_id'], $eventId, 10);
+    $qr = openEventQr($database, (int) $candidate['staff_user_id'], (int) $candidate['organization_id'], $eventId, 120);
     qrCheck(strlen($qr['token']) === 64, 'A secure QR token was not generated.');
+    $durationQuery = $database->prepare('SELECT TIMESTAMPDIFF(MINUTE,check_in_opens_at,check_in_closes_at) FROM events WHERE id=:id');
+    $durationQuery->execute(['id' => $eventId]);
+    qrCheck((int) $durationQuery->fetchColumn() === 120, 'QR attendance could not remain open beyond one hour.');
 
     $context = qrAttendanceContext($database, $qr['token'], (int) $candidate['student_user_id']);
     qrCheck($context !== false && (int) $context['event_id'] === $eventId, 'The enrolled student could not validate the QR.');

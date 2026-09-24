@@ -34,7 +34,6 @@ $checkInUrl = $validToken
     ? ($configuredPublicUrl !== '' ? $configuredPublicUrl : $scheme . '://' . $host)
         . applicationUrl('/student/attendance_checkin.php?token=' . rawurlencode($token))
     : '';
-$localHostWarning = $configuredPublicUrl === '' && preg_match('/^(?:localhost|127\.0\.0\.1)(?::\d+)?$/i', $host);
 $csrfToken = createCsrfToken();
 ?>
 <!doctype html>
@@ -52,7 +51,6 @@ $csrfToken = createCsrfToken();
     <?php if (!$validToken): ?>
         <p class="notice">This QR display is no longer available in this browser. Open a new QR code from the organization dashboard.</p>
     <?php else: ?>
-        <?php if ($localHostWarning): ?><p class="notice"><strong>Phone access warning:</strong> this QR uses localhost. Open ClearGo using this computer's LAN IP address or configure APP_PUBLIC_URL before students scan it.</p><?php endif; ?>
         <div id="qr" aria-label="Student attendance QR code"></div>
         <p><strong>Check-in closes:</strong> <?= escapeHtml((string) $event['check_in_closes_at']) ?></p>
         <p class="muted">Students scan this code with their phone camera, sign in with their school account, and confirm attendance.</p>

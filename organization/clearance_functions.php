@@ -23,6 +23,52 @@ function assignedOrganization(PDO $database, int $userId): array
     return $organizations[0];
 }
 
+function organizationStatusSummary(PDO $database, int $organizationId): array
+{
+    $statement = $database->prepare(
+        "SELECT COUNT(*) AS total,
+                SUM(CASE WHEN organization_record.status='APPROVED' THEN 1 ELSE 0 END) AS approved,
+                SUM(CASE WHEN organization_record.status='RETURNED' THEN 1 ELSE 0 END) AS returned,
+                SUM(CASE WHEN organization_record.status NOT IN ('APPROVED','RETURNED')
+                    AND clearance.id IS NOT NULL
+                    AND (organization.code='CBE' AND student.year_level<=3 OR dean_record.status='APPROVED')
+                    AND NOT EXISTS (
+                        SELECT 1 FROM events event
+                        LEFT JOIN event_attendance attendance ON attendance.event_id=event.id
+                            AND attendance.student_id=student.id AND attendance.status='PRESENT'
+                        INNER JOIN stations event_station ON event_station.id=event.station_id AND event_station.code='ORGANIZATION'
+                        WHERE event.organization_id=student.organization_id AND event.academic_period_id=period.id
+                          AND event.is_required=1 AND event.status='ACTIVE' AND attendance.id IS NULL
+                    ) THEN 1 ELSE 0 END) AS eligible
+         FROM academic_periods period
+         INNER JOIN semester_enrollments enrollment ON enrollment.academic_period_id=period.id AND enrollment.status='ENROLLED'
+         INNER JOIN students student ON student.id=enrollment.student_id AND student.status='ACTIVE'
+            AND student.organization_id=:organization_id
+         INNER JOIN organizations organization ON organization.id=student.organization_id
+         LEFT JOIN clearances clearance ON clearance.student_id=student.id AND clearance.academic_period_id=period.id
+         LEFT JOIN stations organization_station ON organization_station.code='ORGANIZATION'
+         LEFT JOIN clearance_stations organization_record ON organization_record.clearance_id=clearance.id
+            AND organization_record.station_id=organization_station.id
+         LEFT JOIN stations dean_station ON dean_station.code='DEAN'
+         LEFT JOIN clearance_stations dean_record ON dean_record.clearance_id=clearance.id
+            AND dean_record.station_id=dean_station.id
+         WHERE period.status='ACTIVE'"
+    );
+    $statement->execute(['organization_id' => $organizationId]);
+    $row = $statement->fetch() ?: [];
+    $total = (int) ($row['total'] ?? 0);
+    $approved = (int) ($row['approved'] ?? 0);
+    $returned = (int) ($row['returned'] ?? 0);
+    $eligible = (int) ($row['eligible'] ?? 0);
+    return [
+        'TOTAL' => $total,
+        'ELIGIBLE' => $eligible,
+        'PENDING' => max(0, $total - $approved - $returned - $eligible),
+        'APPROVED' => $approved,
+        'RETURNED' => $returned,
+    ];
+}
+
 function requiredOrganizationEvents(PDO $database, int $organizationId, int $studentId): array
 {
     $statement = $database->prepare(

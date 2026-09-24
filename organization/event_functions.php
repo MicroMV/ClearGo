@@ -132,7 +132,7 @@ function openEventQr(PDO $database, int $userId, int $organizationId, int $event
     if ($event === false || $event['status'] !== 'ACTIVE') {
         throw new RuntimeException('The selected event is unavailable.');
     }
-    $minutes = max(1, min(60, $minutes));
+    $minutes = max(1, min(720, $minutes));
     $token = bin2hex(random_bytes(32));
     $tokenHash = hash('sha256', $token);
 

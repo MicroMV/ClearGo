@@ -54,7 +54,12 @@ try {
     $page = min($page, $totalPages);
     $students = array_slice($allStudents, ($page - 1) * $pageSize, $pageSize);
     $organizations = $database->query("SELECT id,code,name FROM organizations WHERE status='ACTIVE' ORDER BY code")->fetchAll();
-    $programs = $database->query("SELECT DISTINCT program FROM students WHERE program<>'' ORDER BY program")->fetchAll(PDO::FETCH_COLUMN);
+    $programQuery = $database->prepare("SELECT DISTINCT program FROM students WHERE program<>'' AND (:organization_all=0 OR organization_id=:organization_id) ORDER BY program");
+    $programQuery->execute(['organization_all' => $organizationFilter, 'organization_id' => $organizationFilter]);
+    $programs = $programQuery->fetchAll(PDO::FETCH_COLUMN);
+    $yearQuery = $database->prepare("SELECT DISTINCT year_level FROM students WHERE (:organization_all=0 OR organization_id=:organization_id) AND (:program_all='' OR program=:program) ORDER BY year_level");
+    $yearQuery->execute(['organization_all' => $organizationFilter, 'organization_id' => $organizationFilter, 'program_all' => $programFilter, 'program' => $programFilter]);
+    $yearLevels = array_map('intval', $yearQuery->fetchAll(PDO::FETCH_COLUMN));
 } catch (Throwable $exception) {
     error_log('Registrar students failed: ' . $exception->getMessage());
     http_response_code(500); exit('Unable to load student accounts.');
@@ -84,9 +89,9 @@ $filterQuery = http_build_query([
         <input name="search" value="<?= escapeHtml($search) ?>" placeholder="Search student number, name, email">
         <select name="organization"><option value="0">All colleges</option><?php foreach ($organizations as $org): ?><option value="<?= (int) $org['id'] ?>" <?= $organizationFilter===(int)$org['id']?'selected':'' ?>><?= escapeHtml($org['code']) ?></option><?php endforeach; ?></select>
         <select name="program"><option value="">All courses</option><?php foreach ($programs as $program): ?><option value="<?= escapeHtml($program) ?>" <?= $programFilter===$program?'selected':'' ?>><?= escapeHtml($program) ?></option><?php endforeach; ?></select>
-        <select name="year_level"><option value="0">All year levels</option><?php for ($year=1;$year<=6;$year++): ?><option value="<?= $year ?>" <?= $yearFilter===$year?'selected':'' ?>>Year <?= $year ?></option><?php endfor; ?></select>
+        <select name="year_level"><option value="0">All year levels</option><?php foreach ($yearLevels as $year): ?><option value="<?= $year ?>" <?= $yearFilter===$year?'selected':'' ?>>Year <?= $year ?></option><?php endforeach; ?></select>
         <select name="enrollment"><option value="ENROLLED" <?= $enrollmentFilter==='ENROLLED'?'selected':'' ?>>Current roster</option><option value="REMOVED" <?= $enrollmentFilter==='REMOVED'?'selected':'' ?>>Not enrolled this semester</option><option value="ALL" <?= $enrollmentFilter==='ALL'?'selected':'' ?>>All student accounts</option></select>
-        <select name="account_status"><option value="ALL">All accounts</option><option value="ACTIVE" <?= $accountFilter==='ACTIVE'?'selected':'' ?>>Active</option><option value="INACTIVE" <?= $accountFilter==='INACTIVE'?'selected':'' ?>>Inactive</option></select>
+        <select name="account_status"><option value="ALL" <?= $accountFilter==='ALL'?'selected':'' ?>>All accounts</option><option value="ACTIVE" <?= $accountFilter==='ACTIVE'?'selected':'' ?>>Active</option><option value="INACTIVE" <?= $accountFilter==='INACTIVE'?'selected':'' ?>>Inactive</option></select>
         <button type="submit">Apply Filters</button>
         <a class="clear-filter" href="<?= escapeHtml(applicationUrl('/registrar/students.php')) ?>">Clear</a>
     </form>

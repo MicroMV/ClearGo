@@ -39,7 +39,15 @@ try {
     $periodId = (int) $context['academic_period_id'];
     ensureOfficeSourceRecords($database, $studentId, $periodId);
 
-    if ($action === 'approve') {
+    if ($action === 'clinic_clear' && $config['code'] === 'CLINIC') {
+        $remarks = trim((string) ($_POST['remarks'] ?? ''));
+        if (mb_strlen($remarks) > 1000) { throw new RuntimeException('Clinic remarks cannot exceed 1,000 characters.'); }
+        $cleared = clearClinicClearance($database, $clearanceId, $user['id'], $remarks ?: 'Cleared directly by the Clinic.');
+        setFlashMessage($cleared ? 'Clinic clearance approved for ' . $context['student_name'] . '.' : 'This student is already cleared by the Clinic.');
+    } elseif ($action === 'library_clear' && $config['code'] === 'LIBRARY') {
+        $cleared = clearLibraryClearance($database, $clearanceId, $user['id']);
+        setFlashMessage($cleared ? 'Library clearance completed for ' . $context['student_name'] . '.' : 'This student is already cleared by the Library.');
+    } elseif ($action === 'approve') {
         approveOfficeClearance($database, $config['code'], $clearanceId, $user['id']);
         setFlashMessage($config['title'] . ' approved for ' . $context['student_name'] . '.');
     } elseif ($action === 'return') {
@@ -62,39 +70,35 @@ try {
         $statement->execute(['status' => $status, 'remarks' => $remarks ?: null, 'user_id' => $user['id'], 'verified' => $status, 'student_id' => $studentId, 'period_id' => $periodId]);
         officeMutationNotice($database, $context, $user['id'], 'Clinic updated the medical-record review to ' . $status . '.');
         setFlashMessage('Medical record updated.');
-    } elseif ($action === 'library_card' && $config['code'] === 'LIBRARY') {
-        $status = strtoupper((string) ($_POST['status'] ?? ''));
-        if (!in_array($status, ['VERIFIED', 'INVALID'], true)) { throw new RuntimeException('Invalid library-card status.'); }
-        $statement = $database->prepare("UPDATE library_cards SET status=:status,verified_by=:user_id,verified_at=CASE WHEN :verified='VERIFIED' THEN NOW() ELSE NULL END WHERE student_id=:student_id");
-        $statement->execute(['status' => $status, 'user_id' => $user['id'], 'verified' => $status, 'student_id' => $studentId]);
-        officeMutationNotice($database, $context, $user['id'], 'Library updated the library-card status to ' . $status . '.');
-        setFlashMessage('Library card status updated.');
-    } elseif ($action === 'add_book' && $config['code'] === 'LIBRARY') {
-        $title = trim((string) ($_POST['book_title'] ?? ''));
-        if ($title === '' || mb_strlen($title) > 255) { throw new RuntimeException('Enter a valid book title.'); }
-        $statement = $database->prepare("INSERT INTO borrowed_books (student_id,book_title,borrowed_at,due_at,status,recorded_by) VALUES (:student_id,:title,CURDATE(),:due_at,'BORROWED',:user_id)");
-        $dueAt = trim((string) ($_POST['due_at'] ?? ''));
-        $statement->execute(['student_id' => $studentId, 'title' => $title, 'due_at' => $dueAt !== '' ? $dueAt : null, 'user_id' => $user['id']]);
-        officeMutationNotice($database, $context, $user['id'], 'Library recorded an unreturned book: ' . $title . '.');
-        setFlashMessage('Borrowed book recorded.');
-    } elseif ($action === 'return_book' && $config['code'] === 'LIBRARY') {
-        $bookId = positivePostId('book_id');
-        $statement = $database->prepare("UPDATE borrowed_books SET status='RETURNED',returned_at=CURDATE(),returned_verified_by=:user_id WHERE id=:id AND student_id=:student_id AND status='BORROWED'");
-        $statement->execute(['user_id' => $user['id'], 'id' => $bookId, 'student_id' => $studentId]);
-        if ($statement->rowCount() !== 1) { throw new RuntimeException('The borrowed book could not be updated.'); }
-        officeMutationNotice($database, $context, $user['id'], 'Library confirmed a borrowed book was returned.');
-        setFlashMessage('Book marked as returned.');
-    } elseif ($action === 'bookstore_payment' && $config['code'] === 'BOOKSTORE') {
-        $feeId = positivePostId('fee_id');
-        $status = strtoupper((string) ($_POST['status'] ?? ''));
-        if (!in_array($status, ['PAID', 'UNPAID'], true)) { throw new RuntimeException('Invalid payment status.'); }
+    } elseif ($action === 'add_bookstore_obligation' && $config['code'] === 'BOOKSTORE') {
+        $description = trim((string) ($_POST['description'] ?? ''));
+        $amount = filter_var($_POST['amount'] ?? null, FILTER_VALIDATE_FLOAT);
+        $remarks = trim((string) ($_POST['remarks'] ?? ''));
+        if ($description === '' || mb_strlen($description) > 255 || $amount === false || $amount < 0) {
+            throw new RuntimeException('Enter a valid Bookstore obligation and amount.');
+        }
+        if (mb_strlen($remarks) > 1000) { throw new RuntimeException('Remarks cannot exceed 1,000 characters.'); }
+        $statement = $database->prepare("INSERT INTO bookstore_obligations (student_id,academic_period_id,description,amount,status,remarks,recorded_by) VALUES (:student_id,:period_id,:description,:amount,'UNPAID',:remarks,:user_id)");
+        $statement->execute(['student_id' => $studentId, 'period_id' => $periodId, 'description' => $description, 'amount' => $amount, 'remarks' => $remarks ?: null, 'user_id' => $user['id']]);
+        $newStatus = $context['station_status'];
+        if ($context['station_status'] === 'APPROVED') {
+            $newStatus = 'RETURNED';
+            $reopen = $database->prepare("UPDATE clearance_stations SET status='RETURNED',approved_by=NULL,approved_at=NULL,returned_by=:user_id,returned_at=NOW(),returned_reason=:reason WHERE id=:id");
+            $reopen->execute(['user_id' => $user['id'], 'reason' => 'Bookstore obligation: ' . $description, 'id' => $context['clearance_station_id']]);
+        }
+        notifyAndAuditOffice($database, $context, $user['id'], 'BOOKSTORE_OBLIGATION_ADDED', 'Bookstore recorded a pending obligation: ' . $description . '.', $context['station_status'], $newStatus);
+        setFlashMessage('Bookstore obligation recorded.');
+    } elseif ($action === 'clear_bookstore_obligation' && $config['code'] === 'BOOKSTORE') {
+        $obligationId = positivePostId('obligation_id');
         $reference = trim((string) ($_POST['payment_reference'] ?? ''));
-        if ($status === 'PAID' && $reference === '') { throw new RuntimeException('Enter the receipt or payment reference.'); }
-        $statement = $database->prepare("UPDATE student_bookstore_fees sf INNER JOIN bookstore_fees fee ON fee.id=sf.fee_id SET sf.status=:status,sf.paid_at=CASE WHEN :paid='PAID' THEN NOW() ELSE NULL END,sf.payment_reference=:reference,sf.remarks=:remarks,sf.verified_by=:user_id,sf.verified_at=NOW() WHERE sf.student_id=:student_id AND sf.fee_id=:fee_id AND fee.academic_period_id=:period_id");
-        $statement->execute(['status' => $status, 'paid' => $status, 'reference' => $reference ?: null, 'remarks' => trim((string) ($_POST['remarks'] ?? '')) ?: null, 'user_id' => $user['id'], 'student_id' => $studentId, 'fee_id' => $feeId, 'period_id' => $periodId]);
-        if ($statement->rowCount() !== 1) { throw new RuntimeException('The bookstore fee could not be updated.'); }
-        officeMutationNotice($database, $context, $user['id'], 'Bookstore updated a required fee to ' . $status . '.');
-        setFlashMessage('Bookstore payment updated.');
+        $remarks = trim((string) ($_POST['remarks'] ?? ''));
+        if ($reference === '' || mb_strlen($reference) > 255) { throw new RuntimeException('Enter the payment receipt or reference.'); }
+        if (mb_strlen($remarks) > 1000) { throw new RuntimeException('Remarks cannot exceed 1,000 characters.'); }
+        $statement = $database->prepare("UPDATE bookstore_obligations SET status='CLEARED',payment_reference=:reference,remarks=:remarks,cleared_by=:user_id,cleared_at=NOW() WHERE id=:id AND student_id=:student_id AND academic_period_id=:period_id AND status='UNPAID'");
+        $statement->execute(['reference' => $reference, 'remarks' => $remarks ?: null, 'user_id' => $user['id'], 'id' => $obligationId, 'student_id' => $studentId, 'period_id' => $periodId]);
+        if ($statement->rowCount() !== 1) { throw new RuntimeException('The Bookstore obligation could not be updated.'); }
+        officeMutationNotice($database, $context, $user['id'], 'Bookstore verified payment and settled an obligation.');
+        setFlashMessage('Bookstore obligation settled.');
     } elseif ($action === 'add_violation' && in_array($config['code'], ['FACILITIES', 'SASO'], true)) {
         $description = trim((string) ($_POST['description'] ?? ''));
         if ($description === '' || mb_strlen($description) > 2000) { throw new RuntimeException('Enter a valid incident description.'); }

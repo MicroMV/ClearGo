@@ -1,0 +1,1 @@
+csrf_token|s:64:"82607c160af88aa98bb6f6f072ddd9517a2791acba69ebda7b6c0c157fa172ec";authenticated_user|a:3:{s:2:"id";i:37;s:5:"email";s:32:"bookstore@thelewiscollege.edu.ph";s:4:"role";s:15:"BOOKSTORE_STAFF";}

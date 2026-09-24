@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS bookstore_obligations (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    student_id BIGINT UNSIGNED NOT NULL,
+    academic_period_id BIGINT UNSIGNED NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    status ENUM('UNPAID','CLEARED') NOT NULL DEFAULT 'UNPAID',
+    payment_reference VARCHAR(255) NULL,
+    remarks VARCHAR(1000) NULL,
+    recorded_by BIGINT UNSIGNED NOT NULL,
+    cleared_by BIGINT UNSIGNED NULL,
+    cleared_at DATETIME NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    KEY idx_bookstore_obligation_student_period_status (student_id, academic_period_id, status),
+    CONSTRAINT fk_bookstore_obligation_student FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_bookstore_obligation_period FOREIGN KEY (academic_period_id) REFERENCES academic_periods(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_bookstore_obligation_recorded_by FOREIGN KEY (recorded_by) REFERENCES users(id) ON UPDATE CASCADE,
+    CONSTRAINT fk_bookstore_obligation_cleared_by FOREIGN KEY (cleared_by) REFERENCES users(id) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
