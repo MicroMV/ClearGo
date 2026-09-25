@@ -183,20 +183,41 @@ function closeEventQr(PDO $database, int $userId, int $organizationId, int $even
     ]);
 }
 
+function deleteOrganizationEvent(PDO $database, int $userId, int $organizationId, int $eventId): void
+{
+    $period = activeEventPeriod($database);
+    $database->beginTransaction();
+    try {
+        $event = organizationEvent($database, $organizationId, (int) $period['id'], $eventId);
+        if ($event === false) { throw new RuntimeException('The selected event is unavailable.'); }
+        $removeAttendance = $database->prepare('DELETE FROM event_attendance WHERE event_id=:event_id');
+        $removeAttendance->execute(['event_id' => $eventId]);
+        $removeEvent = $database->prepare('DELETE FROM events WHERE id=:event_id AND organization_id=:organization_id AND academic_period_id=:period_id');
+        $removeEvent->execute(['event_id' => $eventId, 'organization_id' => $organizationId, 'period_id' => $period['id']]);
+        if ($removeEvent->rowCount() !== 1) { throw new RuntimeException('The event could not be deleted.'); }
+        $audit = $database->prepare("INSERT INTO audit_logs (user_id,action,station_id,description,old_status,new_status) VALUES (:user_id,'ORGANIZATION_EVENT_DELETED',:station_id,:description,'ACTIVE','DELETED')");
+        $audit->execute(['user_id' => $userId, 'station_id' => $event['station_id'], 'description' => 'Deleted organization event: ' . $event['name'] . '.']);
+        $database->commit();
+    } catch (Throwable $exception) {
+        if ($database->inTransaction()) { $database->rollBack(); }
+        throw $exception;
+    }
+}
+
 function qrAttendanceContext(PDO $database, string $token, int $userId, bool $lock = false): array|false
 {
     if (!preg_match('/^[a-f0-9]{64}$/', $token)) { return false; }
     $statement = $database->prepare(
         "SELECT event.id AS event_id,event.name,event.description,event.event_date,event.start_time,event.end_time,
-                event.check_in_closes_at,event.organization_id,organization.name AS organization_name,
+                event.check_in_closes_at,event.station_id,event.organization_id,organization.name AS organization_name,
                 organization.code AS organization_code,student.id AS student_id,student.student_number,
                 student.first_name,student.last_name,attendance.status AS attendance_status
          FROM events event
          INNER JOIN academic_periods period ON period.id=event.academic_period_id AND period.status='ACTIVE'
             AND period.clearance_status IN ('PREPARING','OPEN')
-         INNER JOIN organizations organization ON organization.id=event.organization_id
+         LEFT JOIN organizations organization ON organization.id=event.organization_id
          INNER JOIN students student ON student.user_id=:user_id AND student.status='ACTIVE'
-            AND student.organization_id=event.organization_id
+            AND (event.organization_id IS NULL OR student.organization_id=event.organization_id)
          INNER JOIN semester_enrollments enrollment ON enrollment.academic_period_id=period.id
             AND enrollment.student_id=student.id AND enrollment.status='ENROLLED'
          LEFT JOIN event_attendance attendance ON attendance.event_id=event.id AND attendance.student_id=student.id
@@ -214,7 +235,7 @@ function recordQrAttendance(PDO $database, string $token, int $userId): array
     try {
         $context = qrAttendanceContext($database, $token, $userId, true);
         if ($context === false) {
-            throw new RuntimeException('This QR code is expired, closed, or not valid for your organization.');
+            throw new RuntimeException('This QR code is expired, closed, or not valid for this event.');
         }
         if ($context['attendance_status'] === 'PRESENT') {
             $database->commit();
@@ -230,14 +251,13 @@ function recordQrAttendance(PDO $database, string $token, int $userId): array
             'student_id' => $context['student_id'],
             'user_id' => $userId,
         ]);
-        $stationId = $database->query("SELECT id FROM stations WHERE code='ORGANIZATION' LIMIT 1")->fetchColumn();
         $audit = $database->prepare(
             "INSERT INTO audit_logs (user_id,action,station_id,student_id,description,old_status,new_status)
              VALUES (:user_id,'EVENT_QR_ATTENDANCE_RECORDED',:station_id,:student_id,:description,:old_status,'PRESENT')"
         );
         $audit->execute([
             'user_id' => $userId,
-            'station_id' => $stationId,
+            'station_id' => $context['station_id'],
             'student_id' => $context['student_id'],
             'description' => 'Student confirmed QR attendance for ' . $context['name'] . '.',
             'old_status' => $context['attendance_status'],

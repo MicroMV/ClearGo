@@ -278,6 +278,7 @@ function approveDeanClearance(PDO $database, int $deanUserId, int $clearanceId):
              FROM requirement_records
              INNER JOIN requirements ON requirements.id = requirement_records.requirement_id
              WHERE requirement_records.clearance_station_id = :station_id
+               AND requirements.status = 'ACTIVE'
                AND requirements.name <> 'Dean Approval'
                AND requirement_records.status NOT IN ('VERIFIED','RESOLVED')
              ORDER BY requirements.id LIMIT 1"
@@ -422,6 +423,7 @@ function approveAllReadyCbeDeanStudents(PDO $database, int $deanUserId, string $
                SELECT 1 FROM requirement_records record
                INNER JOIN requirements requirement ON requirement.id=record.requirement_id
                WHERE record.clearance_station_id=dean_record.id
+                 AND requirement.status='ACTIVE'
                  AND requirement.name<>'Dean Approval'
                  AND record.status NOT IN ('VERIFIED','RESOLVED')
                  AND NOT (:group_name='FOURTH_YEAR' AND requirement.requirement_code='CBE_OJT_REQUIREMENTS')

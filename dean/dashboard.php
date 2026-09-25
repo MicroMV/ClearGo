@@ -32,14 +32,14 @@ try {
                 evaluation_verifications.verified_at,
                 (SELECT COUNT(*) FROM requirement_records rr
                  INNER JOIN requirements r ON r.id=rr.requirement_id
-                 WHERE rr.clearance_station_id=clearance_stations.id AND r.name<>'Dean Approval') AS required_count,
+                 WHERE rr.clearance_station_id=clearance_stations.id AND r.status='ACTIVE' AND r.name<>'Dean Approval') AS required_count,
                 (SELECT COUNT(*) FROM requirement_records rr
                  INNER JOIN requirements r ON r.id=rr.requirement_id
-                 WHERE rr.clearance_station_id=clearance_stations.id AND r.name<>'Dean Approval'
+                 WHERE rr.clearance_station_id=clearance_stations.id AND r.status='ACTIVE' AND r.name<>'Dean Approval'
                    AND rr.status IN ('VERIFIED','RESOLVED')) AS verified_count
                 ,(SELECT COUNT(*) FROM requirement_records rr
                   INNER JOIN requirements r ON r.id=rr.requirement_id
-                  WHERE rr.clearance_station_id=clearance_stations.id AND r.name<>'Dean Approval'
+                  WHERE rr.clearance_station_id=clearance_stations.id AND r.status='ACTIVE' AND r.name<>'Dean Approval'
                     AND rr.status NOT IN ('VERIFIED','RESOLVED')
                     AND NOT (organizations.code='CCS' AND r.requirement_code IN
                         ('CCS_FACULTY_EVALUATION','CCS_FOURTH_YEAR_FACULTY_EVALUATION'))
@@ -135,6 +135,7 @@ try {
             AND requirement_station.code='DEAN'
          INNER JOIN clearance_stations station_record ON station_record.id=record.clearance_station_id
          WHERE station_record.clearance_id=:clearance_id
+           AND requirement.status='ACTIVE'
            AND requirement.name<>'Dean Approval'
          ORDER BY requirement.id"
     );

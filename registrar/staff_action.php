@@ -15,7 +15,7 @@ try {
     if ($action === 'create') {
         $email = strtolower(trim((string) ($_POST['email'] ?? '')));
         $role = strtoupper((string) ($_POST['role'] ?? ''));
-        $allowedRoles = ['ORG_STAFF','DEAN','SASO_STAFF','STUDENT_COUNCIL_STAFF','LIBRARY_STAFF','BOOKSTORE_STAFF','CLINIC_STAFF','FACILITIES_STAFF','ACCOUNTING_STAFF','REGISTRAR'];
+        $allowedRoles = ['ORG_STAFF','DEAN','SASO_STAFF','STUDENT_COUNCIL_STAFF','LIBRARY_STAFF','BOOKSTORE_STAFF','CLINIC_STAFF','FACILITIES_STAFF','COMLAB_STAFF','ACCOUNTING_STAFF','REGISTRAR'];
         if (!filter_var($email, FILTER_VALIDATE_EMAIL) || !str_ends_with($email, '@thelewiscollege.edu.ph') || !in_array($role, $allowedRoles, true)) {
             throw new RuntimeException('Enter a valid staff role and Lewis College GSuite Address.');
         }

@@ -27,12 +27,13 @@ try {
                 WHEN 'BOOKSTORE' THEN 'BOOKSTORE_STAFF'
                 WHEN 'CLINIC' THEN 'CLINIC_STAFF'
                 WHEN 'FACILITIES' THEN 'FACILITIES_STAFF'
+                WHEN 'COMLAB' THEN 'COMLAB_STAFF'
                 WHEN 'ACCOUNTING' THEN 'ACCOUNTING_STAFF'
             END
          WHERE period.status = 'ACTIVE'
            AND period.clearance_status = 'PREPARING'
            AND readiness.status = 'NOT_READY'
-           AND station.code IN ('DEAN','ORGANIZATION','SASO','STUDENT_COUNCIL','LIBRARY','BOOKSTORE','CLINIC','FACILITIES','ACCOUNTING')
+           AND station.code IN ('DEAN','ORGANIZATION','SASO','STUDENT_COUNCIL','LIBRARY','BOOKSTORE','CLINIC','FACILITIES','COMLAB','ACCOUNTING')
          ORDER BY station.sort_order
          LIMIT 1"
     )->fetch();

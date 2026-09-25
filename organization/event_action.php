@@ -46,6 +46,13 @@ try {
         startSecureSession();
         unset($_SESSION['organization_qr_display']);
         setFlashMessage('QR attendance is closed.');
+    } elseif ($action === 'delete') {
+        $eventId = filter_var($_POST['event_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        if ($eventId === false) { throw new RuntimeException('Select a valid event.'); }
+        deleteOrganizationEvent($database, $user['id'], (int) $organization['id'], (int) $eventId);
+        startSecureSession();
+        unset($_SESSION['organization_qr_display']);
+        setFlashMessage('Event and its attendance records were deleted.');
     } else {
         throw new RuntimeException('Unknown event action.');
     }

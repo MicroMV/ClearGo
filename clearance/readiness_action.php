@@ -10,6 +10,7 @@ $paths = [
     'SASO_STAFF' => '/saso/dashboard.php', 'STUDENT_COUNCIL_STAFF' => '/student-council/dashboard.php',
     'LIBRARY_STAFF' => '/library/dashboard.php', 'BOOKSTORE_STAFF' => '/bookstore/dashboard.php',
     'CLINIC_STAFF' => '/clinic/dashboard.php', 'FACILITIES_STAFF' => '/facilities/dashboard.php',
+    'COMLAB_STAFF' => '/comlab/dashboard.php',
     'ACCOUNTING_STAFF' => '/accounting/dashboard.php',
 ];
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCsrfToken($_POST['csrf_token'] ?? null)) { setFlashMessage('Unable to process that request.'); redirectTo($paths[$user['role']]); }

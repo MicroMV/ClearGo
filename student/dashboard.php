@@ -138,6 +138,7 @@ try {
     }
 
     $requirements = [];
+    $accountingReceipt = false;
     if ($selectedStation !== null && $clearance !== false) {
         $selectedStatus = $stationStatuses[(int) $selectedStation['id']]['status'] ?? 'LOCKED';
         $clearanceStation = $stationStatuses[(int) $selectedStation['id']] ?? null;
@@ -149,15 +150,36 @@ try {
                  LEFT JOIN requirement_records rr
                     ON rr.requirement_id = r.id AND rr.clearance_station_id = :clearance_station_id
                  WHERE r.station_id = :station_id AND r.status = :status AND r.is_required = 1
+                   AND (r.applicable_organization_id IS NULL OR r.applicable_organization_id = :organization_id)
+                   AND (r.minimum_year_level IS NULL OR :minimum_year_level >= r.minimum_year_level)
+                   AND (r.maximum_year_level IS NULL OR :maximum_year_level <= r.maximum_year_level)
+                   AND (r.applicable_semester IS NULL OR r.applicable_semester = :semester)
                  ORDER BY r.id'
             );
             $requirementQuery->execute([
                 'clearance_station_id' => $clearanceStation['id'],
                 'station_id' => $selectedStation['id'],
                 'status' => 'ACTIVE',
+                'organization_id' => $student['organization_id'],
+                'minimum_year_level' => $student['year_level'],
+                'maximum_year_level' => $student['year_level'],
+                'semester' => $period['semester'],
             ]);
             $requirements = $requirementQuery->fetchAll();
         }
+    }
+
+    if ($selectedStation !== null && $selectedStation['code'] === 'ACCOUNTING' && $clearance !== false && $period !== false) {
+        $receiptQuery = $database->prepare(
+            "SELECT receipt.id, receipt.receipt_code, receipt.status, receipt.scanned_at,
+                    verification.status AS verification_status, verification.attempt_count, verification.last_submitted_at
+             FROM accounting_receipts receipt
+             LEFT JOIN accounting_receipt_verifications verification ON verification.accounting_receipt_id=receipt.id
+             WHERE receipt.student_id=:student_id AND receipt.academic_period_id=:period_id
+             ORDER BY receipt.id DESC LIMIT 1"
+        );
+        $receiptQuery->execute(['student_id' => $student['id'], 'period_id' => $period['id']]);
+        $accountingReceipt = $receiptQuery->fetch();
     }
 
     $notificationQuery = $database->prepare(
@@ -190,11 +212,52 @@ function studentStatusLabel(string $status): string
     };
 }
 
+$displayStationStatuses = $stationStatuses;
+$stationIdByCode = [];
+foreach ($stations as $station) { $stationIdByCode[$station['code']] = (int) $station['id']; }
+$rawStationStatus = static function (string $code) use ($stationIdByCode, $stationStatuses): string {
+    $stationId = $stationIdByCode[$code] ?? 0;
+    return $stationStatuses[$stationId]['status'] ?? 'LOCKED';
+};
+$setDisplayStatus = static function (string $code, string $status) use (&$displayStationStatuses, $stationIdByCode): void {
+    $stationId = $stationIdByCode[$code] ?? 0;
+    if ($stationId > 0) { $displayStationStatuses[$stationId]['status'] = $status; }
+};
+
+// Never reveal an early approval ahead of its clearance sequence. The underlying
+// record remains intact for staff/audit purposes and becomes visible at its turn.
+$deanComplete = $rawStationStatus('DEAN') === 'APPROVED';
+if (!$deanComplete) {
+    foreach (['ORGANIZATION', 'SASO', 'STUDENT_COUNCIL', 'LIBRARY', 'BOOKSTORE', 'CLINIC', 'FACILITIES', 'COMLAB', 'ACCOUNTING', 'REGISTRAR'] as $code) { $setDisplayStatus($code, 'LOCKED'); }
+} else {
+    $organizationComplete = $rawStationStatus('ORGANIZATION') === 'APPROVED';
+    if (!$organizationComplete) {
+        foreach (['SASO', 'STUDENT_COUNCIL', 'LIBRARY', 'BOOKSTORE', 'CLINIC', 'FACILITIES', 'COMLAB', 'ACCOUNTING', 'REGISTRAR'] as $code) { $setDisplayStatus($code, 'LOCKED'); }
+    } else {
+        $sasoComplete = $rawStationStatus('SASO') === 'APPROVED';
+        if (!$sasoComplete) {
+            foreach (['FACILITIES', 'COMLAB', 'ACCOUNTING', 'REGISTRAR'] as $code) { $setDisplayStatus($code, 'LOCKED'); }
+        } else {
+            $facilitiesComplete = $rawStationStatus('FACILITIES') === 'APPROVED';
+            if (!$facilitiesComplete) {
+                foreach (['COMLAB', 'ACCOUNTING', 'REGISTRAR'] as $code) { $setDisplayStatus($code, 'LOCKED'); }
+            } else {
+                $comlabComplete = $rawStationStatus('COMLAB') === 'APPROVED';
+                if (!$comlabComplete) {
+                    foreach (['ACCOUNTING', 'REGISTRAR'] as $code) { $setDisplayStatus($code, 'LOCKED'); }
+                } elseif ($rawStationStatus('ACCOUNTING') !== 'APPROVED') {
+                    $setDisplayStatus('REGISTRAR', 'LOCKED');
+                }
+            }
+        }
+    }
+}
+
 $approved = 0;
 $currentStation = null;
 $returnedStation = null;
 foreach ($stations as $station) {
-    $status = $stationStatuses[(int) $station['id']]['status'] ?? 'LOCKED';
+    $status = $displayStationStatuses[(int) $station['id']]['status'] ?? 'LOCKED';
     if ($status === 'APPROVED') {
         $approved++;
     }
@@ -212,7 +275,7 @@ $periodLabel = $period === false
     : ($semesterLabels[$period['semester']] ?? $period['semester']) . ' A.Y. ' . $period['school_year'];
 $detailStatus = $selectedStation === null
     ? null
-    : ($stationStatuses[(int) $selectedStation['id']]['status'] ?? 'LOCKED');
+    : ($displayStationStatuses[(int) $selectedStation['id']]['status'] ?? 'LOCKED');
 $message = pullFlashMessage();
 $csrfToken = createCsrfToken();
 $logoutForm = dashboardLogoutForm();
@@ -296,7 +359,8 @@ $logoutForm = dashboardLogoutForm();
                 <dl class="profile">
                     <div><dt>Student Number</dt><dd><?= escapeHtml($student['student_number']) ?></dd></div>
                     <div><dt>Program</dt><dd><?= escapeHtml($student['program']) ?></dd></div>
-                    <div><dt>Year and Section</dt><dd><?= (int) $student['year_level'] ?> - <?= escapeHtml($student['section']) ?></dd></div>
+                    <?php $section = trim((string) ($student['section'] ?? '')); ?>
+                    <div><dt><?= $section === '' || strtoupper($section) === 'N/A' ? 'Year Level' : 'Year and Section' ?></dt><dd><?= (int) $student['year_level'] ?><?= $section === '' || strtoupper($section) === 'N/A' ? '' : ' - ' . escapeHtml($section) ?></dd></div>
                     <div><dt>Organization</dt><dd><?= escapeHtml($student['organization_name'] . ' (' . $student['organization_code'] . ')') ?></dd></div>
                     <div><dt>Email</dt><dd><?= escapeHtml($student['email']) ?></dd></div>
                 </dl>
@@ -352,7 +416,7 @@ $logoutForm = dashboardLogoutForm();
             <?php else: ?>
                 <ol class="stations">
                     <?php foreach ($stations as $station): ?>
-                        <?php $status = $stationStatuses[(int) $station['id']]['status'] ?? 'LOCKED'; ?>
+                        <?php $status = $displayStationStatuses[(int) $station['id']]['status'] ?? 'LOCKED'; ?>
                         <li class="station">
                             <span class="step"><?= escapeHtml($station['display_order']) ?></span>
                             <div class="station-info"><h3><?= escapeHtml($station['name']) ?></h3><?php if ($station['parent_name'] !== null): ?><div class="muted">SASO sub-check</div><?php endif; ?></div>
@@ -406,6 +470,29 @@ $logoutForm = dashboardLogoutForm();
                         <input id="evaluation_proof" name="evaluation_proof" type="file" accept="image/jpeg,image/png,image/webp" required>
                         <p class="muted">JPG, PNG, or WebP; maximum 8 MB. The screenshot is deleted after verification and is never shown to the Dean.</p>
                         <button class="primary-button" type="submit">Upload and Verify</button>
+                    </form>
+                <?php endif; ?>
+            </section>
+        <?php endif; ?>
+
+        <?php if ($selectedStation !== null && $selectedStation['code'] === 'ACCOUNTING' && $clearance !== false && $detailStatus !== 'LOCKED'): ?>
+            <section class="panel" style="margin-top:20px;">
+                <h2>Accounting Receipt Verification</h2>
+                <?php if ($accountingReceipt === false): ?>
+                    <p class="notice">Accounting has not yet issued a receipt code for this clearance. Please contact the Accounting office after payment.</p>
+                <?php elseif ($accountingReceipt['status'] === 'APPROVED'): ?>
+                    <p class="notice">Your Accounting receipt has been approved.</p>
+                <?php elseif ($accountingReceipt['status'] === 'SCANNED'): ?>
+                    <p class="notice">Your receipt photo was verified and is waiting for Accounting approval.</p>
+                <?php else: ?>
+                    <?php if (($accountingReceipt['verification_status'] ?? '') === 'REJECTED'): ?><p class="notice warning">Your previous receipt photo could not be verified. Upload a clear photo of the complete official receipt.</p><?php endif; ?>
+                    <?php if (($accountingReceipt['verification_status'] ?? '') === 'ERROR'): ?><p class="notice warning">Receipt verification was unavailable. Your photo was deleted; please try again later.</p><?php endif; ?>
+                    <form class="upload-form" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/student/accounting_receipt_action.php')) ?>">
+                        <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
+                        <label for="accounting_receipt"><strong>Official Accounting receipt photo</strong></label>
+                        <input id="accounting_receipt" name="accounting_receipt" type="file" accept="image/jpeg,image/png,image/webp" required>
+                        <p class="muted">JPG, PNG, or WebP; maximum 8 MB. The photo must clearly show the complete paid receipt and Accounting-issued receipt code. It is deleted immediately after AI verification.</p>
+                        <button class="primary-button" type="submit">Upload and Verify Receipt</button>
                     </form>
                 <?php endif; ?>
             </section>

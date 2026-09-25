@@ -6,7 +6,7 @@ require_once __DIR__ . '/../clearance/office_workflow.php';
 require_once __DIR__ . '/../organization/clearance_functions.php';
 
 $database = getDatabaseConnection();
-foreach (['STUDENT_COUNCIL','LIBRARY','BOOKSTORE','CLINIC','SASO','FACILITIES','ACCOUNTING','REGISTRAR'] as $code) {
+foreach (['STUDENT_COUNCIL','LIBRARY','BOOKSTORE','CLINIC','SASO','FACILITIES','COMLAB','ACCOUNTING','REGISTRAR'] as $code) {
     $summary = officeStatusSummary($database, $code);
     $parts = $summary['READY'] + $summary['PENDING'] + $summary['RETURNED'] + $summary['APPROVED'];
     if ($summary['TOTAL'] !== $parts) {

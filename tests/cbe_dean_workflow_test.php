@@ -88,31 +88,36 @@ try {
         'station_id' => $organizationStation,
     ]);
 
-    approveOrganizationStudent($database, $orgStaffId, $cbeId, $studentId);
-    $ybcStatus = $database->prepare(
-        "SELECT record.status FROM requirement_records record
-         INNER JOIN requirements requirement ON requirement.id=record.requirement_id
-         INNER JOIN clearance_stations station_record ON station_record.id=record.clearance_station_id
-         WHERE station_record.clearance_id=:clearance_id AND requirement.requirement_code='CBE_YBC_APPROVAL'"
-    );
-    $ybcStatus->execute(['clearance_id' => $clearanceId]);
-    if ($ybcStatus->fetchColumn() !== 'VERIFIED') {
-        $failures[] = 'YBC approval did not verify the CBE Dean sign-off.';
+    try {
+        approveOrganizationStudent($database, $orgStaffId, $cbeId, $studentId);
+        $failures[] = 'YBC incorrectly approved the student before the CBE Dean.';
+    } catch (RuntimeException $exception) {
+        if (!str_contains($exception->getMessage(), 'Dean clearance must be approved')) {
+            throw $exception;
+        }
     }
+
     $deanStatus = $database->prepare(
         "SELECT station_record.status FROM clearance_stations station_record
          INNER JOIN stations station ON station.id=station_record.station_id AND station.code='DEAN'
          WHERE station_record.clearance_id=:clearance_id"
     );
     $deanStatus->execute(['clearance_id' => $clearanceId]);
-    if ($deanStatus->fetchColumn() === 'APPROVED') {
-        $failures[] = 'YBC approval incorrectly replaced final CBE Dean approval.';
-    }
-
     approveDeanClearance($database, $deanId, $clearanceId);
     $deanStatus->execute(['clearance_id' => $clearanceId]);
     if ($deanStatus->fetchColumn() !== 'APPROVED') {
-        $failures[] = 'The CBE Dean could not approve after YBC sign-off.';
+        $failures[] = 'The CBE Dean could not approve before YBC sign-off.';
+    }
+
+    approveOrganizationStudent($database, $orgStaffId, $cbeId, $studentId);
+    $organizationStatus = $database->prepare(
+        "SELECT station_record.status FROM clearance_stations station_record
+         INNER JOIN stations station ON station.id=station_record.station_id AND station.code='ORGANIZATION'
+         WHERE station_record.clearance_id=:clearance_id"
+    );
+    $organizationStatus->execute(['clearance_id' => $clearanceId]);
+    if ($organizationStatus->fetchColumn() !== 'APPROVED') {
+        $failures[] = 'YBC could not approve after the CBE Dean signed.';
     }
     $sasoChildren = $database->prepare(
         "SELECT COUNT(*) FROM clearance_stations station_record
@@ -122,7 +127,7 @@ try {
     );
     $sasoChildren->execute(['clearance_id' => $clearanceId]);
     if ((int) $sasoChildren->fetchColumn() < 1) {
-        $failures[] = 'Dean approval did not release the next offices after prior YBC approval.';
+        $failures[] = 'YBC approval did not release the SASO sub-check offices.';
     }
 } catch (Throwable $exception) {
     $failures[] = $exception->getMessage();
@@ -156,4 +161,4 @@ if ($failures !== []) {
     exit(1);
 }
 
-echo "CBE YBC-to-Dean workflow checks passed.\n";
+echo "CBE Dean-to-YBC workflow checks passed.\n";

@@ -36,6 +36,9 @@ try {
     foreach (['STUDENT_COUNCIL_STAFF','LIBRARY_STAFF','BOOKSTORE_STAFF','CLINIC_STAFF','SASO_STAFF','FACILITIES_STAFF','ACCOUNTING_STAFF','REGISTRAR'] as $role) {
         if (!isset($staffByRole[$role])) { throw new RuntimeException('Missing test staff role: ' . $role); }
     }
+    // The test invokes workflow functions directly; use the Facilities test account
+    // until a dedicated Computer Laboratory account is configured by the Registrar.
+    $staffByRole['COMLAB_STAFF'] = $staffByRole['FACILITIES_STAFF'];
     $orgStaffQuery = $database->prepare("SELECT user_id FROM staff_assignments WHERE organization_id=:organization_id AND status='ACTIVE' ORDER BY id LIMIT 1");
     $orgStaffQuery->execute(['organization_id' => $organizationId]);
     $orgStaffId = (int) $orgStaffQuery->fetchColumn();
@@ -67,19 +70,19 @@ try {
     $started = startStudentClearance($database, $studentUserId);
     $clearanceId = (int) $started['clearance']['id'];
 
-    returnOfficeClearance($database, 'FACILITIES', $clearanceId, $staffByRole['FACILITIES_STAFF'], 'Preparation-mode test requirement.');
+    try {
+        returnOfficeClearance($database, 'FACILITIES', $clearanceId, $staffByRole['FACILITIES_STAFF'], 'Preparation-mode test requirement.');
+        phaseThreeCheck(false, 'A locked office incorrectly took action during semester preparation.');
+    } catch (RuntimeException $exception) {
+        phaseThreeCheck(str_contains($exception->getMessage(), 'current state'), 'Locked office rejection returned an unexpected message.');
+    }
     $preparationStatus = $database->prepare(
         "SELECT cs.status FROM clearance_stations cs
          INNER JOIN stations station ON station.id=cs.station_id AND station.code='FACILITIES'
          WHERE cs.clearance_id=:clearance_id"
     );
     $preparationStatus->execute(['clearance_id' => $clearanceId]);
-    phaseThreeCheck($preparationStatus->fetchColumn() === 'RETURNED', 'A locked office could not take action during semester preparation.');
-    $database->prepare(
-        "UPDATE clearance_stations cs INNER JOIN stations station ON station.id=cs.station_id
-         SET cs.status='LOCKED',cs.returned_by=NULL,cs.returned_at=NULL,cs.returned_reason=NULL
-         WHERE cs.clearance_id=:clearance_id AND station.code='FACILITIES'"
-    )->execute(['clearance_id' => $clearanceId]);
+    phaseThreeCheck($preparationStatus->fetchColumn() === 'LOCKED', 'A locked office status changed during semester preparation.');
     $database->prepare("UPDATE academic_periods SET clearance_status='OPEN' WHERE id=:id")->execute(['id' => $activePeriodId]);
 
     $verifyDean = $database->prepare("UPDATE requirement_records rr INNER JOIN clearance_stations cs ON cs.id=rr.clearance_station_id INNER JOIN requirements r ON r.id=rr.requirement_id SET rr.status='VERIFIED',rr.verified_at=NOW() WHERE cs.clearance_id=:clearance_id AND r.requirement_code='CCS_FACULTY_EVALUATION'");
@@ -122,6 +125,18 @@ try {
 
     $verifyCouncil = $database->prepare("UPDATE requirement_records rr INNER JOIN clearance_stations cs ON cs.id=rr.clearance_station_id INNER JOIN stations station ON station.id=cs.station_id SET rr.status='VERIFIED' WHERE cs.clearance_id=:clearance_id AND station.code='STUDENT_COUNCIL'");
     $verifyCouncil->execute(['clearance_id' => $clearanceId]);
+    $database->prepare(
+        "INSERT INTO event_attendance (event_id,student_id,status,recorded_by)
+         SELECT event.id,:student_id,'PRESENT',:recorded_by
+         FROM events event
+         INNER JOIN stations station ON station.id=event.station_id AND station.code='STUDENT_COUNCIL'
+         WHERE event.academic_period_id=:period_id AND event.is_required=1 AND event.status='ACTIVE'
+         ON DUPLICATE KEY UPDATE status='PRESENT',recorded_by=VALUES(recorded_by)"
+    )->execute([
+        'student_id' => $studentId,
+        'recorded_by' => $staffByRole['STUDENT_COUNCIL_STAFF'],
+        'period_id' => $activePeriodId,
+    ]);
     approveOfficeClearance($database, 'STUDENT_COUNCIL', $clearanceId, $staffByRole['STUDENT_COUNCIL_STAFF']);
 
     $card = $database->prepare("UPDATE library_cards SET status='VERIFIED',verified_by=:user_id,verified_at=NOW() WHERE student_id=:student_id");
@@ -140,6 +155,7 @@ try {
 
     approveOfficeClearance($database, 'SASO', $clearanceId, $staffByRole['SASO_STAFF']);
     approveOfficeClearance($database, 'FACILITIES', $clearanceId, $staffByRole['FACILITIES_STAFF']);
+    approveOfficeClearance($database, 'COMLAB', $clearanceId, $staffByRole['COMLAB_STAFF']);
     approveOfficeClearance($database, 'ACCOUNTING', $clearanceId, $staffByRole['ACCOUNTING_STAFF']);
 
     $documents = $database->prepare("UPDATE student_documents SET status='VERIFIED',reviewed_by=:user_id,reviewed_at=NOW() WHERE student_id=:student_id");
@@ -151,7 +167,7 @@ try {
     $completion = $overall->fetch();
     phaseThreeCheck($completion['status'] === 'COMPLETED' && $completion['completed_at'] !== null, 'Registrar approval did not complete the clearance.');
     $approvalAudits = countQuery($database, "SELECT COUNT(*) FROM audit_logs WHERE student_id=:student_id AND action LIKE '%_CLEARANCE_APPROVED'", ['student_id' => $studentId]);
-    phaseThreeCheck($approvalAudits >= 8, 'Office approvals were not fully audited.');
+    phaseThreeCheck($approvalAudits >= 9, 'Office approvals were not fully audited.');
 } catch (Throwable $exception) {
     $failures[] = 'Phase 3 integration setup failed: ' . $exception->getMessage();
 } finally {

@@ -84,6 +84,8 @@ function prepareSemesterClearanceRecords(PDO $database, int $periodId): void
     $fees->execute(['period_id' => $periodId]);
     $documents = $database->prepare("INSERT IGNORE INTO student_documents (student_id,document_requirement_id,status) SELECT enrollment.student_id,requirement.id,'MISSING' FROM semester_enrollments enrollment INNER JOIN document_requirements requirement ON requirement.academic_period_id=enrollment.academic_period_id AND requirement.status='ACTIVE' AND requirement.is_required=1 WHERE enrollment.academic_period_id=:period_id AND enrollment.status='ENROLLED'");
     $documents->execute(['period_id' => $periodId]);
+    $togas = $database->prepare("INSERT IGNORE INTO facilities_obligations (student_id,academic_period_id,item_type,description,status) SELECT enrollment.student_id,enrollment.academic_period_id,'TOGA','Graduation toga','OUTSTANDING' FROM semester_enrollments enrollment INNER JOIN students student ON student.id=enrollment.student_id INNER JOIN academic_periods period ON period.id=enrollment.academic_period_id AND period.semester='2ND' WHERE enrollment.academic_period_id=:period_id AND enrollment.status='ENROLLED' AND student.status='ACTIVE' AND student.year_level>=4");
+    $togas->execute(['period_id' => $periodId]);
 }
 
 function createRegistrarSemester(PDO $database, int $registrarUserId, string $schoolYear, string $semester): int
@@ -187,6 +189,8 @@ function openRegistrarClearance(PDO $database, int $registrarUserId): int
         $fees->execute(['period_id' => $period['id']]);
         $documents = $database->prepare("INSERT IGNORE INTO student_documents (student_id,document_requirement_id,status) SELECT enrollment.student_id,requirement.id,'MISSING' FROM semester_enrollments enrollment INNER JOIN document_requirements requirement ON requirement.academic_period_id=enrollment.academic_period_id AND requirement.status='ACTIVE' AND requirement.is_required=1 WHERE enrollment.academic_period_id=:period_id AND enrollment.status='ENROLLED'");
         $documents->execute(['period_id' => $period['id']]);
+        $togas = $database->prepare("INSERT IGNORE INTO facilities_obligations (student_id,academic_period_id,item_type,description,status) SELECT enrollment.student_id,enrollment.academic_period_id,'TOGA','Graduation toga','OUTSTANDING' FROM semester_enrollments enrollment INNER JOIN students student ON student.id=enrollment.student_id INNER JOIN academic_periods period ON period.id=enrollment.academic_period_id AND period.semester='2ND' WHERE enrollment.academic_period_id=:period_id AND enrollment.status='ENROLLED' AND student.status='ACTIVE' AND student.year_level>=4");
+        $togas->execute(['period_id' => $period['id']]);
         $studentNotices = $database->prepare("INSERT INTO notifications (user_id,title,message) SELECT student.user_id,'Semester clearance is open',:message FROM semester_enrollments enrollment INNER JOIN students student ON student.id=enrollment.student_id WHERE enrollment.academic_period_id=:period_id AND enrollment.status='ENROLLED'");
         $studentNotices->execute(['message' => semesterLabel($period) . ' clearance is now available.', 'period_id' => $period['id']]);
         $deanNotices = $database->prepare("INSERT INTO notifications (user_id,title,message) SELECT id,'Semester clearance opened',:message FROM users WHERE role='DEAN' AND status='ACTIVE'");

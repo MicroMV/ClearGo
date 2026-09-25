@@ -62,8 +62,7 @@ try {
         if ($status === 'APPROVED' || $status === 'RETURNED') {
             $displayStatus = $status;
         } elseif ($eligibility['eligible'] && !empty($student['clearance_id'])
-            && (($organization['code'] === 'CBE' && (int) $student['year_level'] <= 3)
-                || $student['dean_status'] === 'APPROVED')) {
+            && $student['dean_status'] === 'APPROVED') {
             $displayStatus = 'ELIGIBLE';
         } else {
             $displayStatus = 'PENDING';
@@ -79,7 +78,6 @@ try {
         foreach ($rows as $row) { if ((int) $row['id'] === $studentId) { $selectedStudent = $row; break; } }
     }
     $selectedWaitingForDean = $selectedStudent !== null
-        && !($organization['code'] === 'CBE' && (int) $selectedStudent['year_level'] <= 3)
         && $selectedStudent['dean_status'] !== 'APPROVED';
     $filteredRows = array_values(array_filter($rows, static fn(array $row): bool =>
         $filter === 'ALL' || $row['display_status'] === $filter
@@ -124,10 +122,11 @@ $logoutForm = dashboardLogoutForm();
             <button type="submit">Create Required Event</button>
         </form>
         <?php if ($events === []): ?><p class="muted">No required events have been created for this semester. Until an event is created, direct organization sign-off remains available.</p><?php else: ?>
-        <div class="table-wrap"><table><thead><tr><th>Event</th><th>Date / Time</th><th>Attendance</th><th>QR Check-in</th></tr></thead><tbody>
+        <div class="table-wrap"><table><thead><tr><th>Event</th><th>Date / Time</th><th>Attendance</th><th>QR Check-in</th><th>Actions</th></tr></thead><tbody>
         <?php foreach ($events as $event): ?><?php $qrOpen = (int) $event['qr_is_open'] === 1; ?><tr>
             <td><strong><?= escapeHtml($event['name']) ?></strong></td><td><?= escapeHtml($event['event_date']) ?><br><span class="muted"><?= escapeHtml(trim(($event['start_time'] ?? '') . ' - ' . ($event['end_time'] ?? ''), ' -')) ?></span></td><td><?= (int) $event['present_count'] ?> / <?= (int) $event['enrolled_count'] ?> present</td>
             <td><?php if ($qrOpen): ?><span class="badge approved">OPEN</span> until <?= escapeHtml($event['check_in_closes_at']) ?><div class="inline"><?php if ((int) ($qrDisplay['event_id'] ?? 0) === (int) $event['id']): ?><a href="<?= escapeHtml(applicationUrl('/organization/event_qr.php?event=' . (int) $event['id'])) ?>">Display QR</a><?php endif; ?><form class="inline" method="post" action="<?= escapeHtml(applicationUrl('/organization/event_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="close_qr"><input type="hidden" name="event_id" value="<?= (int) $event['id'] ?>"><button class="secondary" type="submit">Close QR</button></form></div><?php else: ?><form class="inline" method="post" action="<?= escapeHtml(applicationUrl('/organization/event_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="open_qr"><input type="hidden" name="event_id" value="<?= (int) $event['id'] ?>"><select name="minutes" aria-label="QR duration"><option value="5">5 minutes</option><option value="10" selected>10 minutes</option><option value="15">15 minutes</option><option value="30">30 minutes</option><option value="60">1 hour</option><option value="120">2 hours</option><option value="240">4 hours</option><option value="480">8 hours</option><option value="720">12 hours</option></select><button type="submit">Open QR</button></form><?php endif; ?></td>
+            <td><form method="post" action="<?= escapeHtml(applicationUrl('/organization/event_action.php')) ?>" onsubmit="return confirm('Delete this event and all of its attendance records?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="delete"><input type="hidden" name="event_id" value="<?= (int) $event['id'] ?>"><button class="danger" type="submit">Delete</button></form></td>
         </tr><?php endforeach; ?></tbody></table></div><?php endif; ?>
     </section>
     <section class="panel"><div class="summary"><div>Total Students<strong><?= $summary['TOTAL'] ?></strong></div><div>Eligible<strong><?= $summary['ELIGIBLE'] ?></strong></div><div>Pending<strong><?= $summary['PENDING'] ?></strong></div><div>Cleared<strong><?= $summary['APPROVED'] ?></strong></div><div>Returned<strong><?= $summary['RETURNED'] ?></strong></div></div></section>
@@ -145,7 +144,7 @@ $logoutForm = dashboardLogoutForm();
                     <td><?= escapeHtml($student['first_name'] . ' ' . $student['last_name']) ?></td>
                     <td><?php if ($student['eligibility']['events'] === []): ?><?= $organization['code'] === 'CBE' ? 'Direct YBC sign-off' : 'Direct organization sign-off' ?><?php else: ?><?= count($student['eligibility']['events']) - count(array_filter($student['eligibility']['events'], static fn(array $event): bool => !(int) $event['attended'])) ?>/<?= count($student['eligibility']['events']) ?> events attended<?php endif; ?></td>
                     <td><span class="badge <?= strtolower($student['display_status']) ?>"><?= $student['display_status'] === 'APPROVED' ? 'CLEARED' : escapeHtml($student['display_status']) ?></span></td>
-                    <td><?php if (in_array($readiness['clearance_status'], ['PREPARING','OPEN'], true) && $student['display_status'] === 'ELIGIBLE'): ?><button name="student_ids[]" value="<?= (int) $student['id'] ?>" type="submit">Clear</button><?php elseif ($student['display_status'] === 'APPROVED'): ?><span class="muted">Cleared</span><?php elseif (!($organization['code'] === 'CBE' && (int) $student['year_level'] <= 3) && $student['dean_status'] !== 'APPROVED'): ?><span class="muted">Waiting for Dean</span><?php else: ?><span class="muted">Requirements incomplete</span><?php endif; ?></td>
+                    <td><?php if (in_array($readiness['clearance_status'], ['PREPARING','OPEN'], true) && $student['display_status'] === 'ELIGIBLE'): ?><button name="student_ids[]" value="<?= (int) $student['id'] ?>" type="submit">Clear</button><?php elseif ($student['display_status'] === 'APPROVED'): ?><span class="muted">Cleared</span><?php elseif ($student['dean_status'] !== 'APPROVED'): ?><span class="muted">Waiting for Dean</span><?php else: ?><span class="muted">Requirements incomplete</span><?php endif; ?></td>
                 </tr><?php endforeach; ?></tbody>
             </table></div>
             <p>Page <?= $page ?> of <?= $totalPages ?> · <?= $totalRows ?> student(s)</p>

@@ -19,7 +19,7 @@ $primaryStations = $database->query(
     "SELECT code FROM stations WHERE status = 'ACTIVE' AND parent_station_id IS NULL ORDER BY sort_order"
 )->fetchAll(PDO::FETCH_COLUMN);
 checkPhaseOne(
-    $primaryStations === ['DEAN', 'ORGANIZATION', 'SASO', 'FACILITIES', 'ACCOUNTING', 'REGISTRAR'],
+    $primaryStations === ['DEAN', 'ORGANIZATION', 'SASO', 'FACILITIES', 'COMLAB', 'ACCOUNTING', 'REGISTRAR'],
     'Primary station sequence is incorrect.'
 );
 

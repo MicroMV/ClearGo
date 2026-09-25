@@ -35,11 +35,20 @@ try {
     $action = (string) ($_POST['action'] ?? '');
     $clearanceId = positivePostId('clearance_id');
     $context = officeClearanceContext($database, $config['code'], $clearanceId);
+    if ($context['station_status'] === 'LOCKED') {
+        throw new RuntimeException('The required preceding offices have not cleared this student yet.');
+    }
     $studentId = (int) $context['student_id'];
     $periodId = (int) $context['academic_period_id'];
     ensureOfficeSourceRecords($database, $studentId, $periodId);
 
-    if ($action === 'clinic_clear' && $config['code'] === 'CLINIC') {
+    if ($action === 'manual_accounting_clear' && $config['code'] === 'ACCOUNTING') {
+        manuallyClearAccounting($database, $clearanceId, $user['id']);
+        setFlashMessage('Accounting manually cleared ' . $context['student_name'] . '.');
+    } elseif ($action === 'manual_registrar_clear' && $config['code'] === 'REGISTRAR') {
+        manuallyClearRegistrar($database, $clearanceId, $user['id']);
+        setFlashMessage('Registrar manually completed clearance for ' . $context['student_name'] . '.');
+    } elseif ($action === 'clinic_clear' && $config['code'] === 'CLINIC') {
         $remarks = trim((string) ($_POST['remarks'] ?? ''));
         if (mb_strlen($remarks) > 1000) { throw new RuntimeException('Clinic remarks cannot exceed 1,000 characters.'); }
         $cleared = clearClinicClearance($database, $clearanceId, $user['id'], $remarks ?: 'Cleared directly by the Clinic.');
@@ -99,22 +108,41 @@ try {
         if ($statement->rowCount() !== 1) { throw new RuntimeException('The Bookstore obligation could not be updated.'); }
         officeMutationNotice($database, $context, $user['id'], 'Bookstore verified payment and settled an obligation.');
         setFlashMessage('Bookstore obligation settled.');
-    } elseif ($action === 'add_violation' && in_array($config['code'], ['FACILITIES', 'SASO'], true)) {
+    } elseif ($action === 'add_facilities_item' && $config['code'] === 'FACILITIES') {
         $description = trim((string) ($_POST['description'] ?? ''));
-        if ($description === '' || mb_strlen($description) > 2000) { throw new RuntimeException('Enter a valid incident description.'); }
-        $station = officeStation($database, $config['code']);
+        $remarks = trim((string) ($_POST['remarks'] ?? ''));
+        if ($description === '' || mb_strlen($description) > 255) { throw new RuntimeException('Enter a valid borrowed item description.'); }
+        if (mb_strlen($remarks) > 1000) { throw new RuntimeException('Remarks cannot exceed 1,000 characters.'); }
+        $statement = $database->prepare("INSERT INTO facilities_obligations (student_id,academic_period_id,item_type,description,status,remarks,recorded_by) VALUES (:student_id,:period_id,'BORROWED_ITEM',:description,'OUTSTANDING',:remarks,:user_id)");
+        $statement->execute(['student_id' => $studentId, 'period_id' => $periodId, 'description' => $description, 'remarks' => $remarks ?: null, 'user_id' => $user['id']]);
+        officeMutationNotice($database, $context, $user['id'], 'Facilities recorded a borrowed item that must be returned: ' . $description . '.');
+        setFlashMessage('Borrowed item recorded.');
+    } elseif ($action === 'return_facilities_item' && $config['code'] === 'FACILITIES') {
+        $itemId = positivePostId('item_id');
+        $remarks = trim((string) ($_POST['remarks'] ?? ''));
+        if (mb_strlen($remarks) > 1000) { throw new RuntimeException('Remarks cannot exceed 1,000 characters.'); }
+        $statement = $database->prepare("UPDATE facilities_obligations SET status='RETURNED',remarks=CASE WHEN :remarks='' THEN remarks ELSE :remarks END,returned_by=:user_id,returned_at=NOW() WHERE id=:id AND student_id=:student_id AND academic_period_id=:period_id AND status='OUTSTANDING'");
+        $statement->execute(['remarks' => $remarks, 'user_id' => $user['id'], 'id' => $itemId, 'student_id' => $studentId, 'period_id' => $periodId]);
+        if ($statement->rowCount() !== 1) { throw new RuntimeException('The Facilities item could not be marked returned.'); }
+        officeMutationNotice($database, $context, $user['id'], 'Facilities confirmed that a borrowed item or toga was returned.');
+        setFlashMessage('Item marked as returned.');
+    } elseif ($action === 'add_comlab_incident' && $config['code'] === 'COMLAB') {
+        $description = trim((string) ($_POST['description'] ?? ''));
+        if ($description === '' || mb_strlen($description) > 2000) { throw new RuntimeException('Enter an incident description of up to 2,000 characters.'); }
+        if ($context['station_status'] === 'APPROVED') { throw new RuntimeException('This student is already cleared by Computer Laboratory.'); }
+        $station = officeStation($database, 'COMLAB');
         $statement = $database->prepare("INSERT INTO violations (student_id,station_id,description,status,recorded_by) VALUES (:student_id,:station_id,:description,'OPEN',:user_id)");
         $statement->execute(['student_id' => $studentId, 'station_id' => $station['id'], 'description' => $description, 'user_id' => $user['id']]);
-        officeMutationNotice($database, $context, $user['id'], $context['station_name'] . ' recorded an open case: ' . $description);
-        setFlashMessage('Open case recorded.');
-    } elseif ($action === 'resolve_violation' && in_array($config['code'], ['FACILITIES', 'SASO'], true)) {
-        $violationId = positivePostId('violation_id');
-        $station = officeStation($database, $config['code']);
+        officeMutationNotice($database, $context, $user['id'], 'Computer Laboratory recorded an incident report.');
+        setFlashMessage('Computer Laboratory incident report recorded.');
+    } elseif ($action === 'resolve_comlab_incident' && $config['code'] === 'COMLAB') {
+        $incidentId = positivePostId('incident_id');
+        $station = officeStation($database, 'COMLAB');
         $statement = $database->prepare("UPDATE violations SET status='RESOLVED',resolved_by=:user_id,resolved_at=NOW() WHERE id=:id AND student_id=:student_id AND station_id=:station_id AND status='OPEN'");
-        $statement->execute(['user_id' => $user['id'], 'id' => $violationId, 'student_id' => $studentId, 'station_id' => $station['id']]);
-        if ($statement->rowCount() !== 1) { throw new RuntimeException('The case could not be resolved.'); }
-        officeMutationNotice($database, $context, $user['id'], $context['station_name'] . ' resolved an open case.');
-        setFlashMessage('Case marked as settled.');
+        $statement->execute(['user_id' => $user['id'], 'id' => $incidentId, 'student_id' => $studentId, 'station_id' => $station['id']]);
+        if ($statement->rowCount() !== 1) { throw new RuntimeException('The Computer Laboratory incident could not be marked settled.'); }
+        officeMutationNotice($database, $context, $user['id'], 'Computer Laboratory marked an incident report as settled.');
+        setFlashMessage('Computer Laboratory incident report settled.');
     } elseif ($action === 'add_obligation' && $config['code'] === 'ACCOUNTING') {
         $description = trim((string) ($_POST['description'] ?? ''));
         $amount = filter_var($_POST['amount'] ?? null, FILTER_VALIDATE_FLOAT);
@@ -123,6 +151,18 @@ try {
         $statement->execute(['student_id' => $studentId, 'period_id' => $periodId, 'description' => $description, 'amount' => $amount, 'remarks' => trim((string) ($_POST['remarks'] ?? '')) ?: null]);
         officeMutationNotice($database, $context, $user['id'], 'Accounting recorded a financial obligation: ' . $description . '.');
         setFlashMessage('Financial obligation added.');
+    } elseif ($action === 'register_accounting_receipt' && $config['code'] === 'ACCOUNTING') {
+        $receiptCode = strtoupper(trim((string) ($_POST['receipt_code'] ?? '')));
+        if (str_starts_with($receiptCode, 'CLEARGO-ACCOUNTING:')) { $receiptCode = substr($receiptCode, strlen('CLEARGO-ACCOUNTING:')); }
+        if ($receiptCode === '' || mb_strlen($receiptCode) > 255) { throw new RuntimeException('Enter the valid receipt number or QR code from Accounting.'); }
+        try {
+            $statement = $database->prepare("INSERT INTO accounting_receipts (student_id,academic_period_id,receipt_code,status,issued_by) VALUES (:student_id,:period_id,:receipt_code,'ISSUED',:user_id)");
+            $statement->execute(['student_id' => $studentId, 'period_id' => $periodId, 'receipt_code' => $receiptCode, 'user_id' => $user['id']]);
+        } catch (PDOException $exception) {
+            throw new RuntimeException('That Accounting receipt code is already registered.');
+        }
+        officeMutationNotice($database, $context, $user['id'], 'Accounting registered a receipt for student scanning.');
+        setFlashMessage('Valid Accounting receipt registered. Ask the student to scan the QR or barcode.');
     } elseif ($action === 'clear_obligation' && $config['code'] === 'ACCOUNTING') {
         $obligationId = positivePostId('obligation_id');
         $reference = trim((string) ($_POST['payment_reference'] ?? ''));
@@ -161,4 +201,3 @@ try {
 
 $studentParameter = isset($clearanceId) ? '?clearance=' . urlencode((string) $clearanceId) : '';
 redirectTo($config['path'] . $studentParameter);
-

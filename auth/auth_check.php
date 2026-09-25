@@ -11,6 +11,7 @@ const APPLICATION_ROLES = [
     'BOOKSTORE_STAFF',
     'CLINIC_STAFF',
     'FACILITIES_STAFF',
+    'COMLAB_STAFF',
     'ACCOUNTING_STAFF',
     'REGISTRAR',
 ];
@@ -25,6 +26,7 @@ const ROLE_DASHBOARDS = [
     'BOOKSTORE_STAFF' => '/bookstore/dashboard.php',
     'CLINIC_STAFF' => '/clinic/dashboard.php',
     'FACILITIES_STAFF' => '/facilities/dashboard.php',
+    'COMLAB_STAFF' => '/comlab/dashboard.php',
     'ACCOUNTING_STAFF' => '/accounting/dashboard.php',
     'REGISTRAR' => '/registrar/dashboard.php',
 ];

@@ -127,7 +127,7 @@ try {
     }
     phaseTwoCheck(($statuses['DEAN'] ?? null) === 'APPROVED', 'Dean station was not approved.');
     phaseTwoCheck(($statuses['ORGANIZATION'] ?? null) === 'PENDING', 'Organization was not unlocked after Dean approval.');
-    foreach (['SASO', 'STUDENT_COUNCIL', 'LIBRARY', 'BOOKSTORE', 'CLINIC', 'FACILITIES', 'ACCOUNTING', 'REGISTRAR'] as $code) {
+    foreach (['SASO', 'STUDENT_COUNCIL', 'LIBRARY', 'BOOKSTORE', 'CLINIC', 'FACILITIES', 'COMLAB', 'ACCOUNTING', 'REGISTRAR'] as $code) {
         phaseTwoCheck(($statuses[$code] ?? null) === 'LOCKED', $code . ' should remain locked after Dean approval.');
     }
 
