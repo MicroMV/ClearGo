@@ -79,6 +79,11 @@ function applicationUrl(string $path = ''): string
     return rtrim($baseUrl, '/') . '/' . ltrim($path, '/');
 }
 
+function clearGoLogoUrl(): string
+{
+    return applicationUrl('/assets/the-lewis-college-logo.png');
+}
+
 function redirectTo(string $path): never
 {
     header('Location: ' . applicationUrl($path), true, 303);
@@ -249,6 +254,100 @@ function dashboardLogoutForm(): string
     <button type="submit">Log out</button>
 </form>
 HTML;
+}
+
+/**
+ * Returns the current user's existing in-system notifications for dashboard display.
+ * Reading the list preserves the application's established read-on-dashboard behavior.
+ */
+function dashboardNotifications(PDO $database, int $userId): array
+{
+    $notifications = dashboardNotificationPreview($database, $userId);
+
+    $markRead = $database->prepare('UPDATE notifications SET is_read=1 WHERE user_id=:user_id AND is_read=0');
+    $markRead->execute(['user_id' => $userId]);
+
+    return $notifications;
+}
+
+/** Returns notifications without changing their existing read state. */
+function dashboardNotificationPreview(PDO $database, int $userId): array
+{
+    $statement = $database->prepare(
+        'SELECT id,title,message,is_read,created_at FROM notifications WHERE user_id=:user_id ORDER BY created_at DESC,id DESC LIMIT 100'
+    );
+    $statement->execute(['user_id' => $userId]);
+    return $statement->fetchAll();
+}
+
+function dashboardNotificationBell(array $notifications): string
+{
+    $unread = count(array_filter($notifications, static fn(array $notification): bool => !(int) $notification['is_read']));
+    $badge = $unread > 0 ? '<span class="notification-count">' . ($unread > 99 ? '99+' : $unread) . '</span>' : '';
+    $items = '';
+    foreach ($notifications as $notification) {
+        $items .= '<li class="notification-item' . (!(int) $notification['is_read'] ? ' unread' : '') . '">'
+            . '<strong>' . escapeHtml((string) $notification['title']) . '</strong>'
+            . '<span>' . escapeHtml((string) $notification['message']) . '</span>'
+            . '<time>' . escapeHtml((string) $notification['created_at']) . '</time></li>';
+    }
+    if ($items === '') {
+        $items = '<li class="notification-empty">No alerts or notifications yet.</li>';
+    }
+
+    return '<div class="notification-center"><button class="notification-toggle" type="button" aria-label="View alerts and notifications" aria-expanded="false">'
+        . '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>' . $badge . '</button><div class="notification-menu" hidden>'
+        . '<div class="notification-heading"><strong>Alerts &amp; notifications</strong><span>' . count($notifications) . ' total</span></div>'
+        . '<ul>' . $items . '</ul></div></div>';
+}
+
+/**
+ * Builds the shared staff navigation shell without changing role permissions or routes.
+ *
+ * @param array<int,array{key:string,label:string,url:string,icon?:string}> $items
+ */
+function staffDashboardSidebar(string $officeName, array $user, array $items, string $activeKey, string $logoutForm): string
+{
+    $icons = [
+        'dashboard' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>',
+        'students' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1.5a4.5 4.5 0 0 0-4.5-4.5h-3A4.5 4.5 0 0 0 4 18.5V20M10 10a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM17 11a3 3 0 0 0 0-6M20 20v-1a4 4 0 0 0-3-3.87"/></svg>',
+        'import' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v3h16v-3"/></svg>',
+        'staff' => '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M3 21v-2a6 6 0 0 1 12 0v2M17 8h4M19 6v4M17 16h4"/></svg>',
+        'clearance' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v4H7zM5 5H3v16h18V5h-2M8 13l3 3 5-6"/></svg>',
+        'audit' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zM8 9h8M8 13h8M8 17h5"/></svg>',
+    ];
+    $links = '';
+    foreach ($items as $item) {
+        $key = (string) $item['key'];
+        $icon = $icons[$item['icon'] ?? $key] ?? $icons['dashboard'];
+        $isActive = $key === $activeKey;
+        $links .= '<a href="' . escapeHtml(applicationUrl((string) $item['url'])) . '"'
+            . ($isActive ? ' class="active" aria-current="page"' : '') . '><span class="nav-icon">'
+            . $icon . '</span><span>' . escapeHtml((string) $item['label']) . '</span></a>';
+    }
+    $email = escapeHtml((string) $user['email']);
+    $initial = escapeHtml(strtoupper(substr((string) $user['email'], 0, 1)));
+    $logo = escapeHtml(clearGoLogoUrl());
+
+    return '<aside class="staff-sidebar" id="staff-sidebar" aria-label="Office navigation">'
+        . '<button class="sidebar-close" type="button" data-sidebar-close aria-label="Close navigation">&#10005;</button>'
+        . '<div class="sidebar-brand"><img src="' . $logo . '" alt="The Lewis College logo"><div><strong>ClearGo</strong><span>The Lewis College</span></div></div>'
+        . '<div class="sidebar-office"><p class="sidebar-kicker">Staff workspace</p><p class="sidebar-office-name">' . escapeHtml($officeName) . '</p></div>'
+        . '<nav class="staff-nav">' . $links . '</nav>'
+        . '<div class="sidebar-footer"><div class="sidebar-user"><span class="sidebar-avatar">' . $initial . '</span><span class="sidebar-user-copy"><strong>' . $email . '</strong><span>Authorized staff</span></span></div>'
+        . $logoutForm . '</div></aside><button class="sidebar-overlay" type="button" data-sidebar-close aria-label="Close navigation"></button>';
+}
+
+function registrarDashboardSidebar(array $user, string $activeKey, string $logoutForm): string
+{
+    return staffDashboardSidebar('Registrar Administration', $user, [
+        ['key' => 'dashboard', 'label' => 'Dashboard', 'url' => '/registrar/dashboard.php', 'icon' => 'dashboard'],
+        ['key' => 'import', 'label' => 'Import Enrollment', 'url' => '/registrar/student_import.php', 'icon' => 'import'],
+        ['key' => 'students', 'label' => 'Student Accounts', 'url' => '/registrar/students.php', 'icon' => 'students'],
+        ['key' => 'staff', 'label' => 'Staff Accounts', 'url' => '/registrar/staff_accounts.php', 'icon' => 'staff'],
+        ['key' => 'clearance', 'label' => 'Clearance Review', 'url' => '/registrar/clearance.php', 'icon' => 'clearance'],
+        ['key' => 'audit', 'label' => 'Audit Logs', 'url' => '/registrar/audit_logs.php', 'icon' => 'audit'],
+    ], $activeKey, $logoutForm);
 }
 
 function renderDashboard(array $user, string $title): never

@@ -11,6 +11,13 @@ $result = $_SESSION['student_import_result'] ?? null;
 unset($_SESSION['student_import_result']);
 $csrfToken = createCsrfToken();
 $logoutForm = dashboardLogoutForm();
+$notifications = [];
+try {
+    $notifications = dashboardNotificationPreview(getDatabaseConnection(), (int) $user['id']);
+} catch (Throwable $exception) {
+    error_log('Registrar import notifications failed: ' . $exception->getMessage());
+}
+$sidebar = registrarDashboardSidebar($user, 'import', $logoutForm);
 ?>
 <!doctype html>
 <html lang="en">
@@ -20,14 +27,18 @@ $logoutForm = dashboardLogoutForm();
     <style>
         :root{--blue:#0d5ea6;--dark:#17324d;--line:#d8e3ed;--page:#f3f8fd;--red:#a33722;--green:#176b3a;--amber:#956200}*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--dark);font-family:Arial,sans-serif}header{background:#fff;border-bottom:1px solid var(--line);padding:18px 24px}.topbar,main{max-width:1200px;margin:auto}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px}.logout-form{margin:0}button,.button{display:inline-block;border:0;border-radius:5px;background:var(--blue);color:#fff;cursor:pointer;font:inherit;padding:10px 16px;text-decoration:none}.secondary{background:#587086}h1{margin:0;color:var(--blue);font-size:24px}h2{margin-top:0;font-size:20px}main{padding:24px}.panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:20px}.message{padding:13px;background:#edf6ff;border-left:4px solid var(--blue)}.result{background:#eaf7ef;border-left-color:var(--green)}.summary{display:flex;gap:12px;flex-wrap:wrap}.summary span{background:#f1f6fa;border-radius:6px;padding:10px 14px}.upload{display:flex;align-items:end;gap:12px;flex-wrap:wrap}.upload label{display:grid;gap:7px}.hint,.muted{color:#587086;font-size:13px}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;min-width:960px}th,td{border-top:1px solid var(--line);padding:10px;text-align:left;vertical-align:top}th{color:#587086;font-size:13px}.badge{display:inline-block;border-radius:99px;padding:5px 8px;font-size:11px;font-weight:bold}.add{background:#e4f5eb;color:var(--green)}.update{background:#fff7e8;color:var(--amber)}.invalid{background:#fff0ed;color:var(--red)}ul.issues{margin:5px 0 0;padding-left:18px;color:var(--red)}ul.warnings{margin:5px 0 0;padding-left:18px;color:var(--amber)}.actions{display:flex;gap:10px;align-items:center}.actions form{margin:0}@media(max-width:700px){header,main{padding:16px}.topbar{align-items:flex-start}}
     </style>
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>">
 </head>
-<body>
-<header><div class="topbar"><div><h1>Semester Enrollment Import</h1><a href="<?= escapeHtml(applicationUrl('/registrar/dashboard.php')) ?>">Back to Registrar</a></div><?= $logoutForm ?></div></header>
-<main>
+<body class="staff-dashboard">
+<div class="staff-shell">
+<?= $sidebar ?>
+<div class="staff-workspace">
+<header class="staff-topbar"><button class="mobile-nav-toggle" type="button" data-sidebar-open aria-controls="staff-sidebar" aria-expanded="false" aria-label="Open navigation">&#9776;</button><div class="topbar-title"><h1>Import Enrollment</h1><p>Upload, validate, and confirm the official semester roster.</p></div><div class="topbar-actions"><div class="topbar-account"><strong><?= escapeHtml($user['email']) ?></strong><span>Registrar account</span></div><?= dashboardNotificationBell($notifications) ?></div></header>
+<main class="staff-main">
     <?php if ($message !== null): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?>
     <?php if (is_array($result)): ?><div class="panel message result"><strong>Semester roster imported.</strong><p>Added: <?= (int) $result['added'] ?> &nbsp; Updated: <?= (int) $result['updated'] ?> &nbsp; Removed from this semester: <?= (int) ($result['removed_from_semester'] ?? 0) ?> &nbsp; Skipped: <?= (int) $result['skipped'] ?> &nbsp; Errors: <?= (int) $result['errors'] ?></p></div><?php endif; ?>
     <section class="panel">
-        <h2>Upload student records</h2>
+        <div class="section-heading"><div><h2>Upload student records</h2><p class="muted">Prepare the official roster for validation before importing it.</p></div></div>
         <p>Upload the official student master list using the same layout as your existing Excel record. Format names as <strong>Last Name, First Name, Middle Name</strong>. The college is assigned automatically from the Course.</p>
         <form class="upload" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/registrar/student_import_action.php')) ?>">
             <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="preview">
@@ -38,7 +49,7 @@ $logoutForm = dashboardLogoutForm();
     </section>
     <?php if (is_array($preview)): ?>
         <section class="panel">
-            <h2>Preview: <?= escapeHtml((string) ($_SESSION['student_import_name'] ?? 'uploaded file')) ?></h2>
+            <div class="section-heading"><div><h2>Import preview</h2><p class="muted"><?= escapeHtml((string) ($_SESSION['student_import_name'] ?? 'Uploaded file')) ?></p></div></div>
             <div class="summary"><span>Period: <strong><?= escapeHtml((string) ($preview['academic_period'] ?? 'Active period')) ?></strong></span><span>Total: <strong><?= count($preview['rows']) ?></strong></span><span>Valid: <strong><?= (int) $preview['valid_count'] ?></strong></span><span>New: <strong><?= (int) $preview['added_count'] ?></strong></span><span>Updates: <strong><?= (int) $preview['updated_count'] ?></strong></span><span>Records with errors: <strong><?= (int) $preview['error_count'] ?></strong></span></div>
             <p class="muted">Rows with errors will be skipped. Existing Student Nos. retain their account and clearance history. When confirmed, students missing from this complete official file are removed only from the current semester roster.</p>
             <div class="table-wrap"><table><thead><tr><th>Row</th><th>Action</th><th>Student No.</th><th>Full Name</th><th>Course</th><th>Year Level</th><th>Gsuite Address</th><th>Assigned College</th><th>Validation</th></tr></thead><tbody>
@@ -53,6 +64,6 @@ $logoutForm = dashboardLogoutForm();
             </div>
         </section>
     <?php endif; ?>
-</main>
+</main></div></div><script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>"></script>
 </body>
 </html>

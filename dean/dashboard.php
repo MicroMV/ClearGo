@@ -144,6 +144,7 @@ try {
         $row['requirements'] = $requirementQuery->fetchAll();
     }
     unset($row);
+    $notifications = dashboardNotifications($database, (int) $user['id']);
 } catch (Throwable $exception) {
     error_log('Dean dashboard failed to load: ' . $exception->getMessage());
     http_response_code(500);
@@ -153,6 +154,10 @@ try {
 $message = pullFlashMessage();
 $csrfToken = createCsrfToken();
 $logoutForm = dashboardLogoutForm();
+$pageTitle = $dean['organization_code'] . ' Dean Clearance';
+$sidebar = staffDashboardSidebar($pageTitle, $user, [
+    ['key' => 'dashboard', 'label' => 'Dashboard', 'url' => '/dean/dashboard.php', 'icon' => 'dashboard'],
+], 'dashboard', $logoutForm);
 ?>
 <!doctype html>
 <html lang="en">
@@ -162,18 +167,25 @@ $logoutForm = dashboardLogoutForm();
     <title><?= escapeHtml($dean['organization_code']) ?> Dean Clearance | Digital Clearance System</title>
     <style>
         :root{--blue:#0d5ea6;--dark:#17324d;--line:#d8e3ed;--page:#f3f8fd}*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--dark);font-family:Arial,sans-serif}header{background:#fff;border-bottom:1px solid var(--line);padding:18px 24px}header div,main{max-width:1150px;margin:auto}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px}.logout-form{margin:0}h1{margin:0;color:var(--blue);font-size:24px}main{padding:24px}.panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:20px}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.summary div{background:#f4f8fc;border-radius:7px;padding:12px}.summary strong{display:block;font-size:24px;color:var(--blue)}.controls,.group-tabs{display:flex;gap:10px;flex-wrap:wrap}.group-tabs a{border:1px solid var(--blue);border-radius:5px;color:var(--blue);padding:10px 14px;text-decoration:none}.group-tabs a[aria-current=page]{background:var(--blue);color:#fff}input,select,button{border:1px solid #b7c8d8;border-radius:5px;font:inherit;padding:9px}input{min-width:260px}button{background:var(--blue);border:0;color:#fff;cursor:pointer}.logout-form button{padding:9px 14px}.message{padding:12px;background:#edf6ff;border-left:4px solid var(--blue)}table{border-collapse:collapse;width:100%}th,td{border-top:1px solid var(--line);padding:12px;text-align:left;vertical-align:middle}th{font-size:13px;color:#587086}.badge{border-radius:99px;font-size:12px;font-weight:bold;padding:6px 9px;white-space:nowrap}.verified,.approved{background:#e4f5eb;color:#176b3a}.not-submitted,.error{background:#eef1f4;color:#536473}.rejected,.returned{background:#fff0ed;color:#a33722}.pending{background:#fff7e8;color:#956200}.muted{color:#587086;font-size:13px}@media(max-width:760px){main,header{padding:16px}.summary{grid-template-columns:1fr}.table-wrap{overflow-x:auto}input{min-width:0;width:100%}}
-        .pagination{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:14px}.pagination-link,.pagination-ellipsis{display:grid;place-items:center;min-width:42px;height:42px;padding:0 12px;border:1px solid var(--line);border-radius:5px;background:#fff;color:var(--dark);font-weight:600;text-decoration:none}.pagination-link.active{border-color:var(--blue);background:var(--blue);color:#fff}.pagination-ellipsis{border:0;background:transparent}
+        .notification-center{position:relative}.notification-toggle{position:relative;min-width:42px;min-height:40px;padding:6px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--dark);font-size:18px}.notification-count{position:absolute;top:-7px;right:-7px;min-width:18px;padding:1px 5px;border:2px solid #fff;border-radius:99px;background:#a33722;color:#fff;font-size:10px;font-weight:bold;line-height:16px}.notification-menu{position:absolute;z-index:20;top:calc(100% + 10px);right:0;width:min(380px,calc(100vw - 32px));max-height:440px;overflow:auto;border:1px solid var(--line);border-radius:10px;background:#fff;box-shadow:0 18px 48px rgba(23,50,77,.18)}.notification-heading{display:flex;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line)}.notification-heading span,.notification-item time{color:#587086;font-size:11px}.notification-menu ul{margin:0;padding:0;list-style:none}.notification-item{display:grid;gap:3px;padding:13px 16px;border-bottom:1px solid var(--line)}.notification-item.unread{background:#f4f9ff}.notification-item span{color:#4f6278;font-size:13px}.notification-empty{padding:24px 16px;color:#587086;text-align:center}.pagination{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:14px}.pagination-link,.pagination-ellipsis{display:grid;place-items:center;min-width:42px;height:42px;padding:0 12px;border:1px solid var(--line);border-radius:5px;background:#fff;color:var(--dark);font-weight:600;text-decoration:none}.pagination-link.active{border-color:var(--blue);background:var(--blue);color:#fff}.pagination-ellipsis{border:0;background:transparent}
+        .topbar-actions{display:flex;gap:10px;align-items:center}
+        .header-brand{display:flex;align-items:center;gap:10px}.header-brand img{width:60px;height:60px;object-fit:cover;object-position:center}
     </style>
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>">
 </head>
-<body>
-<header><div class="topbar"><h1><?= escapeHtml($dean['organization_code']) ?> Dean Clearance</h1><?= $logoutForm ?></div></header>
-<main>
+<body class="staff-dashboard">
+<div class="staff-shell">
+<?= $sidebar ?>
+<div class="staff-workspace">
+<header class="staff-topbar"><button class="mobile-nav-toggle" type="button" data-sidebar-open aria-controls="staff-sidebar" aria-expanded="false" aria-label="Open navigation">&#9776;</button><div class="topbar-title"><h1><?= escapeHtml($pageTitle) ?></h1><p>Review academic requirements and process eligible student clearances.</p></div><div class="topbar-actions"><div class="topbar-account"><strong><?= escapeHtml($user['email']) ?></strong><span>Dean staff account</span></div><?= dashboardNotificationBell($notifications) ?></div></header>
+<main class="staff-main">
     <section class="panel"><strong><?= escapeHtml($dean['organization_name']) ?></strong><p class="muted">This dashboard only includes students whose courses belong to <?= escapeHtml($dean['organization_code']) ?>.</p></section>
     <?php if ($message !== null): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?>
     <?php if ($readiness['clearance_status'] === 'PREPARING'): ?><section class="panel"><h2>Semester preparation</h2><p>Review requirements and take action now. Approve complete students and leave incomplete requirements pending so students can comply when the Registrar opens clearance.</p><?php if ($readiness['readiness_status'] === 'READY'): ?><p class="message">The Dean office is marked READY.</p><form method="post" action="<?= escapeHtml(applicationUrl('/clearance/readiness_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><button type="submit" name="action" value="unready">Undo Ready</button></form><?php else: ?><form method="post" action="<?= escapeHtml(applicationUrl('/clearance/readiness_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input name="notes" maxlength="500" placeholder="Optional readiness note"><button type="submit" name="action" value="ready">Mark Dean Office Ready</button></form><?php endif; ?></section><?php endif; ?>
     <?php if ($isCbeDean): ?><section class="panel"><h2>CBE student groups</h2><div class="group-tabs"><a href="?group=NON_GRADUATING&amp;filter=<?= urlencode($filter) ?>" <?= $cbeGroup === 'NON_GRADUATING' ? 'aria-current="page"' : '' ?>>Non-Graduating · <?= $cbeGroupCounts['NON_GRADUATING'] ?></a><a href="?group=FOURTH_YEAR&amp;filter=<?= urlencode($filter) ?>" <?= $cbeGroup === 'FOURTH_YEAR' ? 'aria-current="page"' : '' ?>>Fourth Year · <?= $cbeGroupCounts['FOURTH_YEAR'] ?></a></div><p class="muted"><?= $cbeGroup === 'NON_GRADUATING' ? 'Years 1–3 require YBC organization sign-off before final CBE Dean clearance.' : 'For fourth-year students, one Clear click confirms the OJT requirement and clears the Dean step.' ?></p><form method="post" action="<?= escapeHtml(applicationUrl('/dean/action.php')) ?>" onsubmit="return confirm('Clear every eligible student in this group?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="return_group" value="<?= escapeHtml($cbeGroup) ?>"><button name="action" value="approve_all_cbe_group"><?= $cbeGroup === 'NON_GRADUATING' ? 'Clear All Signed by YBC' : 'Clear All Fourth-Year Students' ?></button></form></section><?php endif; ?>
-    <section class="panel"><div class="summary"><div>Waiting<strong><?= $summary['WAITING'] ?></strong></div><div>Ready to Clear<strong><?= $summary['VERIFIED'] ?></strong></div><div>Cleared<strong><?= $summary['APPROVED'] ?></strong></div></div></section>
+    <section class="panel"><div class="section-heading"><div><h2>Clearance summary</h2><p class="muted">Current Dean status for this college.</p></div></div><div class="summary"><div>Waiting<strong><?= $summary['WAITING'] ?></strong></div><div>Ready to Clear<strong><?= $summary['VERIFIED'] ?></strong></div><div>Cleared<strong><?= $summary['APPROVED'] ?></strong></div></div></section>
     <section class="panel">
+        <div class="section-heading"><div><h2>Find student records</h2><p class="muted">Search the roster or filter by Dean clearance status.</p></div></div>
         <form class="controls" method="get">
             <?php if ($isCbeDean): ?><input type="hidden" name="group" value="<?= escapeHtml($cbeGroup) ?>"><?php endif; ?>
             <input name="search" value="<?= escapeHtml($search) ?>" placeholder="Search student number, name, or program">
@@ -183,6 +195,7 @@ $logoutForm = dashboardLogoutForm();
         </form>
     </section>
     <section class="panel">
+        <div class="section-heading"><div><h2>Student clearance records</h2><p class="muted">Review applicable requirements before taking action.</p></div></div>
         <div class="table-wrap"><table>
             <thead><tr><th>Student ID</th><th>Student Name</th><th>Program</th><th>College</th><th>Applicable Requirements</th><th>Dean Status</th><th>Action</th></tr></thead>
             <tbody>
@@ -218,6 +231,6 @@ $logoutForm = dashboardLogoutForm();
         <p class="muted">Page <?= $page ?> of <?= $totalPages ?> · <?= $totalRows ?> student(s)</p>
         <?= renderPagination($page, $totalPages, array_filter(['search' => $search, 'filter' => $filter, 'group' => $isCbeDean ? $cbeGroup : null], static fn($value): bool => $value !== null)) ?>
     </section>
-</main>
+</main></div></div><script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>"></script>
 </body>
 </html>

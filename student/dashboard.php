@@ -336,9 +336,10 @@ $logoutForm = dashboardLogoutForm();
         a { color:var(--blue); font-weight:bold; text-decoration:none; }
         @media(max-width:700px) { header,main { padding:16px; } .topbar { align-items:flex-start; flex-wrap:wrap; } .header-actions { width:100%; justify-content:flex-end; } .grid { grid-template-columns:1fr; } .station { align-items:flex-start; flex-wrap:wrap; } .station a { width:100%; } }
     </style>
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/student-dashboard.css')) ?>">
 </head>
-<body>
-    <header><div class="topbar"><h1>Student Clearance Dashboard</h1><div class="header-actions">
+<body class="student-dashboard">
+    <header class="student-header"><div class="student-topbar"><a class="student-brand" href="<?= escapeHtml(applicationUrl('/student/dashboard.php')) ?>"><img src="<?= escapeHtml(clearGoLogoUrl()) ?>" alt="The Lewis College logo"><span class="student-brand-copy"><strong>ClearGo</strong><small>Student Portal</small></span></a><div class="header-actions">
         <div class="notification-wrap">
             <button class="notification-button" id="notificationButton" type="button" aria-label="Notifications<?= $unreadNotificationCount > 0 ? ' (' . $unreadNotificationCount . ' unread)' : '' ?>" aria-controls="notificationBox" aria-expanded="false">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6v-5a7 7 0 0 0-5-6.71V3a2 2 0 0 0-4 0v1.29A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z"/></svg>
@@ -349,15 +350,15 @@ $logoutForm = dashboardLogoutForm();
                 <?php if ($notifications === []): ?><p class="muted">You have no notifications yet.</p><?php else: ?><ul class="notification-list"><?php foreach ($notifications as $notification): ?><li class="<?= (int) $notification['is_read'] === 0 ? 'unread' : '' ?>"><strong><?= escapeHtml($notification['title']) ?></strong><div><?= escapeHtml($notification['message']) ?></div><div class="muted"><?= escapeHtml($notification['created_at']) ?></div></li><?php endforeach; ?></ul><?php endif; ?>
             </div>
         </div>
-        <a href="<?= escapeHtml(applicationUrl('/student/password.php')) ?>">Change Password</a><?= $logoutForm ?>
+        <a class="header-link" href="<?= escapeHtml(applicationUrl('/student/password.php')) ?>" aria-label="Change password"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 7a5 5 0 1 0-4.6 5H13l2 2 2-2 2 2 2-2-4.4-4.4A5 5 0 0 0 15 7Z"/></svg><span>Change Password</span></a><?= $logoutForm ?>
     </div></div></header>
-    <main>
+    <main class="student-main">
+        <section class="student-hero" aria-labelledby="student-dashboard-title"><div><p class="eyebrow">Student clearance</p><h1 id="student-dashboard-title">Welcome, <?= escapeHtml($student['first_name']) ?></h1><p>Track your requirements and see what needs attention.</p></div><?php if ($clearance !== false): ?><span class="overall-status"><?= escapeHtml(studentStatusLabel($clearance['status'])) ?></span><?php endif; ?></section>
         <?php if ($message !== null): ?><p class="notice flash"><?= escapeHtml($message) ?></p><?php endif; ?>
         <div class="grid">
-            <section class="panel">
-                <h2><?= escapeHtml($student['first_name'] . ' ' . $student['last_name']) ?></h2>
+            <section class="panel profile-card">
+                <div class="profile-heading"><span class="profile-avatar"><?= escapeHtml(strtoupper(substr($student['first_name'], 0, 1) . substr($student['last_name'], 0, 1))) ?></span><div><h2><?= escapeHtml($student['first_name'] . ' ' . $student['last_name']) ?></h2><p><?= escapeHtml($student['student_number']) ?></p></div></div>
                 <dl class="profile">
-                    <div><dt>Student Number</dt><dd><?= escapeHtml($student['student_number']) ?></dd></div>
                     <div><dt>Program</dt><dd><?= escapeHtml($student['program']) ?></dd></div>
                     <?php $section = trim((string) ($student['section'] ?? '')); ?>
                     <div><dt><?= $section === '' || strtoupper($section) === 'N/A' ? 'Year Level' : 'Year and Section' ?></dt><dd><?= (int) $student['year_level'] ?><?= $section === '' || strtoupper($section) === 'N/A' ? '' : ' - ' . escapeHtml($section) ?></dd></div>
@@ -365,39 +366,35 @@ $logoutForm = dashboardLogoutForm();
                     <div><dt>Email</dt><dd><?= escapeHtml($student['email']) ?></dd></div>
                 </dl>
             </section>
-            <section class="panel">
-                <h2>My Clearance</h2>
-                <form method="get"><label class="muted" for="period">Semester record</label><select id="period" name="period" onchange="this.form.submit()" style="display:block;margin:7px 0 12px;padding:8px;max-width:100%;"><?php foreach ($availablePeriods as $availablePeriod): ?><option value="<?= (int) $availablePeriod['id'] ?>" <?= $period !== false && (int) $period['id'] === (int) $availablePeriod['id'] ? 'selected' : '' ?>><?= escapeHtml(($semesterLabels[$availablePeriod['semester']] ?? $availablePeriod['semester']) . ' A.Y. ' . $availablePeriod['school_year']) ?></option><?php endforeach; ?></select></form>
-                <p class="muted"><?= escapeHtml($periodLabel) ?></p>
+            <section class="panel clearance-card">
+                <div class="clearance-card-header"><div><h2>My Clearance</h2><p class="section-copy">Progress for <?= escapeHtml($periodLabel) ?></p></div></div>
+                <form class="period-form" method="get"><label for="period">Semester record</label><select id="period" name="period" onchange="this.form.submit()"><?php foreach ($availablePeriods as $availablePeriod): ?><option value="<?= (int) $availablePeriod['id'] ?>" <?= $period !== false && (int) $period['id'] === (int) $availablePeriod['id'] ? 'selected' : '' ?>><?= escapeHtml(($semesterLabels[$availablePeriod['semester']] ?? $availablePeriod['semester']) . ' A.Y. ' . $availablePeriod['school_year']) ?></option><?php endforeach; ?></select></form>
                 <?php if ($clearance === false): ?>
                     <?php if ($period === false): ?><p class="notice">No semester record is available.</p><?php elseif (!$isEnrolled): ?><p class="notice warning">You are not included in the enrollment roster for this semester.</p><?php elseif ($period['clearance_status'] !== 'OPEN'): ?><p class="notice">Clearance is not open yet. It will appear after all offices are ready and the Registrar opens the semester.</p><?php else: ?><p class="notice warning">Your semester clearance record is unavailable. Please contact the Registrar.</p><?php endif; ?>
                 <?php else: ?>
-                    <p class="muted">Reference: <?= escapeHtml($clearance['reference_number']) ?></p>
-                    <p><strong><?= $approved ?> of <?= count($stations) ?> stations cleared</strong></p>
-                    <div class="progress"><span style="width:<?= count($stations) === 0 ? 0 : ($approved / count($stations)) * 100 ?>%"></span></div>
-                    <p><strong>Status:</strong> <?= escapeHtml(studentStatusLabel($clearance['status'])) ?></p>
+                    <p class="clearance-reference">Reference <?= escapeHtml($clearance['reference_number']) ?></p>
+                    <div class="progress-copy"><strong><?= $approved ?> of <?= count($stations) ?> stations cleared</strong><span><?= count($stations) === 0 ? 0 : (int) round(($approved / count($stations)) * 100) ?>%</span></div>
+                    <div class="progress" role="progressbar" aria-label="Clearance progress" aria-valuemin="0" aria-valuemax="<?= count($stations) ?>" aria-valuenow="<?= $approved ?>"><span style="width:<?= count($stations) === 0 ? 0 : ($approved / count($stations)) * 100 ?>%"></span></div>
+                    <p class="clearance-status-line"><strong>Overall status</strong><span class="badge <?= escapeHtml(strtolower(str_replace('_', '-', $clearance['status']))) ?>"><?= escapeHtml(studentStatusLabel($clearance['status'])) ?></span></p>
                 <?php endif; ?>
             </section>
         </div>
 
         <?php if ($clearance !== false): ?>
-            <section class="panel" style="margin-top:20px;">
+            <section class="panel next-step-card <?= $returnedStation !== null ? 'action-needed' : ($currentStation === null ? 'complete' : '') ?>">
                 <?php if ($returnedStation !== null): ?>
-                    <h2>Action Needed</h2>
-                    <p class="notice warning"><strong><?= escapeHtml($returnedStation['name']) ?></strong> requires your attention.</p>
+                    <div class="next-step-heading"><span class="next-step-icon">!</span><div><h2>Action needed</h2><p><strong><?= escapeHtml($returnedStation['name']) ?></strong> requires your attention.</p></div></div>
                 <?php elseif ($currentStation !== null): ?>
-                    <h2>Current Step</h2>
-                    <p class="notice"><strong><?= escapeHtml($currentStation['name']) ?></strong> is the current station in your clearance.</p>
+                    <div class="next-step-heading"><span class="next-step-icon">&#8594;</span><div><h2>Current step</h2><p><strong><?= escapeHtml($currentStation['name']) ?></strong> is your active clearance station.</p></div></div>
                 <?php else: ?>
-                    <h2>Clearance Complete</h2>
-                    <p class="notice">You're now cleared</p>
+                    <div class="next-step-heading"><span class="next-step-icon">&#10003;</span><div><h2>Clearance complete</h2><p>All clearance stations have been completed.</p></div></div>
                 <?php endif; ?>
             </section>
         <?php endif; ?>
 
-        <section class="panel" style="margin-top:20px;">
+        <section class="panel event-panel">
             <h2>Organization Event Attendance</h2>
-            <p class="muted">At an event, scan the QR displayed by your organization officer using your phone camera. Sign in and confirm using your own student account.</p>
+            <p class="section-copy">Scan the QR displayed by your organization officer and confirm using your own student account.</p>
             <?php if ($organizationEvents === []): ?>
                 <p class="notice">No required organization events are listed for this semester.</p>
             <?php else: ?>
@@ -409,8 +406,9 @@ $logoutForm = dashboardLogoutForm();
             <?php endif; ?>
         </section>
 
-        <section class="panel" style="margin-top:20px;">
+        <section class="panel station-panel">
             <h2>Clearance Stations</h2>
+            <p class="section-copy">Follow your clearance in order. Available stations can be opened for more details.</p>
             <?php if ($clearance === false): ?>
                 <p class="muted">Station statuses and requirements will appear after you start your clearance.</p>
             <?php else: ?>
@@ -421,7 +419,7 @@ $logoutForm = dashboardLogoutForm();
                             <span class="step"><?= escapeHtml($station['display_order']) ?></span>
                             <div class="station-info"><h3><?= escapeHtml($station['name']) ?></h3><?php if ($station['parent_name'] !== null): ?><div class="muted">SASO sub-check</div><?php endif; ?></div>
                             <span class="badge <?= escapeHtml(strtolower(str_replace('_', '-', $status))) ?>"><?= escapeHtml(studentStatusLabel($status)) ?></span>
-                            <?php if ($status !== 'LOCKED'): ?><a href="?station=<?= urlencode($station['code']) ?>">View requirements</a><?php endif; ?>
+                            <?php if ($status !== 'LOCKED'): ?><a href="?station=<?= urlencode($station['code']) ?>#station-details">View requirements</a><?php endif; ?>
                         </li>
                     <?php endforeach; ?>
                 </ol>
@@ -429,9 +427,9 @@ $logoutForm = dashboardLogoutForm();
         </section>
 
         <?php if ($selectedStation !== null && $clearance !== false): ?>
-            <section class="panel" style="margin-top:20px;">
+            <section class="panel station-detail" id="station-details">
                 <h2><?= escapeHtml($selectedStation['name']) ?></h2>
-                <p><strong>Status:</strong> <?= escapeHtml(studentStatusLabel((string) $detailStatus)) ?></p>
+                <p class="detail-status"><strong>Station status</strong><span class="badge <?= escapeHtml(strtolower(str_replace('_', '-', (string) $detailStatus))) ?>"><?= escapeHtml(studentStatusLabel((string) $detailStatus)) ?></span></p>
                 <?php if ($detailStatus === 'LOCKED'): ?>
                     <p class="notice">This station will become available after the previous clearance station is cleared.</p>
                 <?php elseif ($requirements === []): ?>
@@ -455,7 +453,7 @@ $logoutForm = dashboardLogoutForm();
         <?php endif; ?>
 
         <?php if ($selectedStation !== null && $selectedStation['code'] === 'DEAN' && $clearance !== false && $detailStatus !== 'LOCKED' && $evaluationApplicable): ?>
-            <section class="panel" style="margin-top:20px;">
+            <section class="panel">
                 <h2>Faculty Evaluation Verification</h2>
                 <?php $evaluationStatus = $evaluation === false ? 'NOT_SUBMITTED' : $evaluation['status']; ?>
                 <p><strong>Status:</strong> <span class="badge <?= escapeHtml(strtolower(str_replace('_', '-', $evaluationStatus))) ?>"><?= escapeHtml(studentStatusLabel($evaluationStatus)) ?></span></p>
@@ -476,7 +474,7 @@ $logoutForm = dashboardLogoutForm();
         <?php endif; ?>
 
         <?php if ($selectedStation !== null && $selectedStation['code'] === 'ACCOUNTING' && $clearance !== false && $detailStatus !== 'LOCKED'): ?>
-            <section class="panel" style="margin-top:20px;">
+            <section class="panel">
                 <h2>Accounting Receipt Verification</h2>
                 <?php if ($accountingReceipt === false): ?>
                     <p class="notice">Accounting has not yet issued a receipt code for this clearance. Please contact the Accounting office after payment.</p>
