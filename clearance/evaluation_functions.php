@@ -196,3 +196,52 @@ function processEvaluationUpload(PDO $database, int $userId, array $file): array
         }
     }
 }
+
+function processEvaluationSubmission(PDO $database, int $userId, array $files): array
+{
+    $context = studentEvaluationContext($database, $userId);
+    $uploads = [];
+    foreach (($files['name'] ?? []) as $index => $name) {
+        $uploads[] = [
+            'name' => $name, 'type' => $files['type'][$index] ?? '', 'tmp_name' => $files['tmp_name'][$index] ?? '',
+            'error' => $files['error'][$index] ?? UPLOAD_ERR_NO_FILE, 'size' => $files['size'][$index] ?? 0,
+        ];
+    }
+    if (count($uploads) < 1 || count($uploads) > 3) { throw new RuntimeException('Upload from one to three screenshots only.'); }
+    $validated = array_map('validateEvaluationUpload', $uploads);
+    $directory = __DIR__ . '/../storage/private/evaluation-submissions';
+    if (!is_dir($directory) && !mkdir($directory, 0700, true)) { throw new RuntimeException('Secure screenshot storage is unavailable.'); }
+    $stored = [];
+    try {
+        foreach ($validated as $index => $image) {
+            $name = bin2hex(random_bytes(24)) . '.' . $image['extension'];
+            if (!move_uploaded_file($image['temporary_name'], $directory . '/' . $name)) { throw new RuntimeException('A screenshot could not be stored. Please try again.'); }
+            $stored[] = ['stored_name' => $name, 'original_name' => basename((string) $uploads[$index]['name']), 'mime_type' => $image['mime_type'], 'position' => $index + 1];
+        }
+        $database->beginTransaction();
+        $lock = $database->prepare('SELECT status FROM clearance_stations WHERE id=:id FOR UPDATE');
+        $lock->execute(['id' => $context['clearance_station_id']]);
+        if (in_array($lock->fetchColumn(), ['LOCKED', 'APPROVED'], true)) { throw new RuntimeException('Dean clearance is no longer available for submission.'); }
+        $existingSubmission = $database->prepare('SELECT id FROM evaluation_submissions WHERE clearance_id=:clearance_id FOR UPDATE');
+        $existingSubmission->execute(['clearance_id' => $context['clearance_id']]);
+        $isFirstSubmission = $existingSubmission->fetchColumn() === false;
+        $code = strtoupper(substr(bin2hex(random_bytes(8)), 0, 12));
+        $submission = $database->prepare("INSERT INTO evaluation_submissions (clearance_id,anonymous_code,status,submitted_at,reviewed_at,reviewed_by,return_reason) VALUES (:clearance_id,:code,'SUBMITTED',NOW(),NULL,NULL,NULL) ON DUPLICATE KEY UPDATE anonymous_code=VALUES(anonymous_code),status='SUBMITTED',submitted_at=NOW(),reviewed_at=NULL,reviewed_by=NULL,return_reason=NULL");
+        $submission->execute(['clearance_id' => $context['clearance_id'], 'code' => $code]);
+        $idQuery = $database->prepare('SELECT id FROM evaluation_submissions WHERE clearance_id=:clearance_id'); $idQuery->execute(['clearance_id' => $context['clearance_id']]); $submissionId = (int) $idQuery->fetchColumn();
+        $database->prepare('DELETE FROM evaluation_submission_images WHERE submission_id=:id')->execute(['id' => $submissionId]);
+        $imageInsert = $database->prepare('INSERT INTO evaluation_submission_images (submission_id,stored_name,original_name,mime_type,position) VALUES (:submission_id,:stored_name,:original_name,:mime_type,:position)');
+        foreach ($stored as $image) { $imageInsert->execute(['submission_id' => $submissionId] + $image); }
+        if ($isFirstSubmission) {
+            $notifyDean = $database->prepare("INSERT INTO notifications (user_id,title,message) SELECT assignment.user_id,'Anonymous evaluation submitted','A Faculty Evaluation proof was submitted for anonymous CCS Dean review.' FROM staff_assignments assignment INNER JOIN stations station ON station.id=assignment.station_id AND station.code='DEAN' INNER JOIN students student ON student.organization_id=assignment.organization_id WHERE student.id=:student_id AND assignment.status='ACTIVE'");
+            $notifyDean->execute(['student_id' => $context['student_id']]);
+        }
+        $database->prepare("UPDATE requirement_records record INNER JOIN requirements requirement ON requirement.id=record.requirement_id SET record.status='PENDING',record.remarks='Evaluation screenshots submitted for anonymous Dean review.',record.verified_by=NULL,record.verified_at=NULL WHERE record.clearance_station_id=:station_id AND requirement.requirement_code IN ('CCS_FACULTY_EVALUATION','CCS_FOURTH_YEAR_FACULTY_EVALUATION')")->execute(['station_id' => $context['clearance_station_id']]);
+        $database->commit();
+    } catch (Throwable $exception) {
+        if ($database->inTransaction()) { $database->rollBack(); }
+        foreach ($stored as $image) { @unlink($directory . '/' . $image['stored_name']); }
+        throw $exception;
+    }
+    return ['status' => 'SUBMITTED'];
+}

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../clearance/clearance_functions.php';
+require_once __DIR__ . '/../organization/clearance_functions.php';
 
 $database = getDatabaseConnection();
 $userId = null;
@@ -21,7 +22,15 @@ try {
     );
     $deanQuery->execute(['organization_id' => $cbeId]);
     $deanId = (int) $deanQuery->fetchColumn();
-    if ($cbeId < 1 || $deanId < 1) { throw new RuntimeException('CBE Dean assignment is unavailable.'); }
+    $organizationStaffQuery = $database->prepare(
+        "SELECT assignment.user_id FROM staff_assignments assignment
+         INNER JOIN users user ON user.id=assignment.user_id AND user.role='ORG_STAFF' AND user.status='ACTIVE'
+         INNER JOIN stations station ON station.id=assignment.station_id AND station.code='ORGANIZATION'
+         WHERE assignment.organization_id=:organization_id AND assignment.status='ACTIVE' LIMIT 1"
+    );
+    $organizationStaffQuery->execute(['organization_id' => $cbeId]);
+    $organizationStaffId = (int) $organizationStaffQuery->fetchColumn();
+    if ($cbeId < 1 || $deanId < 1 || $organizationStaffId < 1) { throw new RuntimeException('CBE Organization or Dean assignment is unavailable.'); }
 
     $period = $database->query("SELECT id,clearance_status FROM academic_periods WHERE status='ACTIVE' LIMIT 1")->fetch();
     $periodId = (int) $period['id'];
@@ -51,6 +60,7 @@ try {
     $ojtQuery->execute(['clearance_id' => $clearanceId]);
     if ($ojtQuery->fetchColumn() !== 'NOT_STARTED') { $failures[] = 'The test OJT requirement did not begin as NOT STARTED.'; }
 
+    approveOrganizationStudent($database, $organizationStaffId, $cbeId, $studentId);
     if (!approveDeanClearance($database, $deanId, $clearanceId)) { $failures[] = 'The single CBE approval did not run.'; }
     $ojtQuery->execute(['clearance_id' => $clearanceId]);
     if ($ojtQuery->fetchColumn() !== 'VERIFIED') { $failures[] = 'The Approve action did not verify the OJT requirement.'; }

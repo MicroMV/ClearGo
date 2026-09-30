@@ -12,13 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCsrfToken($_POST['csrf_token
 }
 
 try {
-    $result = processEvaluationUpload(getDatabaseConnection(), $user['id'], $_FILES['evaluation_proof'] ?? []);
-    $messages = [
-        'VERIFIED' => 'Faculty Evaluation completion verified. It is ready for Dean review.',
-        'REJECTED' => 'Your proof could not be verified. Please upload a valid screenshot and try again.',
-        'ERROR' => 'Verification is temporarily unavailable. Your screenshot was deleted; please try again later.',
-    ];
-    setFlashMessage($messages[$result['status']]);
+    processEvaluationSubmission(getDatabaseConnection(), $user['id'], $_FILES['evaluation_proofs'] ?? []);
+    setFlashMessage('Your screenshots were submitted anonymously for CCS Dean review.');
 } catch (Throwable $exception) {
     error_log('Evaluation upload action failed: ' . $exception->getMessage());
     setFlashMessage($exception instanceof RuntimeException ? $exception->getMessage() : 'Unable to verify the screenshot right now.');

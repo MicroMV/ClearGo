@@ -328,6 +328,9 @@ function staffDashboardSidebar(string $officeName, array $user, array $items, st
     $email = escapeHtml((string) $user['email']);
     $initial = escapeHtml(strtoupper(substr((string) $user['email'], 0, 1)));
     $logo = escapeHtml(clearGoLogoUrl());
+    $pageScript = $activeKey === 'submitted_requirements'
+        ? '<script defer src="' . escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) . '"></script>'
+        : '';
 
     return '<aside class="staff-sidebar" id="staff-sidebar" aria-label="Office navigation">'
         . '<button class="sidebar-close" type="button" data-sidebar-close aria-label="Close navigation">&#10005;</button>'
@@ -335,7 +338,7 @@ function staffDashboardSidebar(string $officeName, array $user, array $items, st
         . '<div class="sidebar-office"><p class="sidebar-kicker">Staff workspace</p><p class="sidebar-office-name">' . escapeHtml($officeName) . '</p></div>'
         . '<nav class="staff-nav">' . $links . '</nav>'
         . '<div class="sidebar-footer"><div class="sidebar-user"><span class="sidebar-avatar">' . $initial . '</span><span class="sidebar-user-copy"><strong>' . $email . '</strong><span>Authorized staff</span></span></div>'
-        . $logoutForm . '</div></aside><button class="sidebar-overlay" type="button" data-sidebar-close aria-label="Close navigation"></button>';
+        . $logoutForm . '</div></aside><button class="sidebar-overlay" type="button" data-sidebar-close aria-label="Close navigation"></button>' . $pageScript;
 }
 
 function registrarDashboardSidebar(array $user, string $activeKey, string $logoutForm): string

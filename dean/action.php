@@ -15,10 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCsrfToken($_POST['csrf_token
 }
 
 $action = (string) ($_POST['action'] ?? 'approve');
-$clearanceId = $action === 'approve_all_cbe_group'
+$isBulkAction = in_array($action, ['approve_all_cbe_group', 'approve_all_ready_ccs'], true);
+$clearanceId = $isBulkAction
     ? null
     : filter_var($_POST['clearance_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-if ($action !== 'approve_all_cbe_group' && $clearanceId === false) {
+if (!$isBulkAction && $clearanceId === false) {
     setFlashMessage('Select a valid clearance application.');
     redirectTo($returnPath);
 }
@@ -30,6 +31,12 @@ try {
         if ($returnGroup === '') { throw new RuntimeException('Select a valid CBE student group.'); }
         $result = approveAllReadyCbeDeanStudents($database, (int) $user['id'], $returnGroup);
         setFlashMessage('Dean approvals completed: ' . $result['approved'] . '. Skipped: ' . $result['skipped'] . '.');
+    } elseif ($action === 'approve_all_ready_ccs') {
+        if ($dean['organization_code'] !== 'CCS') { throw new RuntimeException('Bulk clearance is only available to the CCS Dean.'); }
+        $ready = $database->prepare("SELECT clearance.id FROM clearances clearance INNER JOIN students student ON student.id=clearance.student_id AND student.organization_id=:organization_id INNER JOIN academic_periods period ON period.id=clearance.academic_period_id AND period.status='ACTIVE' INNER JOIN stations station ON station.code='DEAN' INNER JOIN clearance_stations dean_record ON dean_record.clearance_id=clearance.id AND dean_record.station_id=station.id WHERE dean_record.status<>'APPROVED' AND NOT EXISTS (SELECT 1 FROM requirement_records record INNER JOIN requirements requirement ON requirement.id=record.requirement_id WHERE record.clearance_station_id=dean_record.id AND requirement.status='ACTIVE' AND requirement.name<>'Dean Approval' AND record.status NOT IN ('VERIFIED','RESOLVED'))");
+        $ready->execute(['organization_id' => $dean['organization_id']]);
+        $approved = 0; foreach ($ready->fetchAll(PDO::FETCH_COLUMN) as $readyClearanceId) { if (approveDeanClearance($database, (int) $user['id'], (int) $readyClearanceId)) { $approved++; } }
+        setFlashMessage($approved . ' ready student(s) cleared.');
     } elseif ($action === 'verify_requirement') {
         $requirementRecordId = filter_var($_POST['requirement_record_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         if ($requirementRecordId === false) { throw new RuntimeException('Select a valid requirement.'); }

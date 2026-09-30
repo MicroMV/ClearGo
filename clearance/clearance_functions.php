@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 function activeStudentForUser(PDO $database, int $userId, bool $lock = false): array
 {
-    $sql = "SELECT id, student_number, first_name, last_name, organization_id
+    $sql = "SELECT students.id, students.student_number, students.first_name, students.last_name,
+                   students.organization_id, organizations.code AS organization_code
             FROM students
-            WHERE user_id = :user_id AND status = 'ACTIVE'
+            INNER JOIN organizations ON organizations.id = students.organization_id
+            WHERE students.user_id = :user_id AND students.status = 'ACTIVE'
             LIMIT 1";
     if ($lock) {
         $sql .= ' FOR UPDATE';
@@ -83,14 +85,15 @@ function startStudentClearance(PDO $database, int $userId): array
         ]);
         $clearanceId = (int) $database->lastInsertId();
 
+        $firstStationCode = $student['organization_code'] === 'CBE' ? 'ORGANIZATION' : 'DEAN';
         $stationInsert = $database->prepare(
             "INSERT INTO clearance_stations (clearance_id, station_id, status)
              SELECT :clearance_id, id,
-                    CASE WHEN code = 'DEAN' THEN 'PENDING' ELSE 'LOCKED' END
+                    CASE WHEN code = :first_station_code THEN 'PENDING' ELSE 'LOCKED' END
              FROM stations
              WHERE status = 'ACTIVE'"
         );
-        $stationInsert->execute(['clearance_id' => $clearanceId]);
+        $stationInsert->execute(['clearance_id' => $clearanceId, 'first_station_code' => $firstStationCode]);
 
         $requiredStationCount = (int) $database->query("SELECT COUNT(*) FROM stations WHERE status = 'ACTIVE'")->fetchColumn();
         if ($requiredStationCount === 0 || $stationInsert->rowCount() !== $requiredStationCount) {
@@ -122,9 +125,11 @@ function startStudentClearance(PDO $database, int $userId): array
         require_once __DIR__ . '/office_workflow.php';
         ensureOfficeSourceRecords($database, (int) $student['id'], (int) $period['id']);
 
-        $deanStationId = $database->query("SELECT id FROM stations WHERE code = 'DEAN' LIMIT 1")->fetchColumn();
-        if ($deanStationId === false) {
-            throw new RuntimeException('The Dean clearance station is unavailable.');
+        $firstStationId = $database->prepare('SELECT id FROM stations WHERE code = :code LIMIT 1');
+        $firstStationId->execute(['code' => $firstStationCode]);
+        $firstStationId = $firstStationId->fetchColumn();
+        if ($firstStationId === false) {
+            throw new RuntimeException('The first clearance station is unavailable.');
         }
 
         $auditInsert = $database->prepare(
@@ -136,28 +141,34 @@ function startStudentClearance(PDO $database, int $userId): array
         );
         $auditInsert->execute([
             'user_id' => $userId,
-            'station_id' => $deanStationId,
+            'station_id' => $firstStationId,
             'student_id' => $student['id'],
         ]);
 
         $notificationInsert = $database->prepare(
             "INSERT INTO notifications (user_id, title, message)
-             VALUES (:user_id, 'Clearance application started',
-                     'Your clearance application has started. Review the applicable requirements for your Dean clearance first.')"
+             VALUES (:user_id, 'Clearance application started', :message)"
         );
-        $notificationInsert->execute(['user_id' => $userId]);
+        $notificationInsert->execute([
+            'user_id' => $userId,
+            'message' => $firstStationCode === 'ORGANIZATION'
+                ? 'Your clearance application has started. Complete Organization clearance first.'
+                : 'Your clearance application has started. Review the applicable requirements for your Dean clearance first.',
+        ]);
 
         $staffNotification = $database->prepare(
             "INSERT INTO notifications (user_id,title,message)
-             SELECT dean.id,'New Dean clearance application',:message
-             FROM users dean
-             INNER JOIN staff_assignments assignment ON assignment.user_id=dean.id AND assignment.status='ACTIVE'
-             INNER JOIN stations station ON station.id=assignment.station_id AND station.code='DEAN'
-             WHERE dean.role='DEAN' AND dean.status='ACTIVE'
+             SELECT staff.id,:title,:message
+             FROM users staff
+             INNER JOIN staff_assignments assignment ON assignment.user_id=staff.id AND assignment.status='ACTIVE'
+             INNER JOIN stations station ON station.id=assignment.station_id AND station.code=:station_code
+             WHERE staff.status='ACTIVE'
                AND assignment.organization_id=:organization_id"
         );
         $staffNotification->execute([
-            'message' => $student['student_number'] . ' started a clearance application and is ready for Dean requirement review.',
+            'title' => $firstStationCode === 'ORGANIZATION' ? 'New Organization clearance application' : 'New Dean clearance application',
+            'message' => $student['student_number'] . ' started a clearance application and is ready for ' . ($firstStationCode === 'ORGANIZATION' ? 'Organization' : 'Dean') . ' review.',
+            'station_code' => $firstStationCode,
             'organization_id' => $student['organization_id'],
         ]);
 
@@ -241,6 +252,21 @@ function approveDeanClearance(PDO $database, int $deanUserId, int $clearanceId):
         }
         if ($clearance['dean_status'] === 'LOCKED') {
             throw new RuntimeException('Dean clearance is not available for this student.');
+        }
+        if ($dean['organization_code'] === 'CBE') {
+            $organizationStatus = $database->prepare(
+                "SELECT organization_record.status
+                 FROM clearance_stations organization_record
+                 INNER JOIN stations organization_station
+                    ON organization_station.id=organization_record.station_id
+                   AND organization_station.code='ORGANIZATION'
+                 WHERE organization_record.clearance_id=:clearance_id
+                 LIMIT 1 FOR UPDATE"
+            );
+            $organizationStatus->execute(['clearance_id' => $clearanceId]);
+            if ($organizationStatus->fetchColumn() !== 'APPROVED') {
+                throw new RuntimeException('CBE Organization/YBC approval is required before Dean clearance.');
+            }
         }
         if ($dean['organization_code'] === 'CCS') {
             $verifyEvaluation = $database->prepare(
@@ -350,12 +376,17 @@ function approveDeanClearance(PDO $database, int $deanUserId, int $clearanceId):
         }
 
         $stationId = $database->query("SELECT id FROM stations WHERE code = 'DEAN' LIMIT 1")->fetchColumn();
+        $isCbe = $dean['organization_code'] === 'CBE';
         $notification = $database->prepare(
             "INSERT INTO notifications (user_id, title, message)
-             VALUES (:user_id, 'Dean clearance approved',
-                     'Your Dean clearance is cleared. Organization clearance is now available.')"
+             VALUES (:user_id, 'Dean clearance approved', :message)"
         );
-        $notification->execute(['user_id' => $clearance['student_user_id']]);
+        $notification->execute([
+            'user_id' => $clearance['student_user_id'],
+            'message' => $isCbe
+                ? 'Your Dean clearance is cleared. SASO sub-checks are now available.'
+                : 'Your Dean clearance is cleared. Organization clearance is now available.',
+        ]);
 
         $organizationStaffNotification = $database->prepare(
             "INSERT INTO notifications (user_id,title,message)
@@ -365,10 +396,12 @@ function approveDeanClearance(PDO $database, int $deanUserId, int $clearanceId):
              INNER JOIN stations station ON station.id=assignment.station_id AND station.code='ORGANIZATION'
              WHERE student.id=:student_id AND assignment.status='ACTIVE'"
         );
-        $organizationStaffNotification->execute([
-            'message' => $clearance['student_number'] . ' completed Dean clearance and is ready for Organization review.',
-            'student_id' => $clearance['student_id'],
-        ]);
+        if (!$isCbe) {
+            $organizationStaffNotification->execute([
+                'message' => $clearance['student_number'] . ' completed Dean clearance and is ready for Organization review.',
+                'student_id' => $clearance['student_id'],
+            ]);
+        }
 
         $audit = $database->prepare(
             "INSERT INTO audit_logs
@@ -416,9 +449,13 @@ function approveAllReadyCbeDeanStudents(PDO $database, int $deanUserId, string $
          INNER JOIN stations dean_station ON dean_station.code='DEAN'
          INNER JOIN clearance_stations dean_record ON dean_record.clearance_id=clearance.id
             AND dean_record.station_id=dean_station.id
+         INNER JOIN stations organization_station ON organization_station.code='ORGANIZATION'
+         INNER JOIN clearance_stations organization_record ON organization_record.clearance_id=clearance.id
+            AND organization_record.station_id=organization_station.id
          WHERE student.organization_id=:organization_id
            AND {$yearCondition}
-           AND dean_record.status<>'APPROVED'
+           AND dean_record.status='PENDING'
+           AND organization_record.status='APPROVED'
            AND NOT EXISTS (
                SELECT 1 FROM requirement_records record
                INNER JOIN requirements requirement ON requirement.id=record.requirement_id

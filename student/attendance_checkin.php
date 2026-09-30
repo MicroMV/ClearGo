@@ -5,15 +5,12 @@ require_once __DIR__ . '/../auth/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../organization/event_functions.php';
 
-$token = strtolower(trim((string) ($_GET['token'] ?? '')));
 startSecureSession();
-if (preg_match('/^[a-f0-9]{64}$/', $token)) {
-    $_SESSION['pending_attendance_token'] = $token;
-} else {
-    $token = (string) ($_SESSION['pending_attendance_token'] ?? '');
-}
-if (!preg_match('/^[a-f0-9]{64}$/', $token)) {
-    setFlashMessage('The attendance QR code is invalid.');
+$token = (string) ($_SESSION['pending_attendance_token'] ?? '');
+$confirmation = $_SESSION['attendance_confirmation'] ?? null;
+unset($_SESSION['attendance_confirmation']);
+if (!is_array($confirmation) && !preg_match('/^[a-f0-9]{64}$/', $token)) {
+    setFlashMessage('Use the ClearGo Attendance Scanner to scan the event QR code.');
     redirectTo('/student/dashboard.php');
 }
 
@@ -25,19 +22,25 @@ if ($user === null) {
 if ($user['role'] !== 'STUDENT') { http_response_code(403); exit('Only students can use an attendance QR code.'); }
 $user = requireRole('STUDENT');
 
-try {
-    $database = getDatabaseConnection();
-    $context = qrAttendanceContext($database, $token, $user['id']);
-} catch (Throwable $exception) {
-    error_log('Attendance QR validation failed: ' . $exception->getMessage());
+if (is_array($confirmation)) {
     $context = false;
+} else {
+    try {
+        $database = getDatabaseConnection();
+        $context = qrAttendanceContext($database, $token, $user['id']);
+    } catch (Throwable $exception) {
+        error_log('Attendance QR validation failed: ' . $exception->getMessage());
+        $context = false;
+    }
 }
 $csrfToken = createCsrfToken();
 ?>
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Confirm Attendance</title><style>
 :root{--blue:#0d5ea6;--dark:#17324d;--line:#d8e3ed;--page:#f3f8fd}*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--dark);font-family:Arial,sans-serif}main{max-width:600px;margin:10vh auto;padding:20px}.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px}h1{color:var(--blue)}.notice{padding:13px;background:#fff7e8;border-left:4px solid #b87800}.success{background:#e4f5eb;border-left-color:#176b3a}button,a{display:inline-block;border:0;border-radius:5px;padding:11px 16px;background:var(--blue);color:#fff;text-decoration:none;font:inherit;cursor:pointer}.muted{color:#587086}
 </style></head><body><main><section class="panel">
-<?php if ($context === false): ?>
+<?php if (is_array($confirmation)): ?>
+    <h1>✓ Attendance Confirmed</h1><p class="success notice">You are marked <strong>PRESENT</strong> for <strong><?= escapeHtml((string) ($confirmation['event_name'] ?? 'this event')) ?></strong>.</p><a href="<?= escapeHtml(applicationUrl('/student/dashboard.php')) ?>">Student Dashboard</a>
+<?php elseif ($context === false): ?>
     <h1>QR Check-in Unavailable</h1><p class="notice">This QR code is expired, closed, or belongs to a different organization. Ask your organization officer to open a new QR code.</p><a href="<?= escapeHtml(applicationUrl('/student/dashboard.php')) ?>">Student Dashboard</a>
 <?php elseif ($context['attendance_status'] === 'PRESENT'): ?>
     <h1>Attendance Already Recorded</h1><p class="success notice">Your attendance for <strong><?= escapeHtml($context['name']) ?></strong> is already marked present.</p><a href="<?= escapeHtml(applicationUrl('/student/dashboard.php')) ?>">Student Dashboard</a>

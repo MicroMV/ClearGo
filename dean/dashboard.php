@@ -9,7 +9,9 @@ require_once __DIR__ . '/../clearance/clearance_functions.php';
 $user = requireRole('DEAN');
 $search = trim((string) ($_GET['search'] ?? ''));
 $filter = strtoupper((string) ($_GET['filter'] ?? 'ALL'));
-$allowedFilters = ['WAITING', 'VERIFIED', 'APPROVED', 'ALL'];
+$courseFilter = trim((string) ($_GET['course'] ?? ''));
+$yearFilter = filter_var($_GET['year_level'] ?? 0, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 6]]) ?: 0;
+$allowedFilters = ['WAITING', 'APPROVED', 'ALL'];
 if (!in_array($filter, $allowedFilters, true)) {
     $filter = 'ALL';
 }
@@ -23,11 +25,21 @@ try {
     $dean = deanAssignment($database, (int) $user['id']);
     $isCbeDean = $dean['organization_code'] === 'CBE';
     $readiness = officeReadiness($database, 'DEAN');
+    $verifiedSubmissionQuery = $database->prepare("SELECT COUNT(*) FROM evaluation_submissions submission INNER JOIN clearances clearance ON clearance.id=submission.clearance_id INNER JOIN students student ON student.id=clearance.student_id INNER JOIN academic_periods period ON period.id=clearance.academic_period_id AND period.status='ACTIVE' WHERE student.organization_id=:organization_id AND submission.status='VERIFIED'");
+    $verifiedSubmissionQuery->execute(['organization_id' => $dean['organization_id']]);
+    $verifiedAnonymousCount = (int) $verifiedSubmissionQuery->fetchColumn();
     $statement = $database->prepare(
         "SELECT clearances.id AS clearance_id, students.student_number,
                 students.first_name, students.last_name, students.program, students.year_level,
                 organizations.name AS organization_name,
                 clearance_stations.status AS dean_status,
+                (SELECT organization_record.status
+                 FROM clearance_stations organization_record
+                 INNER JOIN stations organization_station
+                    ON organization_station.id=organization_record.station_id
+                   AND organization_station.code='ORGANIZATION'
+                 WHERE organization_record.clearance_id=clearances.id
+                 LIMIT 1) AS organization_status,
                 COALESCE(evaluation_verifications.status, 'NOT_SUBMITTED') AS evaluation_status,
                 evaluation_verifications.verified_at,
                 (SELECT COUNT(*) FROM requirement_records rr
@@ -41,8 +53,6 @@ try {
                   INNER JOIN requirements r ON r.id=rr.requirement_id
                   WHERE rr.clearance_station_id=clearance_stations.id AND r.status='ACTIVE' AND r.name<>'Dean Approval'
                     AND rr.status NOT IN ('VERIFIED','RESOLVED')
-                    AND NOT (organizations.code='CCS' AND r.requirement_code IN
-                        ('CCS_FACULTY_EVALUATION','CCS_FOURTH_YEAR_FACULTY_EVALUATION'))
                     AND NOT (organizations.code='CBE' AND students.year_level=4
                         AND r.requirement_code='CBE_OJT_REQUIREMENTS')) AS blocking_count
          FROM clearances
@@ -89,7 +99,7 @@ try {
             $cbeGroup === 'FOURTH_YEAR' ? (int) $row['year_level'] === 4 : (int) $row['year_level'] < 4
         ));
     }
-    $summary = ['WAITING' => 0, 'VERIFIED' => 0, 'APPROVED' => 0];
+    $summary = ['TOTAL' => count($summaryScopeRows), 'WAITING' => 0, 'VERIFIED' => 0, 'APPROVED' => 0];
     foreach ($summaryScopeRows as $row) {
         if ($row['dean_status'] === 'APPROVED') {
             $summary['APPROVED']++;
@@ -114,11 +124,16 @@ try {
             $cbeGroup === 'FOURTH_YEAR' ? (int) $row['year_level'] === 4 : (int) $row['year_level'] < 4
         ));
     }
+    $courses = array_values(array_unique(array_column($summaryRows, 'program')));
+    sort($courses, SORT_NATURAL | SORT_FLAG_CASE);
+    $yearLevels = array_values(array_unique(array_map(static fn(array $row): int => (int) $row['year_level'], $summaryRows)));
+    sort($yearLevels, SORT_NUMERIC);
 
-    $filteredRows = array_values(array_filter($allRows, static function (array $row) use ($filter): bool {
+    $filteredRows = array_values(array_filter($allRows, static function (array $row) use ($filter, $courseFilter, $yearFilter): bool {
+        if (($courseFilter !== '' && $row['program'] !== $courseFilter) || ($yearFilter !== 0 && (int) $row['year_level'] !== $yearFilter)) { return false; }
         return match ($filter) {
-            'WAITING' => $row['dean_status'] !== 'APPROVED' && (int) $row['blocking_count'] > 0,
-            'VERIFIED' => $row['dean_status'] !== 'APPROVED' && (int) $row['blocking_count'] === 0,
+            'WAITING' => $row['dean_status'] !== 'APPROVED' && ((int) $row['blocking_count'] > 0 || $row['dean_status'] === 'RETURNED'),
+            'VERIFIED' => $row['dean_status'] !== 'APPROVED' && $row['dean_status'] !== 'RETURNED' && (int) $row['blocking_count'] === 0,
             'APPROVED' => $row['dean_status'] === 'APPROVED',
             default => true,
         };
@@ -157,6 +172,7 @@ $logoutForm = dashboardLogoutForm();
 $pageTitle = $dean['organization_code'] . ' Dean Clearance';
 $sidebar = staffDashboardSidebar($pageTitle, $user, [
     ['key' => 'dashboard', 'label' => 'Dashboard', 'url' => '/dean/dashboard.php', 'icon' => 'dashboard'],
+    ...($dean['organization_code'] === 'CCS' ? [['key' => 'submitted_requirements', 'label' => 'Submitted Requirements', 'url' => '/dean/submitted_requirements.php', 'icon' => 'document']] : []),
 ], 'dashboard', $logoutForm);
 ?>
 <!doctype html>
@@ -182,14 +198,17 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
     <section class="panel"><strong><?= escapeHtml($dean['organization_name']) ?></strong><p class="muted">This dashboard only includes students whose courses belong to <?= escapeHtml($dean['organization_code']) ?>.</p></section>
     <?php if ($message !== null): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?>
     <?php if ($readiness['clearance_status'] === 'PREPARING'): ?><section class="panel"><h2>Semester preparation</h2><p>Review requirements and take action now. Approve complete students and leave incomplete requirements pending so students can comply when the Registrar opens clearance.</p><?php if ($readiness['readiness_status'] === 'READY'): ?><p class="message">The Dean office is marked READY.</p><form method="post" action="<?= escapeHtml(applicationUrl('/clearance/readiness_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><button type="submit" name="action" value="unready">Undo Ready</button></form><?php else: ?><form method="post" action="<?= escapeHtml(applicationUrl('/clearance/readiness_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input name="notes" maxlength="500" placeholder="Optional readiness note"><button type="submit" name="action" value="ready">Mark Dean Office Ready</button></form><?php endif; ?></section><?php endif; ?>
-    <?php if ($isCbeDean): ?><section class="panel"><h2>CBE student groups</h2><div class="group-tabs"><a href="?group=NON_GRADUATING&amp;filter=<?= urlencode($filter) ?>" <?= $cbeGroup === 'NON_GRADUATING' ? 'aria-current="page"' : '' ?>>Non-Graduating · <?= $cbeGroupCounts['NON_GRADUATING'] ?></a><a href="?group=FOURTH_YEAR&amp;filter=<?= urlencode($filter) ?>" <?= $cbeGroup === 'FOURTH_YEAR' ? 'aria-current="page"' : '' ?>>Fourth Year · <?= $cbeGroupCounts['FOURTH_YEAR'] ?></a></div><p class="muted"><?= $cbeGroup === 'NON_GRADUATING' ? 'Years 1–3 require YBC organization sign-off before final CBE Dean clearance.' : 'For fourth-year students, one Clear click confirms the OJT requirement and clears the Dean step.' ?></p><form method="post" action="<?= escapeHtml(applicationUrl('/dean/action.php')) ?>" onsubmit="return confirm('Clear every eligible student in this group?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="return_group" value="<?= escapeHtml($cbeGroup) ?>"><button name="action" value="approve_all_cbe_group"><?= $cbeGroup === 'NON_GRADUATING' ? 'Clear All Signed by YBC' : 'Clear All Fourth-Year Students' ?></button></form></section><?php endif; ?>
-    <section class="panel"><div class="section-heading"><div><h2>Clearance summary</h2><p class="muted">Current Dean status for this college.</p></div></div><div class="summary"><div>Waiting<strong><?= $summary['WAITING'] ?></strong></div><div>Ready to Clear<strong><?= $summary['VERIFIED'] ?></strong></div><div>Cleared<strong><?= $summary['APPROVED'] ?></strong></div></div></section>
+    <?php if ($isCbeDean): ?><section class="panel"><h2>CBE student groups</h2><div class="group-tabs"><a href="?group=NON_GRADUATING&amp;filter=<?= urlencode($filter) ?>" <?= $cbeGroup === 'NON_GRADUATING' ? 'aria-current="page"' : '' ?>>Non-Graduating · <?= $cbeGroupCounts['NON_GRADUATING'] ?></a><a href="?group=FOURTH_YEAR&amp;filter=<?= urlencode($filter) ?>" <?= $cbeGroup === 'FOURTH_YEAR' ? 'aria-current="page"' : '' ?>>Fourth Year · <?= $cbeGroupCounts['FOURTH_YEAR'] ?></a></div><p class="muted">All CBE students require Organization/YBC sign-off before the CBE Dean can clear them. Fourth-year Dean approval also confirms the OJT requirement.</p><form method="post" action="<?= escapeHtml(applicationUrl('/dean/action.php')) ?>" onsubmit="return confirm('Clear every eligible student in this group?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="return_group" value="<?= escapeHtml($cbeGroup) ?>"><button name="action" value="approve_all_cbe_group">Clear All Signed by YBC</button></form></section><?php endif; ?>
+    <section class="panel"><div class="section-heading"><div><h2>Clearance summary</h2><p class="muted">Current Dean status for this college.</p></div></div><div class="summary"><div>Total Students<strong><?= $summary['TOTAL'] ?></strong></div><div>For Compliance<strong><?= $summary['WAITING'] ?></strong></div><div>Ready to Clear<strong><?= $summary['VERIFIED'] ?></strong></div><div>Cleared<strong><?= $summary['APPROVED'] ?></strong></div></div></section>
+    <?php if ($dean['organization_code'] === 'CCS'): ?><?php $canBulkClear = $summary['VERIFIED'] > 0 && ($summary['VERIFIED'] >= 5 || $summary['WAITING'] < 5); ?><section class="panel"><h2>Bulk Dean clearance</h2><p class="muted"><?= $summary['VERIFIED'] ?> student(s) are ready to clear. Bulk clearance is enabled at 5 ready students, or when fewer than 5 students remain for compliance.</p><form method="post" action="<?= escapeHtml(applicationUrl('/dean/action.php')) ?>" onsubmit="return <?= $canBulkClear ? "confirm('Clear all ready CCS students?')" : 'false' ?>;"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><button name="action" value="approve_all_ready_ccs" <?= $canBulkClear ? '' : 'disabled' ?>>Clear all ready to clear</button></form></section><?php endif; ?>
     <section class="panel">
         <div class="section-heading"><div><h2>Find student records</h2><p class="muted">Search the roster or filter by Dean clearance status.</p></div></div>
         <form class="controls" method="get">
             <?php if ($isCbeDean): ?><input type="hidden" name="group" value="<?= escapeHtml($cbeGroup) ?>"><?php endif; ?>
             <input name="search" value="<?= escapeHtml($search) ?>" placeholder="Search student number, name, or program">
-            <?php $deanFilterLabels = ['WAITING' => 'Waiting for Requirements', 'VERIFIED' => 'Ready to Clear', 'APPROVED' => 'Cleared', 'ALL' => 'All Students']; ?>
+            <select name="course"><option value="">All courses</option><?php foreach ($courses as $course): ?><option value="<?= escapeHtml($course) ?>" <?= $courseFilter === $course ? 'selected' : '' ?>><?= escapeHtml($course) ?></option><?php endforeach; ?></select>
+            <select name="year_level"><option value="0">All year levels</option><?php foreach ($yearLevels as $year): ?><option value="<?= $year ?>" <?= $yearFilter === $year ? 'selected' : '' ?>>Year <?= $year ?></option><?php endforeach; ?></select>
+            <?php $deanFilterLabels = ['WAITING' => 'For Compliance', 'APPROVED' => 'Cleared', 'ALL' => 'All Students']; ?>
             <select name="filter"><?php foreach ($allowedFilters as $option): ?><option value="<?= $option ?>" <?= $filter === $option ? 'selected' : '' ?>><?= escapeHtml($deanFilterLabels[$option]) ?></option><?php endforeach; ?></select>
             <button type="submit">Search</button>
         </form>
@@ -197,25 +216,25 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
     <section class="panel">
         <div class="section-heading"><div><h2>Student clearance records</h2><p class="muted">Review applicable requirements before taking action.</p></div></div>
         <div class="table-wrap"><table>
-            <thead><tr><th>Student ID</th><th>Student Name</th><th>Program</th><th>College</th><th>Applicable Requirements</th><th>Dean Status</th><th>Action</th></tr></thead>
+            <thead><tr><th>No.</th><th>Student ID</th><th>Student Name</th><th>Program</th><th>Year Level</th><th>College</th><th>Requirements</th><th>Clearance Status</th><th>Action</th></tr></thead>
             <tbody>
-            <?php if ($rows === []): ?><tr><td colspan="7">No students match this view.</td></tr><?php endif; ?>
-            <?php foreach ($rows as $row): ?>
+            <?php if ($rows === []): ?><tr><td colspan="9">No students match this view.</td></tr><?php endif; ?>
+            <?php $rowNumber = ($page - 1) * $pageSize; foreach ($rows as $row): $rowNumber++; ?>
                 <tr>
-                    <td><?= escapeHtml($row['student_number']) ?></td>
+                    <td><?= $rowNumber ?></td><td><?= escapeHtml($row['student_number']) ?></td>
                     <td><?= escapeHtml($row['first_name'] . ' ' . $row['last_name']) ?></td>
-                    <td><?= escapeHtml($row['program']) ?></td>
+                    <td><?= escapeHtml($row['program']) ?></td><td>Year <?= (int) $row['year_level'] ?></td>
                     <td><?= escapeHtml($row['organization_name']) ?></td>
                     <td>
-                        <?php if ($row['requirements'] === []): ?><span class="muted">Dean approval only</span><?php endif; ?>
+                        <?php if ($isCbeDean && $row['organization_status'] !== 'APPROVED'): ?><span class="muted">Organization/YBC approval required before Dean clearance</span><?php elseif ($row['requirements'] === []): ?><span class="muted">Dean approval only</span><?php endif; ?>
                         <?php foreach ($row['requirements'] as $requirement): ?>
-                            <div style="margin-bottom:8px"><strong><?= escapeHtml($requirement['name']) ?></strong><?php if (!($requirement['requirement_code'] === 'CBE_YBC_APPROVAL' && in_array($requirement['status'], ['VERIFIED','RESOLVED'], true))): ?><br><span class="badge <?= strtolower(str_replace('_', '-', $requirement['status'])) ?>"><?= escapeHtml(str_replace('_', ' ', $requirement['status'])) ?></span><?php endif; ?>
+                            <div style="margin-bottom:8px"><strong><?= escapeHtml($requirement['name']) ?></strong><?php if (!in_array($requirement['requirement_code'], ['CBE_YBC_APPROVAL', 'CCS_FACULTY_EVALUATION', 'CCS_FOURTH_YEAR_FACULTY_EVALUATION'], true)): ?><br><span class="badge <?= strtolower(str_replace('_', '-', $requirement['status'])) ?>"><?= escapeHtml(str_replace('_', ' ', $requirement['status'])) ?></span><?php endif; ?>
                             <?php if (!in_array($requirement['requirement_code'], ['CBE_YBC_APPROVAL','CBE_OJT_REQUIREMENTS','CCS_FACULTY_EVALUATION','CCS_FOURTH_YEAR_FACULTY_EVALUATION'], true) && !in_array($requirement['status'], ['VERIFIED','RESOLVED'], true) && $row['dean_status'] !== 'APPROVED'): ?><form method="post" action="<?= escapeHtml(applicationUrl('/dean/action.php')) ?>" style="margin-top:5px"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><?php if ($isCbeDean): ?><input type="hidden" name="return_group" value="<?= escapeHtml($cbeGroup) ?>"><?php endif; ?><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><input type="hidden" name="requirement_record_id" value="<?= (int) $requirement['id'] ?>"><button name="action" value="verify_requirement">Verify Requirement</button></form><?php elseif ($requirement['requirement_code'] === 'CBE_YBC_APPROVAL' && !in_array($requirement['status'], ['VERIFIED','RESOLVED'], true)): ?><br><span class="muted">Waiting for YBC organization sign-off</span><?php elseif ($requirement['requirement_code'] === 'CBE_OJT_REQUIREMENTS' && !in_array($requirement['status'], ['VERIFIED','RESOLVED'], true)): ?><br><span class="muted">Will be confirmed when the CBE Dean approves</span><?php elseif (in_array($requirement['requirement_code'], ['CCS_FACULTY_EVALUATION','CCS_FOURTH_YEAR_FACULTY_EVALUATION'], true) && !in_array($requirement['status'], ['VERIFIED','RESOLVED'], true)): ?><br><span class="muted">Will be confirmed when the CCS Dean approves</span><?php endif; ?></div>
                         <?php endforeach; ?>
                     </td>
                     <td><span class="badge <?= strtolower($row['dean_status']) ?>"><?= $row['dean_status'] === 'APPROVED' ? 'CLEARED' : escapeHtml(str_replace('_', ' ', $row['dean_status'])) ?></span></td>
                     <td>
-                        <?php if (in_array($readiness['clearance_status'], ['PREPARING','OPEN'], true) && (int) $row['blocking_count'] === 0 && $row['dean_status'] !== 'APPROVED'): ?>
+                        <?php if (in_array($readiness['clearance_status'], ['PREPARING','OPEN'], true) && (int) $row['blocking_count'] === 0 && $row['dean_status'] === 'PENDING' && (!$isCbeDean || $row['organization_status'] === 'APPROVED') && ($dean['organization_code'] !== 'CCS' || $summary['WAITING'] <= 5)): ?>
                             <form method="post" action="<?= escapeHtml(applicationUrl('/dean/action.php')) ?>" onsubmit="return confirm('Clear this student at the Dean office?');">
                                 <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
                                 <?php if ($isCbeDean): ?><input type="hidden" name="return_group" value="<?= escapeHtml($cbeGroup) ?>"><?php endif; ?>

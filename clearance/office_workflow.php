@@ -64,9 +64,6 @@ function officeListFilterSql(string $stationCode, string $filter): string
 {
     $eligible = officeListEligibilitySql($stationCode);
     $ready = "(cs.status='PENDING' AND {$eligible})";
-    if (in_array($stationCode, ['STUDENT_COUNCIL', 'CLINIC', 'LIBRARY', 'BOOKSTORE', 'SASO'], true) && $filter === 'PENDING') {
-        return "cs.status<>'APPROVED'";
-    }
     return match ($filter) {
         'APPROVED' => "cs.status='APPROVED'",
         'RETURNED' => "cs.status='RETURNED'",
@@ -140,17 +137,6 @@ function officeStatusSummary(PDO $database, string $stationCode): array
     );
     $statement->execute(['station_code' => $stationCode]);
     $row = $statement->fetch() ?: [];
-    if (in_array($stationCode, ['STUDENT_COUNCIL', 'CLINIC', 'LIBRARY', 'BOOKSTORE', 'SASO'], true)) {
-        $total = (int) ($row['total'] ?? 0);
-        $approved = (int) ($row['approved'] ?? 0);
-        return [
-            'TOTAL' => $total,
-            'READY' => 0,
-            'PENDING' => $total - $approved,
-            'RETURNED' => 0,
-            'APPROVED' => $approved,
-        ];
-    }
     return [
         'TOTAL' => (int) ($row['total'] ?? 0),
         'READY' => (int) ($row['ready'] ?? 0),

@@ -31,7 +31,7 @@ function organizationStatusSummary(PDO $database, int $organizationId): array
                 SUM(CASE WHEN organization_record.status='RETURNED' THEN 1 ELSE 0 END) AS returned,
                 SUM(CASE WHEN organization_record.status NOT IN ('APPROVED','RETURNED')
                     AND clearance.id IS NOT NULL
-                    AND dean_record.status='APPROVED'
+                    AND (organization.code='CBE' OR dean_record.status='APPROVED')
                     AND NOT EXISTS (
                         SELECT 1 FROM events event
                         LEFT JOIN event_attendance attendance ON attendance.event_id=event.id
@@ -148,8 +148,9 @@ function approveOrganizationStudent(PDO $database, int $staffUserId, int $organi
         if ($student['clearance_status'] === 'APPROVED') {
             throw new RuntimeException('This student is already approved.');
         }
-        $isYbcSignOff = $student['organization_code'] === 'CBE' && (int) $student['year_level'] <= 3;
-        if ($student['dean_status'] !== 'APPROVED' || $student['clearance_status'] === 'LOCKED') {
+        $isCbe = $student['organization_code'] === 'CBE';
+        $isYbcSignOff = $isCbe && (int) $student['year_level'] <= 3;
+        if ((!$isCbe && $student['dean_status'] !== 'APPROVED') || $student['clearance_status'] === 'LOCKED') {
             throw new RuntimeException('Dean clearance must be approved before Organization clearance.');
         }
 
@@ -165,14 +166,24 @@ function approveOrganizationStudent(PDO $database, int $staffUserId, int $organi
         );
         $approve->execute(['staff_user_id' => $staffUserId, 'clearance_station_id' => $student['clearance_station_id']]);
 
-        $unlockSasoChecks = $database->prepare(
-            "UPDATE clearance_stations cs
-             INNER JOIN stations ON stations.id = cs.station_id
-             INNER JOIN stations parent ON parent.id = stations.parent_station_id AND parent.code = 'SASO'
-             SET cs.status = 'PENDING'
-             WHERE cs.clearance_id = :clearance_id AND cs.status = 'LOCKED'"
-        );
-        $unlockSasoChecks->execute(['clearance_id' => $student['clearance_id']]);
+        if ($isCbe) {
+            $unlockDean = $database->prepare(
+                "UPDATE clearance_stations cs
+                 INNER JOIN stations ON stations.id = cs.station_id AND stations.code = 'DEAN'
+                 SET cs.status = 'PENDING'
+                 WHERE cs.clearance_id = :clearance_id AND cs.status = 'LOCKED'"
+            );
+            $unlockDean->execute(['clearance_id' => $student['clearance_id']]);
+        } else {
+            $unlockSasoChecks = $database->prepare(
+                "UPDATE clearance_stations cs
+                 INNER JOIN stations ON stations.id = cs.station_id
+                 INNER JOIN stations parent ON parent.id = stations.parent_station_id AND parent.code = 'SASO'
+                 SET cs.status = 'PENDING'
+                 WHERE cs.clearance_id = :clearance_id AND cs.status = 'LOCKED'"
+            );
+            $unlockSasoChecks->execute(['clearance_id' => $student['clearance_id']]);
+        }
 
         $studentUser = $database->prepare('SELECT user_id FROM students WHERE id = :student_id');
         $studentUser->execute(['student_id' => $studentId]);
@@ -182,20 +193,22 @@ function approveOrganizationStudent(PDO $database, int $staffUserId, int $organi
             $notification->execute([
                 'user_id' => $studentUserId,
                 'title' => $isYbcSignOff ? 'YBC sign-off approved' : 'Organization clearance approved',
-                'message' => $isYbcSignOff
-                    ? 'YBC approved your CBE organization clearance. Student Council, Library, Bookstore, and Clinic checks are now available.'
+                'message' => $isCbe
+                    ? 'YBC approved your CBE organization clearance. Dean clearance is now available.'
                     : 'Your organization clearance is approved. Student Council, Library, Bookstore, and Clinic checks are now available.',
             ]);
         }
 
-        $staffNotification = $database->prepare(
-            "INSERT INTO notifications (user_id,title,message)
-             SELECT id,'Student ready for office review',:message
-             FROM users
-             WHERE role IN ('STUDENT_COUNCIL_STAFF','LIBRARY_STAFF','BOOKSTORE_STAFF','CLINIC_STAFF')
-               AND status='ACTIVE'"
-        );
-        $staffNotification->execute(['message' => $student['student_number'] . ' completed Organization clearance and is ready for the SASO sub-checks.']);
+        if (!$isCbe) {
+            $staffNotification = $database->prepare(
+                "INSERT INTO notifications (user_id,title,message)
+                 SELECT id,'Student ready for office review',:message
+                 FROM users
+                 WHERE role IN ('STUDENT_COUNCIL_STAFF','LIBRARY_STAFF','BOOKSTORE_STAFF','CLINIC_STAFF')
+                   AND status='ACTIVE'"
+            );
+            $staffNotification->execute(['message' => $student['student_number'] . ' completed Organization clearance and is ready for the SASO sub-checks.']);
+        }
 
         $stationId = $database->query("SELECT id FROM stations WHERE code='ORGANIZATION' LIMIT 1")->fetchColumn();
         $audit = $database->prepare("INSERT INTO audit_logs (user_id,action,station_id,student_id,description,old_status,new_status) VALUES (:user_id,'ORGANIZATION_CLEARANCE_APPROVED',:station_id,:student_id,'Organization approved the student after required attendance was completed.',:old_status,'APPROVED')");

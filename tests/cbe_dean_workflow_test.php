@@ -88,28 +88,23 @@ try {
         'station_id' => $organizationStation,
     ]);
 
-    try {
-        approveOrganizationStudent($database, $orgStaffId, $cbeId, $studentId);
-        $failures[] = 'YBC incorrectly approved the student before the CBE Dean.';
-    } catch (RuntimeException $exception) {
-        if (!str_contains($exception->getMessage(), 'Dean clearance must be approved')) {
-            throw $exception;
-        }
-    }
-
     $deanStatus = $database->prepare(
         "SELECT station_record.status FROM clearance_stations station_record
          INNER JOIN stations station ON station.id=station_record.station_id AND station.code='DEAN'
          WHERE station_record.clearance_id=:clearance_id"
     );
     $deanStatus->execute(['clearance_id' => $clearanceId]);
-    approveDeanClearance($database, $deanId, $clearanceId);
-    $deanStatus->execute(['clearance_id' => $clearanceId]);
-    if ($deanStatus->fetchColumn() !== 'APPROVED') {
-        $failures[] = 'The CBE Dean could not approve before YBC sign-off.';
+    if ($deanStatus->fetchColumn() !== 'LOCKED') {
+        $failures[] = 'CBE Dean was not locked before the Organization/YBC sign-off.';
     }
 
     approveOrganizationStudent($database, $orgStaffId, $cbeId, $studentId);
+    $deanStatus->execute(['clearance_id' => $clearanceId]);
+    if ($deanStatus->fetchColumn() !== 'PENDING') {
+        $failures[] = 'YBC approval did not make the CBE Dean available.';
+    }
+
+    approveDeanClearance($database, $deanId, $clearanceId);
     $organizationStatus = $database->prepare(
         "SELECT station_record.status FROM clearance_stations station_record
          INNER JOIN stations station ON station.id=station_record.station_id AND station.code='ORGANIZATION'
@@ -117,7 +112,7 @@ try {
     );
     $organizationStatus->execute(['clearance_id' => $clearanceId]);
     if ($organizationStatus->fetchColumn() !== 'APPROVED') {
-        $failures[] = 'YBC could not approve after the CBE Dean signed.';
+        $failures[] = 'YBC could not approve before the CBE Dean signed.';
     }
     $sasoChildren = $database->prepare(
         "SELECT COUNT(*) FROM clearance_stations station_record
@@ -161,4 +156,4 @@ if ($failures !== []) {
     exit(1);
 }
 
-echo "CBE Dean-to-YBC workflow checks passed.\n";
+echo "CBE YBC-to-Dean workflow checks passed.\n";

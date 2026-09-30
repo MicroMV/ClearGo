@@ -66,19 +66,39 @@ try {
         $organizationEvents = $eventQuery->fetchAll();
     }
 
+    $isCbeStudent = ($student['organization_code'] ?? '') === 'CBE';
     $stationQuery = $database->prepare(
         "SELECT station.id, station.name, station.code, station.sort_order,
                 parent.name AS parent_name,
-                CASE WHEN parent.id IS NULL THEN CAST(station.sort_order AS CHAR)
-                     ELSE CONCAT(parent.sort_order, '.', station.sort_order) END AS display_order
+                CASE
+                    WHEN :is_cbe_display = 1 AND parent.id IS NULL THEN CAST(CASE station.code
+                        WHEN 'ORGANIZATION' THEN 1 WHEN 'DEAN' THEN 2 WHEN 'SASO' THEN 3
+                        WHEN 'FACILITIES' THEN 4 WHEN 'COMLAB' THEN 5 WHEN 'ACCOUNTING' THEN 6
+                        WHEN 'REGISTRAR' THEN 7 ELSE station.sort_order END AS CHAR)
+                    WHEN :is_cbe_child = 1 THEN CONCAT(3, '.', station.sort_order)
+                    WHEN parent.id IS NULL THEN CAST(station.sort_order AS CHAR)
+                    ELSE CONCAT(parent.sort_order, '.', station.sort_order)
+                END AS display_order,
+                CASE
+                    WHEN :is_cbe_order = 1 THEN CASE COALESCE(parent.code, station.code)
+                        WHEN 'ORGANIZATION' THEN 1 WHEN 'DEAN' THEN 2 WHEN 'SASO' THEN 3
+                        WHEN 'FACILITIES' THEN 4 WHEN 'COMLAB' THEN 5 WHEN 'ACCOUNTING' THEN 6
+                        WHEN 'REGISTRAR' THEN 7 ELSE station.sort_order END
+                    ELSE COALESCE(parent.sort_order, station.sort_order)
+                END AS workflow_order
          FROM stations station
          LEFT JOIN stations parent ON parent.id = station.parent_station_id
          WHERE station.status = :status
-         ORDER BY COALESCE(parent.sort_order, station.sort_order),
+         ORDER BY workflow_order,
                   CASE WHEN parent.id IS NULL THEN 0 ELSE 1 END,
                   station.sort_order"
     );
-    $stationQuery->execute(['status' => 'ACTIVE']);
+    $stationQuery->execute([
+        'status' => 'ACTIVE',
+        'is_cbe_display' => $isCbeStudent ? 1 : 0,
+        'is_cbe_child' => $isCbeStudent ? 1 : 0,
+        'is_cbe_order' => $isCbeStudent ? 1 : 0,
+    ]);
     $stations = $stationQuery->fetchAll();
 
     $clearance = false;
@@ -115,13 +135,21 @@ try {
             $evaluationQuery->execute(['clearance_id' => $clearance['id']]);
             $evaluation = $evaluationQuery->fetch();
 
+            $submissionQuery = $database->prepare(
+                'SELECT status, submitted_at AS last_submitted_at, reviewed_at AS verified_at, return_reason
+                 FROM evaluation_submissions WHERE clearance_id=:clearance_id LIMIT 1'
+            );
+            $submissionQuery->execute(['clearance_id' => $clearance['id']]);
+            $evaluationSubmission = $submissionQuery->fetch();
+            if ($evaluationSubmission !== false) { $evaluation = $evaluationSubmission; }
+
             $evaluationRequirementQuery = $database->prepare(
                 "SELECT COUNT(*)
                  FROM requirement_records record
                  INNER JOIN requirements requirement ON requirement.id = record.requirement_id
                  INNER JOIN clearance_stations station_record ON station_record.id = record.clearance_station_id
                  WHERE station_record.clearance_id = :clearance_id
-                   AND requirement.requirement_code = 'CCS_FACULTY_EVALUATION'"
+                   AND requirement.requirement_code IN ('CCS_FACULTY_EVALUATION','CCS_FOURTH_YEAR_FACULTY_EVALUATION')"
             );
             $evaluationRequirementQuery->execute(['clearance_id' => $clearance['id']]);
             $evaluationApplicable = (int) $evaluationRequirementQuery->fetchColumn() === 1;
@@ -137,35 +165,33 @@ try {
         }
     }
 
-    $requirements = [];
+    $stationRequirements = [];
     $accountingReceipt = false;
-    if ($selectedStation !== null && $clearance !== false) {
-        $selectedStatus = $stationStatuses[(int) $selectedStation['id']]['status'] ?? 'LOCKED';
-        $clearanceStation = $stationStatuses[(int) $selectedStation['id']] ?? null;
-
-        if ($selectedStatus !== 'LOCKED' && $clearanceStation !== null) {
-            $requirementQuery = $database->prepare(
-                'SELECT r.name, r.description, rr.status, rr.remarks
-                 FROM requirements r
-                 LEFT JOIN requirement_records rr
-                    ON rr.requirement_id = r.id AND rr.clearance_station_id = :clearance_station_id
-                 WHERE r.station_id = :station_id AND r.status = :status AND r.is_required = 1
-                   AND (r.applicable_organization_id IS NULL OR r.applicable_organization_id = :organization_id)
-                   AND (r.minimum_year_level IS NULL OR :minimum_year_level >= r.minimum_year_level)
-                   AND (r.maximum_year_level IS NULL OR :maximum_year_level <= r.maximum_year_level)
-                   AND (r.applicable_semester IS NULL OR r.applicable_semester = :semester)
-                 ORDER BY r.id'
-            );
-            $requirementQuery->execute([
-                'clearance_station_id' => $clearanceStation['id'],
-                'station_id' => $selectedStation['id'],
-                'status' => 'ACTIVE',
-                'organization_id' => $student['organization_id'],
-                'minimum_year_level' => $student['year_level'],
-                'maximum_year_level' => $student['year_level'],
-                'semester' => $period['semester'],
-            ]);
-            $requirements = $requirementQuery->fetchAll();
+    if ($clearance !== false) {
+        $allRequirementsQuery = $database->prepare(
+            'SELECT r.station_id, r.name, r.requirement_code, r.description, rr.status, rr.remarks
+             FROM requirements r
+             INNER JOIN clearance_stations clearance_station
+                ON clearance_station.station_id = r.station_id AND clearance_station.clearance_id = :clearance_id
+             LEFT JOIN requirement_records rr
+                ON rr.requirement_id = r.id AND rr.clearance_station_id = clearance_station.id
+             WHERE r.status = :status AND r.is_required = 1
+               AND (r.applicable_organization_id IS NULL OR r.applicable_organization_id = :organization_id)
+               AND (r.minimum_year_level IS NULL OR :minimum_year_level >= r.minimum_year_level)
+               AND (r.maximum_year_level IS NULL OR :maximum_year_level <= r.maximum_year_level)
+               AND (r.applicable_semester IS NULL OR r.applicable_semester = :semester)
+             ORDER BY r.station_id, r.id'
+        );
+        $allRequirementsQuery->execute([
+            'clearance_id' => $clearance['id'],
+            'status' => 'ACTIVE',
+            'organization_id' => $student['organization_id'],
+            'minimum_year_level' => $student['year_level'],
+            'maximum_year_level' => $student['year_level'],
+            'semester' => $period['semester'],
+        ]);
+        foreach ($allRequirementsQuery->fetchAll() as $requirement) {
+            $stationRequirements[(int) $requirement['station_id']][] = $requirement;
         }
     }
 
@@ -207,6 +233,7 @@ function studentStatusLabel(string $status): string
     return match ($status) {
         'APPROVED' => 'CLEARED',
         'RETURNED' => 'REQUIRES ACTION',
+        'SUBMITTED' => 'WAITING FOR VERIFICATION',
         'UNDER_REVIEW' => 'UNDER REVIEW',
         default => str_replace('_', ' ', $status),
     };
@@ -224,48 +251,42 @@ $setDisplayStatus = static function (string $code, string $status) use (&$displa
     if ($stationId > 0) { $displayStationStatuses[$stationId]['status'] = $status; }
 };
 
-// Never reveal an early approval ahead of its clearance sequence. The underlying
-// record remains intact for staff/audit purposes and becomes visible at its turn.
+// Never reveal an early approval ahead of its clearance sequence. CBE starts at
+// Organization/YBC; every other college starts at the Dean.
 $deanComplete = $rawStationStatus('DEAN') === 'APPROVED';
-if (!$deanComplete) {
+$organizationComplete = $rawStationStatus('ORGANIZATION') === 'APPROVED';
+if ($isCbeStudent && !$organizationComplete) {
+    foreach (['DEAN', 'SASO', 'STUDENT_COUNCIL', 'LIBRARY', 'BOOKSTORE', 'CLINIC', 'FACILITIES', 'COMLAB', 'ACCOUNTING', 'REGISTRAR'] as $code) { $setDisplayStatus($code, 'LOCKED'); }
+} elseif (!$isCbeStudent && !$deanComplete) {
     foreach (['ORGANIZATION', 'SASO', 'STUDENT_COUNCIL', 'LIBRARY', 'BOOKSTORE', 'CLINIC', 'FACILITIES', 'COMLAB', 'ACCOUNTING', 'REGISTRAR'] as $code) { $setDisplayStatus($code, 'LOCKED'); }
+} elseif (!$deanComplete) {
+    foreach (['SASO', 'STUDENT_COUNCIL', 'LIBRARY', 'BOOKSTORE', 'CLINIC', 'FACILITIES', 'COMLAB', 'ACCOUNTING', 'REGISTRAR'] as $code) { $setDisplayStatus($code, 'LOCKED'); }
+} elseif (!$organizationComplete) {
+    foreach (['SASO', 'STUDENT_COUNCIL', 'LIBRARY', 'BOOKSTORE', 'CLINIC', 'FACILITIES', 'COMLAB', 'ACCOUNTING', 'REGISTRAR'] as $code) { $setDisplayStatus($code, 'LOCKED'); }
 } else {
-    $organizationComplete = $rawStationStatus('ORGANIZATION') === 'APPROVED';
-    if (!$organizationComplete) {
-        foreach (['SASO', 'STUDENT_COUNCIL', 'LIBRARY', 'BOOKSTORE', 'CLINIC', 'FACILITIES', 'COMLAB', 'ACCOUNTING', 'REGISTRAR'] as $code) { $setDisplayStatus($code, 'LOCKED'); }
+    $sasoComplete = $rawStationStatus('SASO') === 'APPROVED';
+    if (!$sasoComplete) {
+        foreach (['FACILITIES', 'COMLAB', 'ACCOUNTING', 'REGISTRAR'] as $code) { $setDisplayStatus($code, 'LOCKED'); }
     } else {
-        $sasoComplete = $rawStationStatus('SASO') === 'APPROVED';
-        if (!$sasoComplete) {
-            foreach (['FACILITIES', 'COMLAB', 'ACCOUNTING', 'REGISTRAR'] as $code) { $setDisplayStatus($code, 'LOCKED'); }
+        $facilitiesComplete = $rawStationStatus('FACILITIES') === 'APPROVED';
+        if (!$facilitiesComplete) {
+            foreach (['COMLAB', 'ACCOUNTING', 'REGISTRAR'] as $code) { $setDisplayStatus($code, 'LOCKED'); }
         } else {
-            $facilitiesComplete = $rawStationStatus('FACILITIES') === 'APPROVED';
-            if (!$facilitiesComplete) {
-                foreach (['COMLAB', 'ACCOUNTING', 'REGISTRAR'] as $code) { $setDisplayStatus($code, 'LOCKED'); }
-            } else {
-                $comlabComplete = $rawStationStatus('COMLAB') === 'APPROVED';
-                if (!$comlabComplete) {
-                    foreach (['ACCOUNTING', 'REGISTRAR'] as $code) { $setDisplayStatus($code, 'LOCKED'); }
-                } elseif ($rawStationStatus('ACCOUNTING') !== 'APPROVED') {
-                    $setDisplayStatus('REGISTRAR', 'LOCKED');
-                }
+            $comlabComplete = $rawStationStatus('COMLAB') === 'APPROVED';
+            if (!$comlabComplete) {
+                foreach (['ACCOUNTING', 'REGISTRAR'] as $code) { $setDisplayStatus($code, 'LOCKED'); }
+            } elseif ($rawStationStatus('ACCOUNTING') !== 'APPROVED') {
+                $setDisplayStatus('REGISTRAR', 'LOCKED');
             }
         }
     }
 }
 
 $approved = 0;
-$currentStation = null;
-$returnedStation = null;
 foreach ($stations as $station) {
     $status = $displayStationStatuses[(int) $station['id']]['status'] ?? 'LOCKED';
     if ($status === 'APPROVED') {
         $approved++;
-    }
-    if ($status === 'RETURNED' && $returnedStation === null) {
-        $returnedStation = $station;
-    }
-    if ($status !== 'APPROVED' && $status !== 'LOCKED' && $currentStation === null) {
-        $currentStation = $station;
     }
 }
 
@@ -353,7 +374,7 @@ $logoutForm = dashboardLogoutForm();
         <a class="header-link" href="<?= escapeHtml(applicationUrl('/student/password.php')) ?>" aria-label="Change password"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 7a5 5 0 1 0-4.6 5H13l2 2 2-2 2 2 2-2-4.4-4.4A5 5 0 0 0 15 7Z"/></svg><span>Change Password</span></a><?= $logoutForm ?>
     </div></div></header>
     <main class="student-main">
-        <section class="student-hero" aria-labelledby="student-dashboard-title"><div><p class="eyebrow">Student clearance</p><h1 id="student-dashboard-title">Welcome, <?= escapeHtml($student['first_name']) ?></h1><p>Track your requirements and see what needs attention.</p></div><?php if ($clearance !== false): ?><span class="overall-status"><?= escapeHtml(studentStatusLabel($clearance['status'])) ?></span><?php endif; ?></section>
+        <section class="student-hero" aria-labelledby="student-dashboard-title"><div><p class="eyebrow">Student clearance</p><h1 id="student-dashboard-title">Welcome, <?= escapeHtml($student['first_name'] . ' ' . $student['last_name']) ?></h1><p>Track your requirements and see what needs attention.</p></div><?php if ($clearance !== false): ?><span class="overall-status"><?= escapeHtml(studentStatusLabel($clearance['status'])) ?></span><?php endif; ?></section>
         <?php if ($message !== null): ?><p class="notice flash"><?= escapeHtml($message) ?></p><?php endif; ?>
         <div class="grid">
             <section class="panel profile-card">
@@ -380,21 +401,10 @@ $logoutForm = dashboardLogoutForm();
             </section>
         </div>
 
-        <?php if ($clearance !== false): ?>
-            <section class="panel next-step-card <?= $returnedStation !== null ? 'action-needed' : ($currentStation === null ? 'complete' : '') ?>">
-                <?php if ($returnedStation !== null): ?>
-                    <div class="next-step-heading"><span class="next-step-icon">!</span><div><h2>Action needed</h2><p><strong><?= escapeHtml($returnedStation['name']) ?></strong> requires your attention.</p></div></div>
-                <?php elseif ($currentStation !== null): ?>
-                    <div class="next-step-heading"><span class="next-step-icon">&#8594;</span><div><h2>Current step</h2><p><strong><?= escapeHtml($currentStation['name']) ?></strong> is your active clearance station.</p></div></div>
-                <?php else: ?>
-                    <div class="next-step-heading"><span class="next-step-icon">&#10003;</span><div><h2>Clearance complete</h2><p>All clearance stations have been completed.</p></div></div>
-                <?php endif; ?>
-            </section>
-        <?php endif; ?>
-
         <section class="panel event-panel">
             <h2>Organization Event Attendance</h2>
-            <p class="section-copy">Scan the QR displayed by your organization officer and confirm using your own student account.</p>
+            <p class="section-copy">Use the ClearGo scanner to scan the QR displayed by your organization officer. Attendance is tied to your student account.</p>
+            <p><a class="button-link" href="<?= escapeHtml(applicationUrl('/student/attendance_scanner.php')) ?>">Open ClearGo Attendance Scanner</a></p>
             <?php if ($organizationEvents === []): ?>
                 <p class="notice">No required organization events are listed for this semester.</p>
             <?php else: ?>
@@ -419,37 +429,51 @@ $logoutForm = dashboardLogoutForm();
                             <span class="step"><?= escapeHtml($station['display_order']) ?></span>
                             <div class="station-info"><h3><?= escapeHtml($station['name']) ?></h3><?php if ($station['parent_name'] !== null): ?><div class="muted">SASO sub-check</div><?php endif; ?></div>
                             <span class="badge <?= escapeHtml(strtolower(str_replace('_', '-', $status))) ?>"><?= escapeHtml(studentStatusLabel($status)) ?></span>
-                            <?php if ($status !== 'LOCKED'): ?><a href="?station=<?= urlencode($station['code']) ?>#station-details">View requirements</a><?php endif; ?>
+                            <?php if ($status !== 'LOCKED'): ?><button class="requirements-button" type="button" data-requirements-modal="requirements-modal-<?= (int) $station['id'] ?>">View requirements</button><?php endif; ?>
                         </li>
                     <?php endforeach; ?>
                 </ol>
             <?php endif; ?>
         </section>
 
-        <?php if ($selectedStation !== null && $clearance !== false): ?>
-            <section class="panel station-detail" id="station-details">
-                <h2><?= escapeHtml($selectedStation['name']) ?></h2>
-                <p class="detail-status"><strong>Station status</strong><span class="badge <?= escapeHtml(strtolower(str_replace('_', '-', (string) $detailStatus))) ?>"><?= escapeHtml(studentStatusLabel((string) $detailStatus)) ?></span></p>
-                <?php if ($detailStatus === 'LOCKED'): ?>
-                    <p class="notice">This station will become available after the previous clearance station is cleared.</p>
-                <?php elseif ($requirements === []): ?>
-                    <p class="muted">No requirement records are available for this station.</p>
-                <?php else: ?>
-                    <h3>Requirements</h3>
-                    <ul class="requirements">
-                        <?php foreach ($requirements as $requirement): ?>
-                            <li>
-                                <strong><?= escapeHtml($requirement['name']) ?></strong>
-                                <div class="muted"><?= escapeHtml($requirement['description'] ?? '') ?></div>
-                                <div><strong>Status:</strong> <?= escapeHtml(studentStatusLabel($requirement['status'] ?? 'NOT_STARTED')) ?></div>
-                                <?php if (($requirement['status'] ?? '') === 'RETURNED' && !empty($requirement['remarks'])): ?>
-                                    <div>Action needed: <?= escapeHtml($requirement['remarks']) ?></div>
-                                <?php endif; ?>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php endif; ?>
-            </section>
+        <?php if ($clearance !== false): ?>
+            <?php foreach ($stations as $station): ?>
+                <?php $modalStatus = $displayStationStatuses[(int) $station['id']]['status'] ?? 'LOCKED'; ?>
+                <?php if ($modalStatus === 'LOCKED') { continue; } ?>
+                <div class="requirements-modal" id="requirements-modal-<?= (int) $station['id'] ?>" hidden aria-hidden="true">
+                    <div class="requirements-modal__backdrop" data-close-requirements-modal></div>
+                    <section class="requirements-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="requirements-modal-title-<?= (int) $station['id'] ?>" tabindex="-1">
+                        <div class="requirements-modal__header">
+                            <div><h2 id="requirements-modal-title-<?= (int) $station['id'] ?>"><?= escapeHtml($station['name']) ?> Requirements</h2><p>Station status: <span class="badge <?= escapeHtml(strtolower(str_replace('_', '-', $modalStatus))) ?>"><?= escapeHtml(studentStatusLabel($modalStatus)) ?></span></p></div>
+                            <button class="requirements-modal__close" type="button" data-close-requirements-modal aria-label="Close requirements">&times;</button>
+                        </div>
+                        <?php $modalRequirements = $stationRequirements[(int) $station['id']] ?? []; if ($station['code'] === 'DEAN' && $evaluationApplicable) { $modalRequirements = array_values(array_filter($modalRequirements, static fn(array $requirement): bool => in_array($requirement['requirement_code'] ?? '', ['CCS_FACULTY_EVALUATION', 'CCS_FOURTH_YEAR_FACULTY_EVALUATION'], true))); } ?>
+                        <?php if ($modalRequirements === []): ?>
+                            <p class="muted">No requirement records are available for this station.</p>
+                        <?php else: ?>
+                            <ul class="requirements">
+                                <?php foreach ($modalRequirements as $requirement): ?>
+                                    <li>
+                                        <strong><?= escapeHtml($requirement['name']) ?></strong>
+                                        <div class="muted"><?= escapeHtml($requirement['description'] ?? '') ?></div>
+                                        <div><strong>Status:</strong> <span class="<?= ($requirement['status'] ?? '') === 'RETURNED' ? 'status-returned' : '' ?>"><?= escapeHtml(studentStatusLabel($requirement['status'] ?? 'NOT_STARTED')) ?></span></div>
+                                        <?php if (($requirement['status'] ?? '') === 'RETURNED' && !empty($requirement['remarks'])): ?><div class="status-returned">Action needed: <?= escapeHtml($requirement['remarks']) ?></div><?php endif; ?>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                            <?php if ($station['code'] === 'DEAN' && $evaluationApplicable && $modalStatus !== 'APPROVED' && in_array(($evaluation['status'] ?? 'NOT_SUBMITTED'), ['NOT_SUBMITTED', 'RETURNED', 'REJECTED', 'ERROR'], true)): ?>
+                                <form class="upload-form" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/student/evaluation_action.php')) ?>">
+                                    <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
+                                    <label for="modal_evaluation_proofs"><strong>Upload evaluation screenshots</strong></label>
+                                    <input id="modal_evaluation_proofs" name="evaluation_proofs[]" type="file" accept="image/jpeg,image/png,image/webp" multiple required onchange="if(this.files.length>3){alert('Choose no more than 3 screenshots.');this.value=''}">
+                                    <p class="muted">Choose 1–3 screenshots. JPG, PNG, or WebP; 8 MB maximum per image. The CCS Dean reviews them anonymously.</p>
+                                    <button class="primary-button" type="submit">Submit screenshots</button>
+                                </form>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </section>
+                </div>
+            <?php endforeach; ?>
         <?php endif; ?>
 
         <?php if ($selectedStation !== null && $selectedStation['code'] === 'DEAN' && $clearance !== false && $detailStatus !== 'LOCKED' && $evaluationApplicable): ?>
@@ -459,15 +483,15 @@ $logoutForm = dashboardLogoutForm();
                 <p><strong>Status:</strong> <span class="badge <?= escapeHtml(strtolower(str_replace('_', '-', $evaluationStatus))) ?>"><?= escapeHtml(studentStatusLabel($evaluationStatus)) ?></span></p>
                 <?php if ($evaluationStatus === 'VERIFIED'): ?>
                     <p class="notice">Your Faculty Evaluation completion is verified and ready for Dean review.</p>
-                <?php elseif ($detailStatus !== 'APPROVED'): ?>
-                    <?php if ($evaluationStatus === 'REJECTED'): ?><p class="notice warning">Your proof could not be verified. Please upload a valid screenshot and try again.</p><?php endif; ?>
+                <?php elseif ($detailStatus !== 'APPROVED' && in_array($evaluationStatus, ['NOT_SUBMITTED', 'RETURNED', 'REJECTED', 'ERROR'], true)): ?>
+                    <?php if ($evaluationStatus === 'RETURNED'): ?><p class="notice warning"><?= escapeHtml($evaluation['return_reason'] ?? 'Your screenshots need another submission.') ?></p><?php endif; ?>
                     <?php if ($evaluationStatus === 'ERROR'): ?><p class="notice warning">The previous verification attempt was unavailable. The screenshot was not retained.</p><?php endif; ?>
                     <form class="upload-form" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/student/evaluation_action.php')) ?>">
                         <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
-                        <label for="evaluation_proof"><strong>Evaluation completion screenshot</strong></label>
-                        <input id="evaluation_proof" name="evaluation_proof" type="file" accept="image/jpeg,image/png,image/webp" required>
-                        <p class="muted">JPG, PNG, or WebP; maximum 8 MB. The screenshot is deleted after verification and is never shown to the Dean.</p>
-                        <button class="primary-button" type="submit">Upload and Verify</button>
+                        <label for="evaluation_proofs"><strong>Evaluation completion screenshots</strong></label>
+                        <input id="evaluation_proofs" name="evaluation_proofs[]" type="file" accept="image/jpeg,image/png,image/webp" multiple required onchange="if(this.files.length>3){alert('Choose no more than 3 screenshots.');this.value=''}">
+                        <p class="muted">Upload 1 to 3 JPG, PNG, or WebP screenshots (8 MB each). Your name and student number are hidden from the CCS Dean during review.</p>
+                        <button class="primary-button" type="submit">Submit for Dean Review</button>
                     </form>
                 <?php endif; ?>
             </section>
@@ -516,6 +540,39 @@ $logoutForm = dashboardLogoutForm();
                 notificationBox.hidden = true;
                 notificationButton.setAttribute('aria-expanded', 'false');
                 notificationButton.focus();
+            }
+        });
+
+        let activeRequirementsModal = null;
+        let requirementsModalTrigger = null;
+        function closeRequirementsModal() {
+            if (activeRequirementsModal === null) return;
+            activeRequirementsModal.hidden = true;
+            activeRequirementsModal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('requirements-modal-open');
+            requirementsModalTrigger?.focus();
+            activeRequirementsModal = null;
+            requirementsModalTrigger = null;
+        }
+        document.querySelectorAll('[data-requirements-modal]').forEach(function (button) {
+            button.addEventListener('click', function () {
+                const modal = document.getElementById(button.dataset.requirementsModal);
+                if (modal === null) return;
+                activeRequirementsModal = modal;
+                requirementsModalTrigger = button;
+                modal.hidden = false;
+                modal.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('requirements-modal-open');
+                modal.querySelector('.requirements-modal__dialog').focus();
+            });
+        });
+        document.querySelectorAll('[data-close-requirements-modal]').forEach(function (button) {
+            button.addEventListener('click', closeRequirementsModal);
+        });
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && activeRequirementsModal !== null) {
+                event.preventDefault();
+                closeRequirementsModal();
             }
         });
     </script>

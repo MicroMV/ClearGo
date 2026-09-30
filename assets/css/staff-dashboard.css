@@ -434,3 +434,59 @@ body.staff-dashboard {
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }
+
+/* Standalone staff pages that do not use a top bar still need to clear the fixed sidebar. */
+.staff-shell > main.page {
+    width: calc(100% - var(--cg-sidebar));
+    max-width: none;
+    margin: 0 0 0 var(--cg-sidebar);
+}
+
+@media (max-width: 900px) {
+    .staff-shell > main.page {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+/* Compact anonymous-evaluation queue: images remain available without turning the queue into a gallery. */
+.submission { padding: 14px !important; }
+.submission .proofs { margin: 12px 0 !important; }
+.submission .proofs img { width: 210px !important; height: 275px !important; max-height: 275px !important; object-fit: cover !important; }
+.submission .actions textarea { min-height: 44px; max-height: 44px; }
+
+.submission .actions textarea {
+    display: none;
+    width: 104px !important;
+    min-width: 104px !important;
+    min-height: 40px;
+    max-height: 40px;
+    padding: 9px;
+    color: transparent;
+    cursor: text;
+    transition: width .16s ease, min-height .16s ease, max-height .16s ease;
+}
+.submission .actions.return-open textarea {
+    display: block;
+    width: min(500px, 100%) !important;
+    min-height: 74px;
+    max-height: 160px;
+    color: var(--cg-text);
+}
+
+.page > .submission { display: inline-block; width: calc(25% - 12px); margin: 6px; vertical-align: top; }
+.submission .proofs { position: relative; justify-content: center; }
+.proof-carousel-arrow { position: absolute; top: 50%; z-index: 2; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: rgba(11,37,69,.84); color: #fff; font-size: 25px; line-height: 28px; transform: translateY(-50%); cursor: pointer; }
+.proof-carousel-arrow.previous { left: 3px; }.proof-carousel-arrow.next { right: 3px; }
+@media (max-width: 1200px) { .page > .submission { width: calc(50% - 12px); } }
+@media (max-width: 600px) { .page > .submission { display: block; width: 100%; margin: 8px 0; } }
+
+.return-comment-modal { position: fixed; z-index: 100; inset: 0; display: grid; place-items: center; padding: 18px; background: rgba(11,37,69,.48); }
+.return-comment-dialog { width: min(100%, 480px); padding: 22px; border-radius: 12px; background: #fff; box-shadow: 0 20px 55px rgba(0,0,0,.25); }
+.return-comment-dialog h2 { margin: 0; }.return-comment-dialog p { color: var(--cg-muted); }
+.return-comment-dialog textarea { width: 100%; min-height: 120px; margin: 10px 0 16px; padding: 10px; border: 1px solid var(--cg-border); border-radius: 8px; font: inherit; }
+.return-comment-dialog div { display: flex; justify-content: flex-end; gap: 10px; }.return-comment-dialog button { padding: 10px 14px; border: 0; border-radius: 7px; font-weight: 700; cursor: pointer; }.return-comment-dialog .cancel { background: #e9eef4; color: var(--cg-text); }.return-comment-dialog .confirm { background: var(--cg-danger); color: #fff; }
+.submission .actions button.return { background: var(--cg-danger) !important; color: #fff; }
+.submission .actions button.return:hover { background: var(--cg-danger-hover) !important; }
+.submitted-page-topbar { margin-left: var(--cg-sidebar); }
+@media (max-width: 900px) { .submitted-page-topbar { margin-left: 0; } }

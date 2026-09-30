@@ -27,13 +27,7 @@ $display = $_SESSION['organization_qr_display'] ?? null;
 $token = is_array($display) && (int) ($display['event_id'] ?? 0) === (int) $eventId
     ? (string) ($display['token'] ?? '') : '';
 $validToken = preg_match('/^[a-f0-9]{64}$/', $token) === 1;
-$host = preg_replace('/[^A-Za-z0-9.\-:\[\]]/', '', (string) ($_SERVER['HTTP_HOST'] ?? 'localhost')) ?: 'localhost';
-$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-$configuredPublicUrl = rtrim((string) (getenv('APP_PUBLIC_URL') ?: ''), '/');
-$checkInUrl = $validToken
-    ? ($configuredPublicUrl !== '' ? $configuredPublicUrl : $scheme . '://' . $host)
-        . applicationUrl('/student/attendance_checkin.php?token=' . rawurlencode($token))
-    : '';
+$checkInPayload = $validToken ? 'CLEARGO-ATTENDANCE:' . $token : '';
 $csrfToken = createCsrfToken();
 ?>
 <!doctype html>
@@ -53,16 +47,16 @@ $csrfToken = createCsrfToken();
     <?php else: ?>
         <div id="qr" aria-label="Student attendance QR code"></div>
         <p><strong>Check-in closes:</strong> <?= escapeHtml((string) $event['check_in_closes_at']) ?></p>
-        <p class="muted">Students scan this code with their phone camera, sign in with their school account, and confirm attendance.</p>
+        <p class="muted">Students must use the ClearGo Attendance Scanner while signed in to their student account. Other QR scanner apps cannot check them in.</p>
     <?php endif; ?>
     <div class="actions">
-        <a class="button" href="<?= escapeHtml(applicationUrl('/organization/dashboard.php')) ?>">Back to Events</a>
+        <button type="button" onclick="window.print()">Print QR</button><a class="button" href="<?= escapeHtml(applicationUrl('/organization/dashboard.php')) ?>">Back to Events</a>
         <?php if ($validToken): ?><form method="post" action="<?= escapeHtml(applicationUrl('/organization/event_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="close_qr"><input type="hidden" name="event_id" value="<?= (int) $eventId ?>"><button class="danger" type="submit">Close QR Now</button></form><?php endif; ?>
     </div>
 </section></main>
 <?php if ($validToken): ?><script src="<?= escapeHtml(applicationUrl('/assets/js/qrcode.js')) ?>"></script><script>
 const qr = qrcode(0, 'M');
-qr.addData(<?= json_encode($checkInUrl, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
+qr.addData(<?= json_encode($checkInPayload, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
 qr.make();
 document.getElementById('qr').innerHTML = qr.createSvgTag(7, 4);
 </script><?php endif; ?>
