@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 const APPLICATION_ROLES = [
@@ -99,8 +100,12 @@ function paginationPages(int $currentPage, int $totalPages): array
 {
     $totalPages = max(1, $totalPages);
     $currentPage = max(1, min($currentPage, $totalPages));
-    if ($totalPages <= 5) { return range(1, $totalPages); }
-    if ($currentPage <= 2) { return [1, 2, 3, 'ellipsis', $totalPages]; }
+    if ($totalPages <= 5) {
+        return range(1, $totalPages);
+    }
+    if ($currentPage <= 2) {
+        return [1, 2, 3, 'ellipsis', $totalPages];
+    }
     if ($currentPage >= $totalPages - 1) {
         return [1, 'ellipsis', $totalPages - 2, $totalPages - 1, $totalPages];
     }
@@ -109,7 +114,9 @@ function paginationPages(int $currentPage, int $totalPages): array
 
 function renderPagination(int $currentPage, int $totalPages, array $query = []): string
 {
-    if ($totalPages <= 1) { return ''; }
+    if ($totalPages <= 1) {
+        return '';
+    }
     unset($query['page'], $query['edit'], $query['export']);
     $pageLink = static function (int $page, string $label, string $class = '') use ($query): string {
         $url = '?' . http_build_query(array_merge($query, ['page' => $page]));
@@ -118,7 +125,9 @@ function renderPagination(int $currentPage, int $totalPages, array $query = []):
     };
 
     $html = '<nav class="pagination" aria-label="Student list pages">';
-    if ($currentPage > 1) { $html .= $pageLink($currentPage - 1, 'Previous'); }
+    if ($currentPage > 1) {
+        $html .= $pageLink($currentPage - 1, 'Previous');
+    }
     foreach (paginationPages($currentPage, $totalPages) as $page) {
         if ($page === 'ellipsis') {
             $html .= '<span class="pagination-ellipsis" aria-hidden="true">&hellip;</span>';
@@ -128,7 +137,9 @@ function renderPagination(int $currentPage, int $totalPages, array $query = []):
             $html .= $pageLink((int) $page, (string) $page);
         }
     }
-    if ($currentPage < $totalPages) { $html .= $pageLink($currentPage + 1, 'Next'); }
+    if ($currentPage < $totalPages) {
+        $html .= $pageLink($currentPage + 1, 'Next');
+    }
     return $html . '</nav>';
 }
 
@@ -170,12 +181,14 @@ function authenticatedUser(): ?array
     startSecureSession();
     $user = $_SESSION['authenticated_user'] ?? null;
 
-    if (!is_array($user)
+    if (
+        !is_array($user)
         || !isset($user['id'], $user['email'], $user['role'])
         || !is_int($user['id'])
         || !is_string($user['email'])
         || !is_string($user['role'])
-        || !in_array($user['role'], APPLICATION_ROLES, true)) {
+        || !in_array($user['role'], APPLICATION_ROLES, true)
+    ) {
         return null;
     }
 
@@ -359,6 +372,7 @@ function renderDashboard(array $user, string $title): never
     $role = escapeHtml($user['role']);
     $pageTitle = escapeHtml($title);
     $logoutForm = dashboardLogoutForm();
+    $dashboardStylesheet = escapeHtml(applicationUrl('/assets/css/simple-dashboard.css'));
 
     echo <<<HTML
 <!doctype html>
@@ -367,11 +381,7 @@ function renderDashboard(array $user, string $title): never
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{$pageTitle} | Digital Clearance System</title>
-    <style>
-        body { margin: 0; font-family: Arial, sans-serif; background: #f3f8fd; color: #17324d; }
-        main { max-width: 680px; margin: 12vh auto; padding: 32px; background: #fff; border-radius: 12px; box-shadow: 0 8px 24px rgba(23, 50, 77, .12); }
-        h1 { margin-top: 0; color: #0d5ea6; } p { line-height: 1.6; } button { background: #0d5ea6; border: 0; border-radius: 5px; color: #fff; cursor: pointer; padding: 10px 16px; }
-    </style>
+    <link rel="stylesheet" href="{$dashboardStylesheet}">
 </head>
 <body>
     <main>

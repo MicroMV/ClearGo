@@ -1,0 +1,100 @@
+        body {
+                margin: 0;
+                background: #f3f8fd;
+                color: #17324d;
+                font-family: Arial, sans-serif
+        }
+
+        header {
+                padding: 18px 24px;
+                background: #fff;
+                border-bottom: 1px solid #d8e3ed
+        }
+
+        .topbar,
+        main {
+                max-width: 1150px;
+                margin: auto
+        }
+
+        .topbar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center
+        }
+
+        h1 {
+                margin: 0;
+                color: #0d5ea6;
+                font-size: 24px
+        }
+
+        main {
+                padding: 24px
+        }
+
+        .panel {
+                background: #fff;
+                border: 1px solid #d8e3ed;
+                border-radius: 10px;
+                padding: 20px;
+                margin-bottom: 20px
+        }
+
+        .message {
+                padding: 12px;
+                background: #edf6ff;
+                border-left: 4px solid #0d5ea6
+        }
+
+        table {
+                border-collapse: collapse;
+                width: 100%;
+                min-width: 1050px
+        }
+
+        th,
+        td {
+                padding: 10px;
+                border-top: 1px solid #d8e3ed;
+                text-align: left;
+                vertical-align: top
+        }
+
+        th {
+                font-size: 13px;
+                color: #587086
+        }
+
+        form {
+                display: flex;
+                gap: 7px;
+                flex-wrap: wrap
+        }
+
+        input,
+        select,
+        button {
+                padding: 8px;
+                border: 1px solid #b7c8d8;
+                border-radius: 5px
+        }
+
+        button {
+                background: #0d5ea6;
+                color: #fff;
+                border: 0
+        }
+
+        .muted {
+                font-size: 13px;
+                color: #587086
+        }
+
+        a {
+                color: #0d5ea6
+        }
+
+        .table-wrap {
+                overflow: auto
+        }

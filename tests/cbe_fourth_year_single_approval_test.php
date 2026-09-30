@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/../config/database.php';
@@ -30,7 +31,9 @@ try {
     );
     $organizationStaffQuery->execute(['organization_id' => $cbeId]);
     $organizationStaffId = (int) $organizationStaffQuery->fetchColumn();
-    if ($cbeId < 1 || $deanId < 1 || $organizationStaffId < 1) { throw new RuntimeException('CBE Organization or Dean assignment is unavailable.'); }
+    if ($cbeId < 1 || $deanId < 1 || $organizationStaffId < 1) {
+        throw new RuntimeException('CBE Organization or Dean assignment is unavailable.');
+    }
 
     $period = $database->query("SELECT id,clearance_status FROM academic_periods WHERE status='ACTIVE' LIMIT 1")->fetch();
     $periodId = (int) $period['id'];
@@ -58,19 +61,27 @@ try {
          WHERE station_record.clearance_id=:clearance_id AND requirement.requirement_code='CBE_OJT_REQUIREMENTS'"
     );
     $ojtQuery->execute(['clearance_id' => $clearanceId]);
-    if ($ojtQuery->fetchColumn() !== 'NOT_STARTED') { $failures[] = 'The test OJT requirement did not begin as NOT STARTED.'; }
+    if ($ojtQuery->fetchColumn() !== 'NOT_STARTED') {
+        $failures[] = 'The test OJT requirement did not begin as NOT STARTED.';
+    }
 
     approveOrganizationStudent($database, $organizationStaffId, $cbeId, $studentId);
-    if (!approveDeanClearance($database, $deanId, $clearanceId)) { $failures[] = 'The single CBE approval did not run.'; }
+    if (!approveDeanClearance($database, $deanId, $clearanceId)) {
+        $failures[] = 'The single CBE approval did not run.';
+    }
     $ojtQuery->execute(['clearance_id' => $clearanceId]);
-    if ($ojtQuery->fetchColumn() !== 'VERIFIED') { $failures[] = 'The Approve action did not verify the OJT requirement.'; }
+    if ($ojtQuery->fetchColumn() !== 'VERIFIED') {
+        $failures[] = 'The Approve action did not verify the OJT requirement.';
+    }
     $deanStatus = $database->prepare(
         "SELECT record.status FROM clearance_stations record
          INNER JOIN stations station ON station.id=record.station_id AND station.code='DEAN'
          WHERE record.clearance_id=:clearance_id"
     );
     $deanStatus->execute(['clearance_id' => $clearanceId]);
-    if ($deanStatus->fetchColumn() !== 'APPROVED') { $failures[] = 'The same Approve action did not clear the Dean station.'; }
+    if ($deanStatus->fetchColumn() !== 'APPROVED') {
+        $failures[] = 'The same Approve action did not clear the Dean station.';
+    }
 } catch (Throwable $exception) {
     $failures[] = $exception->getMessage();
 } finally {
@@ -79,12 +90,14 @@ try {
         $database->prepare('DELETE FROM notifications WHERE user_id=:user_id')->execute(['user_id' => $userId]);
         $database->prepare('DELETE FROM clearances WHERE student_id=:student_id')->execute(['student_id' => $studentId]);
         $database->prepare('DELETE FROM semester_enrollments WHERE student_id=:student_id')->execute(['student_id' => $studentId]);
-        foreach (['library_cards','medical_requirements','student_bookstore_fees','student_documents'] as $table) {
+        foreach (['library_cards', 'medical_requirements', 'student_bookstore_fees', 'student_documents'] as $table) {
             $database->prepare("DELETE FROM {$table} WHERE student_id=:student_id")->execute(['student_id' => $studentId]);
         }
         $database->prepare('DELETE FROM students WHERE id=:student_id')->execute(['student_id' => $studentId]);
     }
-    if ($userId !== null) { $database->prepare('DELETE FROM users WHERE id=:id')->execute(['id' => $userId]); }
+    if ($userId !== null) {
+        $database->prepare('DELETE FROM users WHERE id=:id')->execute(['id' => $userId]);
+    }
     if ($periodId !== null && $originalPeriodStatus !== null) {
         $database->prepare('UPDATE academic_periods SET clearance_status=:status WHERE id=:id')->execute(['status' => $originalPeriodStatus, 'id' => $periodId]);
     }

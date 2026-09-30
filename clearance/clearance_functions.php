@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 function activeStudentForUser(PDO $database, int $userId, bool $lock = false): array

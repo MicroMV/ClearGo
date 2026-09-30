@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/../config/database.php';
@@ -15,9 +16,13 @@ $candidate = $database->query(
      INNER JOIN clearance_stations cs ON cs.clearance_id=clearance.id AND cs.station_id=station.id
      WHERE period.status='ACTIVE' LIMIT 1"
 )->fetchColumn();
-if ($candidate === false) { throw new RuntimeException('No current student is available for the Bookstore test.'); }
+if ($candidate === false) {
+    throw new RuntimeException('No current student is available for the Bookstore test.');
+}
 $staffId = $database->query("SELECT id FROM users WHERE role='BOOKSTORE_STAFF' AND status='ACTIVE' ORDER BY id LIMIT 1")->fetchColumn();
-if ($staffId === false) { throw new RuntimeException('No active Bookstore staff account is available.'); }
+if ($staffId === false) {
+    throw new RuntimeException('No active Bookstore staff account is available.');
+}
 $context = officeClearanceContext($database, 'BOOKSTORE', (int) $candidate);
 $obligationId = null;
 try {
@@ -34,5 +39,7 @@ try {
     }
     echo "Bookstore obligation workflow test passed.\n";
 } finally {
-    if ($obligationId !== null) { $database->prepare('DELETE FROM bookstore_obligations WHERE id=:id')->execute(['id' => $obligationId]); }
+    if ($obligationId !== null) {
+        $database->prepare('DELETE FROM bookstore_obligations WHERE id=:id')->execute(['id' => $obligationId]);
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 function assignedOrganization(PDO $database, int $userId): array
@@ -95,7 +96,7 @@ function requiredOrganizationEvents(PDO $database, int $organizationId, int $stu
 function organizationEligibility(PDO $database, int $organizationId, int $studentId): array
 {
     $events = requiredOrganizationEvents($database, $organizationId, $studentId);
-    $missing = array_values(array_filter($events, static fn (array $event): bool => (int) $event['attended'] !== 1));
+    $missing = array_values(array_filter($events, static fn(array $event): bool => (int) $event['attended'] !== 1));
 
     if ($events === []) {
         return ['eligible' => true, 'events' => [], 'reason' => 'No event attendance is required; direct organization sign-off is available.'];
@@ -219,7 +220,9 @@ function approveOrganizationStudent(PDO $database, int $staffUserId, int $organi
         $database->commit();
         return 'approved';
     } catch (Throwable $exception) {
-        if ($database->inTransaction()) { $database->rollBack(); }
+        if ($database->inTransaction()) {
+            $database->rollBack();
+        }
         throw $exception;
     }
 }

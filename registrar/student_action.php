@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/../auth/auth_check.php';
@@ -15,7 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCsrfToken($_POST['csrf_token
 function registrarStudentId(): int
 {
     $id = filter_var($_POST['student_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-    if ($id === false) { throw new RuntimeException('Select a valid student.'); }
+    if ($id === false) {
+        throw new RuntimeException('Select a valid student.');
+    }
     return (int) $id;
 }
 
@@ -69,7 +72,9 @@ try {
         $query = $database->prepare('SELECT student.*,user.email,user.status AS account_status FROM students student INNER JOIN users user ON user.id=student.user_id WHERE student.id=:id LIMIT 1');
         $query->execute(['id' => $studentId]);
         $student = $query->fetch();
-        if ($student === false) { throw new RuntimeException('Student account not found.'); }
+        if ($student === false) {
+            throw new RuntimeException('Student account not found.');
+        }
 
         if ($action === 'update') {
             $number = normalizeImportText((string) ($_POST['student_number'] ?? ''));
@@ -98,11 +103,15 @@ try {
             $database->commit();
             setFlashMessage('Account status changed to ' . $newStatus . '.');
         } elseif ($action === 'enroll' || $action === 'remove_enrollment') {
-            if ($period['clearance_status'] !== 'PREPARING') { throw new RuntimeException('Enrollment is locked after clearance opens.'); }
+            if ($period['clearance_status'] !== 'PREPARING') {
+                throw new RuntimeException('Enrollment is locked after clearance opens.');
+            }
             $newStatus = $action === 'enroll' ? 'ENROLLED' : 'REMOVED';
             $statement = $database->prepare("INSERT INTO semester_enrollments(academic_period_id,student_id,status,enrolled_by,enrolled_at,removed_by,removed_at) VALUES(:period,:student,:status,:enrolled_by,NOW(),:removed_by,CASE WHEN :removed_status='REMOVED' THEN NOW() ELSE NULL END) ON DUPLICATE KEY UPDATE status=VALUES(status),enrolled_by=VALUES(enrolled_by),enrolled_at=CASE WHEN VALUES(status)='ENROLLED' THEN NOW() ELSE enrolled_at END,removed_by=VALUES(removed_by),removed_at=VALUES(removed_at)");
             $statement->execute(['period' => $period['id'], 'student' => $studentId, 'status' => $newStatus, 'enrolled_by' => $newStatus === 'ENROLLED' ? $user['id'] : null, 'removed_by' => $newStatus === 'REMOVED' ? $user['id'] : null, 'removed_status' => $newStatus]);
-            if ($newStatus === 'ENROLLED') { prepareSemesterClearanceRecords($database, (int) $period['id']); }
+            if ($newStatus === 'ENROLLED') {
+                prepareSemesterClearanceRecords($database, (int) $period['id']);
+            }
             $database->prepare("UPDATE office_period_readiness SET status='NOT_READY',ready_by=NULL,ready_at=NULL,notes=NULL WHERE academic_period_id=:period")->execute(['period' => $period['id']]);
             auditStudentAccount($database, $user['id'], $stationId, $studentId, 'SEMESTER_ENROLLMENT_CHANGED', 'Registrar changed current-semester enrollment.', null, $newStatus);
             setFlashMessage('Semester enrollment changed to ' . $newStatus . '.');
@@ -115,7 +124,9 @@ try {
         }
     }
 } catch (Throwable $exception) {
-    if (isset($database) && $database->inTransaction()) { $database->rollBack(); }
+    if (isset($database) && $database->inTransaction()) {
+        $database->rollBack();
+    }
     error_log('Registrar student action failed: ' . $exception->getMessage());
     setFlashMessage($exception instanceof RuntimeException ? $exception->getMessage() : 'Unable to update the student account.');
 }

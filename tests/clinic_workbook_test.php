@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/../config/database.php';
@@ -7,7 +8,9 @@ require_once __DIR__ . '/../clinic/workbook_functions.php';
 
 function clinicCheck(bool $condition, string $message): void
 {
-    if (!$condition) { throw new RuntimeException($message); }
+    if (!$condition) {
+        throw new RuntimeException($message);
+    }
 }
 
 $database = getDatabaseConnection();
@@ -22,8 +25,11 @@ try {
     $entries = readZipEntries($temporaryFile, ['xl/workbook.xml'], 'xl/worksheets/');
     clinicCheck(isset($entries['xl/workbook.xml']), 'The Clinic workbook definition is missing.');
     clinicCheck(substr_count($entries['xl/workbook.xml'], '<sheet ') === 3, 'The Clinic workbook does not contain exactly three sheets.');
-    foreach (['CCS','CBE','CTE'] as $code) {
+    foreach (['CCS', 'CBE', 'CTE'] as $code) {
         clinicCheck(str_contains($entries['xl/workbook.xml'], 'name="' . $code . '"'), "The {$code} Clinic sheet is missing.");
+    }
+    foreach (array_filter($entries, static fn(string $name): bool => str_starts_with($name, 'xl/worksheets/'), ARRAY_FILTER_USE_KEY) as $worksheet) {
+        clinicCheck(str_contains($worksheet, 'Has Medical Record'), 'A Clinic sheet is missing the medical-record column.');
     }
     $rows = readClinicWorkbook($temporaryFile);
     clinicCheck($rows !== [], 'The generated Clinic workbook could not be read back.');
@@ -61,18 +67,22 @@ try {
     clinicCheck($clinicStatus->fetchColumn() === 'APPROVED', 'Clinic import did not approve Clinic clearance.');
     echo "Clinic three-sheet workbook test passed.\n";
 } finally {
-    if (is_string($temporaryFile) && file_exists($temporaryFile)) { unlink($temporaryFile); }
+    if (is_string($temporaryFile) && file_exists($temporaryFile)) {
+        unlink($temporaryFile);
+    }
     if ($studentId !== null) {
         $database->prepare('DELETE FROM audit_logs WHERE student_id=:student_id')->execute(['student_id' => $studentId]);
         $database->prepare('DELETE FROM notifications WHERE user_id=:user_id')->execute(['user_id' => $userId]);
         $database->prepare('DELETE FROM clearances WHERE student_id=:student_id')->execute(['student_id' => $studentId]);
         $database->prepare('DELETE FROM semester_enrollments WHERE student_id=:student_id')->execute(['student_id' => $studentId]);
-        foreach (['library_cards','medical_requirements','student_bookstore_fees','student_documents'] as $table) {
+        foreach (['library_cards', 'medical_requirements', 'student_bookstore_fees', 'student_documents'] as $table) {
             $database->prepare("DELETE FROM {$table} WHERE student_id=:student_id")->execute(['student_id' => $studentId]);
         }
         $database->prepare('DELETE FROM students WHERE id=:student_id')->execute(['student_id' => $studentId]);
     }
-    if ($userId !== null) { $database->prepare('DELETE FROM users WHERE id=:id')->execute(['id' => $userId]); }
+    if ($userId !== null) {
+        $database->prepare('DELETE FROM users WHERE id=:id')->execute(['id' => $userId]);
+    }
     if ($periodId !== null && $originalPeriodStatus !== null) {
         $database->prepare('UPDATE academic_periods SET clearance_status=:status WHERE id=:id')->execute(['status' => $originalPeriodStatus, 'id' => $periodId]);
     }

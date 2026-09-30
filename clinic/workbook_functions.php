@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/../registrar/student_import_functions.php';
@@ -34,8 +35,8 @@ function clinicWorksheetXml(string $organizationCode, array $students, string $p
 {
     $rows = [
         [$organizationCode . ' CLINIC CLEARANCE - ' . $periodLabel],
-        ['Change Clinic Status to CLEARED only after the student has completed all clinic requirements. Student Number must not be changed.'],
-        ['Student Number', 'Full Name', 'Course', 'Year Level', 'Clinic Status', 'Remarks'],
+        ['Has Medical Record shows the current ClearGo record. Change Clinic Status to CLEARED only after the student has completed all clinic requirements. Student Number must not be changed.'],
+        ['Student Number', 'Full Name', 'Course', 'Year Level', 'Has Medical Record', 'Clinic Status', 'Remarks'],
     ];
     foreach ($students as $student) {
         $status = $student['clinic_status'] === 'APPROVED' ? 'CLEARED' : '';
@@ -44,6 +45,7 @@ function clinicWorksheetXml(string $organizationCode, array $students, string $p
             $student['last_name'] . ', ' . $student['first_name'],
             $student['program'],
             'Year ' . (int) $student['year_level'],
+            $student['medical_status'] === 'VERIFIED' ? 'YES' : 'NO',
             $status,
             (string) ($student['remarks'] ?? ''),
         ];
@@ -69,15 +71,17 @@ function clinicWorksheetXml(string $organizationCode, array $students, string $p
     return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
         . '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cols>'
         . '<col min="1" max="1" width="18" customWidth="1"/><col min="2" max="2" width="34" customWidth="1"/>'
-        . '<col min="3" max="3" width="25" customWidth="1"/><col min="4" max="5" width="16" customWidth="1"/>'
-        . '<col min="6" max="6" width="40" customWidth="1"/></cols><sheetData>' . $xmlRows
-        . '</sheetData><autoFilter ref="A3:F' . max(3, count($rows)) . '"/></worksheet>';
+        . '<col min="3" max="3" width="25" customWidth="1"/><col min="4" max="4" width="16" customWidth="1"/>'
+        . '<col min="5" max="6" width="20" customWidth="1"/><col min="7" max="7" width="40" customWidth="1"/></cols><sheetData>' . $xmlRows
+        . '</sheetData><autoFilter ref="A3:G' . max(3, count($rows)) . '"/></worksheet>';
 }
 
 function createClinicWorkbookXlsx(PDO $database): string
 {
     $period = $database->query("SELECT school_year,semester FROM academic_periods WHERE status='ACTIVE' LIMIT 1")->fetch();
-    if ($period === false) { throw new RuntimeException('There is no active semester.'); }
+    if ($period === false) {
+        throw new RuntimeException('There is no active semester.');
+    }
     $semester = ['1ST' => 'FIRST SEMESTER', '2ND' => 'SECOND SEMESTER', 'SUMMER' => 'SUMMER'][$period['semester']] ?? $period['semester'];
     $periodLabel = $semester . ' A.Y. ' . $period['school_year'];
     $grouped = ['CCS' => [], 'CBE' => [], 'CTE' => []];
@@ -118,7 +122,9 @@ function readClinicWorkbook(string $path): array
     }
     $worksheetNames = array_values(array_filter(array_keys($entries), static fn(string $name): bool => preg_match('#^xl/worksheets/sheet\d+\.xml$#i', $name) === 1));
     natsort($worksheetNames);
-    if (count($worksheetNames) !== 3) { throw new RuntimeException('Use the Clinic workbook with its CCS, CBE, and CTE sheets.'); }
+    if (count($worksheetNames) !== 3) {
+        throw new RuntimeException('Use the Clinic workbook with its CCS, CBE, and CTE sheets.');
+    }
     $result = [];
     foreach ($worksheetNames as $worksheetName) {
         $rows = parseStudentWorksheet($entries[$worksheetName], $sharedStrings);
@@ -127,26 +133,43 @@ function readClinicWorkbook(string $path): array
         foreach ($rows as $index => $row) {
             $normalized = array_map(static fn(string $value): string => normalizedImportKey(rtrim($value, '.')), $row);
             foreach ($normalized as $column => $value) {
-                if (in_array($value, ['student number','student no'], true)) { $map['student_number'] = $column; }
-                if ($value === 'clinic status') { $map['status'] = $column; }
-                if ($value === 'remarks') { $map['remarks'] = $column; }
+                if (in_array($value, ['student number', 'student no'], true)) {
+                    $map['student_number'] = $column;
+                }
+                if ($value === 'clinic status') {
+                    $map['status'] = $column;
+                }
+                if ($value === 'remarks') {
+                    $map['remarks'] = $column;
+                }
             }
-            if (isset($map['student_number'], $map['status'])) { $headerIndex = $index; break; }
+            if (isset($map['student_number'], $map['status'])) {
+                $headerIndex = $index;
+                break;
+            }
             $map = [];
         }
-        if ($headerIndex === null) { continue; }
+        if ($headerIndex === null) {
+            continue;
+        }
         foreach (array_slice($rows, $headerIndex + 1) as $row) {
             $studentNumber = normalizeImportText((string) ($row[$map['student_number']] ?? ''));
-            if ($studentNumber === '') { continue; }
+            if ($studentNumber === '') {
+                continue;
+            }
             $result[] = [
                 'student_number' => $studentNumber,
                 'status' => strtoupper(normalizeImportText((string) ($row[$map['status']] ?? ''))),
                 'remarks' => normalizeImportText((string) ($row[$map['remarks'] ?? -1] ?? '')),
             ];
-            if (count($result) > CLINIC_WORKBOOK_MAX_ROWS) { throw new RuntimeException('The workbook exceeds 5,000 student rows.'); }
+            if (count($result) > CLINIC_WORKBOOK_MAX_ROWS) {
+                throw new RuntimeException('The workbook exceeds 5,000 student rows.');
+            }
         }
     }
-    if ($result === []) { throw new RuntimeException('No Clinic template rows were found in the workbook.'); }
+    if ($result === []) {
+        throw new RuntimeException('No Clinic template rows were found in the workbook.');
+    }
     return $result;
 }
 
@@ -163,7 +186,9 @@ function clearClinicFromWorkbook(PDO $database, int $staffUserId, string $studen
     );
     $statement->execute(['student_number' => $studentNumber]);
     $clearanceId = $statement->fetchColumn();
-    if ($clearanceId === false) { throw new RuntimeException($studentNumber . ': no current-semester Clinic clearance was found.'); }
+    if ($clearanceId === false) {
+        throw new RuntimeException($studentNumber . ': no current-semester Clinic clearance was found.');
+    }
     try {
         return clearClinicClearance($database, (int) $clearanceId, $staffUserId, $remarks)
             ? 'cleared' : 'already_cleared';
@@ -178,9 +203,15 @@ function importClinicWorkbook(PDO $database, int $staffUserId, array $rows): arr
     $result = ['cleared' => 0, 'already_cleared' => 0, 'skipped' => 0, 'errors' => []];
     foreach ($rows as $row) {
         $key = strtoupper(trim($row['student_number']));
-        if ($key === '' || isset($seen[$key])) { $result['skipped']++; continue; }
+        if ($key === '' || isset($seen[$key])) {
+            $result['skipped']++;
+            continue;
+        }
         $seen[$key] = true;
-        if ($row['status'] !== 'CLEARED') { $result['skipped']++; continue; }
+        if ($row['status'] !== 'CLEARED') {
+            $result['skipped']++;
+            continue;
+        }
         try {
             $outcome = clearClinicFromWorkbook($database, $staffUserId, $row['student_number'], $row['remarks']);
             $result[$outcome]++;

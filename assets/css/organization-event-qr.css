@@ -1,0 +1,83 @@
+        :root {
+                --blue: #0d5ea6;
+                --dark: #17324d;
+                --line: #d8e3ed;
+                --page: #f3f8fd
+        }
+
+        * {
+                box-sizing: border-box
+        }
+
+        body {
+                margin: 0;
+                background: var(--page);
+                color: var(--dark);
+                font-family: Arial, sans-serif
+        }
+
+        main {
+                max-width: 760px;
+                margin: 30px auto;
+                padding: 24px
+        }
+
+        .panel {
+                background: #fff;
+                border: 1px solid var(--line);
+                border-radius: 12px;
+                padding: 28px;
+                text-align: center
+        }
+
+        h1 {
+                color: var(--blue)
+        }
+
+        #qr {
+                display: flex;
+                justify-content: center;
+                margin: 24px auto
+        }
+
+        #qr svg {
+                max-width: 100%;
+                height: auto
+        }
+
+        .notice {
+                padding: 13px;
+                background: #fff7e8;
+                border-left: 4px solid #b87800;
+                text-align: left
+        }
+
+        .actions {
+                display: flex;
+                justify-content: center;
+                gap: 12px;
+                flex-wrap: wrap;
+                margin-top: 22px
+        }
+
+        button,
+        a.button {
+                border: 0;
+                border-radius: 5px;
+                padding: 11px 16px;
+                background: var(--blue);
+                color: #fff;
+                font: inherit;
+                text-decoration: none;
+                cursor: pointer
+        }
+
+        .danger {
+                background: #aa3824 !important
+        }
+
+        .muted {
+                color: #587086;
+                font-size: 14px;
+                word-break: break-all
+        }

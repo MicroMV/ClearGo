@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/../config/database.php';
@@ -20,7 +21,9 @@ $testDocumentRequirementId = null;
 function phaseThreeCheck(bool $condition, string $message): void
 {
     global $failures;
-    if (!$condition) { $failures[] = $message; }
+    if (!$condition) {
+        $failures[] = $message;
+    }
 }
 
 try {
@@ -32,9 +35,13 @@ try {
     $organizationId = (int) $database->query("SELECT id FROM organizations WHERE code='CCS' LIMIT 1")->fetchColumn();
     $staff = $database->query("SELECT id,role FROM users WHERE status='ACTIVE' AND role IN ('ORG_STAFF','STUDENT_COUNCIL_STAFF','LIBRARY_STAFF','BOOKSTORE_STAFF','CLINIC_STAFF','SASO_STAFF','FACILITIES_STAFF','ACCOUNTING_STAFF','REGISTRAR') ORDER BY id")->fetchAll();
     $staffByRole = [];
-    foreach ($staff as $member) { $staffByRole[$member['role']] ??= (int) $member['id']; }
-    foreach (['STUDENT_COUNCIL_STAFF','LIBRARY_STAFF','BOOKSTORE_STAFF','CLINIC_STAFF','SASO_STAFF','FACILITIES_STAFF','ACCOUNTING_STAFF','REGISTRAR'] as $role) {
-        if (!isset($staffByRole[$role])) { throw new RuntimeException('Missing test staff role: ' . $role); }
+    foreach ($staff as $member) {
+        $staffByRole[$member['role']] ??= (int) $member['id'];
+    }
+    foreach (['STUDENT_COUNCIL_STAFF', 'LIBRARY_STAFF', 'BOOKSTORE_STAFF', 'CLINIC_STAFF', 'SASO_STAFF', 'FACILITIES_STAFF', 'ACCOUNTING_STAFF', 'REGISTRAR'] as $role) {
+        if (!isset($staffByRole[$role])) {
+            throw new RuntimeException('Missing test staff role: ' . $role);
+        }
     }
     // The test invokes workflow functions directly; use the Facilities test account
     // until a dedicated Computer Laboratory account is configured by the Registrar.
@@ -50,7 +57,9 @@ try {
     );
     $deanQuery->execute(['organization_id' => $organizationId]);
     $staffByRole['DEAN'] = (int) $deanQuery->fetchColumn();
-    if ($staffByRole['DEAN'] < 1) { throw new RuntimeException('Missing Dean assigned to the test organization.'); }
+    if ($staffByRole['DEAN'] < 1) {
+        throw new RuntimeException('Missing Dean assigned to the test organization.');
+    }
 
     $student = $database->prepare("INSERT INTO students (user_id,student_number,first_name,last_name,program,year_level,section,organization_id,status) VALUES (:user_id,:number,'Phase Three','Workflow Student','BS Computer Science',1,'TEST',:organization_id,'ACTIVE')");
     $student->execute(['user_id' => $studentUserId, 'number' => 'PHASE3-' . $token, 'organization_id' => $organizationId]);
@@ -114,11 +123,13 @@ try {
     $readStatuses = static function () use ($statusQuery, $clearanceId): array {
         $statusQuery->execute(['clearance_id' => $clearanceId]);
         $result = [];
-        foreach ($statusQuery->fetchAll() as $row) { $result[$row['code']] = $row['status']; }
+        foreach ($statusQuery->fetchAll() as $row) {
+            $result[$row['code']] = $row['status'];
+        }
         return $result;
     };
     $statuses = $readStatuses();
-    foreach (['STUDENT_COUNCIL','LIBRARY','BOOKSTORE','CLINIC'] as $code) {
+    foreach (['STUDENT_COUNCIL', 'LIBRARY', 'BOOKSTORE', 'CLINIC'] as $code) {
         phaseThreeCheck(($statuses[$code] ?? null) === 'PENDING', $code . ' did not unlock after Organization approval.');
     }
     phaseThreeCheck(($statuses['SASO'] ?? null) === 'LOCKED', 'SASO opened before all sub-checks were approved.');
@@ -180,7 +191,7 @@ try {
         $deleteEvent->execute(['id' => $eventId]);
     }
     if ($studentId !== null) {
-        foreach (['audit_logs','violations','borrowed_books','accounting_obligations'] as $table) {
+        foreach (['audit_logs', 'violations', 'borrowed_books', 'accounting_obligations'] as $table) {
             $delete = $database->prepare("DELETE FROM {$table} WHERE student_id=:student_id");
             $delete->execute(['student_id' => $studentId]);
         }
@@ -188,7 +199,7 @@ try {
         $deleteClearance->execute(['student_id' => $studentId]);
         $deleteEnrollment = $database->prepare('DELETE FROM semester_enrollments WHERE student_id=:student_id');
         $deleteEnrollment->execute(['student_id' => $studentId]);
-        foreach (['library_cards','medical_requirements','student_bookstore_fees','student_documents'] as $table) {
+        foreach (['library_cards', 'medical_requirements', 'student_bookstore_fees', 'student_documents'] as $table) {
             $delete = $database->prepare("DELETE FROM {$table} WHERE student_id=:student_id");
             $delete->execute(['student_id' => $studentId]);
         }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/../registrar/student_import_functions.php';
@@ -40,8 +41,10 @@ $studentCount = (int) $database->query('SELECT COUNT(*) FROM students')->fetchCo
 $hashCount = (int) $database->query('SELECT COUNT(DISTINCT password_hash) FROM users')->fetchColumn();
 $sampleHash = (string) $database->query('SELECT password_hash FROM users LIMIT 1')->fetchColumn();
 
-if ($result['added'] !== 2500 || $studentCount !== 2500 || $hashCount !== 1
-    || !password_verify(CLEAR_GO_INITIAL_PASSWORD, $sampleHash)) {
+if (
+    $result['added'] !== 2500 || $studentCount !== 2500 || $hashCount !== 1
+    || !password_verify(CLEAR_GO_INITIAL_PASSWORD, $sampleHash)
+) {
     fwrite(STDERR, "Student import scale test failed.\n");
     exit(1);
 }

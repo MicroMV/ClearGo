@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/semester_functions.php';
@@ -315,15 +316,26 @@ function parseStudentYearLevel(string $value): int
 {
     $normalized = normalizedImportKey($value);
     $words = [
-        'first' => 1, 'one' => 1, 'second' => 2, 'two' => 2,
-        'third' => 3, 'three' => 3, 'fourth' => 4, 'four' => 4,
-        'fifth' => 5, 'five' => 5, 'sixth' => 6, 'six' => 6,
+        'first' => 1,
+        'one' => 1,
+        'second' => 2,
+        'two' => 2,
+        'third' => 3,
+        'three' => 3,
+        'fourth' => 4,
+        'four' => 4,
+        'fifth' => 5,
+        'five' => 5,
+        'sixth' => 6,
+        'six' => 6,
     ];
     if (preg_match('/\b([1-6])(?:st|nd|rd|th)?\b/i', $normalized, $matches) === 1) {
         return (int) $matches[1];
     }
     foreach ($words as $word => $year) {
-        if (preg_match('/\b' . preg_quote($word, '/') . '\b/i', $normalized) === 1) { return $year; }
+        if (preg_match('/\b' . preg_quote($word, '/') . '\b/i', $normalized) === 1) {
+            return $year;
+        }
     }
     return 0;
 }
@@ -340,7 +352,10 @@ function inferStudentOrganization(string $course, array $organizations, array $k
             'CTE' => '/\b(BEED|BSED|BTVTED|TCP|EDUCATION|TEACHER)\b/i',
         ];
         foreach ($rules as $candidate => $pattern) {
-            if (preg_match($pattern, $course) === 1) { $code = $candidate; break; }
+            if (preg_match($pattern, $course) === 1) {
+                $code = $candidate;
+                break;
+            }
         }
     }
     return $code !== null ? ($organizations[normalizedImportKey($code)] ?? null) : null;
@@ -412,7 +427,9 @@ function validateStudentImport(PDO $database, array $rawRows): array
     $periodStatement = $database->prepare("SELECT school_year,semester FROM academic_periods WHERE status='ACTIVE' ORDER BY id LIMIT 2");
     $periodStatement->execute();
     $activePeriods = $periodStatement->fetchAll();
-    if (count($activePeriods) !== 1) { throw new RuntimeException('Exactly one active academic period is required before importing students.'); }
+    if (count($activePeriods) !== 1) {
+        throw new RuntimeException('Exactly one active academic period is required before importing students.');
+    }
     $activePeriod = $activePeriods[0];
     if ($layout['academic_year'] !== null && ($layout['academic_year'] !== $activePeriod['school_year'] || $layout['semester'] !== $activePeriod['semester'])) {
         throw new RuntimeException('The workbook academic year/semester does not match the active academic period.');
@@ -431,10 +448,14 @@ function validateStudentImport(PDO $database, array $rawRows): array
     $courseStatement = $database->query('SELECT DISTINCT s.program, o.code FROM students s INNER JOIN organizations o ON o.id=s.organization_id');
     foreach ($courseStatement->fetchAll() as $courseRow) {
         $courseKey = normalizedImportKey((string) $courseRow['program']);
-        if (isset($knownCourses[$courseKey]) && $knownCourses[$courseKey] !== $courseRow['code']) { $ambiguousCourses[$courseKey] = true; }
+        if (isset($knownCourses[$courseKey]) && $knownCourses[$courseKey] !== $courseRow['code']) {
+            $ambiguousCourses[$courseKey] = true;
+        }
         $knownCourses[$courseKey] = (string) $courseRow['code'];
     }
-    foreach (array_keys($ambiguousCourses) as $courseKey) { unset($knownCourses[$courseKey]); }
+    foreach (array_keys($ambiguousCourses) as $courseKey) {
+        unset($knownCourses[$courseKey]);
+    }
 
     $studentsByNumber = [];
     $studentStatement = $database->query(
@@ -465,20 +486,34 @@ function validateStudentImport(PDO $database, array $rawRows): array
         $existing = $studentsByNumber[normalizedImportKey($values['student_id'])] ?? null;
         $errors = [];
         $warnings = [];
-        if ($values['student_id'] === '') { $errors[] = 'Missing Student ID.'; }
-        if ($values['student_name'] === '') { $errors[] = 'Missing student name.'; }
-        if (!filter_var($values['school_email'], FILTER_VALIDATE_EMAIL)
-            || !str_ends_with(strtolower($values['school_email']), '@thelewiscollege.edu.ph')) {
+        if ($values['student_id'] === '') {
+            $errors[] = 'Missing Student ID.';
+        }
+        if ($values['student_name'] === '') {
+            $errors[] = 'Missing student name.';
+        }
+        if (
+            !filter_var($values['school_email'], FILTER_VALIDATE_EMAIL)
+            || !str_ends_with(strtolower($values['school_email']), '@thelewiscollege.edu.ph')
+        ) {
             $errors[] = 'Gsuite Address must use @thelewiscollege.edu.ph.';
         }
-        if ($values['course_program'] === '') { $errors[] = 'Missing course/program.'; }
-        if ($yearLevel < 1 || $yearLevel > 6) { $errors[] = 'Year Level must be First Year through Sixth Year.'; }
-        if ($organization === null) { $errors[] = 'The Course could not be assigned to a college. Add a recognized course name.'; }
+        if ($values['course_program'] === '') {
+            $errors[] = 'Missing course/program.';
+        }
+        if ($yearLevel < 1 || $yearLevel > 6) {
+            $errors[] = 'Year Level must be First Year through Sixth Year.';
+        }
+        if ($organization === null) {
+            $errors[] = 'The Course could not be assigned to a college. Add a recognized course name.';
+        }
         $emailOwner = $usersByEmail[normalizedImportKey($values['school_email'])] ?? null;
         if ($emailOwner !== null && ($existing === null || (int) $emailOwner['id'] !== (int) $existing['user_id'])) {
             $errors[] = 'School email already belongs to another account.';
         }
-        if ($existing !== null) { $warnings[] = 'Student ID already exists; basic information will be updated.'; }
+        if ($existing !== null) {
+            $warnings[] = 'Student ID already exists; basic information will be updated.';
+        }
 
         $rows[] = [
             'row_number' => $layout['header_index'] + $offset + 2,
@@ -506,12 +541,20 @@ function validateStudentImport(PDO $database, array $rawRows): array
     $idCounts = [];
     $emailCounts = [];
     foreach ($rows as $row) {
-        if ($row['student_id'] !== '') { $idCounts[normalizedImportKey($row['student_id'])] = ($idCounts[normalizedImportKey($row['student_id'])] ?? 0) + 1; }
-        if ($row['school_email'] !== '') { $emailCounts[normalizedImportKey($row['school_email'])] = ($emailCounts[normalizedImportKey($row['school_email'])] ?? 0) + 1; }
+        if ($row['student_id'] !== '') {
+            $idCounts[normalizedImportKey($row['student_id'])] = ($idCounts[normalizedImportKey($row['student_id'])] ?? 0) + 1;
+        }
+        if ($row['school_email'] !== '') {
+            $emailCounts[normalizedImportKey($row['school_email'])] = ($emailCounts[normalizedImportKey($row['school_email'])] ?? 0) + 1;
+        }
     }
     foreach ($rows as &$row) {
-        if ($row['student_id'] !== '' && ($idCounts[normalizedImportKey($row['student_id'])] ?? 0) > 1) { $row['errors'][] = 'Duplicate Student ID within the file.'; }
-        if ($row['school_email'] !== '' && ($emailCounts[normalizedImportKey($row['school_email'])] ?? 0) > 1) { $row['errors'][] = 'Duplicate school email within the file.'; }
+        if ($row['student_id'] !== '' && ($idCounts[normalizedImportKey($row['student_id'])] ?? 0) > 1) {
+            $row['errors'][] = 'Duplicate Student ID within the file.';
+        }
+        if ($row['school_email'] !== '' && ($emailCounts[normalizedImportKey($row['school_email'])] ?? 0) > 1) {
+            $row['errors'][] = 'Duplicate school email within the file.';
+        }
     }
     unset($row);
 
@@ -543,9 +586,13 @@ function importValidatedStudents(PDO $database, array $preview, ?int $registrarU
         if ($registrarUserId !== null) {
             $periodQuery = $database->query("SELECT id,school_year,semester,clearance_status FROM academic_periods WHERE status='ACTIVE' ORDER BY id LIMIT 2");
             $periods = $periodQuery->fetchAll();
-            if (count($periods) !== 1) { throw new RuntimeException('Exactly one active semester is required.'); }
+            if (count($periods) !== 1) {
+                throw new RuntimeException('Exactly one active semester is required.');
+            }
             $activePeriod = $periods[0];
-            if ($activePeriod['clearance_status'] !== 'PREPARING') { throw new RuntimeException('The enrollment roster can only be replaced before semester clearance is opened.'); }
+            if ($activePeriod['clearance_status'] !== 'PREPARING') {
+                throw new RuntimeException('The enrollment roster can only be replaced before semester clearance is opened.');
+            }
             $registrarStationId = $database->query("SELECT id FROM stations WHERE code='REGISTRAR' LIMIT 1")->fetchColumn();
             $audit = $database->prepare(
                 "INSERT INTO audit_logs
@@ -582,9 +629,12 @@ function importValidatedStudents(PDO $database, array $preview, ?int $registrarU
             if ($row['action'] === 'UPDATE') {
                 $updateUser->execute(['email' => $row['school_email'], 'id' => $row['existing_user_id']]);
                 $updateStudent->execute([
-                    'first_name' => $row['first_name'], 'last_name' => $row['last_name'],
-                    'program' => $row['course_program'], 'year_level' => $row['year_level'],
-                    'organization_id' => $row['organization_id'], 'id' => $row['existing_student_id'],
+                    'first_name' => $row['first_name'],
+                    'last_name' => $row['last_name'],
+                    'program' => $row['course_program'],
+                    'year_level' => $row['year_level'],
+                    'organization_id' => $row['organization_id'],
+                    'id' => $row['existing_student_id'],
                 ]);
                 $updated++;
                 $studentId = (int) $row['existing_student_id'];
@@ -594,10 +644,14 @@ function importValidatedStudents(PDO $database, array $preview, ?int $registrarU
                     'password_hash' => $initialPasswordHash,
                 ]);
                 $insertStudent->execute([
-                    'user_id' => (int) $database->lastInsertId(), 'student_number' => $row['student_id'],
-                    'first_name' => $row['first_name'], 'last_name' => $row['last_name'],
-                    'program' => $row['course_program'], 'year_level' => $row['year_level'],
-                    'section' => 'N/A', 'organization_id' => $row['organization_id'],
+                    'user_id' => (int) $database->lastInsertId(),
+                    'student_number' => $row['student_id'],
+                    'first_name' => $row['first_name'],
+                    'last_name' => $row['last_name'],
+                    'program' => $row['course_program'],
+                    'year_level' => $row['year_level'],
+                    'section' => 'N/A',
+                    'organization_id' => $row['organization_id'],
                 ]);
                 $studentId = (int) $database->lastInsertId();
                 $added++;
@@ -641,7 +695,9 @@ function importValidatedStudents(PDO $database, array $preview, ?int $registrarU
         }
         $database->commit();
     } catch (Throwable $exception) {
-        if ($database->inTransaction()) { $database->rollBack(); }
+        if ($database->inTransaction()) {
+            $database->rollBack();
+        }
         throw $exception;
     }
 

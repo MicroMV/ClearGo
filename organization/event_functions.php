@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 function activeEventPeriod(PDO $database): array
@@ -87,7 +88,9 @@ function createOrganizationEvent(
 
     $period = activeEventPeriod($database);
     $stationId = $database->query("SELECT id FROM stations WHERE code='ORGANIZATION' AND status='ACTIVE' LIMIT 1")->fetchColumn();
-    if ($stationId === false) { throw new RuntimeException('Organization station is unavailable.'); }
+    if ($stationId === false) {
+        throw new RuntimeException('Organization station is unavailable.');
+    }
 
     $database->beginTransaction();
     try {
@@ -120,7 +123,9 @@ function createOrganizationEvent(
         $database->commit();
         return $eventId;
     } catch (Throwable $exception) {
-        if ($database->inTransaction()) { $database->rollBack(); }
+        if ($database->inTransaction()) {
+            $database->rollBack();
+        }
         throw $exception;
     }
 }
@@ -147,7 +152,9 @@ function openEventQr(PDO $database, int $userId, int $organizationId, int $event
     $update->bindValue(':organization_id', $organizationId, PDO::PARAM_INT);
     $update->bindValue(':period_id', (int) $period['id'], PDO::PARAM_INT);
     $update->execute();
-    if ($update->rowCount() !== 1) { throw new RuntimeException('Unable to open QR check-in.'); }
+    if ($update->rowCount() !== 1) {
+        throw new RuntimeException('Unable to open QR check-in.');
+    }
 
     $stationId = (int) $event['station_id'];
     $audit = $database->prepare(
@@ -166,7 +173,9 @@ function closeEventQr(PDO $database, int $userId, int $organizationId, int $even
 {
     $period = activeEventPeriod($database);
     $event = organizationEvent($database, $organizationId, (int) $period['id'], $eventId);
-    if ($event === false) { throw new RuntimeException('The selected event is unavailable.'); }
+    if ($event === false) {
+        throw new RuntimeException('The selected event is unavailable.');
+    }
     $update = $database->prepare(
         "UPDATE events SET check_in_token_hash=NULL,check_in_closes_at=NOW()
          WHERE id=:event_id AND organization_id=:organization_id AND academic_period_id=:period_id"
@@ -189,24 +198,32 @@ function deleteOrganizationEvent(PDO $database, int $userId, int $organizationId
     $database->beginTransaction();
     try {
         $event = organizationEvent($database, $organizationId, (int) $period['id'], $eventId);
-        if ($event === false) { throw new RuntimeException('The selected event is unavailable.'); }
+        if ($event === false) {
+            throw new RuntimeException('The selected event is unavailable.');
+        }
         $removeAttendance = $database->prepare('DELETE FROM event_attendance WHERE event_id=:event_id');
         $removeAttendance->execute(['event_id' => $eventId]);
         $removeEvent = $database->prepare('DELETE FROM events WHERE id=:event_id AND organization_id=:organization_id AND academic_period_id=:period_id');
         $removeEvent->execute(['event_id' => $eventId, 'organization_id' => $organizationId, 'period_id' => $period['id']]);
-        if ($removeEvent->rowCount() !== 1) { throw new RuntimeException('The event could not be deleted.'); }
+        if ($removeEvent->rowCount() !== 1) {
+            throw new RuntimeException('The event could not be deleted.');
+        }
         $audit = $database->prepare("INSERT INTO audit_logs (user_id,action,station_id,description,old_status,new_status) VALUES (:user_id,'ORGANIZATION_EVENT_DELETED',:station_id,:description,'ACTIVE','DELETED')");
         $audit->execute(['user_id' => $userId, 'station_id' => $event['station_id'], 'description' => 'Deleted organization event: ' . $event['name'] . '.']);
         $database->commit();
     } catch (Throwable $exception) {
-        if ($database->inTransaction()) { $database->rollBack(); }
+        if ($database->inTransaction()) {
+            $database->rollBack();
+        }
         throw $exception;
     }
 }
 
 function qrAttendanceContext(PDO $database, string $token, int $userId, bool $lock = false): array|false
 {
-    if (!preg_match('/^[a-f0-9]{64}$/', $token)) { return false; }
+    if (!preg_match('/^[a-f0-9]{64}$/', $token)) {
+        return false;
+    }
     $statement = $database->prepare(
         "SELECT event.id AS event_id,event.name,event.description,event.event_date,event.start_time,event.end_time,
                 event.check_in_closes_at,event.station_id,event.organization_id,organization.name AS organization_name,
@@ -265,7 +282,9 @@ function recordQrAttendance(PDO $database, string $token, int $userId): array
         $database->commit();
         return ['context' => $context, 'already_recorded' => false];
     } catch (Throwable $exception) {
-        if ($database->inTransaction()) { $database->rollBack(); }
+        if ($database->inTransaction()) {
+            $database->rollBack();
+        }
         throw $exception;
     }
 }

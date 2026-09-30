@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/../registrar/student_import_functions.php';
@@ -7,7 +8,9 @@ $failures = [];
 function importCheck(bool $condition, string $message): void
 {
     global $failures;
-    if (!$condition) { $failures[] = $message; }
+    if (!$condition) {
+        $failures[] = $message;
+    }
 }
 
 function createStoredZip(array $entries): string
@@ -96,7 +99,9 @@ try {
     importCheck(count(array_filter($officialLayoutPreview['rows'], static fn(array $row): bool => $row['organization'] === 'CCS')) === 3, 'ACT courses were not assigned to CCS.');
 
     $invalidDomainPreview = validateStudentImport($database, [
-        $rawRows[0], $rawRows[1], $rawRows[2],
+        $rawRows[0],
+        $rawRows[1],
+        $rawRows[2],
         ['1', 'DOMAIN-1', 'Wrong, Domain', 'BSCS', 'First Year', 'student@gmail.com'],
     ]);
     importCheck($invalidDomainPreview['valid_count'] === 0, 'A non-GSuite student address was accepted.');

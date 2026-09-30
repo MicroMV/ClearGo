@@ -1,0 +1,75 @@
+:root {
+    --blue: #0d5ea6;
+    --dark: #17324d;
+    --line: #d8e3ed;
+    --page: #f3f8fd
+}
+
+* {
+    box-sizing: border-box
+}
+
+body {
+    margin: 0;
+    background: var(--page);
+    color: var(--dark);
+    font-family: Arial, sans-serif
+}
+
+main {
+    max-width: 620px;
+    margin: 7vh auto;
+    padding: 20px
+}
+
+.panel {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 28px;
+    text-align: center
+}
+
+h1 {
+    color: var(--blue)
+}
+
+#camera,
+#camera video,
+#camera img {
+    width: 100%;
+    min-height: 280px;
+    max-height: 60vh;
+    background: #172433;
+    border-radius: 10px;
+    object-fit: cover
+}
+
+.notice {
+    padding: 13px;
+    background: #edf6ff;
+    border-left: 4px solid var(--blue);
+    text-align: left
+}
+
+.error {
+    background: #fff0ed;
+    border-left-color: #a33722
+}
+
+button,
+a {
+    display: inline-block;
+    border: 0;
+    border-radius: 5px;
+    padding: 11px 16px;
+    background: var(--blue);
+    color: #fff;
+    text-decoration: none;
+    font: inherit;
+    cursor: pointer
+}
+
+.muted {
+    color: #587086
+}

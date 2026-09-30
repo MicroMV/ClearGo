@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/../config/database.php';
@@ -50,10 +51,12 @@ try {
 
     markOfficeNotReady($database, (int) $candidate['user_id'], (string) $candidate['station_code']);
     $notReady = officeReadiness($database, (string) $candidate['station_code']);
-    if ($notReady['readiness_status'] !== 'NOT_READY'
+    if (
+        $notReady['readiness_status'] !== 'NOT_READY'
         || $notReady['ready_at'] !== null
         || $notReady['ready_by_email'] !== null
-        || $notReady['notes'] !== null) {
+        || $notReady['notes'] !== null
+    ) {
         $failures[] = 'Undo Ready did not completely restore the not-ready state.';
     }
 } catch (Throwable $exception) {

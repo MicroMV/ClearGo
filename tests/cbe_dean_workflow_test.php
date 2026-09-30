@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/../config/database.php';
@@ -134,7 +135,7 @@ try {
             ->execute(['user_id' => $userId, 'token' => '%' . $token . '%']);
         $database->prepare('DELETE FROM clearances WHERE student_id=:student_id')->execute(['student_id' => $studentId]);
         $database->prepare('DELETE FROM semester_enrollments WHERE student_id=:student_id')->execute(['student_id' => $studentId]);
-        foreach (['library_cards','medical_requirements','student_bookstore_fees','student_documents'] as $table) {
+        foreach (['library_cards', 'medical_requirements', 'student_bookstore_fees', 'student_documents'] as $table) {
             $database->prepare("DELETE FROM {$table} WHERE student_id=:student_id")->execute(['student_id' => $studentId]);
         }
         $database->prepare('DELETE FROM students WHERE id=:student_id')->execute(['student_id' => $studentId]);

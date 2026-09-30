@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/../registrar/student_import_functions.php';
@@ -68,11 +69,15 @@ function libraryWorksheetXml(string $organizationCode, array $students, string $
 function createLibraryWorkbookXlsx(PDO $database): string
 {
     $period = $database->query("SELECT school_year,semester FROM academic_periods WHERE status='ACTIVE' LIMIT 1")->fetch();
-    if ($period === false) { throw new RuntimeException('There is no active semester.'); }
+    if ($period === false) {
+        throw new RuntimeException('There is no active semester.');
+    }
     $semester = ['1ST' => 'FIRST SEMESTER', '2ND' => 'SECOND SEMESTER', 'SUMMER' => 'SUMMER'][$period['semester']] ?? $period['semester'];
     $periodLabel = $semester . ' A.Y. ' . $period['school_year'];
     $grouped = ['CCS' => [], 'CBE' => [], 'CTE' => []];
-    foreach (libraryWorkbookStudents($database) as $student) { $grouped[$student['organization_code']][] = $student; }
+    foreach (libraryWorkbookStudents($database) as $student) {
+        $grouped[$student['organization_code']][] = $student;
+    }
     $sheetEntries = [];
     $sheetDeclarations = '';
     $sheetRelationships = '';
@@ -105,7 +110,9 @@ function readLibraryWorkbook(string $path): array
     }
     $worksheetNames = array_values(array_filter(array_keys($entries), static fn(string $name): bool => preg_match('#^xl/worksheets/sheet\d+\.xml$#i', $name) === 1));
     natsort($worksheetNames);
-    if (count($worksheetNames) !== 3) { throw new RuntimeException('Use the Library workbook with its CCS, CBE, and CTE sheets.'); }
+    if (count($worksheetNames) !== 3) {
+        throw new RuntimeException('Use the Library workbook with its CCS, CBE, and CTE sheets.');
+    }
     $result = [];
     foreach ($worksheetNames as $worksheetName) {
         $rows = parseStudentWorksheet($entries[$worksheetName], $sharedStrings);
@@ -113,21 +120,36 @@ function readLibraryWorkbook(string $path): array
         $map = [];
         foreach ($rows as $index => $row) {
             foreach (array_map(static fn(string $value): string => normalizedImportKey(rtrim($value, '.')), $row) as $column => $value) {
-                if (in_array($value, ['student number', 'student no'], true)) { $map['student_number'] = $column; }
-                if ($value === 'library status') { $map['status'] = $column; }
+                if (in_array($value, ['student number', 'student no'], true)) {
+                    $map['student_number'] = $column;
+                }
+                if ($value === 'library status') {
+                    $map['status'] = $column;
+                }
             }
-            if (isset($map['student_number'], $map['status'])) { $headerIndex = $index; break; }
+            if (isset($map['student_number'], $map['status'])) {
+                $headerIndex = $index;
+                break;
+            }
             $map = [];
         }
-        if ($headerIndex === null) { continue; }
+        if ($headerIndex === null) {
+            continue;
+        }
         foreach (array_slice($rows, $headerIndex + 1) as $row) {
             $studentNumber = normalizeImportText((string) ($row[$map['student_number']] ?? ''));
-            if ($studentNumber === '') { continue; }
+            if ($studentNumber === '') {
+                continue;
+            }
             $result[] = ['student_number' => $studentNumber, 'status' => strtoupper(normalizeImportText((string) ($row[$map['status']] ?? '')))];
-            if (count($result) > LIBRARY_WORKBOOK_MAX_ROWS) { throw new RuntimeException('The workbook exceeds 5,000 student rows.'); }
+            if (count($result) > LIBRARY_WORKBOOK_MAX_ROWS) {
+                throw new RuntimeException('The workbook exceeds 5,000 student rows.');
+            }
         }
     }
-    if ($result === []) { throw new RuntimeException('No Library template rows were found in the workbook.'); }
+    if ($result === []) {
+        throw new RuntimeException('No Library template rows were found in the workbook.');
+    }
     return $result;
 }
 
@@ -142,7 +164,9 @@ function clearLibraryFromWorkbook(PDO $database, int $staffUserId, string $stude
     );
     $statement->execute(['student_number' => $studentNumber]);
     $clearanceId = $statement->fetchColumn();
-    if ($clearanceId === false) { throw new RuntimeException($studentNumber . ': no current-semester Library clearance was found.'); }
+    if ($clearanceId === false) {
+        throw new RuntimeException($studentNumber . ': no current-semester Library clearance was found.');
+    }
     try {
         return clearLibraryClearance($database, (int) $clearanceId, $staffUserId) ? 'cleared' : 'already_cleared';
     } catch (RuntimeException $exception) {
@@ -156,11 +180,20 @@ function importLibraryWorkbook(PDO $database, int $staffUserId, array $rows): ar
     $result = ['cleared' => 0, 'already_cleared' => 0, 'skipped' => 0, 'errors' => []];
     foreach ($rows as $row) {
         $key = strtoupper(trim($row['student_number']));
-        if ($key === '' || isset($seen[$key])) { $result['skipped']++; continue; }
+        if ($key === '' || isset($seen[$key])) {
+            $result['skipped']++;
+            continue;
+        }
         $seen[$key] = true;
-        if ($row['status'] !== 'CLEARED') { $result['skipped']++; continue; }
-        try { $result[clearLibraryFromWorkbook($database, $staffUserId, $row['student_number'])]++; }
-        catch (RuntimeException $exception) { $result['errors'][] = $exception->getMessage(); }
+        if ($row['status'] !== 'CLEARED') {
+            $result['skipped']++;
+            continue;
+        }
+        try {
+            $result[clearLibraryFromWorkbook($database, $staffUserId, $row['student_number'])]++;
+        } catch (RuntimeException $exception) {
+            $result['errors'][] = $exception->getMessage();
+        }
     }
     return $result;
 }

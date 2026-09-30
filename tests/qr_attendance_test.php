@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/../config/database.php';
@@ -6,7 +7,9 @@ require_once __DIR__ . '/../organization/event_functions.php';
 
 function qrCheck(bool $condition, string $message): void
 {
-    if (!$condition) { throw new RuntimeException($message); }
+    if (!$condition) {
+        throw new RuntimeException($message);
+    }
 }
 
 $database = getDatabaseConnection();

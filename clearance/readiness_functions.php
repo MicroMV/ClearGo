@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 const READINESS_ROLE_STATIONS = [
@@ -28,21 +29,31 @@ function officeReadiness(PDO $database, string $stationCode): array
     );
     $statement->execute(['station_code' => $stationCode]);
     $row = $statement->fetch();
-    if ($row === false) { throw new RuntimeException('Semester office readiness is not configured.'); }
+    if ($row === false) {
+        throw new RuntimeException('Semester office readiness is not configured.');
+    }
     return $row;
 }
 
 function markOfficeReady(PDO $database, int $userId, string $stationCode, string $notes): void
 {
-    if (mb_strlen($notes) > 500) { throw new RuntimeException('Readiness notes cannot exceed 500 characters.'); }
+    if (mb_strlen($notes) > 500) {
+        throw new RuntimeException('Readiness notes cannot exceed 500 characters.');
+    }
     $database->beginTransaction();
     try {
         $context = officeReadiness($database, $stationCode);
-        if ($context['clearance_status'] !== 'PREPARING') { throw new RuntimeException('Office readiness can only be confirmed before clearance opens.'); }
-        if ($context['readiness_status'] === 'READY') { throw new RuntimeException('This office is already marked ready.'); }
+        if ($context['clearance_status'] !== 'PREPARING') {
+            throw new RuntimeException('Office readiness can only be confirmed before clearance opens.');
+        }
+        if ($context['readiness_status'] === 'READY') {
+            throw new RuntimeException('This office is already marked ready.');
+        }
         $update = $database->prepare("UPDATE office_period_readiness SET status='READY',ready_by=:user_id,ready_at=NOW(),notes=:notes WHERE id=:id AND status='NOT_READY'");
         $update->execute(['user_id' => $userId, 'notes' => $notes ?: null, 'id' => $context['readiness_id']]);
-        if ($update->rowCount() !== 1) { throw new RuntimeException('Office readiness could not be updated.'); }
+        if ($update->rowCount() !== 1) {
+            throw new RuntimeException('Office readiness could not be updated.');
+        }
         $description = $context['station_name'] . ' confirmed readiness for ' . $context['semester'] . ' Semester A.Y. ' . $context['school_year'] . '.';
         $audit = $database->prepare("INSERT INTO audit_logs (user_id,action,station_id,description,old_status,new_status) VALUES (:user_id,'OFFICE_MARKED_READY',:station_id,:description,'NOT_READY','READY')");
         $audit->execute(['user_id' => $userId, 'station_id' => $context['station_id'], 'description' => $description]);
@@ -50,7 +61,9 @@ function markOfficeReady(PDO $database, int $userId, string $stationCode, string
         $notification->execute(['message' => $description]);
         $database->commit();
     } catch (Throwable $exception) {
-        if ($database->inTransaction()) { $database->rollBack(); }
+        if ($database->inTransaction()) {
+            $database->rollBack();
+        }
         throw $exception;
     }
 }
@@ -60,11 +73,17 @@ function markOfficeNotReady(PDO $database, int $userId, string $stationCode): vo
     $database->beginTransaction();
     try {
         $context = officeReadiness($database, $stationCode);
-        if ($context['clearance_status'] !== 'PREPARING') { throw new RuntimeException('Ready status cannot be changed after clearance opens.'); }
-        if ($context['readiness_status'] !== 'READY') { throw new RuntimeException('This office is already marked not ready.'); }
+        if ($context['clearance_status'] !== 'PREPARING') {
+            throw new RuntimeException('Ready status cannot be changed after clearance opens.');
+        }
+        if ($context['readiness_status'] !== 'READY') {
+            throw new RuntimeException('This office is already marked not ready.');
+        }
         $update = $database->prepare("UPDATE office_period_readiness SET status='NOT_READY',ready_by=NULL,ready_at=NULL,notes=NULL WHERE id=:id AND status='READY'");
         $update->execute(['id' => $context['readiness_id']]);
-        if ($update->rowCount() !== 1) { throw new RuntimeException('Office readiness could not be updated.'); }
+        if ($update->rowCount() !== 1) {
+            throw new RuntimeException('Office readiness could not be updated.');
+        }
         $description = $context['station_name'] . ' withdrew readiness for ' . $context['semester'] . ' Semester A.Y. ' . $context['school_year'] . '.';
         $audit = $database->prepare("INSERT INTO audit_logs (user_id,action,station_id,description,old_status,new_status) VALUES (:user_id,'OFFICE_MARKED_NOT_READY',:station_id,:description,'READY','NOT_READY')");
         $audit->execute(['user_id' => $userId, 'station_id' => $context['station_id'], 'description' => $description]);
@@ -72,7 +91,9 @@ function markOfficeNotReady(PDO $database, int $userId, string $stationCode): vo
         $notification->execute(['message' => $description]);
         $database->commit();
     } catch (Throwable $exception) {
-        if ($database->inTransaction()) { $database->rollBack(); }
+        if ($database->inTransaction()) {
+            $database->rollBack();
+        }
         throw $exception;
     }
 }

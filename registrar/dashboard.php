@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 require_once __DIR__ . '/../auth/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
@@ -16,18 +17,99 @@ try {
     $notifications = dashboardNotifications($database, (int) $user['id']);
 } catch (Throwable $exception) {
     error_log('Registrar dashboard failed: ' . $exception->getMessage());
-    http_response_code(500); exit('Unable to load the Registrar dashboard.');
+    http_response_code(500);
+    exit('Unable to load the Registrar dashboard.');
 }
-$message = pullFlashMessage(); $csrfToken = createCsrfToken(); $logoutForm = dashboardLogoutForm();
+$message = pullFlashMessage();
+$csrfToken = createCsrfToken();
+$logoutForm = dashboardLogoutForm();
 $sidebar = registrarDashboardSidebar($user, 'dashboard', $logoutForm);
 ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Registrar | ClearGo</title><style>
-:root{--blue:#0d5ea6;--dark:#17324d;--line:#d8e3ed;--page:#f3f8fd;--green:#176b3a;--amber:#956200}*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--dark);font-family:Arial,sans-serif}header{padding:18px 24px;background:#fff;border-bottom:1px solid var(--line)}.topbar,main{max-width:1150px;margin:auto}.topbar{display:flex;justify-content:space-between;align-items:center}h1{margin:0;color:var(--blue);font-size:24px}main{padding:24px}.panel,.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:20px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{margin:0;text-decoration:none;color:var(--dark)}.card strong{display:block;color:var(--blue);font-size:18px;margin-bottom:6px}.summary{display:flex;gap:14px;flex-wrap:wrap}.summary span{padding:12px;background:#f1f6fa;border-radius:7px}.summary b{display:block;font-size:23px;color:var(--blue)}table{border-collapse:collapse;width:100%}th,td{border-top:1px solid var(--line);padding:10px;text-align:left}th{font-size:13px;color:#587086}.badge{display:inline-block;border-radius:99px;padding:5px 9px;font-size:12px;font-weight:bold}.ready,.open{background:#e4f5eb;color:var(--green)}.not-ready,.preparing,.draft{background:#fff7e8;color:var(--amber)}.closed{background:#eef1f4;color:#536473}.message{padding:12px;background:#edf6ff;border-left:4px solid var(--blue)}form.inline{display:flex;gap:9px;flex-wrap:wrap;align-items:end}input,select,button{padding:9px;border:1px solid #b7c8d8;border-radius:5px;font:inherit}button{background:var(--blue);color:#fff;border:0;cursor:pointer}button:disabled{background:#9aabba;cursor:not-allowed}.muted{font-size:13px;color:#587086}@media(max-width:800px){.cards{grid-template-columns:1fr 1fr}main,header{padding:16px}}@media(max-width:500px){.cards{grid-template-columns:1fr}}
-.topbar-actions{display:flex;gap:10px;align-items:center}.notification-center{position:relative}.notification-toggle{position:relative;min-width:42px;min-height:40px;padding:6px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--dark);font-size:18px}.notification-count{position:absolute;top:-7px;right:-7px;min-width:18px;padding:1px 5px;border:2px solid #fff;border-radius:99px;background:#a33722;color:#fff;font-size:10px;font-weight:bold;line-height:16px}.notification-menu{position:absolute;z-index:20;top:calc(100% + 10px);right:0;width:min(380px,calc(100vw - 32px));max-height:440px;overflow:auto;border:1px solid var(--line);border-radius:10px;background:#fff;box-shadow:0 18px 48px rgba(23,50,77,.18)}.notification-heading{display:flex;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line)}.notification-heading span,.notification-item time{color:#587086;font-size:11px}.notification-menu ul{margin:0;padding:0;list-style:none}.notification-item{display:grid;gap:3px;padding:13px 16px;border-bottom:1px solid var(--line)}.notification-item.unread{background:#f4f9ff}.notification-item span{color:#4f6278;font-size:13px}.notification-empty{padding:24px 16px;color:#587086;text-align:center}</style><link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>"></head><body class="staff-dashboard"><div class="staff-shell"><?= $sidebar ?><div class="staff-workspace"><header class="staff-topbar"><button class="mobile-nav-toggle" type="button" data-sidebar-open aria-controls="staff-sidebar" aria-expanded="false" aria-label="Open navigation">&#9776;</button><div class="topbar-title"><h1>Registrar Administration</h1><p>Manage semester operations, accounts, and final clearance review.</p></div><div class="topbar-actions"><div class="topbar-account"><strong><?= escapeHtml($user['email']) ?></strong><span>Registrar account</span></div><?= dashboardNotificationBell($notifications) ?></div></header><main class="staff-main">
-<?php if ($message): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?>
-<section class="cards"><a class="card" href="<?= escapeHtml(applicationUrl('/registrar/student_import.php')) ?>"><strong>Import Enrollment</strong>Upload the complete semester Excel roster and create/update accounts.</a><a class="card" href="<?= escapeHtml(applicationUrl('/registrar/students.php')) ?>"><strong>Student Accounts</strong>Edit accounts and current-semester enrollment.</a><a class="card" href="<?= escapeHtml(applicationUrl('/registrar/staff_accounts.php')) ?>"><strong>Staff Accounts</strong>Manage office GSuite addresses and passwords.</a><a class="card" href="<?= escapeHtml(applicationUrl('/registrar/clearance.php')) ?>"><strong>Clearance Review</strong>Process final Registrar requirements.</a><a class="card" href="<?= escapeHtml(applicationUrl('/registrar/audit_logs.php')) ?>"><strong>Audit Logs</strong>Review all recorded modifications.</a></section>
-<section class="panel"><div class="section-heading"><div><h2><?= escapeHtml(semesterLabel($period)) ?></h2><p class="muted">Active semester overview and clearance lifecycle.</p></div></div><div class="summary"><span>Lifecycle<b><?= escapeHtml($period['clearance_status']) ?></b></span><span>Enrolled students<b><?= $enrolledCount ?></b></span><span>Offices ready<b><?= $readyCount ?>/<?= count($readiness) ?></b></span></div><?php if ($period['clearance_status'] === 'PREPARING'): ?><form method="post" action="<?= escapeHtml(applicationUrl('/registrar/semester_action.php')) ?>" onsubmit="return confirm('Open clearance for all enrolled students? The roster will be locked for this semester.');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><button name="action" value="open_clearance" <?= $readyCount !== count($readiness) || $enrolledCount < 1 ? 'disabled' : '' ?>>Open Semester Clearance</button></form><?php elseif ($period['clearance_status'] === 'OPEN'): ?><p class="message">Clearance is visible to enrolled students. This semester remains available after it is archived.</p><?php endif; ?></section>
-<section class="panel"><h2>Office readiness</h2><table><thead><tr><th>Office</th><th>Status</th><th>Confirmed by</th><th>Date</th></tr></thead><tbody><?php foreach ($readiness as $row): ?><tr><td><?= escapeHtml($row['name']) ?></td><td><span class="badge <?= strtolower(str_replace('_','-',$row['status'])) ?>"><?= escapeHtml(str_replace('_',' ',$row['status'])) ?></span></td><td><?= escapeHtml($row['ready_by_email'] ?? '—') ?></td><td><?= escapeHtml($row['ready_at'] ?? '—') ?></td></tr><?php endforeach; ?></tbody></table></section>
-<section class="panel"><h2>Start the next semester</h2><p class="muted">This archives the current semester without deleting its students, approvals, documents, or audit history. The new semester begins with a fresh roster and fresh office readiness.</p><form class="inline" method="post" action="<?= escapeHtml(applicationUrl('/registrar/semester_action.php')) ?>" onsubmit="return confirm('Archive the current semester and start a new preparation cycle?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><label>Academic Year<br><input name="school_year" required pattern="\d{4}-\d{4}" placeholder="2026-2027"></label><label>Semester<br><select name="semester"><option value="1ST">First Semester</option><option value="2ND">Second Semester</option><option value="SUMMER">Summer</option></select></label><button name="action" value="create_semester">Create Semester</button></form></section>
-<section class="panel"><h2>Semester archive</h2><table><thead><tr><th>Semester</th><th>Status</th><th>Opened</th><th>Closed</th></tr></thead><tbody><?php foreach ($periods as $archive): ?><tr><td><?= escapeHtml(semesterLabel($archive)) ?></td><td><span class="badge <?= strtolower($archive['clearance_status']) ?>"><?= escapeHtml($archive['clearance_status']) ?></span></td><td><?= escapeHtml($archive['opened_at'] ?? '—') ?></td><td><?= escapeHtml($archive['closed_at'] ?? '—') ?></td></tr><?php endforeach; ?></tbody></table></section>
-</main></div></div><script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>"></script></body></html>
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Registrar | ClearGo</title>
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/registrar-dashboard.css')) ?>">
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>">
+</head>
+
+<body class="staff-dashboard">
+    <div class="staff-shell"><?= $sidebar ?><div class="staff-workspace">
+            <header class="staff-topbar"><button class="mobile-nav-toggle" type="button" data-sidebar-open aria-controls="staff-sidebar" aria-expanded="false" aria-label="Open navigation">&#9776;</button>
+                <div class="topbar-title">
+                    <h1>Registrar Administration</h1>
+                    <p>Manage semester operations, accounts, and final clearance review.</p>
+                </div>
+                <div class="topbar-actions">
+                    <div class="topbar-account"><strong><?= escapeHtml($user['email']) ?></strong><span>Registrar account</span></div><?= dashboardNotificationBell($notifications) ?>
+                </div>
+            </header>
+            <main class="staff-main">
+                <?php if ($message): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?>
+                <section class="cards"><a class="card" href="<?= escapeHtml(applicationUrl('/registrar/student_import.php')) ?>"><strong>Import Enrollment</strong>Upload the complete semester Excel roster and create/update accounts.</a><a class="card" href="<?= escapeHtml(applicationUrl('/registrar/students.php')) ?>"><strong>Student Accounts</strong>Edit accounts and current-semester enrollment.</a><a class="card" href="<?= escapeHtml(applicationUrl('/registrar/staff_accounts.php')) ?>"><strong>Staff Accounts</strong>Manage office GSuite addresses and passwords.</a><a class="card" href="<?= escapeHtml(applicationUrl('/registrar/clearance.php')) ?>"><strong>Clearance Review</strong>Process final Registrar requirements.</a><a class="card" href="<?= escapeHtml(applicationUrl('/registrar/audit_logs.php')) ?>"><strong>Audit Logs</strong>Review all recorded modifications.</a></section>
+                <section class="panel">
+                    <div class="section-heading">
+                        <div>
+                            <h2><?= escapeHtml(semesterLabel($period)) ?></h2>
+                            <p class="muted">Active semester overview and clearance lifecycle.</p>
+                        </div>
+                    </div>
+                    <div class="summary"><span>Lifecycle<b><?= escapeHtml($period['clearance_status']) ?></b></span><span>Enrolled students<b><?= $enrolledCount ?></b></span><span>Offices ready<b><?= $readyCount ?>/<?= count($readiness) ?></b></span></div><?php if ($period['clearance_status'] === 'PREPARING'): ?><form method="post" action="<?= escapeHtml(applicationUrl('/registrar/semester_action.php')) ?>" onsubmit="return confirm('Open clearance for all enrolled students? The roster will be locked for this semester.');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><button name="action" value="open_clearance" <?= $readyCount !== count($readiness) || $enrolledCount < 1 ? 'disabled' : '' ?>>Open Semester Clearance</button></form><?php elseif ($period['clearance_status'] === 'OPEN'): ?><p class="message">Clearance is visible to enrolled students. This semester remains available after it is archived.</p><?php endif; ?>
+                </section>
+                <section class="panel">
+                    <h2>Office readiness</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Office</th>
+                                <th>Status</th>
+                                <th>Confirmed by</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody><?php foreach ($readiness as $row): ?><tr>
+                                    <td><?= escapeHtml($row['name']) ?></td>
+                                    <td><span class="badge <?= strtolower(str_replace('_', '-', $row['status'])) ?>"><?= escapeHtml(str_replace('_', ' ', $row['status'])) ?></span></td>
+                                    <td><?= escapeHtml($row['ready_by_email'] ?? '—') ?></td>
+                                    <td><?= escapeHtml($row['ready_at'] ?? '—') ?></td>
+                                </tr><?php endforeach; ?></tbody>
+                    </table>
+                </section>
+                <section class="panel">
+                    <h2>Start the next semester</h2>
+                    <p class="muted">This archives the current semester without deleting its students, approvals, documents, or audit history. The new semester begins with a fresh roster and fresh office readiness.</p>
+                    <form class="inline" method="post" action="<?= escapeHtml(applicationUrl('/registrar/semester_action.php')) ?>" onsubmit="return confirm('Archive the current semester and start a new preparation cycle?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><label>Academic Year<br><input name="school_year" required pattern="\d{4}-\d{4}" placeholder="2026-2027"></label><label>Semester<br><select name="semester">
+                                <option value="1ST">First Semester</option>
+                                <option value="2ND">Second Semester</option>
+                                <option value="SUMMER">Summer</option>
+                            </select></label><button name="action" value="create_semester">Create Semester</button></form>
+                </section>
+                <section class="panel">
+                    <h2>Semester archive</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Semester</th>
+                                <th>Status</th>
+                                <th>Opened</th>
+                                <th>Closed</th>
+                            </tr>
+                        </thead>
+                        <tbody><?php foreach ($periods as $archive): ?><tr>
+                                    <td><?= escapeHtml(semesterLabel($archive)) ?></td>
+                                    <td><span class="badge <?= strtolower($archive['clearance_status']) ?>"><?= escapeHtml($archive['clearance_status']) ?></span></td>
+                                    <td><?= escapeHtml($archive['opened_at'] ?? '—') ?></td>
+                                    <td><?= escapeHtml($archive['closed_at'] ?? '—') ?></td>
+                                </tr><?php endforeach; ?></tbody>
+                    </table>
+                </section>
+            </main>
+        </div>
+    </div>
+    <script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>"></script>
+</body>
+
+</html>

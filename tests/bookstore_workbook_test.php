@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/../config/database.php';
@@ -6,14 +7,18 @@ require_once __DIR__ . '/../bookstore/workbook_functions.php';
 
 function bookstoreWorkbookCheck(bool $condition, string $message): void
 {
-    if (!$condition) { throw new RuntimeException($message); }
+    if (!$condition) {
+        throw new RuntimeException($message);
+    }
 }
 
 $database = getDatabaseConnection();
 $workbook = createBookstoreWorkbookXlsx($database);
 bookstoreWorkbookCheck(str_starts_with($workbook, 'PK'), 'Bookstore export is not an XLSX ZIP archive.');
 $temporary = tempnam(sys_get_temp_dir(), 'bookstore-workbook-');
-if ($temporary === false) { throw new RuntimeException('Unable to create a temporary test file.'); }
+if ($temporary === false) {
+    throw new RuntimeException('Unable to create a temporary test file.');
+}
 try {
     file_put_contents($temporary, $workbook);
     $entries = readZipEntries($temporary, [], 'xl/worksheets/');

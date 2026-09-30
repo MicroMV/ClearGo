@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/../config/database.php';
@@ -17,7 +18,9 @@ $failures = [];
 
 try {
     $organization = $database->query("SELECT id, code FROM organizations WHERE status = 'ACTIVE' ORDER BY id LIMIT 1")->fetch();
-    if ($organization === false) { throw new RuntimeException('No active organization is available for the importer test.'); }
+    if ($organization === false) {
+        throw new RuntimeException('No active organization is available for the importer test.');
+    }
 
     $insertUser = $database->prepare("INSERT INTO users (email, password_hash, role, status) VALUES (:email, :hash, 'STUDENT', 'ACTIVE')");
     $insertUser->execute(['email' => $oldEmail, 'hash' => password_hash(bin2hex(random_bytes(16)), PASSWORD_DEFAULT)]);

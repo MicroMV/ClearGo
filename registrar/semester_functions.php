@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 function registrarActivePeriod(PDO $database, bool $lock = false): array
@@ -6,7 +7,9 @@ function registrarActivePeriod(PDO $database, bool $lock = false): array
     $sql = "SELECT id,school_year,semester,status,clearance_status,opened_at,closed_at
             FROM academic_periods WHERE status='ACTIVE' ORDER BY id LIMIT 2" . ($lock ? ' FOR UPDATE' : '');
     $periods = $database->query($sql)->fetchAll();
-    if (count($periods) !== 1) { throw new RuntimeException('Exactly one active semester must be configured.'); }
+    if (count($periods) !== 1) {
+        throw new RuntimeException('Exactly one active semester must be configured.');
+    }
     return $periods[0];
 }
 
@@ -95,13 +98,17 @@ function createRegistrarSemester(PDO $database, int $registrarUserId, string $sc
     if (preg_match('/^(\d{4})-(\d{4})$/', $schoolYear, $matches) !== 1 || (int) $matches[2] !== (int) $matches[1] + 1) {
         throw new RuntimeException('Use an academic year such as 2026-2027.');
     }
-    if (!in_array($semester, ['1ST','2ND','SUMMER'], true)) { throw new RuntimeException('Select a valid semester.'); }
+    if (!in_array($semester, ['1ST', '2ND', 'SUMMER'], true)) {
+        throw new RuntimeException('Select a valid semester.');
+    }
 
     $database->beginTransaction();
     try {
         $existing = $database->prepare('SELECT id FROM academic_periods WHERE school_year=:school_year AND semester=:semester LIMIT 1');
         $existing->execute(['school_year' => $schoolYear, 'semester' => $semester]);
-        if ($existing->fetchColumn() !== false) { throw new RuntimeException('That academic semester already exists. Open its archive instead of creating a duplicate.'); }
+        if ($existing->fetchColumn() !== false) {
+            throw new RuntimeException('That academic semester already exists. Open its archive instead of creating a duplicate.');
+        }
 
         $database->exec("UPDATE academic_periods SET status='CLOSED',clearance_status='CLOSED',closed_at=COALESCE(closed_at,NOW()) WHERE status='ACTIVE'");
         $insert = $database->prepare("INSERT INTO academic_periods (school_year,semester,status,clearance_status) VALUES (:school_year,:semester,'ACTIVE','PREPARING')");
@@ -115,7 +122,9 @@ function createRegistrarSemester(PDO $database, int $registrarUserId, string $sc
         $database->commit();
         return $periodId;
     } catch (Throwable $exception) {
-        if ($database->inTransaction()) { $database->rollBack(); }
+        if ($database->inTransaction()) {
+            $database->rollBack();
+        }
         throw $exception;
     }
 }
@@ -125,15 +134,23 @@ function openRegistrarClearance(PDO $database, int $registrarUserId): int
     $database->beginTransaction();
     try {
         $period = registrarActivePeriod($database, true);
-        if ($period['clearance_status'] === 'OPEN') { throw new RuntimeException('Clearance is already open for this semester.'); }
-        if ($period['clearance_status'] !== 'PREPARING') { throw new RuntimeException('This semester is not available for preparation.'); }
+        if ($period['clearance_status'] === 'OPEN') {
+            throw new RuntimeException('Clearance is already open for this semester.');
+        }
+        if ($period['clearance_status'] !== 'PREPARING') {
+            throw new RuntimeException('This semester is not available for preparation.');
+        }
         $readinessQuery = $database->prepare("SELECT COUNT(*) FROM office_period_readiness WHERE academic_period_id=:period_id AND status<>'READY'");
         $readinessQuery->execute(['period_id' => $period['id']]);
-        if ((int) $readinessQuery->fetchColumn() > 0) { throw new RuntimeException('Every office must click Ready before clearance can be opened.'); }
+        if ((int) $readinessQuery->fetchColumn() > 0) {
+            throw new RuntimeException('Every office must click Ready before clearance can be opened.');
+        }
         $enrollmentQuery = $database->prepare("SELECT COUNT(*) FROM semester_enrollments WHERE academic_period_id=:period_id AND status='ENROLLED'");
         $enrollmentQuery->execute(['period_id' => $period['id']]);
         $enrollmentCount = (int) $enrollmentQuery->fetchColumn();
-        if ($enrollmentCount < 1) { throw new RuntimeException('Import or enroll students before opening clearance.'); }
+        if ($enrollmentCount < 1) {
+            throw new RuntimeException('Import or enroll students before opening clearance.');
+        }
 
         $open = $database->prepare("UPDATE academic_periods SET clearance_status='OPEN',opened_by=:user_id,opened_at=NOW(),closed_at=NULL WHERE id=:period_id");
         $open->execute(['user_id' => $registrarUserId, 'period_id' => $period['id']]);
@@ -201,7 +218,9 @@ function openRegistrarClearance(PDO $database, int $registrarUserId): int
         $database->commit();
         return $enrollmentCount;
     } catch (Throwable $exception) {
-        if ($database->inTransaction()) { $database->rollBack(); }
+        if ($database->inTransaction()) {
+            $database->rollBack();
+        }
         throw $exception;
     }
 }

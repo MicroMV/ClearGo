@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 require_once __DIR__ . '/../auth/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
@@ -14,12 +15,44 @@ try {
     $database = getDatabaseConnection();
     $period = activeEventPeriod($database);
     $event = $eventId === false ? false : studentCouncilEvent($database, (int) $period['id'], (int) $eventId);
-    if ($event === false) { throw new RuntimeException('Event unavailable.'); }
-} catch (Throwable $exception) { setFlashMessage('Unable to display the event QR code.'); redirectTo('/student-council/dashboard.php'); }
+    if ($event === false) {
+        throw new RuntimeException('Event unavailable.');
+    }
+} catch (Throwable $exception) {
+    setFlashMessage('Unable to display the event QR code.');
+    redirectTo('/student-council/dashboard.php');
+}
 $host = preg_replace('/[^A-Za-z0-9.\-:\[\]]/', '', (string) ($_SERVER['HTTP_HOST'] ?? 'localhost')) ?: 'localhost';
 $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $publicUrl = rtrim((string) (getenv('APP_PUBLIC_URL') ?: ''), '/');
 $checkInUrl = $validToken ? ($publicUrl !== '' ? $publicUrl : $scheme . '://' . $host) . applicationUrl('/student/attendance_checkin.php?token=' . rawurlencode($token)) : '';
 $csrfToken = createCsrfToken();
 ?>
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Student Council Event QR</title><style>:root{--blue:#0d5ea6;--dark:#17324d;--line:#d8e3ed;--page:#f3f8fd}*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--dark);font-family:Arial,sans-serif}main{max-width:760px;margin:30px auto;padding:24px}.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px;text-align:center}h1{color:var(--blue)}#qr{display:flex;justify-content:center;margin:24px auto}#qr svg{max-width:100%;height:auto}.notice{padding:13px;background:#fff7e8;border-left:4px solid #b87800;text-align:left}.actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:22px}button,a.button{border:0;border-radius:5px;padding:11px 16px;background:var(--blue);color:#fff;font:inherit;text-decoration:none;cursor:pointer}.danger{background:#aa3824!important}.muted{color:#587086;font-size:14px;word-break:break-all}</style></head><body><main><section class="panel"><h1><?= escapeHtml($event['name']) ?></h1><p>Student Council institutional attendance · <?= escapeHtml($event['event_date']) ?></p><?php if (!$validToken): ?><p class="notice">This QR display is no longer available in this browser. Open a new QR code from the Student Council dashboard.</p><?php else: ?><div id="qr" aria-label="Student attendance QR code"></div><p><strong>Check-in closes:</strong> <?= escapeHtml((string) $event['check_in_closes_at']) ?></p><p class="muted">Students scan this code with their phone camera, sign in with their school account, and confirm attendance.</p><?php endif; ?><div class="actions"><a class="button" href="<?= escapeHtml(applicationUrl('/student-council/dashboard.php')) ?>">Back to Events</a><?php if ($validToken): ?><form method="post" action="<?= escapeHtml(applicationUrl('/student-council/event_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="close_qr"><input type="hidden" name="event_id" value="<?= (int) $eventId ?>"><button class="danger" type="submit">Close QR Now</button></form><?php endif; ?></div></section></main><?php if ($validToken): ?><script src="<?= escapeHtml(applicationUrl('/assets/js/qrcode.js')) ?>"></script><script>const qr=qrcode(0,'M');qr.addData(<?= json_encode($checkInUrl, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);qr.make();document.getElementById('qr').innerHTML=qr.createSvgTag(7,4);</script><?php endif; ?></body></html>
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Student Council Event QR</title>
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/student-council-event-qr.css')) ?>">
+</head>
+
+<body>
+    <main>
+        <section class="panel">
+            <h1><?= escapeHtml($event['name']) ?></h1>
+            <p>Student Council institutional attendance · <?= escapeHtml($event['event_date']) ?></p><?php if (!$validToken): ?><p class="notice">This QR display is no longer available in this browser. Open a new QR code from the Student Council dashboard.</p><?php else: ?><div id="qr" aria-label="Student attendance QR code"></div>
+                <p><strong>Check-in closes:</strong> <?= escapeHtml((string) $event['check_in_closes_at']) ?></p>
+                <p class="muted">Students scan this code with their phone camera, sign in with their school account, and confirm attendance.</p><?php endif; ?><div class="actions"><a class="button" href="<?= escapeHtml(applicationUrl('/student-council/dashboard.php')) ?>">Back to Events</a><?php if ($validToken): ?><form method="post" action="<?= escapeHtml(applicationUrl('/student-council/event_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="close_qr"><input type="hidden" name="event_id" value="<?= (int) $eventId ?>"><button class="danger" type="submit">Close QR Now</button></form><?php endif; ?></div>
+        </section>
+    </main><?php if ($validToken): ?><script src="<?= escapeHtml(applicationUrl('/assets/js/qrcode.js')) ?>"></script>
+        <script>
+            const qr = qrcode(0, 'M');
+            qr.addData(<?= json_encode($checkInUrl, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>);
+            qr.make();
+            document.getElementById('qr').innerHTML = qr.createSvgTag(7, 4);
+        </script><?php endif; ?>
+</body>
+
+</html>

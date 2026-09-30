@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/auth_check.php';
@@ -16,8 +17,10 @@ if (!verifyCsrfToken($_POST['csrf_token'] ?? null)) {
 $email = trim((string) ($_POST['email'] ?? ''));
 $password = (string) ($_POST['password'] ?? '');
 
-if ($email === '' || $password === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)
-    || !str_ends_with(strtolower($email), '@thelewiscollege.edu.ph')) {
+if (
+    $email === '' || $password === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)
+    || !str_ends_with(strtolower($email), '@thelewiscollege.edu.ph')
+) {
     setFlashMessage('Invalid email or password.');
     redirectTo('/login.php');
 }
@@ -60,8 +63,10 @@ $_SESSION['authenticated_user'] = [
     'role' => $user['role'],
 ];
 
-if ($user['role'] === 'STUDENT'
-    && preg_match('/^[a-f0-9]{64}$/', (string) ($_SESSION['pending_attendance_token'] ?? ''))) {
+if (
+    $user['role'] === 'STUDENT'
+    && preg_match('/^[a-f0-9]{64}$/', (string) ($_SESSION['pending_attendance_token'] ?? ''))
+) {
     redirectTo('/student/attendance_checkin.php');
 }
 

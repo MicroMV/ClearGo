@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require_once __DIR__ . '/../auth/auth_check.php';
@@ -34,21 +35,27 @@ try {
     } elseif ($action === 'open_qr') {
         $eventId = filter_var($_POST['event_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         $minutes = filter_var($_POST['minutes'] ?? 10, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 720]]);
-        if ($eventId === false || $minutes === false) { throw new RuntimeException('Select a valid event and QR duration.'); }
+        if ($eventId === false || $minutes === false) {
+            throw new RuntimeException('Select a valid event and QR duration.');
+        }
         $qr = openEventQr($database, $user['id'], (int) $organization['id'], (int) $eventId, (int) $minutes);
         startSecureSession();
         $_SESSION['organization_qr_display'] = $qr;
         redirectTo('/organization/event_qr.php?event=' . (int) $eventId);
     } elseif ($action === 'close_qr') {
         $eventId = filter_var($_POST['event_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-        if ($eventId === false) { throw new RuntimeException('Select a valid event.'); }
+        if ($eventId === false) {
+            throw new RuntimeException('Select a valid event.');
+        }
         closeEventQr($database, $user['id'], (int) $organization['id'], (int) $eventId);
         startSecureSession();
         unset($_SESSION['organization_qr_display']);
         setFlashMessage('QR attendance is closed.');
     } elseif ($action === 'delete') {
         $eventId = filter_var($_POST['event_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-        if ($eventId === false) { throw new RuntimeException('Select a valid event.'); }
+        if ($eventId === false) {
+            throw new RuntimeException('Select a valid event.');
+        }
         deleteOrganizationEvent($database, $user['id'], (int) $organization['id'], (int) $eventId);
         startSecureSession();
         unset($_SESSION['organization_qr_display']);
