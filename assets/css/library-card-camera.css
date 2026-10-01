@@ -1,0 +1,46 @@
+.library-card-box {
+    margin-top: 18px;
+    padding: 16px;
+    border: 1px solid #d6e1ee;
+    border-radius: 12px;
+    background: #f8fbff;
+}
+
+.library-card-box h3 {
+    margin-top: 0;
+}
+
+.library-card-capture {
+    display: grid;
+    gap: 12px;
+}
+
+.library-card-capture video,
+.library-card-preview {
+    display: block;
+    width: 100%;
+    max-height: 420px;
+    border: 1px solid #c8d6e6;
+    border-radius: 10px;
+    background: #0b192a;
+    object-fit: contain;
+}
+
+.library-card-capture [hidden] {
+    display: none;
+}
+
+.library-card-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.library-card-buttons button {
+    margin: 0;
+}
+
+.library-camera-status {
+    min-height: 20px;
+    margin: 0;
+}

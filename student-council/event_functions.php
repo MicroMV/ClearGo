@@ -25,7 +25,7 @@ function studentCouncilEvents(PDO $database, int $periodId): array
     return $statement->fetchAll();
 }
 
-function createStudentCouncilEvent(PDO $database, int $userId, string $name, string $eventDate, ?string $startTime, ?string $endTime): void
+function createStudentCouncilEvent(PDO $database, int $userId, string $name, string $eventDate): void
 {
     $name = trim($name);
     if ($name === '' || mb_strlen($name) > 200) {
@@ -35,21 +35,13 @@ function createStudentCouncilEvent(PDO $database, int $userId, string $name, str
     if ($date === false || $date->format('Y-m-d') !== $eventDate) {
         throw new RuntimeException('Provide a valid event date.');
     }
-    foreach ([$startTime, $endTime] as $time) {
-        if ($time !== null && !preg_match('/^(?:[01]\\d|2[0-3]):[0-5]\\d$/', $time)) {
-            throw new RuntimeException('Provide a valid event time.');
-        }
-    }
-    if ($startTime !== null && $endTime !== null && $endTime <= $startTime) {
-        throw new RuntimeException('The event end time must be later than its start time.');
-    }
     $period = activeEventPeriod($database);
     $stationId = $database->query("SELECT id FROM stations WHERE code='STUDENT_COUNCIL' AND status='ACTIVE' LIMIT 1")->fetchColumn();
     if ($stationId === false) {
         throw new RuntimeException('Student Council station is unavailable.');
     }
-    $statement = $database->prepare("INSERT INTO events (station_id,organization_id,academic_period_id,name,event_date,start_time,end_time,is_required,status,created_by) VALUES (:station_id,NULL,:period_id,:name,:event_date,:start_time,:end_time,1,'ACTIVE',:user_id)");
-    $statement->execute(['station_id' => $stationId, 'period_id' => $period['id'], 'name' => $name, 'event_date' => $eventDate, 'start_time' => $startTime, 'end_time' => $endTime, 'user_id' => $userId]);
+    $statement = $database->prepare("INSERT INTO events (station_id,organization_id,academic_period_id,name,event_date,is_required,status,created_by) VALUES (:station_id,NULL,:period_id,:name,:event_date,1,'ACTIVE',:user_id)");
+    $statement->execute(['station_id' => $stationId, 'period_id' => $period['id'], 'name' => $name, 'event_date' => $eventDate, 'user_id' => $userId]);
     $notification = $database->prepare("INSERT INTO notifications (user_id,title,message) SELECT student.user_id,'New required institutional activity',:message FROM students student INNER JOIN semester_enrollments enrollment ON enrollment.student_id=student.id AND enrollment.academic_period_id=:period_id AND enrollment.status='ENROLLED' WHERE student.status='ACTIVE'");
     $notification->execute(['period_id' => $period['id'], 'message' => 'Student Council added the required activity "' . $name . '" on ' . $eventDate . '. Check in through the event QR code when it opens.']);
     $audit = $database->prepare("INSERT INTO audit_logs (user_id,action,station_id,description,new_status) VALUES (:user_id,'STUDENT_COUNCIL_EVENT_CREATED',:station_id,:description,'ACTIVE')");

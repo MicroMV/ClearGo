@@ -168,7 +168,7 @@ $filterQuery = http_build_query([
                         <button type="submit">Apply Filters</button>
                         <a class="clear-filter" href="<?= escapeHtml(applicationUrl('/registrar/students.php')) ?>">Clear</a>
                     </form>
-                    <p class="muted"><?= escapeHtml(semesterLabel($period)) ?>; enrollment changes are <?= $period['clearance_status'] === 'PREPARING' ? 'open' : 'locked after clearance opening' ?>. Page <?= $page ?> of <?= $totalPages ?> · <?= $totalRows ?> student(s).</p>
+                    <p class="muted"><?= escapeHtml(semesterLabel($period)) ?>; enrollment changes are <?= $period['clearance_status'] === 'PREPARING' ? 'open' : 'unavailable after clearance opening' ?>. Page <?= $page ?> of <?= $totalPages ?> · <?= $totalRows ?> student(s).</p>
                     <div class="table-wrap">
                         <table>
                             <thead>

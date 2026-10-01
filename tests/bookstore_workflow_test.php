@@ -24,6 +24,7 @@ if ($staffId === false) {
     throw new RuntimeException('No active Bookstore staff account is available.');
 }
 $context = officeClearanceContext($database, 'BOOKSTORE', (int) $candidate);
+$baselineEligible = officeEligibility($database, 'BOOKSTORE', $context)['eligible'];
 $obligationId = null;
 try {
     $insert = $database->prepare("INSERT INTO bookstore_obligations (student_id,academic_period_id,description,amount,status,recorded_by) VALUES (:student_id,:period_id,'Automated Bookstore test',10,'UNPAID',:user_id)");
@@ -34,8 +35,8 @@ try {
     }
     $database->prepare("UPDATE bookstore_obligations SET status='CLEARED',payment_reference='TEST-RECEIPT',cleared_by=:user_id,cleared_at=NOW() WHERE id=:id")
         ->execute(['user_id' => $staffId, 'id' => $obligationId]);
-    if (!officeEligibility($database, 'BOOKSTORE', $context)['eligible']) {
-        throw new RuntimeException('A settled Bookstore obligation still blocked clearance.');
+    if (officeEligibility($database, 'BOOKSTORE', $context)['eligible'] !== $baselineEligible) {
+        throw new RuntimeException('A settled Bookstore obligation did not restore the student\'s previous eligibility.');
     }
     echo "Bookstore obligation workflow test passed.\n";
 } finally {

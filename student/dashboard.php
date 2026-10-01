@@ -173,6 +173,8 @@ try {
 
     $stationRequirements = [];
     $accountingReceipt = false;
+    $libraryCardSubmission = false;
+    $bookstoreFees = [];
     $medicalStatus = 'PENDING';
     $medicalAppointment = false;
     $medicalSchedules = [];
@@ -218,6 +220,30 @@ try {
     }
 
     if ($clearance !== false && $period !== false) {
+        $libraryCardQuery = $database->prepare(
+            "SELECT card.status AS card_status,submission.status AS submission_status,
+                    submission.submitted_at,submission.return_reason
+             FROM library_cards card
+             LEFT JOIN library_card_submissions submission ON submission.library_card_id=card.id
+             WHERE card.student_id=:student_id LIMIT 1"
+        );
+        $libraryCardQuery->execute(['student_id' => $student['id']]);
+        $libraryCardSubmission = $libraryCardQuery->fetch();
+
+        $bookstoreFeeQuery = $database->prepare(
+            "SELECT student_fee.id AS student_fee_id,student_fee.status AS payment_status,
+                    fee.name,fee.amount,submission.status AS submission_status,
+                    submission.submitted_at,submission.return_reason
+             FROM student_bookstore_fees student_fee
+             INNER JOIN bookstore_fees fee ON fee.id=student_fee.fee_id
+                AND fee.academic_period_id=:period_id AND fee.status='ACTIVE'
+             LEFT JOIN bookstore_receipt_submissions submission ON submission.student_fee_id=student_fee.id
+             WHERE student_fee.student_id=:student_id
+             ORDER BY fee.id"
+        );
+        $bookstoreFeeQuery->execute(['period_id' => $period['id'], 'student_id' => $student['id']]);
+        $bookstoreFees = $bookstoreFeeQuery->fetchAll();
+
         $medicalQuery = $database->prepare("SELECT status FROM medical_requirements WHERE student_id=:student_id AND academic_period_id=:period_id LIMIT 1");
         $medicalQuery->execute(['student_id' => $student['id'], 'period_id' => $period['id']]);
         $medicalStatus = (string) ($medicalQuery->fetchColumn() ?: 'PENDING');
@@ -278,7 +304,7 @@ function studentStatusLabel(string $status): string
         'RETURNED' => 'REQUIRES ACTION',
         'SUBMITTED' => 'WAITING FOR VERIFICATION',
         'UNDER_REVIEW' => 'UNDER REVIEW',
-        default => str_replace('_', ' ', $status),
+        default => statusDisplayLabel($status),
     };
 }
 
@@ -371,6 +397,7 @@ $logoutForm = dashboardLogoutForm();
     <title>Student Dashboard | Digital Clearance System</title>
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/student-page.css')) ?>">
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/student-dashboard.css')) ?>">
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/library-card-camera.css')) ?>">
 </head>
 
 <body class="student-dashboard">
@@ -514,7 +541,7 @@ $logoutForm = dashboardLogoutForm();
                             $modalRequirements = array_values(array_filter($modalRequirements, static fn(array $requirement): bool => in_array($requirement['requirement_code'] ?? '', ['CCS_FACULTY_EVALUATION', 'CCS_FOURTH_YEAR_FACULTY_EVALUATION'], true)));
                         } ?>
                         <?php if ($modalRequirements === []): ?>
-                            <p class="muted">No requirement records are available for this station.</p>
+                            <?php if ($station['code'] !== 'BOOKSTORE'): ?><p class="muted">No requirement records are available for this station.</p><?php endif; ?>
                         <?php else: ?>
                             <ul class="requirements">
                                 <?php foreach ($modalRequirements as $requirement): ?>
@@ -535,6 +562,62 @@ $logoutForm = dashboardLogoutForm();
                                     <button class="primary-button" type="submit">Submit screenshots</button>
                                 </form>
                             <?php endif; ?>
+                        <?php endif; ?>
+                        <?php if ($station['code'] === 'LIBRARY'): ?>
+                            <div class="library-card-box">
+                                <h3>Capture your library card</h3>
+                                <?php $librarySubmissionStatus = (string) ($libraryCardSubmission['submission_status'] ?? ''); ?>
+                                <?php if ($modalStatus === 'APPROVED' || ($libraryCardSubmission['card_status'] ?? '') === 'VERIFIED'): ?>
+                                    <p class="notice">Your library card has been confirmed by the Library.</p>
+                                <?php elseif ($librarySubmissionStatus === 'SUBMITTED'): ?>
+                                    <p class="notice">Your captured library card is waiting for Library confirmation.</p>
+                                <?php else: ?>
+                                    <?php if ($librarySubmissionStatus === 'RETURNED'): ?><p class="notice warning">Please capture your card again: <?= escapeHtml((string) ($libraryCardSubmission['return_reason'] ?? 'The previous photo was not accepted.')) ?></p><?php endif; ?>
+                                    <form class="library-card-capture" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/student/library_card_action.php')) ?>" data-library-card-capture>
+                                        <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
+                                        <input type="hidden" name="capture_source" value="live_camera">
+                                        <video playsinline muted hidden aria-label="Library card camera preview"></video>
+                                        <canvas hidden></canvas>
+                                        <img class="library-card-preview" hidden alt="Captured library card preview">
+                                        <p class="muted">Use your phone camera to capture the front of your physical library card in real time. Gallery uploads are not allowed.</p>
+                                        <div class="library-card-buttons"><button type="button" data-open-camera>Open Camera</button><button type="button" data-capture-photo hidden>Capture Card</button><button class="secondary" type="button" data-retake-photo hidden>Retake</button><button class="primary-button" type="submit" data-submit-photo disabled>Submit to Library</button></div>
+                                        <p class="library-camera-status muted" aria-live="polite"></p>
+                                    </form>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+                        <?php if ($station['code'] === 'BOOKSTORE'): ?>
+                            <div class="bookstore-fee-box">
+                                <h3>Event fee receipts</h3>
+                                <p class="muted">Submit one receipt for each event listed by the Bookstore. Every submission must be confirmed before Bookstore clearance.</p>
+                                <?php if ($bookstoreFees === []): ?>
+                                    <p class="notice">The Bookstore has not posted any event fees for this semester.</p>
+                                <?php else: ?>
+                                    <div class="bookstore-fee-list">
+                                    <?php foreach ($bookstoreFees as $fee): ?>
+                                        <article class="bookstore-fee-item">
+                                            <div class="bookstore-fee-heading"><div><strong><?= escapeHtml($fee['name']) ?></strong><div class="muted">Required receipt &middot; PHP <?= number_format((float) $fee['amount'], 2) ?></div></div>
+                                            <?php if ($fee['payment_status'] === 'PAID'): ?><span class="badge approved">CONFIRMED</span><?php elseif ($fee['submission_status'] === 'SUBMITTED'): ?><span class="badge under-review">AWAITING REVIEW</span><?php elseif ($fee['submission_status'] === 'LOST_REPORTED'): ?><span class="badge under-review">LOST RECEIPT REVIEW</span><?php elseif ($fee['submission_status'] === 'RETURNED'): ?><span class="badge returned">RETURNED</span><?php else: ?><span class="badge not-submitted">NOT SUBMITTED</span><?php endif; ?></div>
+                                            <?php if ($fee['submission_status'] === 'RETURNED' && !empty($fee['return_reason'])): ?><p class="notice warning">Action needed: <?= escapeHtml($fee['return_reason']) ?></p><?php endif; ?>
+                                            <?php if ($fee['payment_status'] !== 'PAID' && !in_array($fee['submission_status'] ?? '', ['SUBMITTED', 'LOST_REPORTED'], true)): ?>
+                                                <div class="bookstore-receipt-actions">
+                                                    <form class="upload-form" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/student/bookstore_receipt_action.php')) ?>">
+                                                        <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="student_fee_id" value="<?= (int) $fee['student_fee_id'] ?>">
+                                                        <label><strong>Upload <?= escapeHtml($fee['name']) ?> receipt</strong><input name="receipt_image" type="file" accept="image/jpeg,image/png,image/webp" required></label>
+                                                        <p class="muted">One clear JPG, PNG, or WebP image; maximum 8 MB.</p><button class="primary-button" name="action" value="upload">Submit Receipt</button>
+                                                    </form>
+                                                    <form method="post" action="<?= escapeHtml(applicationUrl('/student/bookstore_receipt_action.php')) ?>" onsubmit="return confirm('Report this receipt as lost? The Bookstore must confirm your report.');">
+                                                        <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="student_fee_id" value="<?= (int) $fee['student_fee_id'] ?>"><button class="lost-receipt-button" name="action" value="lost">Report Lost Receipt</button>
+                                                    </form>
+                                                </div>
+                                            <?php else: ?>
+                                                <?php if ($fee['payment_status'] !== 'PAID'): ?><p class="muted">Submitted <?= escapeHtml(date('M j, Y g:i A', strtotime((string) $fee['submitted_at']))) ?>. Please wait for Bookstore confirmation.</p><?php endif; ?>
+                                            <?php endif; ?>
+                                        </article>
+                                    <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
                         <?php endif; ?>
                         <?php if ($station['code'] === 'CLINIC' && $medicalStatus === 'RETURNED'): ?>
                             <div class="medical-schedule-box">
@@ -618,6 +701,7 @@ $logoutForm = dashboardLogoutForm();
 
     </main>
     <script src="<?= escapeHtml(applicationUrl('/assets/js/student-dashboard.js')) ?>"></script>
+    <script src="<?= escapeHtml(applicationUrl('/assets/js/library-card-camera.js')) ?>"></script>
 </body>
 
 </html>

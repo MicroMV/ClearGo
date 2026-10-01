@@ -124,6 +124,7 @@ $logoutForm = dashboardLogoutForm();
 $pageTitle = $organization['code'] === 'CBE' ? 'YBC Organization Clearance' : 'Organization Clearance';
 $sidebar = staffDashboardSidebar($pageTitle, $user, [
     ['key' => 'dashboard', 'label' => 'Dashboard', 'url' => '/organization/dashboard.php', 'icon' => 'dashboard'],
+    ['key' => 'attendance', 'label' => 'Event Attendance', 'url' => '/organization/attendance.php', 'icon' => 'document'],
 ], 'dashboard', $logoutForm);
 ?>
 <!doctype html>
@@ -264,7 +265,7 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
                                                 <td><?= escapeHtml($student['program']) ?></td>
                                                 <td>Year <?= (int) $student['year_level'] ?></td>
                                                 <td><?php if ($student['eligibility']['events'] === []): ?><?= $organization['code'] === 'CBE' ? 'Direct YBC sign-off' : 'Direct organization sign-off' ?><?php else: ?><?= count($student['eligibility']['events']) - count(array_filter($student['eligibility']['events'], static fn(array $event): bool => !(int) $event['attended'])) ?>/<?= count($student['eligibility']['events']) ?> events attended<?php endif; ?></td>
-                                                <td><span class="badge <?= strtolower($student['display_status']) ?>"><?= $student['display_status'] === 'APPROVED' ? 'CLEARED' : escapeHtml($student['display_status']) ?></span></td>
+                                                <td><span class="badge <?= strtolower($student['display_status']) ?>"><?= $student['display_status'] === 'APPROVED' ? 'CLEARED' : escapeHtml(statusDisplayLabel($student['display_status'])) ?></span></td>
                                                 <td><?php if (in_array($readiness['clearance_status'], ['PREPARING', 'OPEN'], true) && $student['display_status'] === 'ELIGIBLE'): ?><button name="student_ids[]" value="<?= (int) $student['id'] ?>" type="submit">Clear</button><?php elseif ($student['display_status'] === 'APPROVED'): ?><span class="muted">Cleared</span><?php elseif ($organization['code'] !== 'CBE' && $student['dean_status'] !== 'APPROVED'): ?><span class="muted">Waiting for Dean</span><?php else: ?><span class="muted">Requirements incomplete</span><?php endif; ?></td>
                                             </tr><?php endforeach; ?></tbody>
                                 </table>
@@ -276,7 +277,7 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
                 <?php if ($selectedStudent !== null): ?><section class="panel">
                         <h2><?= escapeHtml($selectedStudent['first_name'] . ' ' . $selectedStudent['last_name']) ?></h2>
                         <p><?= escapeHtml($selectedStudent['student_number']) ?> | <?= escapeHtml($selectedStudent['email']) ?> | <?= escapeHtml($organization['code']) ?></p>
-                        <p><strong>Organization clearance:</strong> <?= escapeHtml($selectedStudent['display_status']) ?></p>
+                        <p><strong>Organization clearance:</strong> <?= escapeHtml(statusDisplayLabel($selectedStudent['display_status'])) ?></p>
                         <h3>Required Organization Events</h3><?php if ($selectedStudent['eligibility']['events'] === []): ?><p>No event attendance is required. This student is available for direct <?= $organization['code'] === 'CBE' ? 'YBC' : 'organization' ?> sign-off.</p><?php else: ?><ul class="events"><?php foreach ($selectedStudent['eligibility']['events'] as $event): ?><li><strong><?= escapeHtml($event['name']) ?></strong> <span class="<?= (int) $event['attended'] === 1 ? 'yes' : 'no' ?>"><?= (int) $event['attended'] === 1 ? 'PRESENT' : 'NOT ATTENDED' ?></span></li><?php endforeach; ?></ul><?php endif; ?><p><?= escapeHtml($selectedStudent['eligibility']['reason'] ?? 'All required attendance is complete.') ?></p><?php if ($selectedWaitingForDean): ?><p class="message">Waiting for Dean clearance. Organization clearance becomes available after the Dean clears this student.</p><?php elseif ($selectedStudent['display_status'] === 'ELIGIBLE'): ?><form method="post" action="<?= escapeHtml(applicationUrl('/organization/action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="student_ids[]" value="<?= (int) $selectedStudent['id'] ?>"><button name="action" value="approve_selected">Clear</button></form><?php elseif (!empty($selectedStudent['clearance_id']) && $selectedStudent['display_status'] !== 'APPROVED'): ?><form method="post" action="<?= escapeHtml(applicationUrl('/organization/action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="return"><input type="hidden" name="student_id" value="<?= (int) $selectedStudent['id'] ?>">
                                 <p><textarea name="reason" required maxlength="1000" placeholder="Reason for return"></textarea></p><button class="danger" type="submit">Return Student</button>
                             </form><?php endif; ?>

@@ -38,6 +38,11 @@ function studentCouncilAttendanceEligibilitySql(string $studentAlias, string $pe
     return "NOT EXISTS (SELECT 1 FROM events council_event INNER JOIN stations council_station ON council_station.id=council_event.station_id AND council_station.code='STUDENT_COUNCIL' LEFT JOIN event_attendance council_attendance ON council_attendance.event_id=council_event.id AND council_attendance.student_id={$studentAlias}.id AND council_attendance.status='PRESENT' WHERE council_event.academic_period_id={$periodAlias}.id AND council_event.is_required=1 AND council_event.status='ACTIVE' AND council_attendance.id IS NULL)";
 }
 
+function bookstoreEligibilitySql(string $studentAlias, string $periodAlias): string
+{
+    return "NOT EXISTS (SELECT 1 FROM bookstore_obligations obligation WHERE obligation.student_id={$studentAlias}.id AND obligation.academic_period_id={$periodAlias}.id AND obligation.status='UNPAID') AND NOT EXISTS (SELECT 1 FROM student_bookstore_fees student_fee INNER JOIN bookstore_fees fee ON fee.id=student_fee.fee_id AND fee.academic_period_id={$periodAlias}.id AND fee.status='ACTIVE' AND fee.is_required=1 WHERE student_fee.student_id={$studentAlias}.id AND student_fee.status<>'PAID')";
+}
+
 function sasoEligibilitySql(string $clearanceAlias, string $studentAlias): string
 {
     return "EXISTS (SELECT 1 FROM clearance_stations organization_record INNER JOIN stations organization_station ON organization_station.id=organization_record.station_id AND organization_station.code='ORGANIZATION' WHERE organization_record.clearance_id={$clearanceAlias}.id AND organization_record.status='APPROVED') AND EXISTS (SELECT 1 FROM stations child INNER JOIN stations parent ON parent.id=child.parent_station_id AND parent.code='SASO' WHERE child.status='ACTIVE') AND NOT EXISTS (SELECT 1 FROM stations child INNER JOIN stations parent ON parent.id=child.parent_station_id AND parent.code='SASO' INNER JOIN clearance_stations child_record ON child_record.station_id=child.id AND child_record.clearance_id={$clearanceAlias}.id WHERE child.status='ACTIVE' AND child_record.status<>'APPROVED')";
@@ -48,7 +53,7 @@ function officeListEligibilitySql(string $stationCode): string
     $requirement = match ($stationCode) {
         'STUDENT_COUNCIL' => studentCouncilAttendanceEligibilitySql('student', 'period'),
         'LIBRARY' => "EXISTS (SELECT 1 FROM library_cards card WHERE card.student_id=student.id AND card.status='VERIFIED')",
-        'BOOKSTORE' => "NOT EXISTS (SELECT 1 FROM bookstore_obligations obligation WHERE obligation.student_id=student.id AND obligation.academic_period_id=period.id AND obligation.status='UNPAID')",
+        'BOOKSTORE' => bookstoreEligibilitySql('student', 'period'),
         'CLINIC' => "EXISTS (SELECT 1 FROM medical_requirements medical WHERE medical.student_id=student.id AND medical.academic_period_id=period.id AND medical.status='VERIFIED')",
         'SASO' => sasoEligibilitySql('c', 'student'),
         'FACILITIES' => "NOT EXISTS (SELECT 1 FROM facilities_obligations item WHERE item.student_id=student.id AND item.academic_period_id=period.id AND item.status='OUTSTANDING') AND (student.year_level<4 OR period.semester<>'2ND' OR EXISTS (SELECT 1 FROM facilities_obligations toga WHERE toga.student_id=student.id AND toga.academic_period_id=period.id AND toga.item_type='TOGA' AND toga.status='RETURNED'))",
@@ -143,7 +148,7 @@ function officeStatusSummary(PDO $database, string $stationCode): array
     $eligibilitySql = match ($stationCode) {
         'STUDENT_COUNCIL' => studentCouncilAttendanceEligibilitySql('student', 'period'),
         'LIBRARY' => "EXISTS (SELECT 1 FROM library_cards card WHERE card.student_id=student.id AND card.status='VERIFIED')",
-        'BOOKSTORE' => "NOT EXISTS (SELECT 1 FROM bookstore_obligations obligation WHERE obligation.student_id=student.id AND obligation.academic_period_id=period.id AND obligation.status='UNPAID')",
+        'BOOKSTORE' => bookstoreEligibilitySql('student', 'period'),
         'CLINIC' => "EXISTS (SELECT 1 FROM medical_requirements medical WHERE medical.student_id=student.id AND medical.academic_period_id=period.id AND medical.status='VERIFIED')",
         'SASO' => sasoEligibilitySql('clearance', 'student'),
         'FACILITIES' => "NOT EXISTS (SELECT 1 FROM facilities_obligations item WHERE item.student_id=student.id AND item.academic_period_id=period.id AND item.status='OUTSTANDING') AND (student.year_level<4 OR period.semester<>'2ND' OR EXISTS (SELECT 1 FROM facilities_obligations toga WHERE toga.student_id=student.id AND toga.academic_period_id=period.id AND toga.item_type='TOGA' AND toga.status='RETURNED'))",
@@ -265,8 +270,17 @@ function officeEligibility(PDO $database, string $stationCode, array $row): arra
         $eligible = $cardStatus === 'VERIFIED';
     } elseif ($stationCode === 'BOOKSTORE') {
         $open = countQuery($database, "SELECT COUNT(*) FROM bookstore_obligations WHERE student_id=:student_id AND academic_period_id=:period_id AND status='UNPAID'", ['student_id' => $studentId, 'period_id' => $periodId]);
-        $details[] = $open === 0 ? 'No pending Bookstore obligations' : "Pending Bookstore obligations: {$open}";
-        $eligible = $open === 0;
+        $unconfirmedFees = countQuery($database, "SELECT COUNT(*) FROM student_bookstore_fees student_fee INNER JOIN bookstore_fees fee ON fee.id=student_fee.fee_id AND fee.academic_period_id=:period_id AND fee.status='ACTIVE' AND fee.is_required=1 WHERE student_fee.student_id=:student_id AND student_fee.status<>'PAID'", ['student_id' => $studentId, 'period_id' => $periodId]);
+        if ($open > 0) {
+            $details[] = "Pending Bookstore obligations: {$open}";
+        }
+        if ($unconfirmedFees > 0) {
+            $details[] = "Pending event receipt obligations: {$unconfirmedFees}";
+        }
+        if ($open === 0 && $unconfirmedFees === 0) {
+            $details[] = 'No pending Bookstore obligations';
+        }
+        $eligible = $open === 0 && $unconfirmedFees === 0;
     } elseif ($stationCode === 'CLINIC') {
         $medical = $database->prepare('SELECT status, remarks FROM medical_requirements WHERE student_id=:student_id AND academic_period_id=:period_id LIMIT 1');
         $medical->execute(['student_id' => $studentId, 'period_id' => $periodId]);
@@ -640,6 +654,10 @@ function clearBookstoreClearance(PDO $database, int $clearanceId, int $staffUser
         }
         if ($context['station_status'] === 'LOCKED') {
             throw new RuntimeException('The required preceding offices have not cleared this student yet.');
+        }
+        $unconfirmedFees = countQuery($database, "SELECT COUNT(*) FROM student_bookstore_fees student_fee INNER JOIN bookstore_fees fee ON fee.id=student_fee.fee_id AND fee.academic_period_id=:period_id AND fee.status='ACTIVE' AND fee.is_required=1 WHERE student_fee.student_id=:student_id AND student_fee.status<>'PAID'", ['student_id' => $context['student_id'], 'period_id' => $context['academic_period_id']]);
+        if ($unconfirmedFees > 0) {
+            throw new RuntimeException('Confirm every required event receipt before clearing this student.');
         }
         $unpaid = countQuery($database, "SELECT COUNT(*) FROM bookstore_obligations WHERE student_id=:student_id AND academic_period_id=:period_id AND status='UNPAID'", ['student_id' => $context['student_id'], 'period_id' => $context['academic_period_id']]);
         if ($unpaid > 0 && trim($paymentReference) === '') {

@@ -1,0 +1,159 @@
+.staff-dashboard .receipt-filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+    padding: 5px;
+    width: fit-content;
+    max-width: 100%;
+    border: 1px solid var(--cg-border);
+    border-radius: 10px;
+    background: var(--cg-bg);
+}
+
+.staff-dashboard .receipt-filters a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 8px 14px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    background: transparent;
+    color: var(--cg-text);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.staff-dashboard .receipt-filters a:hover {
+    background: var(--cg-blue-soft);
+    color: var(--cg-blue);
+    text-decoration: none;
+}
+
+.staff-dashboard .receipt-filters a.active {
+    border-color: var(--cg-blue);
+    background: var(--cg-blue);
+    color: #fff;
+    box-shadow: 0 1px 2px rgba(11, 37, 69, .14);
+}
+
+.receipt-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.receipt-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 16px;
+    border: 1px solid var(--cg-border);
+    border-radius: 12px;
+    background: var(--cg-surface);
+    box-shadow: var(--cg-shadow);
+}
+
+.receipt-card-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.receipt-card-heading > div {
+    min-width: 0;
+}
+
+.receipt-card-heading > div > strong {
+    display: block;
+    overflow-wrap: anywhere;
+    font-size: 16px;
+}
+
+.receipt-student {
+    margin-bottom: 12px;
+}
+
+.receipt-card-image {
+    display: grid;
+    place-items: center;
+    height: 300px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    border: 1px solid var(--cg-border);
+    border-radius: 9px;
+    background: var(--cg-bg);
+}
+
+.receipt-card-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.receipt-card-lost {
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 5px;
+    height: 180px;
+    margin-bottom: 14px;
+    padding: 20px;
+    border: 1px dashed #d4ad63;
+    border-radius: 9px;
+    background: var(--cg-warning-bg);
+    color: var(--cg-warning);
+    text-align: center;
+}
+
+.receipt-card-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.receipt-card-actions form,
+.receipt-card-actions button {
+    width: 100%;
+    margin: 0;
+}
+
+.return-receipt-form {
+    display: grid;
+    gap: 14px;
+}
+
+.return-receipt-form textarea {
+    width: 100%;
+    min-height: 120px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.staff-dashboard .lost-reported {
+    background: #fff6df;
+    color: #8a5b00;
+}
+
+@media (max-width: 700px) {
+    .staff-dashboard .receipt-filters {
+        width: 100%;
+    }
+
+    .staff-dashboard .receipt-filters a {
+        flex: 1 1 calc(50% - 8px);
+    }
+
+    .receipt-card-grid {
+        grid-template-columns: 1fr;
+    }
+}

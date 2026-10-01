@@ -1,0 +1,37 @@
+.attendance-controls {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.attendance-controls label:first-child {
+    min-width: min(100%, 320px);
+}
+
+.attendance-controls label:nth-child(2) {
+    flex: 1;
+    min-width: min(100%, 260px);
+}
+
+.attendance-summary {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    border: 1px solid var(--cg-border);
+    border-radius: 9px;
+    background: var(--cg-blue-soft);
+}
+
+.attendance-summary strong {
+    color: var(--cg-navy);
+    font-size: 24px;
+}
+
+.attendance-summary span {
+    color: var(--cg-muted);
+    font-weight: 700;
+}

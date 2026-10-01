@@ -35,6 +35,50 @@
         font-weight: bold;
 }
 
+.bookstore-fee-box {
+        margin-top: 18px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+}
+
+.bookstore-fee-list {
+        display: grid;
+        gap: 12px;
+        margin-top: 12px;
+}
+
+.bookstore-fee-item {
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: #fbfdff;
+}
+
+.bookstore-fee-heading,
+.bookstore-receipt-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+        flex-wrap: wrap;
+}
+
+.bookstore-receipt-actions {
+        margin-top: 12px;
+        align-items: flex-end;
+}
+
+.bookstore-receipt-actions .upload-form {
+        flex: 1;
+        min-width: min(100%, 320px);
+}
+
+.lost-receipt-button {
+        border-color: #a66a00;
+        background: #fff6df;
+        color: #7a4d00;
+}
+
         * {
                 box-sizing: border-box;
         }

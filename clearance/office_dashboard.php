@@ -174,6 +174,16 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
     if ($stationCode === 'CLINIC') {
         $sidebarItems[] = ['key' => 'schedules', 'label' => 'Medical Schedules', 'url' => '/clinic/schedules.php', 'icon' => 'document'];
     }
+    if ($stationCode === 'BOOKSTORE') {
+        $sidebarItems[] = ['key' => 'fees', 'label' => 'Event Fees', 'url' => '/bookstore/fees.php', 'icon' => 'document'];
+        $sidebarItems[] = ['key' => 'submissions', 'label' => 'Receipt Submissions', 'url' => '/bookstore/submissions.php', 'icon' => 'document'];
+    }
+    if ($stationCode === 'LIBRARY') {
+        $sidebarItems[] = ['key' => 'submissions', 'label' => 'Card Submissions', 'url' => '/library/submissions.php', 'icon' => 'document'];
+    }
+    if ($stationCode === 'STUDENT_COUNCIL') {
+        $sidebarItems[] = ['key' => 'attendance', 'label' => 'Event Attendance', 'url' => '/student-council/attendance.php', 'icon' => 'document'];
+    }
     $activeSidebarItem = 'dashboard';
     if ($stationCode === 'REGISTRAR') {
         $sidebar = registrarDashboardSidebar($user, 'clearance', $logoutForm);
@@ -251,45 +261,39 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                     <?php if ($stationCode === 'STUDENT_COUNCIL'): ?><section class="panel">
                             <h2>Institutional Event Attendance</h2>
                             <p>Create required institutional activities and open a QR code during each activity. Every enrolled student can check in; attendance is recorded in ClearGo for clearance verification.</p>
-                            <form class="controls" method="post" action="<?= escapeHtml(applicationUrl('/student-council/event_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="create"><input type="text" name="name" maxlength="200" required placeholder="Required institutional activity"><label>Date <input type="date" name="event_date" required value="<?= escapeHtml(date('Y-m-d')) ?>"></label><label>Start <input type="time" name="start_time"></label><label>End <input type="time" name="end_time"></label><button type="submit">Create Required Event</button></form><?php if ($councilEvents === []): ?><p class="muted">No institutional activities have been created for this semester.</p><?php else: ?><div class="table-wrap">
+                            <form class="controls" method="post" action="<?= escapeHtml(applicationUrl('/student-council/event_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="create"><input type="text" name="name" maxlength="200" required placeholder="Required institutional activity"><label>Date <input type="date" name="event_date" required value="<?= escapeHtml(date('Y-m-d')) ?>"></label><button type="submit">Create Required Event</button></form><?php if ($councilEvents === []): ?><p class="muted">No institutional activities have been created for this semester.</p><?php else: ?><div class="table-wrap">
                                     <table>
                                         <thead>
                                             <tr>
                                                 <th>Activity</th>
-                                                <th>Date / Time</th>
+                                                <th>Date</th>
                                                 <th>Attendance</th>
                                                 <th>QR Check-in</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody><?php foreach ($councilEvents as $event): ?><tr>
                                                     <td><strong><?= escapeHtml($event['name']) ?></strong></td>
-                                                    <td><?= escapeHtml($event['event_date']) ?><br><span class="muted"><?= escapeHtml(trim(($event['start_time'] ?? '') . ' - ' . ($event['end_time'] ?? ''), ' -')) ?></span></td>
+                                                    <td><?= escapeHtml($event['event_date']) ?></td>
                                                     <td><?= (int) $event['present_count'] ?> / <?= (int) $event['enrolled_count'] ?> present</td>
                                                     <td><?php if ((int) $event['qr_is_open'] === 1): ?><span class="badge approved">OPEN</span> until <?= escapeHtml($event['check_in_closes_at']) ?> <a href="<?= escapeHtml(applicationUrl('/student-council/event_qr.php?event=' . (int) $event['id'])) ?>">Display QR</a>
-                                                            <form class="inline" method="post" action="<?= escapeHtml(applicationUrl('/student-council/event_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="close_qr"><input type="hidden" name="event_id" value="<?= (int) $event['id'] ?>"><button class="secondary" type="submit">Close QR</button></form><?php else: ?><form class="inline" method="post" action="<?= escapeHtml(applicationUrl('/student-council/event_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="open_qr"><input type="hidden" name="event_id" value="<?= (int) $event['id'] ?>"><select name="minutes">
+                                                            <form class="inline" method="post" action="<?= escapeHtml(applicationUrl('/student-council/event_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="close_qr"><input type="hidden" name="event_id" value="<?= (int) $event['id'] ?>"><button class="secondary" type="submit">Close QR</button></form><?php else: ?><form class="inline" method="post" action="<?= escapeHtml(applicationUrl('/student-council/event_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="open_qr"><input type="hidden" name="event_id" value="<?= (int) $event['id'] ?>"><label class="muted">Attendance time limit<select name="minutes" aria-label="Attendance time limit">
                                                                     <option value="5">5 minutes</option>
                                                                     <option value="10" selected>10 minutes</option>
                                                                     <option value="15">15 minutes</option>
                                                                     <option value="30">30 minutes</option>
                                                                     <option value="60">1 hour</option>
-                                                                </select><button type="submit">Open QR</button></form><?php endif; ?>
+                                                                    <option value="120">2 hours</option>
+                                                                    <option value="240">4 hours</option>
+                                                                    <option value="480">8 hours</option>
+                                                                    <option value="720">12 hours</option>
+                                                                </select></label><button type="submit">Open check-in</button></form><?php endif; ?>
                                                     </td>
+                                                    <td><form method="post" action="<?= escapeHtml(applicationUrl('/student-council/event_action.php')) ?>" onsubmit="return confirm('Delete this event and all of its attendance records?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="delete"><input type="hidden" name="event_id" value="<?= (int) $event['id'] ?>"><button class="danger" type="submit">Delete</button></form></td>
                                                 </tr><?php endforeach; ?></tbody>
                                     </table>
                                 </div><?php endif; ?>
                         </section><?php endif; ?>
-                    <?php if ($stationCode === 'STUDENT_COUNCIL' && $councilEvents !== []): ?>
-                        <section class="panel">
-                            <h2>Delete institutional activity</h2>
-                            <p class="muted">Deleting an activity permanently removes its QR access and recorded attendance.</p>
-                            <form class="inline" method="post" action="<?= escapeHtml(applicationUrl('/student-council/event_action.php')) ?>" onsubmit="return confirm('Delete this event and all of its attendance records?');">
-                                <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
-                                <input type="hidden" name="action" value="delete">
-                                <select name="event_id" required><?php foreach ($councilEvents as $event): ?><option value="<?= (int) $event['id'] ?>"><?= escapeHtml($event['name'] . ' — ' . $event['event_date']) ?></option><?php endforeach; ?></select>
-                                <button class="danger" type="submit">Delete event</button>
-                            </form>
-                        </section>
-                    <?php endif; ?>
                     <section class="panel">
                         <div class="section-heading">
                             <div>
@@ -368,9 +372,25 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                                             <?php $section = trim((string) $row['section']); ?>
                                             <td>Year <?= (int) $row['year_level'] ?><?php if ($section !== '' && strtoupper($section) !== 'N/A'): ?><div class="muted"><?= escapeHtml($section) ?></div><?php endif; ?></td>
                                             <td><?= escapeHtml($row['organization_code']) ?></td>
-                                            <td><?= $stationCode === 'BOOKSTORE' ? escapeHtml($row['eligibility']['details'][0] ?? 'Needs Bookstore review') : ($row['eligibility']['eligible'] ? 'All checks satisfied' : escapeHtml($row['eligibility']['details'][0] ?? 'Needs review')) ?></td>
-                                            <td><span class="badge <?= strtolower(str_replace('_', '-', $row['view_status'])) ?>"><?= $row['station_status'] === 'APPROVED' ? 'CLEARED' : escapeHtml(str_replace('_', ' ', $row['view_status'])) ?></span></td>
+                                            <td><?= $stationCode === 'BOOKSTORE' ? escapeHtml(implode('; ', $row['eligibility']['details']) ?: 'Needs Bookstore review') : ($row['eligibility']['eligible'] ? 'All checks satisfied' : escapeHtml($row['eligibility']['details'][0] ?? 'Needs review')) ?></td>
+                                            <td><span class="badge <?= strtolower(str_replace('_', '-', $row['view_status'])) ?>"><?= $row['station_status'] === 'APPROVED' ? 'CLEARED' : escapeHtml(statusDisplayLabel($row['view_status'])) ?></span></td>
+                                            <?php if ($stationCode === 'BOOKSTORE'): ?>
+                                                <td>
+                                                    <?php if (in_array($row['station_status'], ['APPROVED', 'LOCKED'], true)): ?>
+                                                        <span class="muted">&mdash;</span>
+                                                    <?php elseif ($row['eligibility']['eligible']): ?>
+                                                        <form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student for Bookstore?');">
+                                                            <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
+                                                            <input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>">
+                                                            <button name="action" value="approve">Clear</button>
+                                                        </form>
+                                                    <?php else: ?>
+                                                        <a href="?clearance=<?= (int) $row['clearance_id'] ?>&amp;search=<?= urlencode($search) ?>&amp;filter=<?= urlencode($filter) ?>&amp;course=<?= urlencode($courseFilter) ?>&amp;year_level=<?= $yearFilter ?>&amp;page=<?= $page ?>">Review</a>
+                                                    <?php endif; ?>
+                                                </td>
+                                            <?php else: ?>
                                             <td><?php if (in_array($row['station_status'], ['APPROVED', 'LOCKED'], true)): ?><span class="muted">—</span><?php elseif ($stationCode === 'FACILITIES'): ?><button type="button" class="secondary" onclick="openFacilitiesItemModal(<?= (int) $row['clearance_id'] ?>)">Borrowed Item</button><?php if ($row['eligibility']['eligible']): ?> <form class="inline" method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student for Facilities?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="approve">Clear</button></form><?php endif; ?><?php elseif ($stationCode === 'CLINIC'): ?><div class="inline"><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Mark this student as having no medical record?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><input type="hidden" name="status" value="RETURNED"><input type="hidden" name="remarks" value="No medical record on file."><button class="danger" name="action" value="medical_status">No Medical</button></form><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student at the Clinic?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="clinic_clear">Clear</button></form></div><?php elseif ($directClearOffice): ?><form method="post" action="<?= escapeHtml($actionUrl) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="library_clear">Clear</button></form><?php elseif ($stationCode === 'SASO'): ?><?php if ($row['eligibility']['eligible']): ?><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student for SASO?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="approve">Clear</button></form><?php else: ?><span class="muted">—</span><?php endif; ?><?php elseif ($stationCode === 'STUDENT_COUNCIL' && $row['eligibility']['eligible']): ?><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student for Student Council?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="approve">Clear</button></form><?php else: ?><a href="?clearance=<?= (int) $row['clearance_id'] ?>&amp;search=<?= urlencode($search) ?>&amp;filter=<?= urlencode($filter) ?>&amp;audience=<?= urlencode($facilitiesAudience) ?>&amp;department=<?= urlencode($facilitiesDepartment) ?>&amp;course=<?= urlencode($courseFilter) ?>&amp;year_level=<?= $yearFilter ?>&amp;page=<?= $page ?>"><?= $stationCode === 'BOOKSTORE' ? 'Review' : ($row['clearance_status'] === 'PREPARING' ? 'Take Action' : 'Review') ?></a><?php endif; ?></td>
+                                            <?php endif; ?>
                                         </tr>
                                     <?php endforeach;
                                     if ($visible === 0): ?><tr>
@@ -402,7 +422,7 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                                         <p><strong><?= escapeHtml($selected['student_number']) ?></strong><br><?= escapeHtml($selected['program']) ?> · Year <?= (int) $selected['year_level'] ?><br><?= escapeHtml($selected['organization_name']) ?></p><?php $selectedDisplayStatus = $selected['station_status'];
                                                                                                                                                                                                                                                             if ($selected['station_status'] === 'PENDING' && $selected['eligibility']['eligible']) {
                                                                                                                                                                                                                                                                 $selectedDisplayStatus = 'READY';
-                                                                                                                                                                                                                                                            } ?><p>Status: <span class="badge <?= strtolower($selectedDisplayStatus) ?>"><?= escapeHtml(str_replace('_', ' ', $selectedDisplayStatus)) ?></span></p><?php if ($selected['returned_reason']): ?><p class="message"><?= escapeHtml($selected['returned_reason']) ?></p><?php endif; ?>
+                                                                                                                                                                                                                                                            } ?><p>Status: <span class="badge <?= strtolower($selectedDisplayStatus) ?>"><?= escapeHtml(statusDisplayLabel($selectedDisplayStatus)) ?></span></p><?php if ($selected['returned_reason']): ?><p class="message"><?= escapeHtml($selected['returned_reason']) ?></p><?php endif; ?>
                                     </div><?php if ($stationCode !== 'BOOKSTORE'): ?><div>
                                             <h2>Eligibility checks</h2>
                                             <ul class="requirement-list"><?php foreach ($selected['eligibility']['details'] as $detail): ?><li><?= escapeHtml($detail) ?></li><?php endforeach; ?></ul>
@@ -416,7 +436,7 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                                 <?php if ($stationCode === 'CLINIC'): ?>
                                     <p>Review the official medical record. Clicking Clear verifies the medical requirement and approves Clinic clearance in one step.</p><?php if ($selected['station_status'] === 'APPROVED'): ?><p class="message">This student is already cleared by the Clinic.</p><?php else: ?><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student at the Clinic?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $selected['clearance_id'] ?>"><textarea name="remarks" placeholder="Optional Clinic remarks"></textarea><button name="action" value="clinic_clear">Clear</button></form><?php endif; ?>
                                 <?php elseif ($stationCode === 'STUDENT_COUNCIL'): ?>
-                                    <?php foreach ($detailRecords as $record): ?><div class="record"><strong><?= escapeHtml($record['name']) ?></strong> <span class="badge <?= strtolower($record['status']) ?>"><?= escapeHtml(str_replace('_', ' ', $record['status'])) ?></span>
+                                    <?php foreach ($detailRecords as $record): ?><div class="record"><strong><?= escapeHtml($record['name']) ?></strong> <span class="badge <?= strtolower($record['status']) ?>"><?= escapeHtml(statusDisplayLabel($record['status'])) ?></span>
                                             <div class="muted"><?= escapeHtml($record['description'] ?? '') ?></div><?php if (!in_array($record['status'], ['VERIFIED', 'RESOLVED'], true)): ?><form class="inline" method="post" action="<?= escapeHtml($actionUrl) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $selected['clearance_id'] ?>"><input type="hidden" name="requirement_record_id" value="<?= (int) $record['id'] ?>"><input type="text" name="remarks" placeholder="Verification note"><button name="action" value="verify_requirement">Verify</button></form><?php endif; ?>
                                         </div><?php endforeach; ?>
                                 <?php elseif ($stationCode === 'LIBRARY'): ?>
@@ -446,7 +466,7 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                                         <button name="action" value="register_accounting_receipt">Issue receipt code</button>
                                     </form>
                                 <?php elseif ($stationCode === 'REGISTRAR'): ?>
-                                    <?php foreach ($detailRecords as $record): ?><div class="record"><strong><?= escapeHtml($record['name']) ?></strong> <span class="badge <?= strtolower(str_replace('_', '-', $record['status'])) ?>"><?= escapeHtml(str_replace('_', ' ', $record['status'])) ?></span><?php if ($record['return_reason']): ?><div><?= escapeHtml($record['return_reason']) ?></div><?php endif; ?><form class="inline" method="post" action="<?= escapeHtml($actionUrl) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $selected['clearance_id'] ?>"><input type="hidden" name="document_id" value="<?= (int) $record['id'] ?>"><select name="status">
+                                    <?php foreach ($detailRecords as $record): ?><div class="record"><strong><?= escapeHtml($record['name']) ?></strong> <span class="badge <?= strtolower(str_replace('_', '-', $record['status'])) ?>"><?= escapeHtml(statusDisplayLabel($record['status'])) ?></span><?php if ($record['return_reason']): ?><div><?= escapeHtml($record['return_reason']) ?></div><?php endif; ?><form class="inline" method="post" action="<?= escapeHtml($actionUrl) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $selected['clearance_id'] ?>"><input type="hidden" name="document_id" value="<?= (int) $record['id'] ?>"><select name="status">
                                                     <option value="VERIFIED">Verified</option>
                                                     <option value="RETURNED">Returned</option>
                                                 </select><input type="text" name="reason" placeholder="Return reason / verification note"><button name="action" value="document_status">Save</button></form>

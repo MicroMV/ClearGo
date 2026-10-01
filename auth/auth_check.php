@@ -96,6 +96,11 @@ function escapeHtml(string $value): string
     return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
+function statusDisplayLabel(string $status): string
+{
+    return strtoupper($status) === 'LOCKED' ? 'UNAVAILABLE' : str_replace('_', ' ', $status);
+}
+
 function paginationPages(int $currentPage, int $totalPages): array
 {
     $totalPages = max(1, $totalPages);

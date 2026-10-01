@@ -104,7 +104,7 @@ try {
             setFlashMessage('Account status changed to ' . $newStatus . '.');
         } elseif ($action === 'enroll' || $action === 'remove_enrollment') {
             if ($period['clearance_status'] !== 'PREPARING') {
-                throw new RuntimeException('Enrollment is locked after clearance opens.');
+                throw new RuntimeException('Enrollment changes are unavailable after clearance opens.');
             }
             $newStatus = $action === 'enroll' ? 'ENROLLED' : 'REMOVED';
             $statement = $database->prepare("INSERT INTO semester_enrollments(academic_period_id,student_id,status,enrolled_by,enrolled_at,removed_by,removed_at) VALUES(:period,:student,:status,:enrolled_by,NOW(),:removed_by,CASE WHEN :removed_status='REMOVED' THEN NOW() ELSE NULL END) ON DUPLICATE KEY UPDATE status=VALUES(status),enrolled_by=VALUES(enrolled_by),enrolled_at=CASE WHEN VALUES(status)='ENROLLED' THEN NOW() ELSE enrolled_at END,removed_by=VALUES(removed_by),removed_at=VALUES(removed_at)");

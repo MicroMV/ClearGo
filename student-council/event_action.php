@@ -14,7 +14,7 @@ try {
     $database = getDatabaseConnection();
     $action = (string) ($_POST['action'] ?? '');
     if ($action === 'create') {
-        createStudentCouncilEvent($database, (int) $user['id'], (string) ($_POST['name'] ?? ''), (string) ($_POST['event_date'] ?? ''), trim((string) ($_POST['start_time'] ?? '')) ?: null, trim((string) ($_POST['end_time'] ?? '')) ?: null);
+        createStudentCouncilEvent($database, (int) $user['id'], (string) ($_POST['name'] ?? ''), (string) ($_POST['event_date'] ?? ''));
         setFlashMessage('Required institutional event created. Open its QR code when attendance begins.');
     } else {
         $eventId = filter_var($_POST['event_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);

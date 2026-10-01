@@ -57,7 +57,7 @@ $sidebar = registrarDashboardSidebar($user, 'dashboard', $logoutForm);
                             <p class="muted">Active semester overview and clearance lifecycle.</p>
                         </div>
                     </div>
-                    <div class="summary"><span>Lifecycle<b><?= escapeHtml($period['clearance_status']) ?></b></span><span>Enrolled students<b><?= $enrolledCount ?></b></span><span>Offices ready<b><?= $readyCount ?>/<?= count($readiness) ?></b></span></div><?php if ($period['clearance_status'] === 'PREPARING'): ?><form method="post" action="<?= escapeHtml(applicationUrl('/registrar/semester_action.php')) ?>" onsubmit="return confirm('Open clearance for all enrolled students? The roster will be locked for this semester.');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><button name="action" value="open_clearance" <?= $readyCount !== count($readiness) || $enrolledCount < 1 ? 'disabled' : '' ?>>Open Semester Clearance</button></form><?php elseif ($period['clearance_status'] === 'OPEN'): ?><p class="message">Clearance is visible to enrolled students. This semester remains available after it is archived.</p><?php endif; ?>
+                    <div class="summary"><span>Lifecycle<b><?= escapeHtml($period['clearance_status']) ?></b></span><span>Enrolled students<b><?= $enrolledCount ?></b></span><span>Offices ready<b><?= $readyCount ?>/<?= count($readiness) ?></b></span></div><?php if ($period['clearance_status'] === 'PREPARING'): ?><form method="post" action="<?= escapeHtml(applicationUrl('/registrar/semester_action.php')) ?>" onsubmit="return confirm('Open clearance for all enrolled students? Roster changes will be unavailable for this semester.');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><button name="action" value="open_clearance" <?= $readyCount !== count($readiness) || $enrolledCount < 1 ? 'disabled' : '' ?>>Open Semester Clearance</button></form><?php elseif ($period['clearance_status'] === 'OPEN'): ?><p class="message">Clearance is visible to enrolled students. This semester remains available after it is archived.</p><?php endif; ?>
                 </section>
                 <section class="panel">
                     <h2>Office readiness</h2>
@@ -72,7 +72,7 @@ $sidebar = registrarDashboardSidebar($user, 'dashboard', $logoutForm);
                         </thead>
                         <tbody><?php foreach ($readiness as $row): ?><tr>
                                     <td><?= escapeHtml($row['name']) ?></td>
-                                    <td><span class="badge <?= strtolower(str_replace('_', '-', $row['status'])) ?>"><?= escapeHtml(str_replace('_', ' ', $row['status'])) ?></span></td>
+                                    <td><span class="badge <?= strtolower(str_replace('_', '-', $row['status'])) ?>"><?= escapeHtml(statusDisplayLabel($row['status'])) ?></span></td>
                                     <td><?= escapeHtml($row['ready_by_email'] ?? '—') ?></td>
                                     <td><?= escapeHtml($row['ready_at'] ?? '—') ?></td>
                                 </tr><?php endforeach; ?></tbody>
