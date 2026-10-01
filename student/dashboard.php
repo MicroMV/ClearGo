@@ -51,6 +51,18 @@ try {
         $isEnrolled = (int) $enrollmentQuery->fetchColumn() === 1;
     }
 
+    $facilitiesItems = [];
+    if ($period !== false) {
+        $facilitiesQuery = $database->prepare(
+            "SELECT description, remarks, item_type
+             FROM facilities_obligations
+             WHERE student_id=:student_id AND academic_period_id=:period_id AND status='OUTSTANDING'
+             ORDER BY created_at DESC, id DESC"
+        );
+        $facilitiesQuery->execute(['student_id' => $student['id'], 'period_id' => $period['id']]);
+        $facilitiesItems = $facilitiesQuery->fetchAll();
+    }
+
     $organizationEvents = [];
     if ($period !== false && $isEnrolled) {
         $eventQuery = $database->prepare(
@@ -480,6 +492,24 @@ $logoutForm = dashboardLogoutForm();
                 <?php endif; ?>
             </section>
         </div>
+
+        <?php if ($facilitiesItems !== []): ?>
+        <section class="panel">
+            <h2>Facilities Items Pending Return</h2>
+            <p class="section-copy">Return these items to Facilities before your Facilities clearance can be approved.</p>
+            <ul class="requirements">
+                <?php foreach ($facilitiesItems as $facilitiesItem): ?>
+                <li>
+                    <strong><?= escapeHtml($facilitiesItem['description']) ?></strong>
+                    <span class="badge pending">NOT RETURNED</span>
+                    <?php if (trim((string) ($facilitiesItem['remarks'] ?? '')) !== ''): ?>
+                    <p class="notice warning"><strong>Facilities note:</strong> <?= nl2br(escapeHtml($facilitiesItem['remarks'])) ?></p>
+                    <?php endif; ?>
+                </li>
+                <?php endforeach; ?>
+            </ul>
+        </section>
+        <?php endif; ?>
 
         <section class="panel event-panel">
             <h2>Organization Event Attendance</h2>

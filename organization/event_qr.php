@@ -10,7 +10,7 @@ require_once __DIR__ . '/event_functions.php';
 $user = requireRole('ORG_STAFF');
 $eventId = filter_var($_GET['event'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 if ($eventId === false) {
-    redirectTo('/organization/dashboard.php');
+    redirectTo('/organization/attendance.php');
 }
 
 try {
@@ -24,7 +24,7 @@ try {
 } catch (Throwable $exception) {
     error_log('Organization QR page failed: ' . $exception->getMessage());
     setFlashMessage($exception instanceof RuntimeException ? $exception->getMessage() : 'Unable to display the QR code.');
-    redirectTo('/organization/dashboard.php');
+    redirectTo('/organization/attendance.php');
 }
 
 startSecureSession();
@@ -58,7 +58,7 @@ $csrfToken = createCsrfToken();
                 <p class="muted">Students must use the ClearGo Attendance Scanner while signed in to their student account. Other QR scanner apps cannot check them in.</p>
             <?php endif; ?>
             <div class="actions">
-                <button type="button" onclick="window.print()">Print QR</button><a class="button" href="<?= escapeHtml(applicationUrl('/organization/dashboard.php')) ?>">Back to Events</a>
+                <button type="button" onclick="window.print()">Print QR</button><a class="button" href="<?= escapeHtml(applicationUrl('/organization/attendance.php')) ?>">Back to Events</a>
                 <?php if ($validToken): ?><form method="post" action="<?= escapeHtml(applicationUrl('/organization/event_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="close_qr"><input type="hidden" name="event_id" value="<?= (int) $eventId ?>"><button class="danger" type="submit">Close QR Now</button></form><?php endif; ?>
             </div>
         </section>

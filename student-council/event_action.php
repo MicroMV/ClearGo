@@ -8,7 +8,7 @@ require_once __DIR__ . '/event_functions.php';
 $user = requireRole('STUDENT_COUNCIL_STAFF');
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCsrfToken($_POST['csrf_token'] ?? null)) {
     setFlashMessage('Unable to process that event request. Please try again.');
-    redirectTo('/student-council/dashboard.php');
+    redirectTo('/student-council/attendance.php');
 }
 try {
     $database = getDatabaseConnection();
@@ -49,4 +49,4 @@ try {
     error_log('Student Council event action failed: ' . $exception->getMessage());
     setFlashMessage($exception instanceof RuntimeException ? $exception->getMessage() : 'Unable to process the event request.');
 }
-redirectTo('/student-council/dashboard.php');
+redirectTo('/student-council/attendance.php');

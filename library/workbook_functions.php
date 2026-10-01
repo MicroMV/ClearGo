@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../registrar/student_import_functions.php';
 require_once __DIR__ . '/../clearance/office_workflow.php';
+require_once __DIR__ . '/../clearance/workbook_styles.php';
 
 const LIBRARY_WORKBOOK_MAX_FILE_SIZE = 5 * 1024 * 1024;
 const LIBRARY_WORKBOOK_MAX_ROWS = 5000;
@@ -30,8 +31,8 @@ function libraryWorksheetXml(string $organizationCode, array $students, string $
 {
     $rows = [
         [$organizationCode . ' LIBRARY CLEARANCE - ' . $periodLabel],
-        ['Enter CLEARED only after the student presents a valid library card. Student Number must not be changed.'],
-        ['Student Number', 'Full Name', 'Course', 'Year Level', 'Library Status'],
+        ["Search by name or ID: open the Full Name or Student Number header filter and type in its Search box. Ctrl+F also finds students.\nVerify the library card before entering CLEARED. Keep Student Number unchanged. Record borrowing in columns F and G."],
+        ['Student Number', 'Full Name', 'Course', 'Year Level', 'Library Status', 'Borrowed Book?', 'Book Title(s)'],
     ];
     foreach ($students as $student) {
         $rows[] = [
@@ -40,6 +41,8 @@ function libraryWorksheetXml(string $organizationCode, array $students, string $
             $student['program'],
             'Year ' . (int) $student['year_level'],
             $student['library_status'] === 'APPROVED' ? 'CLEARED' : '',
+            '',
+            '',
         ];
     }
     $xmlRows = '';
@@ -54,16 +57,21 @@ function libraryWorksheetXml(string $organizationCode, array $students, string $
                 $column = chr(65 + ($number % 26)) . $column;
                 $number = intdiv($number, 26);
             }
-            $cells .= '<c r="' . $column . $rowNumber . '" t="inlineStr"><is><t xml:space="preserve">'
+            $style = $rowNumber === 1 ? 1 : ($rowNumber === 2 ? 2 : ($rowNumber === 3 ? 3 : ($rowNumber % 2 === 0 ? 4 : 5)));
+            $cells .= '<c r="' . $column . $rowNumber . '" s="' . $style . '" t="inlineStr"><is><t xml:space="preserve">'
                 . htmlspecialchars((string) $value, ENT_XML1 | ENT_QUOTES, 'UTF-8') . '</t></is></c>';
         }
-        $xmlRows .= '<row r="' . $rowNumber . '">' . $cells . '</row>';
+        $height = $rowNumber === 1 ? 32 : ($rowNumber === 2 ? 60 : 30);
+        $xmlRows .= '<row r="' . $rowNumber . '" ht="' . $height . '" customHeight="1">' . $cells . '</row>';
     }
     return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
-        . '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><cols>'
+        . '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="3" topLeftCell="A4" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>'
         . '<col min="1" max="1" width="18" customWidth="1"/><col min="2" max="2" width="34" customWidth="1"/>'
-        . '<col min="3" max="3" width="25" customWidth="1"/><col min="4" max="5" width="16" customWidth="1"/>'
-        . '</cols><sheetData>' . $xmlRows . '</sheetData><autoFilter ref="A3:E' . max(3, count($rows)) . '"/></worksheet>';
+        . '<col min="3" max="3" width="25" customWidth="1"/><col min="4" max="6" width="18" customWidth="1"/><col min="7" max="7" width="46" customWidth="1"/>'
+        . '</cols><sheetData>' . $xmlRows . '</sheetData><autoFilter ref="A3:G' . max(3, count($rows)) . '"/>'
+        . '<mergeCells count="2"><mergeCell ref="A1:G1"/><mergeCell ref="A2:G2"/></mergeCells>'
+        . '<dataValidations count="1"><dataValidation type="list" allowBlank="1" showErrorMessage="1" errorTitle="Choose Yes or No" error="Select Yes or No to record borrowing." sqref="F4:F' . max(4, count($rows)) . '"><formula1>"Yes,No"</formula1></dataValidation></dataValidations>'
+        . '<pageMargins left="0.25" right="0.25" top="0.5" bottom="0.5" header="0.2" footer="0.2"/><pageSetup orientation="landscape" paperSize="9"/></worksheet>';
 }
 
 function createLibraryWorkbookXlsx(PDO $database): string
@@ -82,6 +90,8 @@ function createLibraryWorkbookXlsx(PDO $database): string
     $sheetDeclarations = '';
     $sheetRelationships = '';
     $contentOverrides = '';
+    $contentOverrides .= '<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>';
+    $sheetRelationships .= '<Relationship Id="rIdStyles" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>';
     foreach (array_keys($grouped) as $index => $code) {
         $sheetNumber = $index + 1;
         $sheetEntries['xl/worksheets/sheet' . $sheetNumber . '.xml'] = libraryWorksheetXml($code, $grouped[$code], $periodLabel);
@@ -90,6 +100,7 @@ function createLibraryWorkbookXlsx(PDO $database): string
         $contentOverrides .= '<Override PartName="/xl/worksheets/sheet' . $sheetNumber . '.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>';
     }
     return createStoredZipArchive(array_merge([
+        'xl/styles.xml' => officeWorkbookStylesXml(),
         '[Content_Types].xml' => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' . $contentOverrides . '</Types>',
         '_rels/.rels' => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>',
         'xl/workbook.xml' => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>' . $sheetDeclarations . '</sheets></workbook>',

@@ -88,7 +88,6 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
             }
         }
         $summary = officeStatusSummary($database, $stationCode);
-        $councilEvents = $stationCode === 'STUDENT_COUNCIL' ? studentCouncilEvents($database, (int) $readiness['academic_period_id']) : [];
         $totalRows = officeRowCount($database, $stationCode, $search, $filter, $facilitiesAudience, $facilitiesDepartment, $courseFilter, $yearFilter);
         $totalPages = max(1, (int) ceil($totalRows / $pageSize));
         $page = min($page, $totalPages);
@@ -198,7 +197,7 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title><?= escapeHtml($title) ?> | ClearGo</title>
-        <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/office-dashboard.css')) ?>">
+        <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/office-dashboard.css')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/css/office-dashboard.css') ?>">
         <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>">
     </head>
 
@@ -221,11 +220,12 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                             <div class="section-heading">
                                 <div>
                                     <h2>Clinic workbook processing</h2>
+                                    <p class="muted">Search by name or ID in Excel using the Full Name or Student Number header filter's Search box, or press Ctrl+F.</p>
                                     <p class="muted">Process current student clearance records in the official ClearGo workbook.</p>
                                 </div>
                             </div>
                             <div class="workbook-grid">
-                                <div class="workbook-step"><strong>1. Download and update</strong><span class="muted">The workbook contains separate CCS, CBE, and CTE sheets. Enter <strong>CLEARED</strong> in Clinic Status only after requirements are complete.</span>
+                                <div class="workbook-step"><strong>1. Download and update</strong><span class="muted">The workbook contains separate CCS, CBE, and CTE sheets. Enter <strong>CLEARED</strong> in Clearance Status only after requirements are complete.</span>
                                     <p><a class="button-link" href="<?= escapeHtml(applicationUrl('/clinic/workbook_template.php')) ?>">Download 3-sheet template</a></p>
                                 </div>
                                 <div class="workbook-step"><strong>2. Upload the completed workbook</strong>
@@ -238,7 +238,9 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                         </section><?php endif; ?>
                     <?php if ($stationCode === 'LIBRARY'): ?><section class="panel workbook-panel">
                             <h2>Library Excel Workbook</h2>
+                            <p>To search in Excel, open the filter arrow on <strong>Full Name</strong> or <strong>Student Number</strong> and type the name or ID in the filter's Search box. You can also press <strong>Ctrl+F</strong> to find a student.</p>
                             <p>Download the student list separated into CCS, CBE, and CTE sheets. Enter <strong>CLEARED</strong> only after the Librarian or Library Desk verifies the student's library card.</p>
+                            <p>Use <strong>Borrowed Book?</strong> (Yes/No) and <strong>Book Title(s)</strong> to record borrowing beside each student. Keep the completed file for your records; uploads process Library Status only, and borrowing entries are not saved in ClearGo.</p>
                             <div class="controls"><a class="button-link" href="<?= escapeHtml(applicationUrl('/library/workbook_template.php')) ?>">Download 3-Sheet Excel Template</a>
                                 <form class="inline" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/library/workbook_import.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="file" name="library_workbook" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required aria-label="Completed Library Excel workbook"><button type="submit">Upload and Clear Students</button></form>
                             </div>
@@ -246,6 +248,8 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                         </section><?php endif; ?>
                     <?php if ($stationCode === 'BOOKSTORE'): ?><section class="panel workbook-panel">
                             <h2>Bookstore Excel Workbook</h2>
+                            <p>Pending Obligations includes active event names and amounts; Pending Balance includes unpaid event fees. Closed events are excluded. Event Receipt Status is PAID when all active event receipts are confirmed, otherwise UNPAID. Use its dropdown for your spreadsheet records; uploads process Clearance Status, while event receipts are confirmed on Receipt Submissions. Download again after adding or closing an event.</p>
+                            <p>Search by name or ID in Excel using the Full Name or Student Number header filter's Search box, or press Ctrl+F.</p>
                             <p>Download the current roster with pending balances and accountabilities separated into CCS, CBE, and CTE sheets. Verify each student's ID and payment receipt or reference against Bookstore records, then mark <strong>CLEARED</strong> only after all obligations are settled.</p>
                             <div class="controls"><a class="button-link" href="<?= escapeHtml(applicationUrl('/bookstore/workbook_template.php')) ?>">Download 3-Sheet Excel Template</a>
                                 <form class="inline" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/bookstore/workbook_import.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="file" name="bookstore_workbook" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required aria-label="Completed Bookstore Excel workbook"><button type="submit">Upload and Clear Students</button></form>
@@ -258,42 +262,7 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                             <p>Review records and take action now. Clear complete students or return incomplete records, then mark the office Ready.</p><?php if ($readiness['readiness_status'] === 'READY'): ?><p class="message">Your office is READY.</p>
                                 <form method="post" action="<?= escapeHtml(applicationUrl('/clearance/readiness_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><button type="submit" name="action" value="unready">Undo Ready</button></form><?php else: ?><form method="post" action="<?= escapeHtml(applicationUrl('/clearance/readiness_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="text" name="notes" maxlength="500" placeholder="Optional readiness note"><button type="submit" name="action" value="ready">Mark Office Ready</button></form><?php endif; ?>
                         </section><?php endif; ?>
-                    <?php if ($stationCode === 'STUDENT_COUNCIL'): ?><section class="panel">
-                            <h2>Institutional Event Attendance</h2>
-                            <p>Create required institutional activities and open a QR code during each activity. Every enrolled student can check in; attendance is recorded in ClearGo for clearance verification.</p>
-                            <form class="controls" method="post" action="<?= escapeHtml(applicationUrl('/student-council/event_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="create"><input type="text" name="name" maxlength="200" required placeholder="Required institutional activity"><label>Date <input type="date" name="event_date" required value="<?= escapeHtml(date('Y-m-d')) ?>"></label><button type="submit">Create Required Event</button></form><?php if ($councilEvents === []): ?><p class="muted">No institutional activities have been created for this semester.</p><?php else: ?><div class="table-wrap">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Activity</th>
-                                                <th>Date</th>
-                                                <th>Attendance</th>
-                                                <th>QR Check-in</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody><?php foreach ($councilEvents as $event): ?><tr>
-                                                    <td><strong><?= escapeHtml($event['name']) ?></strong></td>
-                                                    <td><?= escapeHtml($event['event_date']) ?></td>
-                                                    <td><?= (int) $event['present_count'] ?> / <?= (int) $event['enrolled_count'] ?> present</td>
-                                                    <td><?php if ((int) $event['qr_is_open'] === 1): ?><span class="badge approved">OPEN</span> until <?= escapeHtml($event['check_in_closes_at']) ?> <a href="<?= escapeHtml(applicationUrl('/student-council/event_qr.php?event=' . (int) $event['id'])) ?>">Display QR</a>
-                                                            <form class="inline" method="post" action="<?= escapeHtml(applicationUrl('/student-council/event_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="close_qr"><input type="hidden" name="event_id" value="<?= (int) $event['id'] ?>"><button class="secondary" type="submit">Close QR</button></form><?php else: ?><form class="inline" method="post" action="<?= escapeHtml(applicationUrl('/student-council/event_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="open_qr"><input type="hidden" name="event_id" value="<?= (int) $event['id'] ?>"><label class="muted">Attendance time limit<select name="minutes" aria-label="Attendance time limit">
-                                                                    <option value="5">5 minutes</option>
-                                                                    <option value="10" selected>10 minutes</option>
-                                                                    <option value="15">15 minutes</option>
-                                                                    <option value="30">30 minutes</option>
-                                                                    <option value="60">1 hour</option>
-                                                                    <option value="120">2 hours</option>
-                                                                    <option value="240">4 hours</option>
-                                                                    <option value="480">8 hours</option>
-                                                                    <option value="720">12 hours</option>
-                                                                </select></label><button type="submit">Open check-in</button></form><?php endif; ?>
-                                                    </td>
-                                                    <td><form method="post" action="<?= escapeHtml(applicationUrl('/student-council/event_action.php')) ?>" onsubmit="return confirm('Delete this event and all of its attendance records?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="delete"><input type="hidden" name="event_id" value="<?= (int) $event['id'] ?>"><button class="danger" type="submit">Delete</button></form></td>
-                                                </tr><?php endforeach; ?></tbody>
-                                    </table>
-                                </div><?php endif; ?>
-                        </section><?php endif; ?>
+
                     <section class="panel">
                         <div class="section-heading">
                             <div>
@@ -389,7 +358,7 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                                                     <?php endif; ?>
                                                 </td>
                                             <?php else: ?>
-                                            <td><?php if (in_array($row['station_status'], ['APPROVED', 'LOCKED'], true)): ?><span class="muted">—</span><?php elseif ($stationCode === 'FACILITIES'): ?><button type="button" class="secondary" onclick="openFacilitiesItemModal(<?= (int) $row['clearance_id'] ?>)">Borrowed Item</button><?php if ($row['eligibility']['eligible']): ?> <form class="inline" method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student for Facilities?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="approve">Clear</button></form><?php endif; ?><?php elseif ($stationCode === 'CLINIC'): ?><div class="inline"><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Mark this student as having no medical record?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><input type="hidden" name="status" value="RETURNED"><input type="hidden" name="remarks" value="No medical record on file."><button class="danger" name="action" value="medical_status">No Medical</button></form><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student at the Clinic?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="clinic_clear">Clear</button></form></div><?php elseif ($directClearOffice): ?><form method="post" action="<?= escapeHtml($actionUrl) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="library_clear">Clear</button></form><?php elseif ($stationCode === 'SASO'): ?><?php if ($row['eligibility']['eligible']): ?><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student for SASO?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="approve">Clear</button></form><?php else: ?><span class="muted">—</span><?php endif; ?><?php elseif ($stationCode === 'STUDENT_COUNCIL' && $row['eligibility']['eligible']): ?><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student for Student Council?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="approve">Clear</button></form><?php else: ?><a href="?clearance=<?= (int) $row['clearance_id'] ?>&amp;search=<?= urlencode($search) ?>&amp;filter=<?= urlencode($filter) ?>&amp;audience=<?= urlencode($facilitiesAudience) ?>&amp;department=<?= urlencode($facilitiesDepartment) ?>&amp;course=<?= urlencode($courseFilter) ?>&amp;year_level=<?= $yearFilter ?>&amp;page=<?= $page ?>"><?= $stationCode === 'BOOKSTORE' ? 'Review' : ($row['clearance_status'] === 'PREPARING' ? 'Take Action' : 'Review') ?></a><?php endif; ?></td>
+                                            <td><?php if ($stationCode !== 'FACILITIES' && in_array($row['station_status'], ['APPROVED', 'LOCKED'], true)): ?><span class="muted">—</span><?php elseif ($stationCode === 'FACILITIES'): ?><div class="facilities-row-actions"><?php if (in_array($row['station_status'], ['APPROVED', 'LOCKED'], true) || !$row['eligibility']['eligible']): ?><button type="button" class="secondary" onclick="openFacilitiesItemModal(<?= (int) $row['clearance_id'] ?>)"><?= in_array($row['station_status'], ['APPROVED', 'LOCKED'], true) ? 'View Items' : 'Manage Items' ?></button><?php endif; ?><?php if (!in_array($row['station_status'], ['APPROVED', 'LOCKED'], true) && $row['eligibility']['eligible']): ?> <form class="inline" method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student for Facilities?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="approve">Clear</button></form><?php endif; ?></div><?php elseif ($stationCode === 'CLINIC'): ?><div class="inline"><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Mark this student as having no medical record?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><input type="hidden" name="status" value="RETURNED"><input type="hidden" name="remarks" value="No medical record on file."><button class="danger" name="action" value="medical_status">No Medical</button></form><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student at the Clinic?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="clinic_clear">Clear</button></form></div><?php elseif ($directClearOffice): ?><form method="post" action="<?= escapeHtml($actionUrl) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="library_clear">Clear</button></form><?php elseif ($stationCode === 'SASO'): ?><?php if ($row['eligibility']['eligible']): ?><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student for SASO?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="approve">Clear</button></form><?php else: ?><span class="muted">—</span><?php endif; ?><?php elseif ($stationCode === 'STUDENT_COUNCIL' && $row['eligibility']['eligible']): ?><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student for Student Council?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="approve">Clear</button></form><?php else: ?><a href="?clearance=<?= (int) $row['clearance_id'] ?>&amp;search=<?= urlencode($search) ?>&amp;filter=<?= urlencode($filter) ?>&amp;audience=<?= urlencode($facilitiesAudience) ?>&amp;department=<?= urlencode($facilitiesDepartment) ?>&amp;course=<?= urlencode($courseFilter) ?>&amp;year_level=<?= $yearFilter ?>&amp;page=<?= $page ?>"><?= $stationCode === 'BOOKSTORE' ? 'Review' : ($row['clearance_status'] === 'PREPARING' ? 'Take Action' : 'Review') ?></a><?php endif; ?></td>
                                             <?php endif; ?>
                                         </tr>
                                     <?php endforeach;
@@ -401,17 +370,10 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                         </div>
                         <p class="muted">Page <?= $page ?> of <?= $totalPages ?> · <?= $totalRows ?> student(s)</p><?= renderPagination($page, $totalPages, ['search' => $search, 'course' => $courseFilter, 'year_level' => $yearFilter, 'filter' => $filter, 'audience' => $facilitiesAudience, 'department' => $facilitiesDepartment]) ?>
                     </section>
-                    <?php if ($stationCode === 'FACILITIES'): ?><div id="facilities-item-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="facilities-item-title">
-                            <div class="modal">
-                                <h2 id="facilities-item-title">Record borrowed item</h2>
-                                <p class="muted">This item must be returned before Facilities can clear the student.</p>
-                                <form method="post" action="<?= escapeHtml($actionUrl) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" id="facilities-item-clearance" name="clearance_id"><input type="text" name="description" maxlength="255" required placeholder="Borrowed item">
-                                    <p><input type="text" name="remarks" maxlength="1000" placeholder="Optional item details"></p>
-                                    <div class="actions"><button type="button" class="secondary" onclick="closeFacilitiesItemModal()">Cancel</button><button name="action" value="add_facilities_item">Save borrowed item</button></div>
-                                </form>
-                            </div>
-                        </div>
-                        <script src="<?= escapeHtml(applicationUrl('/assets/js/office-dashboard.js')) ?>"></script><?php endif; ?>
+                    <?php if ($stationCode === 'FACILITIES'): ?>
+                        <?php require __DIR__ . '/facilities_items_modal.php'; ?>
+                        <script src="<?= escapeHtml(applicationUrl('/assets/js/office-dashboard.js')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/js/office-dashboard.js') ?>"></script>
+                    <?php endif; ?>
 
                     <?php if ($selected !== null): ?>
                         <?php if (!in_array($stationCode, ['BOOKSTORE', 'SASO', 'FACILITIES'], true)): ?>

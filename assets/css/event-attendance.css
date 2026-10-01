@@ -1,3 +1,7 @@
+.staff-dashboard .controls.council-event-form {
+    margin-bottom: 24px;
+}
+
 .attendance-controls {
     display: flex;
     gap: 10px;
@@ -34,4 +38,15 @@
 .attendance-summary span {
     color: var(--cg-muted);
     font-weight: 700;
+}
+
+.event-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+.event-actions form {
+    margin: 0;
 }

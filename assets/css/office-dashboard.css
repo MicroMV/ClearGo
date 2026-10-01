@@ -685,6 +685,48 @@
                 flex: 0
         }
 
+        .staff-dashboard .facilities-row-actions {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                width: max-content;
+        }
+
+        .staff-dashboard .facilities-row-actions form.inline {
+                display: flex;
+                flex: 0 0 auto;
+                margin: 0;
+                min-width: 0;
+                width: auto;
+        }
+
+        .staff-dashboard .facilities-row-actions button {
+                flex: 0 0 auto;
+                width: auto;
+                min-height: 40px;
+                margin: 0;
+                white-space: nowrap;
+        }
+
+        .staff-dashboard .facilities-modal-actions {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 10px;
+                margin-top: 16px;
+        }
+
+        .staff-dashboard .facilities-modal-actions form {
+                margin: 0;
+                flex: 0 0 auto;
+        }
+
+        .staff-dashboard .facilities-modal-actions button {
+                margin: 0;
+                width: auto;
+                white-space: nowrap;
+        }
+
         .brand-logo {
                 width: 60px;
                 height: 60px;

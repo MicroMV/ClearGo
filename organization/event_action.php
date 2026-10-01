@@ -10,7 +10,7 @@ require_once __DIR__ . '/event_functions.php';
 $user = requireRole('ORG_STAFF');
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCsrfToken($_POST['csrf_token'] ?? null)) {
     setFlashMessage('Unable to process that event request. Please try again.');
-    redirectTo('/organization/dashboard.php');
+    redirectTo('/organization/attendance.php');
 }
 
 try {
@@ -68,4 +68,4 @@ try {
     setFlashMessage($exception instanceof RuntimeException ? $exception->getMessage() : 'Unable to process the event request.');
 }
 
-redirectTo('/organization/dashboard.php');
+redirectTo('/organization/attendance.php');

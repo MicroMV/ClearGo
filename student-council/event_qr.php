@@ -20,7 +20,7 @@ try {
     }
 } catch (Throwable $exception) {
     setFlashMessage('Unable to display the event QR code.');
-    redirectTo('/student-council/dashboard.php');
+    redirectTo('/student-council/attendance.php');
 }
 $host = preg_replace('/[^A-Za-z0-9.\-:\[\]]/', '', (string) ($_SERVER['HTTP_HOST'] ?? 'localhost')) ?: 'localhost';
 $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
@@ -44,7 +44,7 @@ $csrfToken = createCsrfToken();
             <h1><?= escapeHtml($event['name']) ?></h1>
             <p>Student Council institutional attendance · <?= escapeHtml($event['event_date']) ?></p><?php if (!$validToken): ?><p class="notice">This QR display is no longer available in this browser. Open a new QR code from the Student Council dashboard.</p><?php else: ?><div id="qr" aria-label="Student attendance QR code"></div>
                 <p><strong>Check-in closes:</strong> <?= escapeHtml((string) $event['check_in_closes_at']) ?></p>
-                <p class="muted">Students scan this code with their phone camera, sign in with their school account, and confirm attendance.</p><?php endif; ?><div class="actions"><a class="button" href="<?= escapeHtml(applicationUrl('/student-council/dashboard.php')) ?>">Back to Events</a><?php if ($validToken): ?><form method="post" action="<?= escapeHtml(applicationUrl('/student-council/event_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="close_qr"><input type="hidden" name="event_id" value="<?= (int) $eventId ?>"><button class="danger" type="submit">Close QR Now</button></form><?php endif; ?></div>
+                <p class="muted">Students scan this code with their phone camera, sign in with their school account, and confirm attendance.</p><?php endif; ?><div class="actions"><button type="button" onclick="window.print()">Print QR</button><a class="button" href="<?= escapeHtml(applicationUrl('/student-council/attendance.php')) ?>">Back to Events</a><?php if ($validToken): ?><form method="post" action="<?= escapeHtml(applicationUrl('/student-council/event_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="close_qr"><input type="hidden" name="event_id" value="<?= (int) $eventId ?>"><button class="danger" type="submit">Close QR Now</button></form><?php endif; ?></div>
         </section>
     </main><?php if ($validToken): ?><script src="<?= escapeHtml(applicationUrl('/assets/js/qrcode.js')) ?>"></script>
         <script>

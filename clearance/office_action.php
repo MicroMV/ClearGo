@@ -128,6 +128,9 @@ try {
         officeMutationNotice($database, $context, $user['id'], 'Bookstore verified payment and settled an obligation.');
         setFlashMessage('Bookstore obligation settled.');
     } elseif ($action === 'add_facilities_item' && $config['code'] === 'FACILITIES') {
+        if ($context['station_status'] === 'APPROVED') {
+            throw new RuntimeException('This student is already cleared by Facilities.');
+        }
         $description = trim((string) ($_POST['description'] ?? ''));
         $remarks = trim((string) ($_POST['remarks'] ?? ''));
         if ($description === '' || mb_strlen($description) > 255) {
@@ -146,7 +149,7 @@ try {
         if (mb_strlen($remarks) > 1000) {
             throw new RuntimeException('Remarks cannot exceed 1,000 characters.');
         }
-        $statement = $database->prepare("UPDATE facilities_obligations SET status='RETURNED',remarks=CASE WHEN :remarks='' THEN remarks ELSE :remarks END,returned_by=:user_id,returned_at=NOW() WHERE id=:id AND student_id=:student_id AND academic_period_id=:period_id AND status='OUTSTANDING'");
+        $statement = $database->prepare("UPDATE facilities_obligations SET status='RETURNED',remarks=COALESCE(NULLIF(:remarks,''),remarks),returned_by=:user_id,returned_at=NOW() WHERE id=:id AND student_id=:student_id AND academic_period_id=:period_id AND status='OUTSTANDING'");
         $statement->execute(['remarks' => $remarks, 'user_id' => $user['id'], 'id' => $itemId, 'student_id' => $studentId, 'period_id' => $periodId]);
         if ($statement->rowCount() !== 1) {
             throw new RuntimeException('The Facilities item could not be marked returned.');

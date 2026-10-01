@@ -1,0 +1,1 @@
+csrf_token|s:64:"9e5635a225106c65082f7f5ad8c30586a981efa38c83130cb20791a7cc30d4bf";authenticated_user|a:3:{s:2:"id";i:35;s:5:"email";s:37:"studentcouncil@thelewiscollege.edu.ph";s:4:"role";s:21:"STUDENT_COUNCIL_STAFF";}student_council_qr_display|a:2:{s:5:"token";s:64:"48b6add6887c16b85e01022c44a9fd662dccf5059565f95a64cdc8e9a76ce2fd";s:8:"event_id";i:126;}

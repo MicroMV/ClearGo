@@ -6,6 +6,8 @@ require_once __DIR__ . '/../auth/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/readiness_functions.php';
 require_once __DIR__ . '/../organization/clearance_functions.php';
+require_once __DIR__ . '/../organization/event_functions.php';
+require_once __DIR__ . '/../student-council/event_functions.php';
 
 function renderEventAttendancePage(string $role, string $eventSource): void
 {
@@ -86,6 +88,13 @@ function renderEventAttendancePage(string $role, string $eventSource): void
         $attendees = $attendanceQuery->fetchAll();
     }
 
+    $managementEvents = $eventSource === 'ORGANIZATION'
+        ? organizationEvents($database, (int) $organization['id'], (int) $period['id'])
+        : studentCouncilEvents($database, (int) $period['id']);
+    startSecureSession();
+    $qrDisplay = is_array($_SESSION['organization_qr_display'] ?? null) ? $_SESSION['organization_qr_display'] : [];
+    $csrfToken = createCsrfToken();
+    $message = pullFlashMessage();
     $notifications = dashboardNotifications($database, (int) $user['id']);
     if ($eventSource === 'ORGANIZATION') {
         $title = ($organization['code'] === 'CBE' ? 'YBC Organization' : 'Organization') . ' Event Attendance';
@@ -110,11 +119,24 @@ function renderEventAttendancePage(string $role, string $eventSource): void
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title><?= escapeHtml($title) ?> | ClearGo</title>
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>">
-    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/event-attendance.css')) ?>">
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/event-attendance.css')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/css/event-attendance.css') ?>">
 </head>
 <body class="staff-dashboard"><div class="staff-shell"><?= $sidebar ?><div class="staff-workspace">
-<header class="staff-topbar"><button class="mobile-nav-toggle" type="button" data-sidebar-open aria-controls="staff-sidebar" aria-expanded="false" aria-label="Open navigation">&#9776;</button><div class="topbar-title"><h1><?= escapeHtml($title) ?></h1><p>View students who were recorded present in a specific event.</p></div><div class="topbar-actions"><div class="topbar-account"><strong><?= escapeHtml($user['email']) ?></strong><span>Staff account</span></div><?= dashboardNotificationBell($notifications) ?></div></header>
-<main class="staff-main"><section class="panel"><div class="section-heading"><div><h2>Attendance records</h2><p class="muted"><?= escapeHtml($period['semester'] . ' Semester A.Y. ' . $period['school_year']) ?></p></div></div>
+<header class="staff-topbar"><button class="mobile-nav-toggle" type="button" data-sidebar-open aria-controls="staff-sidebar" aria-expanded="false" aria-label="Open navigation">&#9776;</button><div class="topbar-title"><h1><?= escapeHtml($title) ?></h1><p>Manage required events, open QR check-in, and view attendance records.</p></div><div class="topbar-actions"><div class="topbar-account"><strong><?= escapeHtml($user['email']) ?></strong><span>Staff account</span></div><?= dashboardNotificationBell($notifications) ?></div></header>
+<main class="staff-main">
+<?php if ($message !== null): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?>
+<?php
+    if ($eventSource === 'ORGANIZATION') {
+        $attendanceEvents = $events;
+        $events = $managementEvents;
+        require __DIR__ . '/organization_event_management.php';
+        $events = $attendanceEvents;
+    } else {
+        $councilEvents = $managementEvents;
+        require __DIR__ . '/council_event_management.php';
+    }
+?>
+<section class="panel"><div class="section-heading"><div><h2>Attendance records</h2><p class="muted"><?= escapeHtml($period['semester'] . ' Semester A.Y. ' . $period['school_year']) ?></p></div></div>
 <?php if ($events === []): ?><p class="muted">No events have been created for this semester.</p><?php else: ?>
 <form class="attendance-controls" method="get"><label>Event<select name="event" onchange="this.form.submit()"><?php foreach ($events as $event): ?><option value="<?= (int) $event['id'] ?>" <?= (int) $event['id'] === (int) $selectedEvent['id'] ? 'selected' : '' ?>><?= escapeHtml($event['name'] . ' - ' . $event['event_date']) ?></option><?php endforeach; ?></select></label><label>Search student<input type="search" name="search" value="<?= escapeHtml($search) ?>" placeholder="Student ID, name, or program"></label><button type="submit">Search</button></form>
 <div class="attendance-summary"><strong><?= $totalRows ?></strong><span>student<?= $totalRows === 1 ? '' : 's' ?> present</span></div>
