@@ -50,7 +50,7 @@ $sidebar = registrarDashboardSidebar($user, 'staff', $logoutForm);
                     <p>Manage authorized office accounts and credentials.</p>
                 </div>
                 <div class="topbar-actions">
-                    <div class="topbar-account"><strong><?= escapeHtml($user['email']) ?></strong><span>Registrar account</span></div><?= dashboardNotificationBell($notifications) ?>
+                    <?= dashboardNotificationBell($notifications) ?>
                 </div>
             </header>
             <main class="staff-main">

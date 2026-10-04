@@ -73,6 +73,7 @@ try {
 } finally {
     if ($eventId !== null) {
         $database->prepare("DELETE FROM audit_logs WHERE action IN ('ORGANIZATION_EVENT_CREATED','EVENT_QR_OPENED','EVENT_QR_ATTENDANCE_RECORDED','EVENT_QR_CLOSED') AND description LIKE '%Automated QR Attendance Test%'")->execute();
+        $database->prepare("DELETE FROM notifications WHERE message LIKE '%Automated QR Attendance Test%'")->execute();
         $database->prepare('DELETE FROM events WHERE id=:id')->execute(['id' => $eventId]);
     }
 }

@@ -55,7 +55,7 @@ try {
     $database = getDatabaseConnection();
     $database->beginTransaction();
     $feeQuery = $database->prepare(
-        "SELECT student_fee.id,student_fee.status AS payment_status,fee.name,
+        "SELECT student_fee.id,student_fee.status AS payment_status,fee.name,student.student_number,
                 station_record.status AS station_status
          FROM student_bookstore_fees student_fee
          INNER JOIN students student ON student.id=student_fee.student_id AND student.user_id=:user_id
@@ -89,8 +89,12 @@ try {
          ON DUPLICATE KEY UPDATE status=VALUES(status),stored_name=VALUES(stored_name),original_name=VALUES(original_name),mime_type=VALUES(mime_type),submitted_at=NOW(),reviewed_at=NULL,reviewed_by=NULL,return_reason=NULL"
     );
     $save->execute(['student_fee_id' => $studentFeeId, 'status' => $status, 'stored_name' => $storedName, 'original_name' => $originalName, 'mime_type' => $mimeType]);
-    $notify = $database->prepare("INSERT INTO notifications (user_id,title,message) SELECT id,'Bookstore receipt awaiting review',:message FROM users WHERE role='BOOKSTORE_STAFF' AND status='ACTIVE'");
-    $notify->execute(['message' => $action === 'upload' ? 'A student uploaded a receipt for ' . $fee['name'] . '.' : 'A student reported a lost receipt for ' . $fee['name'] . '.']);
+    notifyActiveRoles(
+        $database,
+        ['BOOKSTORE_STAFF'],
+        'Bookstore receipt awaiting review',
+        $fee['student_number'] . ($action === 'upload' ? ' uploaded a receipt for ' : ' reported a lost receipt for ') . $fee['name'] . '. Open Submitted Requirements to review it.'
+    );
     $database->commit();
 
     if ($oldSubmission !== false && !empty($oldSubmission['stored_name']) && $oldSubmission['stored_name'] !== $storedName) {

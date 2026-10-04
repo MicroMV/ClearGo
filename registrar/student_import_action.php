@@ -45,7 +45,15 @@ try {
         if (($preview['valid_count'] ?? 0) < 1) {
             throw new RuntimeException('There are no valid records to import.');
         }
-        $result = importValidatedStudents(getDatabaseConnection(), $preview, $registrar['id']);
+        $database = getDatabaseConnection();
+        $result = importValidatedStudents($database, $preview, $registrar['id']);
+        createNotification(
+            $database,
+            (int) $registrar['id'],
+            'Enrollment Excel import completed',
+            'Import successful. Added: ' . $result['added'] . '; updated: ' . $result['updated']
+                . '; removed from semester: ' . $result['removed_from_semester'] . '; skipped: ' . $result['skipped'] . '.'
+        );
         unset($_SESSION['student_import_preview'], $_SESSION['student_import_name'], $_SESSION['student_import_token']);
         $_SESSION['student_import_result'] = $result;
     } elseif ($action === 'cancel') {

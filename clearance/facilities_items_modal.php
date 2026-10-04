@@ -1,13 +1,15 @@
 <?php foreach ($rows as $facilitiesRow): ?>
 <template id="facilities-items-<?= (int) $facilitiesRow['clearance_id'] ?>">
-    <?php $canManageItems = !in_array($facilitiesRow['station_status'], ['APPROVED', 'LOCKED'], true);
-    $facilitiesItems = officeDetailRecords($database, 'FACILITIES', $facilitiesRow); ?>
-    <?php if ($facilitiesRow['station_status'] === 'APPROVED'): ?><p class="message">This student is already cleared by Facilities.</p><?php elseif ($facilitiesRow['station_status'] === 'LOCKED'): ?><p class="message">The preceding offices must clear this student before you can make changes.</p><?php elseif ($facilitiesRow['eligibility']['eligible']): ?><p class="message">No items are pending return. This student is ready to clear.</p><?php endif; ?>
+    <?php $canManageItems = $facilitiesRow['station_status'] !== 'APPROVED' && in_array($facilitiesRow['clearance_status'], ['PREPARING', 'OPEN'], true);
+    $facilitiesItems = officeDetailRecords($database, 'FACILITIES', $facilitiesRow);
+    $borrowingNow = (new DateTimeImmutable('now', new DateTimeZone('Asia/Manila')))->format('Y-m-d\TH:i'); ?>
+    <?php if ($facilitiesRow['station_status'] === 'APPROVED'): ?><p class="message">This student is already cleared by Facilities.</p><?php elseif ($facilitiesRow['station_status'] === 'LOCKED'): ?><p class="message">Borrowed items can be recorded now. The preceding offices must clear this student before Facilities clearance.</p><?php elseif ($facilitiesRow['eligibility']['eligible']): ?><p class="message">No items are pending return. This student is ready to clear.</p><?php endif; ?>
     <?php if ($facilitiesItems === []): ?><p class="muted">No borrowed items recorded.</p><?php endif; ?>
     <?php foreach ($facilitiesItems as $item): ?>
     <div class="record">
         <strong><?= escapeHtml($item['description']) ?></strong>
         <span class="badge <?= $item['status'] === 'RETURNED' ? 'resolved' : 'pending' ?>"><?= escapeHtml($item['status']) ?></span>
+        <p class="muted"><?= $item['item_type'] === 'BORROWED_ITEM' ? 'Borrowed' : 'Recorded' ?> <?= escapeHtml($item['created_at']) ?></p>
         <?php if ($item['remarks']): ?><p class="muted"><?= escapeHtml($item['remarks']) ?></p><?php endif; ?>
         <?php if ($item['returned_at']): ?><p class="muted">Returned <?= escapeHtml($item['returned_at']) ?></p><?php endif; ?>
         <?php if ($canManageItems && $item['status'] === 'OUTSTANDING'): ?>
@@ -27,16 +29,19 @@
         <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
         <input type="hidden" name="clearance_id" value="<?= (int) $facilitiesRow['clearance_id'] ?>">
         <input type="text" name="description" maxlength="255" required placeholder="Borrowed item" aria-label="Borrowed item">
+        <p><label>Borrowed on<input type="datetime-local" name="borrowed_at" required value="<?= escapeHtml($borrowingNow) ?>" max="<?= escapeHtml($borrowingNow) ?>"></label></p>
         <p><input type="text" name="remarks" maxlength="1000" placeholder="Optional item details" aria-label="Item details"></p>
         <input type="hidden" name="action" value="add_facilities_item">
     </form>
     <div class="facilities-modal-actions">
     <button type="submit" form="facilities-add-item">Save borrowed item</button>
+    <?php if ($facilitiesRow['station_status'] !== 'LOCKED' && $facilitiesRow['eligibility']['eligible']): ?>
     <form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student for Facilities?');">
         <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
         <input type="hidden" name="clearance_id" value="<?= (int) $facilitiesRow['clearance_id'] ?>">
         <button name="action" value="approve" data-facilities-clear data-clear-eligible="<?= $facilitiesRow['eligibility']['eligible'] ? '1' : '0' ?>" <?= !$facilitiesRow['eligibility']['eligible'] ? 'disabled' : '' ?>>Clear Facilities</button>
     </form>
+    <?php endif; ?>
     </div>
     <?php endif; ?>
 </template>

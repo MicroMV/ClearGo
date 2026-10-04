@@ -6,6 +6,7 @@ require_once __DIR__ . '/../auth/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../clearance/readiness_functions.php';
 require_once __DIR__ . '/../clearance/clearance_functions.php';
+require_once __DIR__ . '/../clearance/report_workbook.php';
 
 $user = requireRole('DEAN');
 $search = trim((string) ($_GET['search'] ?? ''));
@@ -148,6 +149,32 @@ try {
         };
     }));
     $totalRows = count($filteredRows);
+    if (($_GET['export'] ?? '') === 'xlsx') {
+        $reportRows = [];
+        foreach ($filteredRows as $row) {
+            $status = $row['dean_status'] === 'APPROVED'
+                ? 'CLEARED'
+                : (((int) $row['blocking_count'] === 0 && $row['dean_status'] !== 'RETURNED') ? 'READY TO CLEAR' : 'FOR COMPLIANCE');
+            $reportRows[] = [
+                $row['student_number'],
+                $row['last_name'] . ', ' . $row['first_name'],
+                $row['program'],
+                'Year ' . (int) $row['year_level'],
+                $row['organization_name'],
+                $row['required_count'] . ' required; ' . $row['verified_count'] . ' verified',
+                str_replace('_', ' ', (string) $row['evaluation_status']),
+                str_replace('_', ' ', (string) ($row['organization_status'] ?: 'PENDING')),
+                $status,
+            ];
+        }
+        $workbook = createClearanceReportXlsx(
+            $dean['organization_code'] . ' Dean Clearance Report',
+            activePeriodReportLabel($database),
+            ['Student Number', 'Full Name', 'Course', 'Year Level', 'College', 'Requirements', 'Evaluation Status', 'Organization Status', 'Clearance Status'],
+            [['name' => $dean['organization_code'], 'rows' => $reportRows]]
+        );
+        downloadClearanceReport($workbook, strtolower($dean['organization_code']) . '-dean-clearance-report.xlsx');
+    }
     $totalPages = max(1, (int) ceil($totalRows / $pageSize));
     $page = min($page, $totalPages);
     $rows = array_slice($filteredRows, ($page - 1) * $pageSize, $pageSize);
@@ -205,13 +232,10 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
                     <p>Review academic requirements and process eligible student clearances.</p>
                 </div>
                 <div class="topbar-actions">
-                    <div class="topbar-account"><strong><?= escapeHtml($user['email']) ?></strong><span>Dean staff account</span></div><?= dashboardNotificationBell($notifications) ?>
+                    <?= dashboardNotificationBell($notifications) ?>
                 </div>
             </header>
             <main class="staff-main">
-                <section class="panel"><strong><?= escapeHtml($dean['organization_name']) ?></strong>
-                    <p class="muted">This dashboard only includes students whose courses belong to <?= escapeHtml($dean['organization_code']) ?>.</p>
-                </section>
                 <?php if ($message !== null): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?>
                 <?php if ($readiness['clearance_status'] === 'PREPARING'): ?><section class="panel">
                         <h2>Semester preparation</h2>
@@ -262,6 +286,7 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
                     <?php $deanFilterLabels = ['WAITING' => 'For Compliance', 'APPROVED' => 'Cleared', 'ALL' => 'All Students']; ?>
                     <select name="filter"><?php foreach ($allowedFilters as $option): ?><option value="<?= $option ?>" <?= $filter === $option ? 'selected' : '' ?>><?= escapeHtml($deanFilterLabels[$option]) ?></option><?php endforeach; ?></select>
                     <button type="submit">Search</button>
+                    <a class="button-link" href="?search=<?= urlencode($search) ?>&amp;course=<?= urlencode($courseFilter) ?>&amp;year_level=<?= $yearFilter ?>&amp;filter=<?= urlencode($filter) ?><?= $isCbeDean ? '&amp;group=' . urlencode($cbeGroup) : '' ?>&amp;export=xlsx">Export Excel report</a>
                 </form>
             </section>
             <section class="panel">

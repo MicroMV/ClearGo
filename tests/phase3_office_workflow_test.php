@@ -167,11 +167,29 @@ try {
     approveOfficeClearance($database, 'SASO', $clearanceId, $staffByRole['SASO_STAFF']);
     approveOfficeClearance($database, 'FACILITIES', $clearanceId, $staffByRole['FACILITIES_STAFF']);
     approveOfficeClearance($database, 'COMLAB', $clearanceId, $staffByRole['COMLAB_STAFF']);
+    $database->prepare("UPDATE clearance_stations cs INNER JOIN stations station ON station.id=cs.station_id AND station.code='REGISTRAR' SET cs.status='PENDING' WHERE cs.clearance_id=:clearance_id")->execute(['clearance_id' => $clearanceId]);
+    try {
+        finalizeRegistrarClearance($database, $clearanceId, $staffByRole['REGISTRAR']);
+        phaseThreeCheck(false, 'Registrar cleared the student before Accounting signed.');
+    } catch (RuntimeException $exception) {
+        phaseThreeCheck(str_contains($exception->getMessage(), 'All offices must sign'), 'Registrar returned an unexpected incomplete-signatures error.');
+    }
+    $database->prepare("UPDATE clearance_stations cs INNER JOIN stations station ON station.id=cs.station_id AND station.code='REGISTRAR' SET cs.status='LOCKED' WHERE cs.clearance_id=:clearance_id")->execute(['clearance_id' => $clearanceId]);
+    $accountingReceipt = $database->prepare("INSERT INTO accounting_receipts (student_id,academic_period_id,receipt_code,status,issued_by,scanned_at) VALUES (:student_id,:period_id,:receipt_code,'SCANNED',:user_id,NOW())");
+    $accountingReceipt->execute(['student_id' => $studentId, 'period_id' => $activePeriodId, 'receipt_code' => 'PORTAL-PHASE3-' . $token, 'user_id' => $staffByRole['ACCOUNTING_STAFF']]);
     approveOfficeClearance($database, 'ACCOUNTING', $clearanceId, $staffByRole['ACCOUNTING_STAFF']);
 
-    $documents = $database->prepare("UPDATE student_documents SET status='VERIFIED',reviewed_by=:user_id,reviewed_at=NOW() WHERE student_id=:student_id");
-    $documents->execute(['user_id' => $staffByRole['REGISTRAR'], 'student_id' => $studentId]);
-    approveOfficeClearance($database, 'REGISTRAR', $clearanceId, $staffByRole['REGISTRAR']);
+    $registrarContext = officeClearanceContext($database, 'REGISTRAR', $clearanceId);
+    $registrarEligibility = officeEligibility($database, 'REGISTRAR', $registrarContext);
+    phaseThreeCheck($registrarEligibility['eligible'], 'Registrar was not ready after every prior office signed.');
+    finalizeRegistrarClearance($database, $clearanceId, $staffByRole['REGISTRAR']);
+
+    $unverifiedDocuments = countQuery(
+        $database,
+        "SELECT COUNT(*) FROM student_documents document INNER JOIN document_requirements requirement ON requirement.id=document.document_requirement_id WHERE document.student_id=:student_id AND requirement.academic_period_id=:period_id AND requirement.status='ACTIVE' AND requirement.is_required=1 AND document.status<>'VERIFIED'",
+        ['student_id' => $studentId, 'period_id' => $activePeriodId]
+    );
+    phaseThreeCheck($unverifiedDocuments === 0, 'Registrar Clear did not confirm all required documents.');
 
     $overall = $database->prepare('SELECT status,completed_at FROM clearances WHERE id=:id');
     $overall->execute(['id' => $clearanceId]);

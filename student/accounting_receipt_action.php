@@ -13,10 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCsrfToken($_POST['csrf_token
 }
 try {
     $result = processAccountingReceiptUpload(getDatabaseConnection(), $user['id'], $_FILES['accounting_receipt'] ?? []);
-    $messages = ['VERIFIED' => 'Receipt photo verified and sent to Accounting for review.', 'REJECTED' => 'The receipt photo could not be verified. Upload a clear photo of the valid Accounting receipt.', 'ERROR' => 'Receipt verification is temporarily unavailable. Your photo was deleted; please try again later.'];
-    setFlashMessage($messages[$result['status']]);
+    setFlashMessage('TLC portal screenshot submitted. Please wait for Accounting review.');
 } catch (Throwable $exception) {
     error_log('Accounting receipt upload failed: ' . $exception->getMessage());
-    setFlashMessage($exception instanceof RuntimeException ? $exception->getMessage() : 'Unable to verify the receipt photo right now.');
+    setFlashMessage($exception instanceof RuntimeException ? $exception->getMessage() : 'Unable to submit the portal screenshot right now.');
 }
 redirectTo('/student/dashboard.php?station=ACCOUNTING');

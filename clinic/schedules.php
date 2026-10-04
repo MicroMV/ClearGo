@@ -84,7 +84,7 @@ $sidebar = staffDashboardSidebar('Clinic Clearance', $user, [
         <header class="staff-topbar">
             <button class="mobile-nav-toggle" type="button" data-sidebar-open aria-controls="staff-sidebar" aria-expanded="false" aria-label="Open navigation">&#9776;</button>
             <div class="topbar-title"><h1>Medical Schedules</h1><p>Create appointment dates for students without medical records.</p></div>
-            <div class="topbar-actions"><div class="topbar-account"><strong><?= escapeHtml($user['email']) ?></strong><span>Clinic staff account</span></div><?= dashboardNotificationBell($notifications) ?></div>
+            <div class="topbar-actions"><?= dashboardNotificationBell($notifications) ?></div>
         </header>
         <main class="staff-main">
             <?php if ($message !== null): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?>

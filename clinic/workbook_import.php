@@ -23,13 +23,15 @@ try {
         throw new RuntimeException('Upload the .xlsx Clinic workbook downloaded from ClearGo.');
     }
     $rows = readClinicWorkbook((string) $file['tmp_name']);
-    $result = importClinicWorkbook(getDatabaseConnection(), (int) $user['id'], $rows);
+    $database = getDatabaseConnection();
+    $result = importClinicWorkbook($database, (int) $user['id'], $rows);
     $message = 'Clinic workbook imported. Cleared: ' . $result['cleared']
         . '. Already cleared: ' . $result['already_cleared'] . '. Unchanged: ' . $result['skipped']
         . '. Errors: ' . count($result['errors']) . '.';
     if ($result['errors'] !== []) {
         $message .= ' ' . implode(' ', array_slice($result['errors'], 0, 3));
     }
+    createNotification($database, (int) $user['id'], 'Clinic Excel import completed', $message);
     setFlashMessage($message);
 } catch (Throwable $exception) {
     error_log('Clinic workbook import failed: ' . $exception->getMessage());

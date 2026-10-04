@@ -38,7 +38,9 @@ try {
     $action = (string) ($_POST['action'] ?? '');
     $clearanceId = positivePostId('clearance_id');
     $context = officeClearanceContext($database, $config['code'], $clearanceId);
-    if ($context['station_status'] === 'LOCKED') {
+    $canRecordComlabViolation = $config['code'] === 'COMLAB' && in_array($action, ['add_comlab_incident', 'resolve_comlab_incident'], true);
+    $canManageFacilitiesItems = $config['code'] === 'FACILITIES' && in_array($action, ['add_facilities_item', 'return_facilities_item'], true);
+    if ($context['station_status'] === 'LOCKED' && !$canRecordComlabViolation && !$canManageFacilitiesItems) {
         throw new RuntimeException('The required preceding offices have not cleared this student yet.');
     }
     $studentId = (int) $context['student_id'];
@@ -48,9 +50,9 @@ try {
     if ($action === 'manual_accounting_clear' && $config['code'] === 'ACCOUNTING') {
         manuallyClearAccounting($database, $clearanceId, $user['id']);
         setFlashMessage('Accounting manually cleared ' . $context['student_name'] . '.');
-    } elseif ($action === 'manual_registrar_clear' && $config['code'] === 'REGISTRAR') {
-        manuallyClearRegistrar($database, $clearanceId, $user['id']);
-        setFlashMessage('Registrar manually completed clearance for ' . $context['student_name'] . '.');
+    } elseif ($action === 'registrar_clear' && $config['code'] === 'REGISTRAR') {
+        finalizeRegistrarClearance($database, $clearanceId, $user['id']);
+        setFlashMessage('Registrar completed clearance for ' . $context['student_name'] . '.');
     } elseif ($action === 'clinic_clear' && $config['code'] === 'CLINIC') {
         $remarks = trim((string) ($_POST['remarks'] ?? ''));
         if (mb_strlen($remarks) > 1000) {
@@ -61,12 +63,12 @@ try {
     } elseif ($action === 'library_clear' && $config['code'] === 'LIBRARY') {
         $cleared = clearLibraryClearance($database, $clearanceId, $user['id']);
         setFlashMessage($cleared ? 'Library clearance completed for ' . $context['student_name'] . '.' : 'This student is already cleared by the Library.');
-    } elseif ($action === 'approve') {
+    } elseif ($action === 'approve' && $config['code'] !== 'REGISTRAR') {
         approveOfficeClearance($database, $config['code'], $clearanceId, $user['id']);
         setFlashMessage($config['title'] . ' approved for ' . $context['student_name'] . '.');
     } elseif ($action === 'return') {
         returnOfficeClearance($database, $config['code'], $clearanceId, $user['id'], trim((string) ($_POST['reason'] ?? '')));
-        setFlashMessage('Clearance returned with instructions for the student.');
+        setFlashMessage($config['code'] === 'REGISTRAR' ? 'Student marked for compliance.' : 'Clearance returned with instructions for the student.');
     } elseif ($action === 'verify_requirement' && $config['code'] === 'STUDENT_COUNCIL') {
         $requirementRecordId = positivePostId('requirement_record_id');
         $statement = $database->prepare("UPDATE requirement_records rr INNER JOIN requirements r ON r.id=rr.requirement_id INNER JOIN clearance_stations cs ON cs.id=rr.clearance_station_id SET rr.status='VERIFIED',rr.verified_by=:user_id,rr.verified_at=NOW(),rr.remarks=:remarks WHERE rr.id=:record_id AND cs.clearance_id=:clearance_id AND r.station_id=:station_id");
@@ -128,6 +130,9 @@ try {
         officeMutationNotice($database, $context, $user['id'], 'Bookstore verified payment and settled an obligation.');
         setFlashMessage('Bookstore obligation settled.');
     } elseif ($action === 'add_facilities_item' && $config['code'] === 'FACILITIES') {
+        if (!in_array($context['clearance_status'], ['PREPARING', 'OPEN'], true)) {
+            throw new RuntimeException('Clearance processing is closed for this semester.');
+        }
         if ($context['station_status'] === 'APPROVED') {
             throw new RuntimeException('This student is already cleared by Facilities.');
         }
@@ -139,11 +144,20 @@ try {
         if (mb_strlen($remarks) > 1000) {
             throw new RuntimeException('Remarks cannot exceed 1,000 characters.');
         }
-        $statement = $database->prepare("INSERT INTO facilities_obligations (student_id,academic_period_id,item_type,description,status,remarks,recorded_by) VALUES (:student_id,:period_id,'BORROWED_ITEM',:description,'OUTSTANDING',:remarks,:user_id)");
-        $statement->execute(['student_id' => $studentId, 'period_id' => $periodId, 'description' => $description, 'remarks' => $remarks ?: null, 'user_id' => $user['id']]);
+        $borrowedInput = (string) ($_POST['borrowed_at'] ?? '');
+        $borrowingTimezone = new DateTimeZone('Asia/Manila');
+        $borrowedAt = DateTimeImmutable::createFromFormat('!Y-m-d\TH:i', $borrowedInput, $borrowingTimezone);
+        if ($borrowedAt === false || $borrowedAt->format('Y-m-d\TH:i') !== $borrowedInput || $borrowedAt > new DateTimeImmutable('now', $borrowingTimezone)) {
+            throw new RuntimeException('Enter a valid borrowing date and time that is not in the future.');
+        }
+        $statement = $database->prepare("INSERT INTO facilities_obligations (student_id,academic_period_id,item_type,description,status,remarks,recorded_by,created_at) VALUES (:student_id,:period_id,'BORROWED_ITEM',:description,'OUTSTANDING',:remarks,:user_id,:borrowed_at)");
+        $statement->execute(['student_id' => $studentId, 'period_id' => $periodId, 'description' => $description, 'remarks' => $remarks ?: null, 'user_id' => $user['id'], 'borrowed_at' => $borrowedAt->format('Y-m-d H:i:s')]);
         officeMutationNotice($database, $context, $user['id'], 'Facilities recorded a borrowed item that must be returned: ' . $description . '.');
         setFlashMessage('Borrowed item recorded.');
     } elseif ($action === 'return_facilities_item' && $config['code'] === 'FACILITIES') {
+        if (!in_array($context['clearance_status'], ['PREPARING', 'OPEN'], true) || $context['station_status'] === 'APPROVED') {
+            throw new RuntimeException('Facilities items cannot be changed for this clearance.');
+        }
         $itemId = positivePostId('item_id');
         $remarks = trim((string) ($_POST['remarks'] ?? ''));
         if (mb_strlen($remarks) > 1000) {
@@ -157,6 +171,9 @@ try {
         officeMutationNotice($database, $context, $user['id'], 'Facilities confirmed that a borrowed item or toga was returned.');
         setFlashMessage('Item marked as returned.');
     } elseif ($action === 'add_comlab_incident' && $config['code'] === 'COMLAB') {
+        if (!in_array($context['clearance_status'], ['PREPARING', 'OPEN'], true)) {
+            throw new RuntimeException('Clearance processing is closed for this semester.');
+        }
         $description = trim((string) ($_POST['description'] ?? ''));
         if ($description === '' || mb_strlen($description) > 2000) {
             throw new RuntimeException('Enter an incident description of up to 2,000 characters.');
@@ -165,11 +182,20 @@ try {
             throw new RuntimeException('This student is already cleared by Computer Laboratory.');
         }
         $station = officeStation($database, 'COMLAB');
-        $statement = $database->prepare("INSERT INTO violations (student_id,station_id,description,status,recorded_by) VALUES (:student_id,:station_id,:description,'OPEN',:user_id)");
-        $statement->execute(['student_id' => $studentId, 'station_id' => $station['id'], 'description' => $description, 'user_id' => $user['id']]);
-        officeMutationNotice($database, $context, $user['id'], 'Computer Laboratory recorded an incident report.');
-        setFlashMessage('Computer Laboratory incident report recorded.');
+        $violationInput = (string) ($_POST['violation_at'] ?? '');
+        $violationTimezone = new DateTimeZone('Asia/Manila');
+        $violationAt = DateTimeImmutable::createFromFormat('!Y-m-d\TH:i', $violationInput, $violationTimezone);
+        if ($violationAt === false || $violationAt->format('Y-m-d\TH:i') !== $violationInput || $violationAt > new DateTimeImmutable('now', $violationTimezone)) {
+            throw new RuntimeException('Enter a valid violation date and time that is not in the future.');
+        }
+        $statement = $database->prepare("INSERT INTO violations (student_id,station_id,description,status,recorded_by,created_at) VALUES (:student_id,:station_id,:description,'OPEN',:user_id,:violation_at)");
+        $statement->execute(['student_id' => $studentId, 'station_id' => $station['id'], 'description' => $description, 'user_id' => $user['id'], 'violation_at' => $violationAt->format('Y-m-d H:i:s')]);
+        officeMutationNotice($database, $context, $user['id'], 'Comlab violation: ' . $description . '. Go to the Comlab room to resolve this violation before clearance.');
+        setFlashMessage('Comlab violation recorded. The student must visit the Comlab room to resolve it.');
     } elseif ($action === 'resolve_comlab_incident' && $config['code'] === 'COMLAB') {
+        if (!in_array($context['clearance_status'], ['PREPARING', 'OPEN'], true) || $context['station_status'] === 'APPROVED') {
+            throw new RuntimeException('Violations cannot be changed for this clearance in its current state.');
+        }
         $incidentId = positivePostId('incident_id');
         $station = officeStation($database, 'COMLAB');
         $statement = $database->prepare("UPDATE violations SET status='RESOLVED',resolved_by=:user_id,resolved_at=NOW() WHERE id=:id AND student_id=:student_id AND station_id=:station_id AND status='OPEN'");
@@ -218,21 +244,7 @@ try {
         }
         officeMutationNotice($database, $context, $user['id'], 'Accounting verified a settled financial obligation.');
         setFlashMessage('Financial obligation cleared.');
-    } elseif ($action === 'document_status' && $config['code'] === 'REGISTRAR') {
-        $documentId = positivePostId('document_id');
-        $status = strtoupper((string) ($_POST['status'] ?? ''));
-        $reason = trim((string) ($_POST['reason'] ?? ''));
-        if (!in_array($status, ['VERIFIED', 'RETURNED'], true) || ($status === 'RETURNED' && $reason === '')) {
-            throw new RuntimeException('Select a valid document status and return reason.');
-        }
-        $statement = $database->prepare("UPDATE student_documents document INNER JOIN document_requirements requirement ON requirement.id=document.document_requirement_id SET document.status=:status,document.reviewed_by=:user_id,document.reviewed_at=NOW(),document.return_reason=:reason WHERE document.id=:id AND document.student_id=:student_id AND requirement.academic_period_id=:period_id");
-        $statement->execute(['status' => $status, 'user_id' => $user['id'], 'reason' => $reason ?: null, 'id' => $documentId, 'student_id' => $studentId, 'period_id' => $periodId]);
-        if ($statement->rowCount() !== 1) {
-            throw new RuntimeException('The document could not be updated.');
-        }
-        officeMutationNotice($database, $context, $user['id'], 'Registrar updated a required document to ' . $status . '.');
-        setFlashMessage('Registrar document updated.');
-    } elseif ($action === 'approve_exception' && in_array($config['code'], ['ACCOUNTING', 'REGISTRAR'], true)) {
+    } elseif ($action === 'approve_exception' && $config['code'] === 'ACCOUNTING') {
         $reason = trim((string) ($_POST['reason'] ?? ''));
         $proof = trim((string) ($_POST['proof_reference'] ?? ''));
         $expires = trim((string) ($_POST['expires_at'] ?? ''));
@@ -252,4 +264,12 @@ try {
 }
 
 $studentParameter = isset($clearanceId) ? '?clearance=' . urlencode((string) $clearanceId) : '';
+if (($_POST['return_history'] ?? '') === '1') {
+    if ($config['code'] === 'FACILITIES' && ($action ?? '') === 'return_facilities_item') {
+        redirectTo('/facilities/borrowed-items.php');
+    }
+    if ($config['code'] === 'COMLAB' && ($action ?? '') === 'resolve_comlab_incident') {
+        redirectTo('/comlab/violations.php');
+    }
+}
 redirectTo($config['path'] . $studentParameter);

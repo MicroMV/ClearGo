@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/../auth/auth_check.php';
+
 function activeStudentForUser(PDO $database, int $userId, bool $lock = false): array
 {
     $sql = "SELECT students.id, students.student_number, students.first_name, students.last_name,
@@ -146,32 +148,35 @@ function startStudentClearance(PDO $database, int $userId): array
             'student_id' => $student['id'],
         ]);
 
-        $notificationInsert = $database->prepare(
-            "INSERT INTO notifications (user_id, title, message)
-             VALUES (:user_id, 'Clearance application started', :message)"
-        );
-        $notificationInsert->execute([
-            'user_id' => $userId,
-            'message' => $firstStationCode === 'ORGANIZATION'
+        createNotification(
+            $database,
+            $userId,
+            'Clearance application started',
+            $firstStationCode === 'ORGANIZATION'
                 ? 'Your clearance application has started. Complete Organization clearance first.'
-                : 'Your clearance application has started. Review the applicable requirements for your Dean clearance first.',
-        ]);
+                : 'Your clearance application has started. Review the applicable requirements for your Dean clearance first.'
+        );
 
-        $staffNotification = $database->prepare(
-            "INSERT INTO notifications (user_id,title,message)
-             SELECT staff.id,:title,:message
+        $staffUsers = $database->prepare(
+            "SELECT staff.id
              FROM users staff
              INNER JOIN staff_assignments assignment ON assignment.user_id=staff.id AND assignment.status='ACTIVE'
              INNER JOIN stations station ON station.id=assignment.station_id AND station.code=:station_code
              WHERE staff.status='ACTIVE'
                AND assignment.organization_id=:organization_id"
         );
-        $staffNotification->execute([
-            'title' => $firstStationCode === 'ORGANIZATION' ? 'New Organization clearance application' : 'New Dean clearance application',
-            'message' => $student['student_number'] . ' started a clearance application and is ready for ' . ($firstStationCode === 'ORGANIZATION' ? 'Organization' : 'Dean') . ' review.',
+        $staffUsers->execute([
             'station_code' => $firstStationCode,
             'organization_id' => $student['organization_id'],
         ]);
+        foreach ($staffUsers->fetchAll(PDO::FETCH_COLUMN) as $staffUserId) {
+            createNotification(
+                $database,
+                (int) $staffUserId,
+                $firstStationCode === 'ORGANIZATION' ? 'New Organization clearance application' : 'New Dean clearance application',
+                $student['student_number'] . ' reached your office with PENDING status and needs review.'
+            );
+        }
 
         $database->commit();
 

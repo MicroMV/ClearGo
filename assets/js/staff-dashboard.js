@@ -22,19 +22,158 @@
         if (event.key === 'Escape') { setSidebar(false); }
     });
 
-    document.querySelectorAll('.notification-toggle').forEach(function (toggle) {
+    var toastTimer = null;
+
+    function closeNotificationToast() {
+        var toast = document.querySelector('.notification-toast');
+        if (!toast) { return; }
+        window.clearTimeout(toastTimer);
+        toast.classList.remove('visible');
+        toast.addEventListener('transitionend', function () { toast.remove(); }, { once: true });
+        window.setTimeout(function () { if (toast.isConnected) { toast.remove(); } }, 500);
+    }
+
+    function showNotificationToast(notification, additionalCount) {
+        closeNotificationToast();
+        var toast = document.createElement('aside');
+        toast.className = 'notification-toast';
+        toast.setAttribute('role', 'status');
+        toast.setAttribute('aria-live', 'polite');
+        var copy = document.createElement('div');
+        var title = document.createElement('strong');
+        title.textContent = additionalCount > 0
+            ? notification.title + ' (+' + additionalCount + ' more)'
+            : notification.title;
+        var message = document.createElement('p');
+        message.textContent = notification.message;
+        var close = document.createElement('button');
+        close.type = 'button';
+        close.setAttribute('aria-label', 'Dismiss notification');
+        close.textContent = '\u00d7';
+        close.addEventListener('click', closeNotificationToast);
+        copy.appendChild(title);
+        copy.appendChild(message);
+        toast.appendChild(copy);
+        toast.appendChild(close);
+        document.body.appendChild(toast);
+        window.requestAnimationFrame(function () { toast.classList.add('visible'); });
+        toastTimer = window.setTimeout(closeNotificationToast, 6000);
+    }
+
+    function updateNotificationBadge(center, unreadCount) {
+        var toggle = center.querySelector('.notification-toggle');
+        if (!toggle) { return; }
+        var badge = toggle.querySelector('.notification-count');
+        if (unreadCount < 1) {
+            if (badge) { badge.remove(); }
+        } else {
+            if (!badge) {
+                badge = document.createElement('span');
+                badge.className = 'notification-count';
+                toggle.appendChild(badge);
+            }
+            badge.textContent = unreadCount > 99 ? '99+' : String(unreadCount);
+        }
+        toggle.setAttribute('aria-label', 'View alerts and notifications' + (unreadCount > 0 ? ' (' + unreadCount + ' unread)' : ''));
+    }
+
+    function renderNotifications(center, notifications, unreadCount) {
+        var menu = center.querySelector('.notification-menu');
+        var list = menu && menu.querySelector('ul');
+        var total = menu && menu.querySelector('.notification-heading span');
+        if (!list) { return; }
+        list.textContent = '';
+        if (notifications.length === 0) {
+            var empty = document.createElement('li');
+            empty.className = 'notification-empty';
+            empty.textContent = 'No alerts or notifications yet.';
+            list.appendChild(empty);
+        }
+        notifications.forEach(function (notification) {
+            var item = document.createElement('li');
+            item.className = 'notification-item' + (notification.is_read ? '' : ' unread');
+            item.dataset.notificationId = String(notification.id);
+            var title = document.createElement('strong');
+            title.textContent = notification.title;
+            var message = document.createElement('span');
+            message.textContent = notification.message;
+            var time = document.createElement('time');
+            time.textContent = notification.created_at;
+            item.appendChild(title);
+            item.appendChild(message);
+            item.appendChild(time);
+            list.appendChild(item);
+        });
+        if (total) { total.textContent = notifications.length + ' total'; }
+        updateNotificationBadge(center, unreadCount);
+    }
+
+    function refreshNotifications(center, announce) {
+        var endpoint = center.dataset.notificationEndpoint;
+        if (!endpoint || document.hidden) { return; }
+        fetch(endpoint, { credentials: 'same-origin', headers: { Accept: 'application/json' } })
+            .then(function (response) { if (!response.ok) { throw new Error('Notification refresh failed'); } return response.json(); })
+            .then(function (payload) {
+                var previousId = Number(center.dataset.latestNotificationId || 0);
+                var fresh = payload.notifications.filter(function (item) { return !item.is_read && item.id > previousId; });
+                renderNotifications(center, payload.notifications, payload.unread_count);
+                if (payload.notifications.length > 0) {
+                    center.dataset.latestNotificationId = String(Math.max.apply(null, payload.notifications.map(function (item) { return item.id; })));
+                }
+                if (announce && fresh.length > 0) {
+                    showNotificationToast(fresh[0], fresh.length - 1);
+                }
+            })
+            .catch(function () { /* Keep the last successfully rendered state. */ });
+    }
+
+    function markNotificationsRead(center) {
+        var endpoint = center.dataset.notificationEndpoint;
+        var token = center.dataset.csrfToken;
+        if (!endpoint || !token || !center.querySelector('.notification-item.unread')) { return; }
+        center.querySelectorAll('.notification-item.unread').forEach(function (item) { item.classList.remove('unread'); });
+        updateNotificationBadge(center, 0);
+        fetch(endpoint, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({ action: 'mark_read', csrf_token: token })
+        }).catch(function () { refreshNotifications(center, false); });
+    }
+
+    function bindNotificationCenter(center) {
+        if (center.dataset.notificationBound === 'true') { return; }
+        var toggle = center.querySelector('.notification-toggle');
+        var menu = center.querySelector('.notification-menu');
+        if (!toggle || !menu) { return; }
+        center.dataset.notificationBound = 'true';
         toggle.addEventListener('click', function (event) {
             event.stopPropagation();
-            var menu = this.nextElementSibling;
-            var isOpen = !menu.hasAttribute('hidden');
+            var willOpen = menu.hasAttribute('hidden');
             document.querySelectorAll('.notification-menu').forEach(function (item) { item.setAttribute('hidden', ''); });
             document.querySelectorAll('.notification-toggle').forEach(function (item) { item.setAttribute('aria-expanded', 'false'); });
-            if (!isOpen) {
+            if (willOpen) {
                 menu.removeAttribute('hidden');
-                this.setAttribute('aria-expanded', 'true');
+                toggle.setAttribute('aria-expanded', 'true');
+                markNotificationsRead(center);
             }
         });
-    });
+        var newestUnread = center.querySelector('.notification-item.unread');
+        if (newestUnread) {
+            showNotificationToast({
+                title: newestUnread.querySelector('strong').textContent,
+                message: newestUnread.querySelector('span').textContent
+            }, Math.max(0, center.querySelectorAll('.notification-item.unread').length - 1));
+        }
+        window.setTimeout(function () { refreshNotifications(center, true); }, 500);
+        window.setInterval(function () { refreshNotifications(center, true); }, 20000);
+    }
+
+    function initNotificationCenters() {
+        document.querySelectorAll('.notification-center').forEach(bindNotificationCenter);
+    }
+
+    initNotificationCenters();
 
     document.addEventListener('click', function (event) {
         if (!event.target.closest('.notification-center')) {
@@ -84,20 +223,19 @@
 
     var submittedPage = document.querySelector('main.page');
     if (submittedPage && !document.querySelector('.submitted-page-topbar')) {
-        var account = document.querySelector('.sidebar-user-copy strong');
         var header = document.createElement('header');
         header.className = 'staff-topbar submitted-page-topbar';
-        header.innerHTML = '<div class="topbar-title"><h1>CCS Dean Clearance</h1><p>Review academic requirements and process eligible student clearances.</p></div><div class="topbar-actions"><div class="topbar-account"><strong></strong><span>Dean staff account</span></div><div class="notification-center"><button class="notification-toggle" type="button" aria-label="Notifications" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button><div class="notification-menu" hidden></div></div></div>';
-        header.querySelector('.topbar-account strong').textContent = account ? account.textContent : '';
+        header.innerHTML = '<div class="topbar-title"><h1>CCS Dean Clearance</h1><p>Review academic requirements and process eligible student clearances.</p></div><div class="topbar-actions"><div class="notification-center"><button class="notification-toggle" type="button" aria-label="Notifications" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button><div class="notification-menu" hidden></div></div></div>';
         header.querySelector('.notification-toggle').addEventListener('click', function () {
             var dashboard = document.querySelector('.staff-nav a[href*="/dean/dashboard.php"]');
-            var menu = header.querySelector('.notification-menu');
-            if (!dashboard || !menu) { return; }
-            if (menu.dataset.loaded === 'true') { menu.toggleAttribute('hidden'); return; }
+            var center = header.querySelector('.notification-center');
+            if (!dashboard || !center) { return; }
             fetch(dashboard.href, { credentials: 'same-origin' }).then(function (response) { return response.text(); }).then(function (html) {
-                var source = new DOMParser().parseFromString(html, 'text/html').querySelector('.notification-menu');
-                menu.innerHTML = source ? source.innerHTML : '<p class="notification-empty">No alerts or notifications yet.</p>';
-                menu.dataset.loaded = 'true'; menu.removeAttribute('hidden');
+                var source = new DOMParser().parseFromString(html, 'text/html').querySelector('.notification-center');
+                if (!source) { return; }
+                center.replaceWith(source);
+                initNotificationCenters();
+                source.querySelector('.notification-toggle').click();
             });
         });
         submittedPage.parentNode.insertBefore(header, submittedPage);

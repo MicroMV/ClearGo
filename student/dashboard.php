@@ -51,6 +51,9 @@ try {
         $isEnrolled = (int) $enrollmentQuery->fetchColumn() === 1;
     }
 
+    $comlabQuery = $database->prepare("SELECT violation.description,violation.created_at FROM violations violation INNER JOIN stations station ON station.id=violation.station_id WHERE violation.student_id=:student_id AND station.code='COMLAB' AND violation.status='OPEN' ORDER BY violation.created_at DESC,violation.id DESC");
+    $comlabQuery->execute(['student_id' => $student['id']]);
+    $comlabViolations = $comlabQuery->fetchAll();
     $facilitiesItems = [];
     if ($period !== false) {
         $facilitiesQuery = $database->prepare(
@@ -218,12 +221,10 @@ try {
         }
     }
 
-    if ($selectedStation !== null && $selectedStation['code'] === 'ACCOUNTING' && $clearance !== false && $period !== false) {
+    if ($clearance !== false && $period !== false) {
         $receiptQuery = $database->prepare(
-            "SELECT receipt.id, receipt.receipt_code, receipt.status, receipt.scanned_at,
-                    verification.status AS verification_status, verification.attempt_count, verification.last_submitted_at
+            "SELECT receipt.id, receipt.receipt_code, receipt.status, receipt.scanned_at
              FROM accounting_receipts receipt
-             LEFT JOIN accounting_receipt_verifications verification ON verification.accounting_receipt_id=receipt.id
              WHERE receipt.student_id=:student_id AND receipt.academic_period_id=:period_id
              ORDER BY receipt.id DESC LIMIT 1"
         );
@@ -289,20 +290,8 @@ try {
         }
     }
 
-    $notificationQuery = $database->prepare(
-        'SELECT title, message, is_read, created_at
-         FROM notifications
-         WHERE user_id = :user_id
-         ORDER BY created_at DESC, id DESC
-         LIMIT 10'
-    );
-    $notificationQuery->execute(['user_id' => $user['id']]);
-    $notifications = $notificationQuery->fetchAll();
-    $unreadNotificationQuery = $database->prepare(
-        'SELECT COUNT(*) FROM notifications WHERE user_id = :user_id AND is_read = 0'
-    );
-    $unreadNotificationQuery->execute(['user_id' => $user['id']]);
-    $unreadNotificationCount = (int) $unreadNotificationQuery->fetchColumn();
+    $notifications = dashboardNotificationPreview($database, (int) $user['id']);
+    $unreadNotificationCount = dashboardUnreadNotificationCount($database, (int) $user['id']);
 } catch (Throwable $exception) {
     error_log('Student dashboard failed to load: ' . $exception->getMessage());
     http_response_code(500);
@@ -416,7 +405,7 @@ $logoutForm = dashboardLogoutForm();
     <header class="student-header">
         <div class="student-topbar"><a class="student-brand" href="<?= escapeHtml(applicationUrl('/student/dashboard.php')) ?>"><img src="<?= escapeHtml(clearGoLogoUrl()) ?>" alt="The Lewis College logo"><span class="student-brand-copy"><strong>ClearGo</strong><small>Student Portal</small></span></a>
             <div class="header-actions">
-                <div class="notification-wrap">
+                <div class="notification-wrap" data-notification-endpoint="<?= escapeHtml(applicationUrl('/auth/notifications.php')) ?>" data-csrf-token="<?= escapeHtml($csrfToken) ?>" data-latest-notification-id="<?= $notifications === [] ? 0 : max(array_map(static fn(array $notification): int => (int) $notification['id'], $notifications)) ?>">
                     <button class="notification-button" id="notificationButton" type="button" aria-label="Notifications<?= $unreadNotificationCount > 0 ? ' (' . $unreadNotificationCount . ' unread)' : '' ?>" aria-controls="notificationBox" aria-expanded="false">
                         <svg viewBox="0 0 24 24" aria-hidden="true">
                             <path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6v-5a7 7 0 0 0-5-6.71V3a2 2 0 0 0-4 0v1.29A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z" />
@@ -425,7 +414,7 @@ $logoutForm = dashboardLogoutForm();
                     </button>
                     <div class="notification-box" id="notificationBox" hidden>
                         <h2>Notifications</h2>
-                        <?php if ($notifications === []): ?><p class="muted">You have no notifications yet.</p><?php else: ?><ul class="notification-list"><?php foreach ($notifications as $notification): ?><li class="<?= (int) $notification['is_read'] === 0 ? 'unread' : '' ?>"><strong><?= escapeHtml($notification['title']) ?></strong>
+                        <?php if ($notifications === []): ?><p class="notification-empty muted">You have no notifications yet.</p><ul class="notification-list"></ul><?php else: ?><ul class="notification-list"><?php foreach ($notifications as $notification): ?><li data-notification-id="<?= (int) $notification['id'] ?>" class="<?= (int) $notification['is_read'] === 0 ? 'unread' : '' ?>"><strong><?= escapeHtml($notification['title']) ?></strong>
                                         <div><?= escapeHtml($notification['message']) ?></div>
                                         <div class="muted"><?= escapeHtml($notification['created_at']) ?></div>
                                     </li><?php endforeach; ?></ul><?php endif; ?>
@@ -493,6 +482,17 @@ $logoutForm = dashboardLogoutForm();
             </section>
         </div>
 
+        <?php if ($comlabViolations !== []): ?>
+        <section class="panel">
+            <h2>Comlab Violation</h2>
+            <p class="notice warning">You have unresolved Comlab violations. Go to the Comlab room to resolve them with the staff before your Computer Laboratory clearance can be approved.</p>
+            <ul class="requirements">
+                <?php foreach ($comlabViolations as $violation): ?>
+                <li><span class="badge returned">VIOLATED</span><p><?= nl2br(escapeHtml($violation['description'])) ?></p><p class="section-copy">Reported <?= escapeHtml($violation['created_at']) ?></p></li>
+                <?php endforeach; ?>
+            </ul>
+        </section>
+        <?php endif; ?>
         <?php if ($facilitiesItems !== []): ?>
         <section class="panel">
             <h2>Facilities Items Pending Return</h2>
@@ -558,43 +558,94 @@ $logoutForm = dashboardLogoutForm();
                 } ?>
                 <div class="requirements-modal" id="requirements-modal-<?= (int) $station['id'] ?>" hidden aria-hidden="true">
                     <div class="requirements-modal__backdrop" data-close-requirements-modal></div>
-                    <section class="requirements-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="requirements-modal-title-<?= (int) $station['id'] ?>" tabindex="-1">
+                    <section class="requirements-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="requirements-modal-title-<?= (int) $station['id'] ?>" aria-describedby="requirements-modal-help-<?= (int) $station['id'] ?>" tabindex="-1">
                         <div class="requirements-modal__header">
-                            <div>
+                            <div class="requirements-modal__heading">
+                                <span class="requirements-modal__eyebrow">Clearance requirements</span>
                                 <h2 id="requirements-modal-title-<?= (int) $station['id'] ?>"><?= escapeHtml($station['name']) ?> Requirements</h2>
-                                <p>Station status: <span class="badge <?= escapeHtml(strtolower(str_replace('_', '-', $modalStatus))) ?>"><?= escapeHtml(studentStatusLabel($modalStatus)) ?></span></p>
+                                <p id="requirements-modal-help-<?= (int) $station['id'] ?>">Review the items below and complete any action marked as required.</p>
                             </div>
                             <button class="requirements-modal__close" type="button" data-close-requirements-modal aria-label="Close requirements">&times;</button>
                         </div>
+                        <div class="requirements-modal__content">
                         <?php $modalRequirements = $stationRequirements[(int) $station['id']] ?? [];
                         if ($station['code'] === 'DEAN' && $evaluationApplicable) {
                             $modalRequirements = array_values(array_filter($modalRequirements, static fn(array $requirement): bool => in_array($requirement['requirement_code'] ?? '', ['CCS_FACULTY_EVALUATION', 'CCS_FOURTH_YEAR_FACULTY_EVALUATION'], true)));
-                        } ?>
+                        }
+                        $completedRequirementStatuses = ['VERIFIED', 'RESOLVED', 'APPROVED'];
+                        $completedRequirementCount = count(array_filter($modalRequirements, static fn(array $requirement): bool => in_array((string) ($requirement['status'] ?? ''), $completedRequirementStatuses, true)));
+                        $hasReturnedRequirement = count(array_filter($modalRequirements, static fn(array $requirement): bool => in_array((string) ($requirement['status'] ?? ''), ['RETURNED', 'REJECTED', 'ERROR'], true))) > 0;
+                        $modalOverviewState = $modalStatus === 'APPROVED' ? 'approved' : ($modalStatus === 'RETURNED' || $hasReturnedRequirement ? 'returned' : strtolower(str_replace('_', '-', $modalStatus)));
+                        $modalGuidanceTitle = $modalStatus === 'APPROVED' ? 'You are cleared at this station' : ($modalStatus === 'RETURNED' || $hasReturnedRequirement ? 'Your submission needs attention' : (in_array($modalStatus, ['SUBMITTED', 'UNDER_REVIEW'], true) ? 'Your submission is being reviewed' : 'Complete the items below'));
+                        $modalGuidanceCopy = $modalStatus === 'APPROVED' ? 'No further action is needed. This station has approved your clearance.' : ($modalStatus === 'RETURNED' || $hasReturnedRequirement ? 'Read the highlighted feedback, correct the item, and submit it again.' : (in_array($modalStatus, ['SUBMITTED', 'UNDER_REVIEW'], true) ? 'No need to submit again. You will be notified after the office reviews it.' : 'Check each required item and follow its submission instructions.')); ?>
+                        <div class="requirements-overview requirements-overview--<?= escapeHtml($modalOverviewState) ?>">
+                            <span class="requirements-overview__icon" aria-hidden="true"><?php if ($modalStatus === 'APPROVED'): ?>&#10003;<?php elseif ($modalStatus === 'RETURNED' || $hasReturnedRequirement): ?>!<?php else: ?>&#8594;<?php endif; ?></span>
+                            <div class="requirements-overview__copy"><strong><?= escapeHtml($modalGuidanceTitle) ?></strong><span><?= escapeHtml($modalGuidanceCopy) ?></span></div>
+                            <span class="badge <?= escapeHtml(strtolower(str_replace('_', '-', $modalStatus))) ?>"><?= escapeHtml(studentStatusLabel($modalStatus)) ?></span>
+                        </div>
                         <?php if ($modalRequirements === []): ?>
-                            <?php if ($station['code'] !== 'BOOKSTORE'): ?><p class="muted">No requirement records are available for this station.</p><?php endif; ?>
+                            <?php if (!in_array($station['code'], ['BOOKSTORE', 'ACCOUNTING', 'LIBRARY'], true)): ?>
+                                <div class="requirements-empty"><span aria-hidden="true">&#10003;</span><div><strong>No document upload is needed</strong><p>This office handles its requirement directly. Check the status above for your next step.</p></div></div>
+                            <?php endif; ?>
                         <?php else: ?>
-                            <ul class="requirements">
-                                <?php foreach ($modalRequirements as $requirement): ?>
-                                    <li>
-                                        <strong><?= escapeHtml($requirement['name']) ?></strong>
-                                        <div class="muted"><?= escapeHtml($requirement['description'] ?? '') ?></div>
-                                        <div><strong>Status:</strong> <span class="<?= ($requirement['status'] ?? '') === 'RETURNED' ? 'status-returned' : '' ?>"><?= escapeHtml(studentStatusLabel($requirement['status'] ?? 'NOT_STARTED')) ?></span></div>
-                                        <?php if (($requirement['status'] ?? '') === 'RETURNED' && !empty($requirement['remarks'])): ?><div class="status-returned">Action needed: <?= escapeHtml($requirement['remarks']) ?></div><?php endif; ?>
+                            <div class="requirements-section-heading">
+                                <div><span class="requirements-section-heading__step">1</span><div><h3>Required items</h3><p>Make sure every item is complete.</p></div></div>
+                                <span class="requirements-count"><?= $completedRequirementCount ?> of <?= count($modalRequirements) ?> complete</span>
+                            </div>
+                            <ul class="requirements requirements-checklist">
+                                <?php foreach ($modalRequirements as $requirementIndex => $requirement): ?>
+                                    <?php $requirementStatus = (string) ($requirement['status'] ?? 'NOT_STARTED');
+                                    $requirementStateClass = in_array($requirementStatus, $completedRequirementStatuses, true) ? 'is-complete' : (in_array($requirementStatus, ['RETURNED', 'REJECTED', 'ERROR'], true) ? 'needs-attention' : 'is-pending'); ?>
+                                    <li class="requirement-card <?= $requirementStateClass ?>">
+                                        <span class="requirement-card__number" aria-hidden="true"><?= in_array($requirementStatus, $completedRequirementStatuses, true) ? '&#10003;' : (int) $requirementIndex + 1 ?></span>
+                                        <div class="requirement-card__content">
+                                            <div class="requirement-card__heading"><strong><?= escapeHtml($requirement['name']) ?></strong><span class="badge <?= escapeHtml(strtolower(str_replace('_', '-', $requirementStatus))) ?>"><?= escapeHtml(studentStatusLabel($requirementStatus)) ?></span></div>
+                                            <?php if (!empty($requirement['description'])): ?><p><?= escapeHtml($requirement['description']) ?></p><?php endif; ?>
+                                            <?php if (in_array($requirementStatus, ['RETURNED', 'REJECTED', 'ERROR'], true) && !empty($requirement['remarks'])): ?><div class="requirement-feedback"><strong>What to fix</strong><span><?= escapeHtml($requirement['remarks']) ?></span></div><?php endif; ?>
+                                        </div>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
                             <?php if ($station['code'] === 'DEAN' && $evaluationApplicable && $modalStatus !== 'APPROVED' && in_array(($evaluation['status'] ?? 'NOT_SUBMITTED'), ['NOT_SUBMITTED', 'RETURNED', 'REJECTED', 'ERROR'], true)): ?>
-                                <form class="upload-form" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/student/evaluation_action.php')) ?>">
+                                <div class="requirements-section-heading requirements-section-heading--action"><div><span class="requirements-section-heading__step">2</span><div><h3>Submit your proof</h3><p>Upload clear images for Dean review.</p></div></div></div>
+                                <form class="upload-form submission-panel" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/student/evaluation_action.php')) ?>">
                                     <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
                                     <label for="modal_evaluation_proofs"><strong>Upload evaluation screenshots</strong></label>
-                                    <input id="modal_evaluation_proofs" name="evaluation_proofs[]" type="file" accept="image/jpeg,image/png,image/webp" multiple required onchange="if(this.files.length>3){alert('Choose no more than 3 screenshots.');this.value=''}">
+                                    <input id="modal_evaluation_proofs" name="evaluation_proofs[]" type="file" accept="image/jpeg,image/png,image/webp" multiple required data-file-input data-maximum-files="3">
+                                    <p class="file-selection-status" data-file-status aria-live="polite">No files selected</p>
                                     <p class="muted">Choose 1–3 screenshots. JPG, PNG, or WebP; 8 MB maximum per image. The CCS Dean reviews them anonymously.</p>
                                     <button class="primary-button" type="submit">Submit screenshots</button>
                                 </form>
                             <?php endif; ?>
                         <?php endif; ?>
+        <?php if ($station['code'] === 'ACCOUNTING'): ?>
+            <div class="accounting-submission-box requirement-action-box">
+                <span class="action-kicker">What to submit</span>
+                <h3>Submit your TLC portal screenshot</h3>
+                <p>Open the <strong>Assessment of Fees</strong> page in your TLC Student Portal and take one complete, readable screenshot.</p>
+                <div class="submission-checklist" aria-label="Screenshot must show"><strong>Your screenshot must clearly show:</strong><ul><li>Full name</li><li>School year and semester</li><li>Total charges and payments</li><li>Remaining balance</li></ul></div>
+                <?php $accountingSubmissionPending = $accountingReceipt !== false && $accountingReceipt['status'] === 'SCANNED'; ?>
+                <?php if ($modalStatus === 'APPROVED'): ?>
+                    <p class="notice">Your Accounting clearance has been approved.</p>
+                <?php else: ?>
+                    <?php if ($accountingSubmissionPending): ?><p class="notice">Your screenshot has already been submitted and is awaiting manual Accounting review.</p><?php endif; ?>
+                    <?php if ($accountingReceipt !== false && $accountingReceipt['status'] === 'ISSUED' && str_starts_with($accountingReceipt['receipt_code'], 'PORTAL-') && $modalStatus === 'RETURNED'): ?>
+                        <p class="notice warning">Your screenshot was rejected: <?= escapeHtml((string) ($stationStatuses[(int) $station['id']]['returned_reason'] ?? 'Please upload a corrected screenshot.')) ?></p>
+                    <?php endif; ?>
+                    <form class="upload-form submission-panel" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/student/accounting_receipt_action.php')) ?>">
+                        <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
+                        <label for="modal_accounting_receipt"><strong>TLC Student Portal assessment screenshot</strong></label>
+                        <input id="modal_accounting_receipt" name="accounting_receipt" type="file" accept="image/jpeg,image/png,image/webp" required data-file-input <?= $accountingSubmissionPending ? 'disabled' : '' ?>>
+                        <p class="file-selection-status" data-file-status aria-live="polite"><?= $accountingSubmissionPending ? 'Submission received' : 'No file selected' ?></p>
+                        <p class="muted">JPG, PNG, or WebP; maximum 8 MB. Accounting will check your submission against official records before approving clearance.</p>
+                        <button class="primary-button" type="submit" <?= $accountingSubmissionPending ? 'disabled' : '' ?>><?= $accountingSubmissionPending ? 'Screenshot Submitted' : 'Submit Screenshot' ?></button>
+                    </form>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
                         <?php if ($station['code'] === 'LIBRARY'): ?>
-                            <div class="library-card-box">
+                            <div class="library-card-box requirement-action-box">
+                                <span class="action-kicker">What to submit</span>
                                 <h3>Capture your library card</h3>
                                 <?php $librarySubmissionStatus = (string) ($libraryCardSubmission['submission_status'] ?? ''); ?>
                                 <?php if ($modalStatus === 'APPROVED' || ($libraryCardSubmission['card_status'] ?? '') === 'VERIFIED'): ?>
@@ -609,7 +660,7 @@ $logoutForm = dashboardLogoutForm();
                                         <video playsinline muted hidden aria-label="Library card camera preview"></video>
                                         <canvas hidden></canvas>
                                         <img class="library-card-preview" hidden alt="Captured library card preview">
-                                        <p class="muted">Use your phone camera to capture the front of your physical library card in real time. Gallery uploads are not allowed.</p>
+                                        <p class="upload-guidance"><strong>Before you capture:</strong> Place the front of your physical library card on a flat, well-lit surface. Keep all four corners and the printed details visible. Gallery uploads are not allowed.</p>
                                         <div class="library-card-buttons"><button type="button" data-open-camera>Open Camera</button><button type="button" data-capture-photo hidden>Capture Card</button><button class="secondary" type="button" data-retake-photo hidden>Retake</button><button class="primary-button" type="submit" data-submit-photo disabled>Submit to Library</button></div>
                                         <p class="library-camera-status muted" aria-live="polite"></p>
                                     </form>
@@ -617,9 +668,10 @@ $logoutForm = dashboardLogoutForm();
                             </div>
                         <?php endif; ?>
                         <?php if ($station['code'] === 'BOOKSTORE'): ?>
-                            <div class="bookstore-fee-box">
+                            <div class="bookstore-fee-box requirement-action-box">
+                                <span class="action-kicker">What to submit</span>
                                 <h3>Event fee receipts</h3>
-                                <p class="muted">Submit one receipt for each event listed by the Bookstore. Every submission must be confirmed before Bookstore clearance.</p>
+                                <p>Submit one clear receipt image for each event below. Every receipt must be confirmed by the Bookstore before you can be cleared.</p>
                                 <?php if ($bookstoreFees === []): ?>
                                     <p class="notice">The Bookstore has not posted any event fees for this semester.</p>
                                 <?php else: ?>
@@ -631,9 +683,10 @@ $logoutForm = dashboardLogoutForm();
                                             <?php if ($fee['submission_status'] === 'RETURNED' && !empty($fee['return_reason'])): ?><p class="notice warning">Action needed: <?= escapeHtml($fee['return_reason']) ?></p><?php endif; ?>
                                             <?php if ($fee['payment_status'] !== 'PAID' && !in_array($fee['submission_status'] ?? '', ['SUBMITTED', 'LOST_REPORTED'], true)): ?>
                                                 <div class="bookstore-receipt-actions">
-                                                    <form class="upload-form" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/student/bookstore_receipt_action.php')) ?>">
+                                                    <form class="upload-form submission-panel" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/student/bookstore_receipt_action.php')) ?>">
                                                         <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="student_fee_id" value="<?= (int) $fee['student_fee_id'] ?>">
-                                                        <label><strong>Upload <?= escapeHtml($fee['name']) ?> receipt</strong><input name="receipt_image" type="file" accept="image/jpeg,image/png,image/webp" required></label>
+                                                        <label><strong>Upload <?= escapeHtml($fee['name']) ?> receipt</strong><input name="receipt_image" type="file" accept="image/jpeg,image/png,image/webp" required data-file-input></label>
+                                                        <p class="file-selection-status" data-file-status aria-live="polite">No file selected</p>
                                                         <p class="muted">One clear JPG, PNG, or WebP image; maximum 8 MB.</p><button class="primary-button" name="action" value="upload">Submit Receipt</button>
                                                     </form>
                                                     <form method="post" action="<?= escapeHtml(applicationUrl('/student/bookstore_receipt_action.php')) ?>" onsubmit="return confirm('Report this receipt as lost? The Bookstore must confirm your report.');">
@@ -650,7 +703,8 @@ $logoutForm = dashboardLogoutForm();
                             </div>
                         <?php endif; ?>
                         <?php if ($station['code'] === 'CLINIC' && $medicalStatus === 'RETURNED'): ?>
-                            <div class="medical-schedule-box">
+                            <div class="medical-schedule-box requirement-action-box">
+                                <span class="action-kicker">Action required</span>
                                 <h3>Schedule your medical appointment</h3>
                                 <?php if ($medicalAppointment !== false): ?>
                                     <p class="notice">Your appointment is scheduled for <strong><?= escapeHtml(date('F j, Y', strtotime($medicalAppointment['schedule_date']))) ?>, <?= escapeHtml(date('g:i A', strtotime($medicalAppointment['schedule_time']))) ?>–<?= escapeHtml(date('g:i A', strtotime($medicalAppointment['end_time']))) ?></strong>.</p>
@@ -680,6 +734,7 @@ $logoutForm = dashboardLogoutForm();
                                 <?php endif; ?>
                             </div>
                         <?php endif; ?>
+                        </div>
                     </section>
                 </div>
             <?php endforeach; ?>
@@ -706,28 +761,7 @@ $logoutForm = dashboardLogoutForm();
             </section>
         <?php endif; ?>
 
-        <?php if ($selectedStation !== null && $selectedStation['code'] === 'ACCOUNTING' && $clearance !== false && $detailStatus !== 'LOCKED'): ?>
-            <section class="panel">
-                <h2>Accounting Receipt Verification</h2>
-                <?php if ($accountingReceipt === false): ?>
-                    <p class="notice">Accounting has not yet issued a receipt code for this clearance. Please contact the Accounting office after payment.</p>
-                <?php elseif ($accountingReceipt['status'] === 'APPROVED'): ?>
-                    <p class="notice">Your Accounting receipt has been approved.</p>
-                <?php elseif ($accountingReceipt['status'] === 'SCANNED'): ?>
-                    <p class="notice">Your receipt photo was verified and is waiting for Accounting approval.</p>
-                <?php else: ?>
-                    <?php if (($accountingReceipt['verification_status'] ?? '') === 'REJECTED'): ?><p class="notice warning">Your previous receipt photo could not be verified. Upload a clear photo of the complete official receipt.</p><?php endif; ?>
-                    <?php if (($accountingReceipt['verification_status'] ?? '') === 'ERROR'): ?><p class="notice warning">Receipt verification was unavailable. Your photo was deleted; please try again later.</p><?php endif; ?>
-                    <form class="upload-form" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/student/accounting_receipt_action.php')) ?>">
-                        <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
-                        <label for="accounting_receipt"><strong>Official Accounting receipt photo</strong></label>
-                        <input id="accounting_receipt" name="accounting_receipt" type="file" accept="image/jpeg,image/png,image/webp" required>
-                        <p class="muted">JPG, PNG, or WebP; maximum 8 MB. The photo must clearly show the complete paid receipt and Accounting-issued receipt code. It is deleted immediately after AI verification.</p>
-                        <button class="primary-button" type="submit">Upload and Verify Receipt</button>
-                    </form>
-                <?php endif; ?>
-            </section>
-        <?php endif; ?>
+
 
     </main>
     <script src="<?= escapeHtml(applicationUrl('/assets/js/student-dashboard.js')) ?>"></script>

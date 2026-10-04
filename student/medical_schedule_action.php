@@ -21,15 +21,16 @@ try {
     $database = getDatabaseConnection();
     $database->beginTransaction();
 
-    $studentQuery = $database->prepare("SELECT id FROM students WHERE user_id=:user_id AND status='ACTIVE' LIMIT 1");
+    $studentQuery = $database->prepare("SELECT id,student_number FROM students WHERE user_id=:user_id AND status='ACTIVE' LIMIT 1");
     $studentQuery->execute(['user_id' => $user['id']]);
-    $studentId = (int) $studentQuery->fetchColumn();
+    $student = $studentQuery->fetch();
+    $studentId = (int) ($student['id'] ?? 0);
     if ($studentId < 1) {
         throw new RuntimeException('No active student profile was found.');
     }
 
     $scheduleQuery = $database->prepare(
-        "SELECT schedule.id,schedule.academic_period_id,schedule.capacity,schedule.status
+        "SELECT schedule.id,schedule.academic_period_id,schedule.schedule_date,schedule.schedule_time,schedule.capacity,schedule.status
          FROM clinic_medical_schedules schedule
          INNER JOIN academic_periods period ON period.id=schedule.academic_period_id AND period.status='ACTIVE'
          WHERE schedule.id=:schedule_id AND TIMESTAMP(schedule.schedule_date,schedule.schedule_time)>NOW()
@@ -55,6 +56,12 @@ try {
 
     $insert = $database->prepare("INSERT INTO clinic_medical_appointments (schedule_id,academic_period_id,student_id) VALUES (:schedule_id,:period_id,:student_id)");
     $insert->execute(['schedule_id' => $scheduleId, 'period_id' => $schedule['academic_period_id'], 'student_id' => $studentId]);
+    notifyActiveRoles(
+        $database,
+        ['CLINIC_STAFF'],
+        'Medical appointment scheduled',
+        $student['student_number'] . ' scheduled a medical appointment for ' . $schedule['schedule_date'] . ' at ' . $schedule['schedule_time'] . '.'
+    );
     $database->commit();
     setFlashMessage('Your medical appointment has been scheduled.');
 } catch (Throwable $exception) {

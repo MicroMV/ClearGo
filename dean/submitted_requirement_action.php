@@ -37,7 +37,7 @@ try {
     $database->prepare("UPDATE requirement_records record INNER JOIN clearance_stations clearance_station ON clearance_station.id=record.clearance_station_id INNER JOIN requirements requirement ON requirement.id=record.requirement_id SET record.status=:status,record.remarks=:remarks,record.verified_by=:user_id,record.verified_at=NOW() WHERE clearance_station.clearance_id=:clearance_id AND requirement.requirement_code IN ('CCS_FACULTY_EVALUATION','CCS_FOURTH_YEAR_FACULTY_EVALUATION')")->execute(['status' => $recordStatus, 'remarks' => $action === 'return' ? $reason : null, 'user_id' => $user['id'], 'clearance_id' => $row['clearance_id']]);
     $title = $action === 'verify' ? 'Faculty Evaluation verified' : 'Faculty Evaluation screenshots returned';
     $message = $action === 'verify' ? 'Your Faculty Evaluation screenshots were verified by the CCS Dean.' : $reason;
-    $database->prepare('INSERT INTO notifications (user_id,title,message) VALUES (:user_id,:title,:message)')->execute(['user_id' => $row['user_id'], 'title' => $title, 'message' => $message]);
+    createNotification($database, (int) $row['user_id'], $title, $message);
     $database->commit();
     setFlashMessage($action === 'verify' ? 'Submission verified.' : 'Submission returned to the student.');
 } catch (Throwable $exception) {

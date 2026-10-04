@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/../auth/auth_check.php';
+
 require_once __DIR__ . '/../verification/evaluation_verifier.php';
 
 function studentEvaluationContext(PDO $database, int $userId): array
@@ -135,10 +137,7 @@ function saveEvaluationResult(PDO $database, array $context, int $userId, array 
             'ERROR' => ['Evaluation verification unavailable', 'Your screenshot was not retained. Please try again when the verification service is available.'],
         ];
         [$title, $message] = $messages[$result['status']];
-        $notification = $database->prepare(
-            'INSERT INTO notifications (user_id, title, message) VALUES (:user_id, :title, :message)'
-        );
-        $notification->execute(['user_id' => $userId, 'title' => $title, 'message' => $message]);
+        createNotification($database, $userId, $title, $message);
 
         $stationId = $database->query("SELECT id FROM stations WHERE code = 'DEAN' LIMIT 1")->fetchColumn();
         $audit = $database->prepare(
@@ -249,8 +248,11 @@ function processEvaluationSubmission(PDO $database, int $userId, array $files): 
             $imageInsert->execute(['submission_id' => $submissionId] + $image);
         }
         if ($isFirstSubmission) {
-            $notifyDean = $database->prepare("INSERT INTO notifications (user_id,title,message) SELECT assignment.user_id,'Anonymous evaluation submitted','A Faculty Evaluation proof was submitted for anonymous CCS Dean review.' FROM staff_assignments assignment INNER JOIN stations station ON station.id=assignment.station_id AND station.code='DEAN' INNER JOIN students student ON student.organization_id=assignment.organization_id WHERE student.id=:student_id AND assignment.status='ACTIVE'");
-            $notifyDean->execute(['student_id' => $context['student_id']]);
+            $deanUsers = $database->prepare("SELECT assignment.user_id FROM staff_assignments assignment INNER JOIN stations station ON station.id=assignment.station_id AND station.code='DEAN' INNER JOIN students student ON student.organization_id=assignment.organization_id WHERE student.id=:student_id AND assignment.status='ACTIVE'");
+            $deanUsers->execute(['student_id' => $context['student_id']]);
+            foreach ($deanUsers->fetchAll(PDO::FETCH_COLUMN) as $deanUserId) {
+                createNotification($database, (int) $deanUserId, 'Anonymous evaluation submitted', 'Anonymous submission ' . $code . ' is awaiting Faculty Evaluation review.');
+            }
         }
         $database->prepare("UPDATE requirement_records record INNER JOIN requirements requirement ON requirement.id=record.requirement_id SET record.status='PENDING',record.remarks='Evaluation screenshots submitted for anonymous Dean review.',record.verified_by=NULL,record.verified_at=NULL WHERE record.clearance_station_id=:station_id AND requirement.requirement_code IN ('CCS_FACULTY_EVALUATION','CCS_FOURTH_YEAR_FACULTY_EVALUATION')")->execute(['station_id' => $context['clearance_station_id']]);
         $database->commit();

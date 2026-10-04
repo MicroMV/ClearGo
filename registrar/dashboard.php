@@ -44,12 +44,11 @@ $sidebar = registrarDashboardSidebar($user, 'dashboard', $logoutForm);
                     <p>Manage semester operations, accounts, and final clearance review.</p>
                 </div>
                 <div class="topbar-actions">
-                    <div class="topbar-account"><strong><?= escapeHtml($user['email']) ?></strong><span>Registrar account</span></div><?= dashboardNotificationBell($notifications) ?>
+                    <?= dashboardNotificationBell($notifications) ?>
                 </div>
             </header>
             <main class="staff-main">
                 <?php if ($message): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?>
-                <section class="cards"><a class="card" href="<?= escapeHtml(applicationUrl('/registrar/student_import.php')) ?>"><strong>Import Enrollment</strong>Upload the complete semester Excel roster and create/update accounts.</a><a class="card" href="<?= escapeHtml(applicationUrl('/registrar/students.php')) ?>"><strong>Student Accounts</strong>Edit accounts and current-semester enrollment.</a><a class="card" href="<?= escapeHtml(applicationUrl('/registrar/staff_accounts.php')) ?>"><strong>Staff Accounts</strong>Manage office GSuite addresses and passwords.</a><a class="card" href="<?= escapeHtml(applicationUrl('/registrar/clearance.php')) ?>"><strong>Clearance Review</strong>Process final Registrar requirements.</a><a class="card" href="<?= escapeHtml(applicationUrl('/registrar/audit_logs.php')) ?>"><strong>Audit Logs</strong>Review all recorded modifications.</a></section>
                 <section class="panel">
                     <div class="section-heading">
                         <div>

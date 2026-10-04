@@ -20,11 +20,13 @@ try {
     if (strtolower(pathinfo((string)($file['name'] ?? ''), PATHINFO_EXTENSION)) !== 'xlsx') {
         throw new RuntimeException('Upload the .xlsx Bookstore workbook downloaded from ClearGo.');
     }
-    $result = importBookstoreWorkbook(getDatabaseConnection(), (int)$user['id'], readBookstoreWorkbook((string)$file['tmp_name']));
+    $database = getDatabaseConnection();
+    $result = importBookstoreWorkbook($database, (int)$user['id'], readBookstoreWorkbook((string)$file['tmp_name']));
     $message = 'Bookstore workbook imported. Cleared: ' . $result['cleared'] . '. Already cleared: ' . $result['already_cleared'] . '. Unchanged: ' . $result['skipped'] . '. Errors: ' . count($result['errors']) . '.';
     if ($result['errors'] !== []) {
         $message .= ' ' . implode(' ', array_slice($result['errors'], 0, 3));
     }
+    createNotification($database, (int) $user['id'], 'Bookstore Excel import completed', $message);
     setFlashMessage($message);
 } catch (Throwable $exception) {
     error_log('Bookstore workbook import failed: ' . $exception->getMessage());

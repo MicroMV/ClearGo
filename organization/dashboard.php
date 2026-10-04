@@ -7,6 +7,7 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/clearance_functions.php';
 require_once __DIR__ . '/event_functions.php';
 require_once __DIR__ . '/../clearance/readiness_functions.php';
+require_once __DIR__ . '/../clearance/report_workbook.php';
 
 $user = requireRole('ORG_STAFF');
 $search = trim((string) ($_GET['search'] ?? ''));
@@ -103,6 +104,34 @@ try {
         return $filter === 'ALL' || $row['display_status'] === $filter;
     }));
     $totalRows = count($filteredRows);
+    if (($_GET['export'] ?? '') === 'xlsx') {
+        $reportRows = [];
+        foreach ($filteredRows as $student) {
+            $events = $student['eligibility']['events'];
+            $attended = count(array_filter($events, static fn(array $event): bool => (int) $event['attended'] === 1));
+            $requirements = $events === []
+                ? ($organization['code'] === 'CBE' ? 'Direct YBC sign-off' : 'Direct organization sign-off')
+                : $attended . '/' . count($events) . ' events attended';
+            $reportRows[] = [
+                $student['student_number'],
+                $student['last_name'] . ', ' . $student['first_name'],
+                $student['program'],
+                'Year ' . (int) $student['year_level'],
+                $student['email'],
+                $requirements,
+                str_replace('_', ' ', (string) ($student['dean_status'] ?: 'PENDING')),
+                $student['display_status'] === 'APPROVED' ? 'CLEARED' : str_replace('_', ' ', $student['display_status']),
+                $student['returned_reason'] ?: '',
+            ];
+        }
+        $workbook = createClearanceReportXlsx(
+            $organization['name'] . ' Clearance Report',
+            activePeriodReportLabel($database),
+            ['Student Number', 'Full Name', 'Course', 'Year Level', 'Email', 'Requirements', 'Dean Status', 'Clearance Status', 'Remarks'],
+            [['name' => $organization['code'], 'rows' => $reportRows]]
+        );
+        downloadClearanceReport($workbook, strtolower($organization['code']) . '-organization-clearance-report.xlsx');
+    }
     $totalPages = max(1, (int) ceil($totalRows / $pageSize));
     $page = min($page, $totalPages);
     $rows = array_slice($filteredRows, ($page - 1) * $pageSize, $pageSize);
@@ -143,7 +172,7 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
                     <p><?= escapeHtml($organization['name'] . ' (' . $organization['code'] . ')') ?> &middot; Manage attendance and organization clearance.</p>
                 </div>
                 <div class="topbar-actions">
-                    <div class="topbar-account"><strong><?= escapeHtml($user['email']) ?></strong><span>Organization staff account</span></div><?= dashboardNotificationBell($notifications) ?>
+                    <?= dashboardNotificationBell($notifications) ?>
                 </div>
             </header>
             <main class="staff-main">
@@ -180,7 +209,7 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
                             <option value="">All courses</option><?php foreach ($courses as $course): ?><option value="<?= escapeHtml($course) ?>" <?= $courseFilter === $course ? 'selected' : '' ?>><?= escapeHtml($course) ?></option><?php endforeach; ?>
                         </select><select name="year_level" aria-label="Filter by year level">
                             <option value="0">All year levels</option><?php foreach ($yearLevels as $year): ?><option value="<?= $year ?>" <?= $yearFilter === $year ? 'selected' : '' ?>>Year <?= $year ?></option><?php endforeach; ?>
-                        </select><select name="filter" aria-label="Filter by clearance status"><?php foreach ($allowedFilters as $option): ?><option value="<?= $option ?>" <?= $filter === $option ? 'selected' : '' ?>><?= escapeHtml($organizationFilterLabels[$option]) ?></option><?php endforeach; ?></select><button type="submit">Search</button></form>
+                        </select><select name="filter" aria-label="Filter by clearance status"><?php foreach ($allowedFilters as $option): ?><option value="<?= $option ?>" <?= $filter === $option ? 'selected' : '' ?>><?= escapeHtml($organizationFilterLabels[$option]) ?></option><?php endforeach; ?></select><button type="submit">Search</button><a class="button-link" href="?search=<?= urlencode($search) ?>&amp;course=<?= urlencode($courseFilter) ?>&amp;year_level=<?= $yearFilter ?>&amp;filter=<?= urlencode($filter) ?>&amp;export=xlsx">Export Excel report</a></form>
                 </section>
                 <section class="panel">
                     <div class="section-heading">

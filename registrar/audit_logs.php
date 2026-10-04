@@ -67,7 +67,7 @@ $sidebar = registrarDashboardSidebar($user, 'audit', $logoutForm);
                     <p>Review recorded account, clearance, and system activity.</p>
                 </div>
                 <div class="topbar-actions">
-                    <div class="topbar-account"><strong><?= escapeHtml($user['email']) ?></strong><span>Registrar account</span></div><?= dashboardNotificationBell($notifications) ?>
+                    <?= dashboardNotificationBell($notifications) ?>
                 </div>
             </header>
             <main class="staff-main">

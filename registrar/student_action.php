@@ -83,7 +83,7 @@ try {
             $program = normalizeImportText((string) ($_POST['program'] ?? ''));
             $year = filter_var($_POST['year_level'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 6]]);
             $organizationId = filter_var($_POST['organization_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-            $section = normalizeImportText((string) ($_POST['section'] ?? ''));
+            $section = normalizeImportText((string) $student['section']);
             [$firstName, $lastName] = splitStudentName($name);
             if ($number === '' || $firstName === '' || $lastName === '' || !validSchoolEmail($email) || $program === '' || $year === false || $organizationId === false) {
                 throw new RuntimeException('Complete all fields with a valid Lewis College GSuite Address.');

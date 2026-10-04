@@ -6,6 +6,7 @@ require_once __DIR__ . '/../auth/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/office_workflow.php';
 require_once __DIR__ . '/readiness_functions.php';
+require_once __DIR__ . '/report_workbook.php';
 
 function officeDetailRecords(PDO $database, string $code, array $row): array
 {
@@ -56,7 +57,7 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
         'COMPLIANCE' => 'For Compliance',
         'READY' => 'Ready to Clear',
         'PENDING' => 'Pending',
-        'RETURNED' => 'Returned',
+        'RETURNED' => $stationCode === 'REGISTRAR' ? 'For Compliance' : 'Returned',
         'APPROVED' => 'Cleared',
     ];
     if (!in_array($filter, $allowedFilters, true)) {
@@ -125,31 +126,36 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
         http_response_code(500);
         exit('Unable to load this office dashboard right now. Please try again later.');
     }
-    if (($_GET['export'] ?? '') === 'csv' && !$directClearOffice) {
-        header('Content-Type: text/csv; charset=UTF-8');
-        header('Content-Disposition: attachment; filename="' . strtolower(str_replace('_', '-', $stationCode)) . '-clearance-report.csv"');
-        $output = fopen('php://output', 'wb');
-        if ($output === false) {
-            throw new RuntimeException('Unable to create the report.');
+    if (($_GET['export'] ?? '') === 'xlsx') {
+        $exportRows = [];
+        for ($offset = 0; $offset < $totalRows; $offset += 200) {
+            $exportRows = array_merge($exportRows, officeRows($database, $stationCode, $search, 200, $offset, $filter, $facilitiesAudience, $facilitiesDepartment, $courseFilter, $yearFilter));
         }
-        fputcsv($output, ['Student Number', 'Student Name', 'Program', 'Year', 'College', 'Office Status', 'Eligible', 'Eligibility Details']);
-        foreach ($rows as $row) {
-            if ($filter !== 'ALL' && $row['view_status'] !== $filter) {
-                continue;
+        $sheets = ['CCS' => [], 'CBE' => [], 'CTE' => []];
+        foreach ($exportRows as $row) {
+            $viewStatus = $row['station_status'];
+            if ($viewStatus === 'LOCKED') {
+                $viewStatus = 'LOCKED';
+            } elseif (!in_array($viewStatus, ['APPROVED', 'RETURNED'], true)) {
+                $viewStatus = $row['eligibility']['eligible'] ? 'READY' : 'PENDING';
             }
-            fputcsv($output, [
+            $sheets[$row['organization_code']][] = [
                 $row['student_number'],
-                $row['first_name'] . ' ' . $row['last_name'],
+                $row['last_name'] . ', ' . $row['first_name'],
                 $row['program'],
-                $row['year_level'],
+                'Year ' . (int) $row['year_level'],
                 $row['organization_code'],
-                $row['view_status'],
-                $row['eligibility']['eligible'] ? 'YES' : 'NO',
+                $viewStatus === 'APPROVED' ? 'CLEARED' : str_replace('_', ' ', $viewStatus),
                 implode('; ', $row['eligibility']['details']),
-            ]);
+                $row['returned_reason'] ?: '',
+            ];
         }
-        fclose($output);
-        exit;
+        $reportSheets = [];
+        foreach ($sheets as $code => $sheetRows) {
+            $reportSheets[] = ['name' => $code, 'rows' => $sheetRows];
+        }
+        $workbook = createClearanceReportXlsx($title . ' Report', activePeriodReportLabel($database), ['Student Number', 'Full Name', 'Course', 'Year Level', 'College', 'Clearance Status', 'Important Details', 'Remarks'], $reportSheets);
+        downloadClearanceReport($workbook, strtolower(str_replace('_', '-', $stationCode)) . '-clearance-report.xlsx');
     }
     $message = pullFlashMessage();
     $csrfToken = createCsrfToken();
@@ -163,7 +169,7 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
         'CLINIC' => 'Verify medical requirements and process clinic clearance.',
         'FACILITIES' => 'Track borrowed property and confirm required returns.',
         'ACCOUNTING' => 'Review financial obligations and receipt verification.',
-        'REGISTRAR' => 'Review final documents and clearance requirements.',
+        'REGISTRAR' => 'Confirm complete documents and all office signatures, then choose Clear or For Compliance.',
         'COMLAB' => 'Review laboratory incidents and equipment accountabilities.',
     ];
     $pageDescription = $officeDescriptions[$stationCode] ?? 'Review and process assigned student clearance records.';
@@ -173,9 +179,18 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
     if ($stationCode === 'CLINIC') {
         $sidebarItems[] = ['key' => 'schedules', 'label' => 'Medical Schedules', 'url' => '/clinic/schedules.php', 'icon' => 'document'];
     }
+    if ($stationCode === 'FACILITIES') {
+        $sidebarItems[] = ['key' => 'borrowed-items', 'label' => 'Borrowed Items', 'url' => '/facilities/borrowed-items.php', 'icon' => 'document'];
+    }
+    if ($stationCode === 'COMLAB') {
+        $sidebarItems[] = ['key' => 'violations', 'label' => 'Violation History', 'url' => '/comlab/violations.php', 'icon' => 'document'];
+    }
     if ($stationCode === 'BOOKSTORE') {
         $sidebarItems[] = ['key' => 'fees', 'label' => 'Event Fees', 'url' => '/bookstore/fees.php', 'icon' => 'document'];
         $sidebarItems[] = ['key' => 'submissions', 'label' => 'Receipt Submissions', 'url' => '/bookstore/submissions.php', 'icon' => 'document'];
+    }
+    if ($stationCode === 'ACCOUNTING') {
+        $sidebarItems[] = ['key' => 'submissions', 'label' => 'Submitted Requirements', 'url' => '/accounting/submissions.php', 'icon' => 'document'];
     }
     if ($stationCode === 'LIBRARY') {
         $sidebarItems[] = ['key' => 'submissions', 'label' => 'Card Submissions', 'url' => '/library/submissions.php', 'icon' => 'document'];
@@ -211,7 +226,7 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                         <p><?= escapeHtml($pageDescription) ?></p>
                     </div>
                     <div class="topbar-actions">
-                        <div class="topbar-account"><strong><?= escapeHtml($user['email']) ?></strong><span>Office staff account</span></div><?= dashboardNotificationBell($notifications) ?>
+                        <?= dashboardNotificationBell($notifications) ?>
                     </div>
                 </header>
                 <main class="staff-main">
@@ -277,7 +292,7 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                             <?php else: ?>
                                 <div>Ready<strong><?= $summary['READY'] ?></strong></div>
                                 <div>Pending<strong><?= $summary['PENDING'] ?></strong></div>
-                                <div>Returned<strong><?= $summary['RETURNED'] ?></strong></div>
+                                <div><?= $stationCode === 'REGISTRAR' ? 'For Compliance' : 'Returned' ?><strong><?= $summary['RETURNED'] ?></strong></div>
                             <?php endif; ?>
                             <div>Cleared<strong><?= $summary['APPROVED'] ?></strong></div>
                         </div>
@@ -294,7 +309,7 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                                 <option value="">All courses</option><?php foreach ($courses as $course): ?><option value="<?= escapeHtml($course) ?>" <?= $courseFilter === $course ? 'selected' : '' ?>><?= escapeHtml($course) ?></option><?php endforeach; ?>
                             </select><select name="year_level" aria-label="Filter by year level">
                                 <option value="0">All year levels</option><?php foreach ($yearLevels as $year): ?><option value="<?= $year ?>" <?= $yearFilter === $year ? 'selected' : '' ?>>Year <?= $year ?></option><?php endforeach; ?>
-                            </select><select name="filter" aria-label="Filter by clearance status"><?php foreach ($allowedFilters as $option): ?><option value="<?= $option ?>" <?= $filter === $option ? 'selected' : '' ?>><?= escapeHtml($filterLabels[$option]) ?></option><?php endforeach; ?></select><button type="submit">Search</button><?php if (!$directClearOffice): ?><a href="?search=<?= urlencode($search) ?>&amp;filter=<?= urlencode($filter) ?>&amp;audience=<?= urlencode($facilitiesAudience) ?>&amp;department=<?= urlencode($facilitiesDepartment) ?>&amp;course=<?= urlencode($courseFilter) ?>&amp;year_level=<?= $yearFilter ?>&amp;export=csv">Export CSV report</a><?php endif; ?></form>
+                            </select><select name="filter" aria-label="Filter by clearance status"><?php foreach ($allowedFilters as $option): ?><option value="<?= $option ?>" <?= $filter === $option ? 'selected' : '' ?>><?= escapeHtml($filterLabels[$option]) ?></option><?php endforeach; ?></select><button type="submit">Search</button><a class="button-link" href="?search=<?= urlencode($search) ?>&amp;filter=<?= urlencode($filter) ?>&amp;audience=<?= urlencode($facilitiesAudience) ?>&amp;department=<?= urlencode($facilitiesDepartment) ?>&amp;course=<?= urlencode($courseFilter) ?>&amp;year_level=<?= $yearFilter ?>&amp;export=xlsx">Export Excel report</a></form>
                     </section>
                     <?php $pendingAccountingRows = $stationCode === 'ACCOUNTING' ? array_filter($rows, static fn(array $row): bool => $row['station_status'] === 'PENDING') : []; ?>
                     <?php if ($pendingAccountingRows !== []): ?><section class="panel">
@@ -302,17 +317,11 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                             <p class="muted">Accounting may manually clear students who have reached this office. This settles listed Accounting obligations and records the approval in the audit log.</p>
                             <form class="inline" method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Manually clear this student in Accounting?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><select name="clearance_id" required><?php foreach ($pendingAccountingRows as $row): ?><option value="<?= (int) $row['clearance_id'] ?>"><?= escapeHtml($row['student_number'] . ' — ' . $row['first_name'] . ' ' . $row['last_name']) ?></option><?php endforeach; ?></select><button name="action" value="manual_accounting_clear">Manually Clear</button></form>
                         </section><?php endif; ?>
-                    <?php $pendingRegistrarRows = $stationCode === 'REGISTRAR' ? array_filter($rows, static fn(array $row): bool => $row['station_status'] === 'PENDING') : []; ?>
-                    <?php if ($pendingRegistrarRows !== []): ?><section class="panel">
-                            <h2>Manual final clearance</h2>
-                            <p class="muted">Registrar may manually complete a clearance once the student has reached Registrar. This approval is retained in the audit log.</p>
-                            <form class="inline" method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Manually complete this student’s clearance?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><select name="clearance_id" required><?php foreach ($pendingRegistrarRows as $row): ?><option value="<?= (int) $row['clearance_id'] ?>"><?= escapeHtml($row['student_number'] . ' — ' . $row['first_name'] . ' ' . $row['last_name']) ?></option><?php endforeach; ?></select><button name="action" value="manual_registrar_clear">Complete Clearance</button></form>
-                        </section><?php endif; ?>
                     <section class="panel">
                         <div class="section-heading">
                             <div>
                                 <h2>Student clearance records</h2>
-                                <p class="muted">Review each student's current eligibility and available action.</p>
+                                <p class="muted"><?= $stationCode === 'REGISTRAR' ? 'Students reaching the final office require complete documents and signatures from every office. Choose Clear or For Compliance.' : 'Review each student\'s current eligibility and available action.' ?></p>
                             </div>
                         </div>
                         <div class="table-wrap">
@@ -338,12 +347,26 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                                             <td><strong><?= escapeHtml($row['student_number']) ?></strong></td>
                                             <td><?= escapeHtml($row['first_name'] . ' ' . $row['last_name']) ?></td>
                                             <td><?= escapeHtml($row['program']) ?></td>
-                                            <?php $section = trim((string) $row['section']); ?>
-                                            <td>Year <?= (int) $row['year_level'] ?><?php if ($section !== '' && strtoupper($section) !== 'N/A'): ?><div class="muted"><?= escapeHtml($section) ?></div><?php endif; ?></td>
+                                            <td>Year <?= (int) $row['year_level'] ?></td>
                                             <td><?= escapeHtml($row['organization_code']) ?></td>
-                                            <td><?= $stationCode === 'BOOKSTORE' ? escapeHtml(implode('; ', $row['eligibility']['details']) ?: 'Needs Bookstore review') : ($row['eligibility']['eligible'] ? 'All checks satisfied' : escapeHtml($row['eligibility']['details'][0] ?? 'Needs review')) ?></td>
-                                            <td><span class="badge <?= strtolower(str_replace('_', '-', $row['view_status'])) ?>"><?= $row['station_status'] === 'APPROVED' ? 'CLEARED' : escapeHtml(statusDisplayLabel($row['view_status'])) ?></span></td>
-                                            <?php if ($stationCode === 'BOOKSTORE'): ?>
+                                            <td><?= $stationCode === 'COMLAB' ? ($row['station_status'] === 'APPROVED' ? 'Passed: No violation' : 'Must have no record of violation inside Comlab') : ($stationCode === 'REGISTRAR' ? escapeHtml(implode('; ', $row['eligibility']['details'])) : ($stationCode === 'BOOKSTORE' ? escapeHtml(implode('; ', $row['eligibility']['details']) ?: 'Needs Bookstore review') : ($row['eligibility']['eligible'] ? 'All checks satisfied' : escapeHtml($row['eligibility']['details'][0] ?? 'Needs review')))) ?></td>
+                                            <td><span class="badge <?= strtolower(str_replace('_', '-', $row['view_status'])) ?>"><?= $row['station_status'] === 'APPROVED' ? 'CLEARED' : ($stationCode === 'REGISTRAR' && $row['view_status'] === 'RETURNED' ? 'FOR COMPLIANCE' : escapeHtml(statusDisplayLabel($row['view_status']))) ?></span></td>
+                                            <?php if ($stationCode === 'REGISTRAR'): ?>
+                                                <td>
+                                                    <?php if (in_array($row['station_status'], ['APPROVED', 'LOCKED'], true) || !in_array($row['clearance_status'], ['PREPARING', 'OPEN'], true)): ?>
+                                                        <span class="muted">&mdash;</span>
+                                                    <?php else: ?>
+                                                        <div class="registrar-row-actions">
+                                                            <button type="button" class="danger" data-registrar-compliance data-clearance-id="<?= (int) $row['clearance_id'] ?>" data-student-name="<?= escapeHtml($row['first_name'] . ' ' . $row['last_name']) ?>">For Compliance</button>
+                                                            <form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student and complete the clearance?');">
+                                                                <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
+                                                                <input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>">
+                                                                <button name="action" value="registrar_clear">Clear</button>
+                                                            </form>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                </td>
+                                            <?php elseif ($stationCode === 'BOOKSTORE'): ?>
                                                 <td>
                                                     <?php if (in_array($row['station_status'], ['APPROVED', 'LOCKED'], true)): ?>
                                                         <span class="muted">&mdash;</span>
@@ -358,7 +381,7 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                                                     <?php endif; ?>
                                                 </td>
                                             <?php else: ?>
-                                            <td><?php if ($stationCode !== 'FACILITIES' && in_array($row['station_status'], ['APPROVED', 'LOCKED'], true)): ?><span class="muted">—</span><?php elseif ($stationCode === 'FACILITIES'): ?><div class="facilities-row-actions"><?php if (in_array($row['station_status'], ['APPROVED', 'LOCKED'], true) || !$row['eligibility']['eligible']): ?><button type="button" class="secondary" onclick="openFacilitiesItemModal(<?= (int) $row['clearance_id'] ?>)"><?= in_array($row['station_status'], ['APPROVED', 'LOCKED'], true) ? 'View Items' : 'Manage Items' ?></button><?php endif; ?><?php if (!in_array($row['station_status'], ['APPROVED', 'LOCKED'], true) && $row['eligibility']['eligible']): ?> <form class="inline" method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student for Facilities?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="approve">Clear</button></form><?php endif; ?></div><?php elseif ($stationCode === 'CLINIC'): ?><div class="inline"><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Mark this student as having no medical record?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><input type="hidden" name="status" value="RETURNED"><input type="hidden" name="remarks" value="No medical record on file."><button class="danger" name="action" value="medical_status">No Medical</button></form><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student at the Clinic?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="clinic_clear">Clear</button></form></div><?php elseif ($directClearOffice): ?><form method="post" action="<?= escapeHtml($actionUrl) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="library_clear">Clear</button></form><?php elseif ($stationCode === 'SASO'): ?><?php if ($row['eligibility']['eligible']): ?><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student for SASO?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="approve">Clear</button></form><?php else: ?><span class="muted">—</span><?php endif; ?><?php elseif ($stationCode === 'STUDENT_COUNCIL' && $row['eligibility']['eligible']): ?><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student for Student Council?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="approve">Clear</button></form><?php else: ?><a href="?clearance=<?= (int) $row['clearance_id'] ?>&amp;search=<?= urlencode($search) ?>&amp;filter=<?= urlencode($filter) ?>&amp;audience=<?= urlencode($facilitiesAudience) ?>&amp;department=<?= urlencode($facilitiesDepartment) ?>&amp;course=<?= urlencode($courseFilter) ?>&amp;year_level=<?= $yearFilter ?>&amp;page=<?= $page ?>"><?= $stationCode === 'BOOKSTORE' ? 'Review' : ($row['clearance_status'] === 'PREPARING' ? 'Take Action' : 'Review') ?></a><?php endif; ?></td>
+                                            <td><?php if ($stationCode === 'COMLAB' && $row['station_status'] === 'APPROVED'): ?><span class="muted">Cleared</span><?php elseif ($stationCode === 'COMLAB'): ?><div class="comlab-row-actions"><button type="button" class="danger" onclick="openComlabViolationModal(<?= (int) $row['clearance_id'] ?>)">Add violation</button><?php if (in_array($row['station_status'], ['PENDING', 'RETURNED'], true) && $row['eligibility']['eligible'] && in_array($row['clearance_status'], ['PREPARING', 'OPEN'], true)): ?><form method="post" action="<?= escapeHtml($actionUrl) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="approve" <?= !$row['eligibility']['eligible'] ? 'disabled title="Resolve violations in the Comlab room first"' : '' ?>>Clear</button></form><?php endif; ?></div><?php elseif ($stationCode !== 'FACILITIES' && in_array($row['station_status'], ['APPROVED', 'LOCKED'], true)): ?><span class="muted">—</span><?php elseif ($stationCode === 'FACILITIES' && $row['station_status'] === 'APPROVED'): ?><span class="muted">Cleared</span><?php elseif ($stationCode === 'FACILITIES'): ?><div class="facilities-row-actions"><button type="button" class="secondary" onclick="openFacilitiesItemModal(<?= (int) $row['clearance_id'] ?>)">Borrowed Item</button><?php if (!in_array($row['station_status'], ['APPROVED', 'LOCKED'], true) && $row['eligibility']['eligible']): ?> <form class="inline" method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student for Facilities?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="approve">Clear</button></form><?php endif; ?></div><?php elseif ($stationCode === 'CLINIC'): ?><div class="inline"><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Mark this student as having no medical record?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><input type="hidden" name="status" value="RETURNED"><input type="hidden" name="remarks" value="No medical record on file."><button class="danger" name="action" value="medical_status">No Medical</button></form><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student at the Clinic?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="clinic_clear">Clear</button></form></div><?php elseif ($directClearOffice): ?><form method="post" action="<?= escapeHtml($actionUrl) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="library_clear">Clear</button></form><?php elseif ($stationCode === 'SASO'): ?><?php if ($row['eligibility']['eligible']): ?><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student for SASO?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="approve">Clear</button></form><?php else: ?><span class="muted">—</span><?php endif; ?><?php elseif ($stationCode === 'STUDENT_COUNCIL' && $row['eligibility']['eligible']): ?><form method="post" action="<?= escapeHtml($actionUrl) ?>" onsubmit="return confirm('Clear this student for Student Council?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>"><button name="action" value="approve">Clear</button></form><?php else: ?><a href="?clearance=<?= (int) $row['clearance_id'] ?>&amp;search=<?= urlencode($search) ?>&amp;filter=<?= urlencode($filter) ?>&amp;audience=<?= urlencode($facilitiesAudience) ?>&amp;department=<?= urlencode($facilitiesDepartment) ?>&amp;course=<?= urlencode($courseFilter) ?>&amp;year_level=<?= $yearFilter ?>&amp;page=<?= $page ?>"><?= $stationCode === 'BOOKSTORE' ? 'Review' : ($row['clearance_status'] === 'PREPARING' ? 'Take Action' : 'Review') ?></a><?php endif; ?></td>
                                             <?php endif; ?>
                                         </tr>
                                     <?php endforeach;
@@ -370,12 +393,31 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                         </div>
                         <p class="muted">Page <?= $page ?> of <?= $totalPages ?> · <?= $totalRows ?> student(s)</p><?= renderPagination($page, $totalPages, ['search' => $search, 'course' => $courseFilter, 'year_level' => $yearFilter, 'filter' => $filter, 'audience' => $facilitiesAudience, 'department' => $facilitiesDepartment]) ?>
                     </section>
+                    <?php if ($stationCode === 'REGISTRAR'): ?>
+                        <div id="registrar-compliance-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="registrar-compliance-title">
+                            <div class="modal" tabindex="-1">
+                                <h2 id="registrar-compliance-title">Mark for Compliance</h2>
+                                <p>Enter the reason <span id="registrar-compliance-student"></span> needs to comply.</p>
+                                <form method="post" action="<?= escapeHtml($actionUrl) ?>">
+                                    <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
+                                    <input id="registrar-compliance-clearance-id" type="hidden" name="clearance_id" value="">
+                                    <textarea id="registrar-compliance-reason" name="reason" required maxlength="1000" placeholder="Reason for compliance"></textarea>
+                                    <div class="actions">
+                                        <button type="button" class="secondary" data-close-registrar-compliance>Cancel</button>
+                                        <button class="danger" name="action" value="return">For Compliance</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <script src="<?= escapeHtml(applicationUrl('/assets/js/registrar-clearance.js')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/js/registrar-clearance.js') ?>"></script>
+                    <?php endif; ?>
                     <?php if ($stationCode === 'FACILITIES'): ?>
                         <?php require __DIR__ . '/facilities_items_modal.php'; ?>
                         <script src="<?= escapeHtml(applicationUrl('/assets/js/office-dashboard.js')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/js/office-dashboard.js') ?>"></script>
                     <?php endif; ?>
 
-                    <?php if ($selected !== null): ?>
+                    <?php if ($stationCode === 'COMLAB'): ?><?php require __DIR__ . '/comlab_violations_modal.php'; ?><?php endif; ?>
+                    <?php if ($selected !== null && !in_array($stationCode, ['COMLAB', 'REGISTRAR'], true)): ?>
                         <?php if (!in_array($stationCode, ['BOOKSTORE', 'SASO', 'FACILITIES'], true)): ?>
                             <section class="panel">
                                 <div class="detail-grid">
@@ -419,14 +461,16 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                                         <form method="post" action="<?= escapeHtml($actionUrl) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $selected['clearance_id'] ?>"><textarea name="description" required maxlength="2000" placeholder="Describe the laboratory incident, damage, missing item, or rule violation"></textarea><button name="action" value="add_comlab_incident">Record Incident</button></form><?php endif; ?>
                                 <?php elseif ($stationCode === 'ACCOUNTING'): ?>
                                     <?php if ($detailRecords === []): ?><p class="muted">No financial obligations recorded.</p><?php endif; ?><?php foreach ($detailRecords as $record): ?><div class="record"><strong><?= escapeHtml($record['description']) ?> — PHP <?= number_format((float)$record['amount'], 2) ?></strong> <span class="badge <?= strtolower($record['status']) ?>"><?= escapeHtml($record['status']) ?></span><?php if ($record['payment_reference']): ?><div class="muted">Reference: <?= escapeHtml($record['payment_reference']) ?></div><?php endif; ?><?php if ($record['status'] === 'UNPAID'): ?><form class="inline" method="post" action="<?= escapeHtml($actionUrl) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $selected['clearance_id'] ?>"><input type="hidden" name="obligation_id" value="<?= (int) $record['id'] ?>"><input type="text" name="payment_reference" required placeholder="Payment reference"><input type="text" name="remarks" placeholder="Remarks"><button name="action" value="clear_obligation">Verify settled</button></form><?php endif; ?></div><?php endforeach; ?><form class="inline" method="post" action="<?= escapeHtml($actionUrl) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $selected['clearance_id'] ?>"><input type="text" name="description" required placeholder="Financial obligation"><input type="number" name="amount" min="0" step="0.01" required placeholder="Amount"><input type="text" name="remarks" placeholder="Remarks"><button name="action" value="add_obligation">Add obligation</button></form>
-                                    <h3>Issue receipt for photo verification</h3>
-                                    <p class="muted">Enter the receipt number printed on the official paid receipt. The student must upload a clear photo that shows this exact code before Accounting can approve the clearance.</p>
-                                    <form class="inline" method="post" action="<?= escapeHtml($actionUrl) ?>">
-                                        <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
-                                        <input type="hidden" name="clearance_id" value="<?= (int) $selected['clearance_id'] ?>">
-                                        <input type="text" name="receipt_code" required maxlength="255" placeholder="Official receipt number / QR code">
-                                        <button name="action" value="register_accounting_receipt">Issue receipt code</button>
-                                    </form>
+                                    <h3>TLC portal screenshot review</h3>
+                                    <p>Check the student's name, school year, semester, charges, payments, and balance against official Accounting records. Approve only when the payment requirement is satisfied. Return with a reason if details are unclear, do not match, or a balance remains due.</p>
+                                    <?php
+                                    $portalQuery = $database->prepare("SELECT receipt.id,receipt.receipt_code FROM accounting_receipts receipt INNER JOIN clearances c ON c.student_id=receipt.student_id AND c.academic_period_id=receipt.academic_period_id WHERE c.id=:clearance_id ORDER BY receipt.id DESC LIMIT 1");
+                                    $portalQuery->execute(['clearance_id' => $selected['clearance_id']]);
+                                    $portalSubmission = $portalQuery->fetch();
+                                    ?>
+                                    <?php if ($portalSubmission && str_starts_with($portalSubmission['receipt_code'], 'PORTAL-')): ?>
+                                        <p><a class="button-link" href="<?= escapeHtml(applicationUrl('/accounting/assessment_image.php?id=' . (int) $portalSubmission['id'])) ?>" target="_blank" rel="noopener">View Portal Screenshot</a></p>
+                                    <?php else: ?><p class="muted">No TLC portal screenshot submitted yet.</p><?php endif; ?>
                                 <?php elseif ($stationCode === 'REGISTRAR'): ?>
                                     <?php foreach ($detailRecords as $record): ?><div class="record"><strong><?= escapeHtml($record['name']) ?></strong> <span class="badge <?= strtolower(str_replace('_', '-', $record['status'])) ?>"><?= escapeHtml(statusDisplayLabel($record['status'])) ?></span><?php if ($record['return_reason']): ?><div><?= escapeHtml($record['return_reason']) ?></div><?php endif; ?><form class="inline" method="post" action="<?= escapeHtml($actionUrl) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="clearance_id" value="<?= (int) $selected['clearance_id'] ?>"><input type="hidden" name="document_id" value="<?= (int) $record['id'] ?>"><select name="status">
                                                     <option value="VERIFIED">Verified</option>

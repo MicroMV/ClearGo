@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/../auth/auth_check.php';
+
 function activeEventPeriod(PDO $database): array
 {
     $period = $database->query(
@@ -111,6 +113,23 @@ function createOrganizationEvent(
             'created_by' => $userId,
         ]);
         $eventId = (int) $database->lastInsertId();
+        $studentUsers = $database->prepare(
+            "SELECT student.user_id
+             FROM students student
+             INNER JOIN semester_enrollments enrollment ON enrollment.student_id=student.id
+                AND enrollment.academic_period_id=:period_id AND enrollment.status='ENROLLED'
+             WHERE student.organization_id=:organization_id AND student.status='ACTIVE'"
+        );
+        $studentUsers->execute(['period_id' => $period['id'], 'organization_id' => $organizationId]);
+        $eventTime = $startTime === null ? '' : ' at ' . $startTime;
+        foreach ($studentUsers->fetchAll(PDO::FETCH_COLUMN) as $studentUserId) {
+            createNotification(
+                $database,
+                (int) $studentUserId,
+                'New required organization activity',
+                '"' . $name . '" is scheduled for ' . $eventDate . $eventTime . '. Use the ClearGo QR scanner when check-in opens.'
+            );
+        }
         $audit = $database->prepare(
             "INSERT INTO audit_logs (user_id,action,station_id,description,new_status)
              VALUES (:user_id,'ORGANIZATION_EVENT_CREATED',:station_id,:description,'ACTIVE')"
@@ -279,6 +298,12 @@ function recordQrAttendance(PDO $database, string $token, int $userId): array
             'description' => 'Student confirmed QR attendance for ' . $context['name'] . '.',
             'old_status' => $context['attendance_status'],
         ]);
+        createNotification(
+            $database,
+            $userId,
+            'Attendance recorded',
+            'You are marked PRESENT for "' . $context['name'] . '". No further check-in is needed for this event.'
+        );
         $database->commit();
         return ['context' => $context, 'already_recorded' => false];
     } catch (Throwable $exception) {

@@ -51,7 +51,7 @@ $sidebar = staffDashboardSidebar('Bookstore Clearance', $user, [
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/bookstore-receipts.css')) ?>">
 </head>
 <body class="staff-dashboard"><div class="staff-shell"><?= $sidebar ?><div class="staff-workspace">
-<header class="staff-topbar"><button class="mobile-nav-toggle" type="button" data-sidebar-open aria-controls="staff-sidebar" aria-expanded="false" aria-label="Open navigation">&#9776;</button><div class="topbar-title"><h1>Event Fees</h1><p>Add the receipts students must submit this semester.</p></div><div class="topbar-actions"><div class="topbar-account"><strong><?= escapeHtml($user['email']) ?></strong><span>Bookstore staff account</span></div><?= dashboardNotificationBell($notifications) ?></div></header>
+<header class="staff-topbar"><button class="mobile-nav-toggle" type="button" data-sidebar-open aria-controls="staff-sidebar" aria-expanded="false" aria-label="Open navigation">&#9776;</button><div class="topbar-title"><h1>Event Fees</h1><p>Add the receipts students must submit this semester.</p></div><div class="topbar-actions"><?= dashboardNotificationBell($notifications) ?></div></header>
 <main class="staff-main">
     <?php if ($message !== null): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?>
     <section class="panel"><div class="section-heading"><div><h2>Add event fee</h2><p class="muted"><?= escapeHtml($period['semester'] . ' Semester A.Y. ' . $period['school_year']) ?></p></div></div>

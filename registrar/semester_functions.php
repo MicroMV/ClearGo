@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/../auth/auth_check.php';
+
 function registrarActivePeriod(PDO $database, bool $lock = false): array
 {
     $sql = "SELECT id,school_year,semester,status,clearance_status,opened_at,closed_at
@@ -119,6 +121,12 @@ function createRegistrarSemester(PDO $database, int $registrarUserId, string $sc
         $registrarStation = $database->query("SELECT id FROM stations WHERE code='REGISTRAR' LIMIT 1")->fetchColumn();
         $audit = $database->prepare("INSERT INTO audit_logs (user_id,action,station_id,description,new_status) VALUES (:user_id,'SEMESTER_CREATED',:station_id,:description,'PREPARING')");
         $audit->execute(['user_id' => $registrarUserId, 'station_id' => $registrarStation, 'description' => 'Registrar created ' . $semester . ' Semester A.Y. ' . $schoolYear . '.']);
+        notifyActiveRoles(
+            $database,
+            ['DEAN','ORG_STAFF','SASO_STAFF','STUDENT_COUNCIL_STAFF','LIBRARY_STAFF','BOOKSTORE_STAFF','CLINIC_STAFF','FACILITIES_STAFF','COMLAB_STAFF','ACCOUNTING_STAFF'],
+            'New semester ready for preparation',
+            semesterLabel(['semester' => $semester, 'school_year' => $schoolYear]) . ' was created. Review your office requirements and mark your office Ready.'
+        );
         $database->commit();
         return $periodId;
     } catch (Throwable $exception) {
@@ -210,8 +218,13 @@ function openRegistrarClearance(PDO $database, int $registrarUserId): int
         $togas->execute(['period_id' => $period['id']]);
         $studentNotices = $database->prepare("INSERT INTO notifications (user_id,title,message) SELECT student.user_id,'Semester clearance is open',:message FROM semester_enrollments enrollment INNER JOIN students student ON student.id=enrollment.student_id WHERE enrollment.academic_period_id=:period_id AND enrollment.status='ENROLLED'");
         $studentNotices->execute(['message' => semesterLabel($period) . ' clearance is now available.', 'period_id' => $period['id']]);
-        $deanNotices = $database->prepare("INSERT INTO notifications (user_id,title,message) SELECT id,'Semester clearance opened',:message FROM users WHERE role='DEAN' AND status='ACTIVE'");
-        $deanNotices->execute(['message' => semesterLabel($period) . ' is open. Enrolled students are ready for Dean review.']);
+        notifyActiveRoles($database, ['DEAN'], 'Clearance opened - Dean action needed', semesterLabel($period) . ' is open. Enrolled students are ready for Dean review.');
+        notifyActiveRoles(
+            $database,
+            ['ORG_STAFF','SASO_STAFF','STUDENT_COUNCIL_STAFF','LIBRARY_STAFF','BOOKSTORE_STAFF','CLINIC_STAFF','FACILITIES_STAFF','COMLAB_STAFF','ACCOUNTING_STAFF'],
+            'Semester clearance opened',
+            semesterLabel($period) . ' is open. You will be notified as each student reaches your office for action.'
+        );
         $registrarStation = $database->query("SELECT id FROM stations WHERE code='REGISTRAR' LIMIT 1")->fetchColumn();
         $audit = $database->prepare("INSERT INTO audit_logs (user_id,action,station_id,description,old_status,new_status) VALUES (:user_id,'SEMESTER_CLEARANCE_OPENED',:station_id,:description,'PREPARING','OPEN')");
         $audit->execute(['user_id' => $registrarUserId, 'station_id' => $registrarStation, 'description' => 'Registrar opened ' . semesterLabel($period) . ' clearance for ' . $enrollmentCount . ' enrolled students.']);

@@ -22,12 +22,14 @@ try {
     if (strtolower(pathinfo((string) ($file['name'] ?? ''), PATHINFO_EXTENSION)) !== 'xlsx') {
         throw new RuntimeException('Upload the .xlsx Library workbook downloaded from ClearGo.');
     }
-    $result = importLibraryWorkbook(getDatabaseConnection(), (int) $user['id'], readLibraryWorkbook((string) $file['tmp_name']));
+    $database = getDatabaseConnection();
+    $result = importLibraryWorkbook($database, (int) $user['id'], readLibraryWorkbook((string) $file['tmp_name']));
     $message = 'Library workbook imported. Cleared: ' . $result['cleared'] . '. Already cleared: ' . $result['already_cleared']
         . '. Unchanged: ' . $result['skipped'] . '. Errors: ' . count($result['errors']) . '.';
     if ($result['errors'] !== []) {
         $message .= ' ' . implode(' ', array_slice($result['errors'], 0, 3));
     }
+    createNotification($database, (int) $user['id'], 'Library Excel import completed', $message);
     setFlashMessage($message);
 } catch (Throwable $exception) {
     error_log('Library workbook import failed: ' . $exception->getMessage());

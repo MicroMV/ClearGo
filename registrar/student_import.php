@@ -41,7 +41,7 @@ $sidebar = registrarDashboardSidebar($user, 'import', $logoutForm);
                     <p>Upload, validate, and confirm the official semester roster.</p>
                 </div>
                 <div class="topbar-actions">
-                    <div class="topbar-account"><strong><?= escapeHtml($user['email']) ?></strong><span>Registrar account</span></div><?= dashboardNotificationBell($notifications) ?>
+                    <?= dashboardNotificationBell($notifications) ?>
                 </div>
             </header>
             <main class="staff-main">
@@ -60,7 +60,7 @@ $sidebar = registrarDashboardSidebar($user, 'import', $logoutForm);
                     <form class="upload" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/registrar/student_import_action.php')) ?>">
                         <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="preview">
                         <label>Excel or CSV file<input name="student_file" type="file" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required></label>
-                        <button type="submit">Upload and Preview</button><a class="button secondary" href="<?= escapeHtml(applicationUrl('/registrar/student_import_template.php')) ?>">Excel Template</a><a class="button secondary" href="<?= escapeHtml(applicationUrl('/registrar/student_import_template.php?format=csv')) ?>">CSV Template</a>
+                        <button type="submit">Upload and Preview</button><a class="button secondary" href="<?= escapeHtml(applicationUrl('/registrar/student_import_template.php')) ?>">Excel Template</a>
                     </form>
                     <p class="hint">Accepted: .xlsx or .csv, up to 5 MB and 5,000 student rows. Columns: #, Student No., Full Name, Course, Year Level, Gsuite Address. The importer recognizes a title such as “ACADEMIC YEAR 2026-2027 1ST SEMESTER” above the headers.</p>
                 </section>

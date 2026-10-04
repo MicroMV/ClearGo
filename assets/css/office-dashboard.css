@@ -685,6 +685,42 @@
                 flex: 0
         }
 
+        .staff-dashboard .registrar-row-actions {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                width: max-content
+        }
+
+        .staff-dashboard .registrar-row-actions form {
+                margin: 0
+        }
+
+        .staff-dashboard .registrar-row-actions button {
+                margin: 0;
+                white-space: nowrap
+        }
+
+        .staff-dashboard .comlab-row-actions {
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: center;
+                gap: 8px;
+                width: max-content;
+        }
+
+        .staff-dashboard .comlab-row-actions form {
+                flex: 0 0 auto;
+                margin: 0;
+        }
+
+        .staff-dashboard .comlab-row-actions button {
+                flex: 0 0 auto;
+                min-height: 40px;
+                margin: 0;
+                white-space: nowrap;
+        }
+
         .staff-dashboard .facilities-row-actions {
                 display: flex;
                 align-items: center;
