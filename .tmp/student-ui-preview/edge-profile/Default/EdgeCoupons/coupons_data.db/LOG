@@ -1,0 +1,6 @@
+2026/10/13-15:20:36.478 6050 Reusing MANIFEST C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default\EdgeCoupons/coupons_data.db/MANIFEST-000001
+2026/10/13-15:20:36.484 6050 Recovering log #45
+2026/10/13-15:20:36.484 6050 Reusing old log C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default\EdgeCoupons/coupons_data.db/000045.log 
+2026/10/13-15:20:36.702 3e74 Level-0 table #50: started
+2026/10/13-15:20:36.708 3e74 Level-0 table #50: 683444 bytes OK
+2026/10/13-15:20:36.710 3e74 Delete type=0 #45

@@ -31,7 +31,7 @@ try {
     $readiness = officeReadiness($database, 'DEAN');
     $verifiedSubmissionQuery = $database->prepare("SELECT COUNT(*) FROM evaluation_submissions submission INNER JOIN clearances clearance ON clearance.id=submission.clearance_id INNER JOIN students student ON student.id=clearance.student_id INNER JOIN academic_periods period ON period.id=clearance.academic_period_id AND period.status='ACTIVE' WHERE student.organization_id=:organization_id AND submission.status='VERIFIED'");
     $verifiedSubmissionQuery->execute(['organization_id' => $dean['organization_id']]);
-    $verifiedAnonymousCount = (int) $verifiedSubmissionQuery->fetchColumn();
+    $verifiedSubmissionQuery->fetchColumn();
     $statement = $database->prepare(
         "SELECT clearances.id AS clearance_id, students.student_number,
                 students.first_name, students.last_name, students.program, students.year_level,

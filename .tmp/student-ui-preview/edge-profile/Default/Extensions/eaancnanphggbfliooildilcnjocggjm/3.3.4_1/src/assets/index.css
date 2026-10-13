@@ -1,0 +1,26 @@
+@import "flag-icons/css/flag-icons.min.css";
+
+/* ./src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .fi.flag-icon.fis {
+    display: block;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 0.125rem;
+    border-width: 1px;
+    border-color: rgb(0 0 0 / 0.12);
+    width: 24px;
+    height: 16px;
+    line-height: 0;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .fi.flag-icon.fis::before {
+    content: none;
+  }
+}

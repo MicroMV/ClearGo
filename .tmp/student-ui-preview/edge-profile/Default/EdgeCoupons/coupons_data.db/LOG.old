@@ -1,0 +1,15 @@
+2026/10/13-15:16:38.201 212c Reusing MANIFEST C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default\EdgeCoupons/coupons_data.db/MANIFEST-000001
+2026/10/13-15:16:38.205 212c Recovering log #42
+2026/10/13-15:16:38.207 212c Reusing old log C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default\EdgeCoupons/coupons_data.db/000042.log 
+2026/10/13-15:16:38.436 5140 Level-0 table #46: started
+2026/10/13-15:16:38.442 5140 Level-0 table #46: 683444 bytes OK
+2026/10/13-15:16:38.445 5140 Delete type=0 #42
+2026/10/13-15:16:38.445 459c Compacting 4@0 + 1@1 files
+2026/10/13-15:16:38.452 459c Generated table #47@0: 4 keys, 683352 bytes
+2026/10/13-15:16:38.452 459c Compacted 4@0 + 1@1 files => 683352 bytes
+2026/10/13-15:16:38.454 459c compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/10/13-15:16:38.456 459c Delete type=2 #34
+2026/10/13-15:16:38.456 459c Delete type=2 #37
+2026/10/13-15:16:38.456 459c Delete type=2 #40
+2026/10/13-15:16:38.456 459c Delete type=2 #43
+2026/10/13-15:16:38.456 459c Delete type=2 #46

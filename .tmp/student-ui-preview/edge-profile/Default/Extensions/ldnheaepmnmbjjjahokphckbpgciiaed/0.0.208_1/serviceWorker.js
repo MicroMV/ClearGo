@@ -1,0 +1,1 @@
+import "/assets/src/entries/background/main.c37c9e04.js";

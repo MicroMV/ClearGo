@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../auth/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/dashboard_functions.php';
 
 $user = requireRole('STUDENT');
 
@@ -25,31 +26,11 @@ try {
         throw new RuntimeException('No active student profile found.');
     }
 
-    $periodQuery = $database->prepare(
-        "SELECT DISTINCT period.id,period.school_year,period.semester,period.status,period.clearance_status
-         FROM academic_periods period
-         LEFT JOIN clearances clearance ON clearance.academic_period_id=period.id AND clearance.student_id=:student_id
-         WHERE period.status='ACTIVE' OR clearance.id IS NOT NULL
-         ORDER BY period.id DESC"
-    );
-    $periodQuery->execute(['student_id' => $student['id']]);
-    $availablePeriods = $periodQuery->fetchAll();
-    $period = $availablePeriods[0] ?? false;
-    $requestedPeriodId = filter_var($_GET['period'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-    if ($requestedPeriodId !== false) {
-        foreach ($availablePeriods as $candidatePeriod) {
-            if ((int) $candidatePeriod['id'] === (int) $requestedPeriodId) {
-                $period = $candidatePeriod;
-                break;
-            }
-        }
-    }
-    $isEnrolled = false;
-    if ($period !== false) {
-        $enrollmentQuery = $database->prepare("SELECT COUNT(*) FROM semester_enrollments WHERE academic_period_id=:period_id AND student_id=:student_id AND status='ENROLLED'");
-        $enrollmentQuery->execute(['period_id' => $period['id'], 'student_id' => $student['id']]);
-        $isEnrolled = (int) $enrollmentQuery->fetchColumn() === 1;
-    }
+    $availablePeriods = studentDashboardPeriods($database, (int) $student['id']);
+    $period = selectStudentDashboardPeriod($availablePeriods, $_GET['period'] ?? null);
+    $isEnrolled = $period !== false && (int) $period['is_enrolled'] === 1;
+    $isHistoricalRecord = studentDashboardIsHistory($period);
+    $canSubmit = studentDashboardCanSubmit($period);
 
     $comlabQuery = $database->prepare("SELECT violation.description,violation.created_at FROM violations violation INNER JOIN stations station ON station.id=violation.station_id WHERE violation.student_id=:student_id AND station.code='COMLAB' AND violation.status='OPEN' ORDER BY violation.created_at DESC,violation.id DESC");
     $comlabQuery->execute(['student_id' => $student['id']]);
@@ -86,6 +67,9 @@ try {
     }
 
     $isCbeStudent = ($student['organization_code'] ?? '') === 'CBE';
+    $stationFilter = $isHistoricalRecord
+        ? 'EXISTS (SELECT 1 FROM clearance_stations saved_station INNER JOIN clearances saved_clearance ON saved_clearance.id=saved_station.clearance_id WHERE saved_station.station_id=station.id AND saved_clearance.student_id=:history_student_id AND saved_clearance.academic_period_id=:history_period_id)'
+        : 'station.status = :status';
     $stationQuery = $database->prepare(
         "SELECT station.id, station.name, station.code, station.sort_order,
                 parent.name AS parent_name,
@@ -107,24 +91,30 @@ try {
                 END AS workflow_order
          FROM stations station
          LEFT JOIN stations parent ON parent.id = station.parent_station_id
-         WHERE station.status = :status
+         WHERE {$stationFilter}
          ORDER BY workflow_order,
                   CASE WHEN parent.id IS NULL THEN 0 ELSE 1 END,
                   station.sort_order"
     );
-    $stationQuery->execute([
-        'status' => 'ACTIVE',
+    $stationParameters = [
         'is_cbe_display' => $isCbeStudent ? 1 : 0,
         'is_cbe_child' => $isCbeStudent ? 1 : 0,
         'is_cbe_order' => $isCbeStudent ? 1 : 0,
-    ]);
+    ];
+    if ($isHistoricalRecord) {
+        $stationParameters['history_student_id'] = $student['id'];
+        $stationParameters['history_period_id'] = $period['id'];
+    } else {
+        $stationParameters['status'] = 'ACTIVE';
+    }
+    $stationQuery->execute($stationParameters);
     $stations = $stationQuery->fetchAll();
 
     $clearance = false;
     $stationStatuses = [];
     $evaluation = false;
     $evaluationApplicable = false;
-    if ($period !== false && $period['clearance_status'] === 'OPEN') {
+    if ($period !== false && ($isHistoricalRecord || $canSubmit)) {
         $clearanceQuery = $database->prepare(
             'SELECT id, reference_number, status
              FROM clearances
@@ -194,28 +184,40 @@ try {
     $medicalAppointment = false;
     $medicalSchedules = [];
     if ($clearance !== false) {
-        $allRequirementsQuery = $database->prepare(
-            'SELECT r.station_id, r.name, r.requirement_code, r.description, rr.status, rr.remarks
-             FROM requirements r
-             INNER JOIN clearance_stations clearance_station
-                ON clearance_station.station_id = r.station_id AND clearance_station.clearance_id = :clearance_id
-             LEFT JOIN requirement_records rr
-                ON rr.requirement_id = r.id AND rr.clearance_station_id = clearance_station.id
-             WHERE r.status = :status AND r.is_required = 1
-               AND (r.applicable_organization_id IS NULL OR r.applicable_organization_id = :organization_id)
-               AND (r.minimum_year_level IS NULL OR :minimum_year_level >= r.minimum_year_level)
-               AND (r.maximum_year_level IS NULL OR :maximum_year_level <= r.maximum_year_level)
-               AND (r.applicable_semester IS NULL OR r.applicable_semester = :semester)
-             ORDER BY r.station_id, r.id'
-        );
-        $allRequirementsQuery->execute([
-            'clearance_id' => $clearance['id'],
-            'status' => 'ACTIVE',
-            'organization_id' => $student['organization_id'],
-            'minimum_year_level' => $student['year_level'],
-            'maximum_year_level' => $student['year_level'],
-            'semester' => $period['semester'],
-        ]);
+        if ($isHistoricalRecord) {
+            $allRequirementsQuery = $database->prepare(
+                'SELECT r.station_id,r.name,r.requirement_code,r.description,rr.status,rr.remarks
+                 FROM requirement_records rr
+                 INNER JOIN requirements r ON r.id=rr.requirement_id
+                 INNER JOIN clearance_stations clearance_station ON clearance_station.id=rr.clearance_station_id
+                 WHERE clearance_station.clearance_id=:clearance_id
+                 ORDER BY r.station_id,r.id'
+            );
+            $allRequirementsQuery->execute(['clearance_id' => $clearance['id']]);
+        } else {
+            $allRequirementsQuery = $database->prepare(
+                'SELECT r.station_id, r.name, r.requirement_code, r.description, rr.status, rr.remarks
+                 FROM requirements r
+                 INNER JOIN clearance_stations clearance_station
+                    ON clearance_station.station_id = r.station_id AND clearance_station.clearance_id = :clearance_id
+                 LEFT JOIN requirement_records rr
+                    ON rr.requirement_id = r.id AND rr.clearance_station_id = clearance_station.id
+                 WHERE r.status = :status AND r.is_required = 1
+                   AND (r.applicable_organization_id IS NULL OR r.applicable_organization_id = :organization_id)
+                   AND (r.minimum_year_level IS NULL OR :minimum_year_level >= r.minimum_year_level)
+                   AND (r.maximum_year_level IS NULL OR :maximum_year_level <= r.maximum_year_level)
+                   AND (r.applicable_semester IS NULL OR r.applicable_semester = :semester)
+                 ORDER BY r.station_id, r.id'
+            );
+            $allRequirementsQuery->execute([
+                'clearance_id' => $clearance['id'],
+                'status' => 'ACTIVE',
+                'organization_id' => $student['organization_id'],
+                'minimum_year_level' => $student['year_level'],
+                'maximum_year_level' => $student['year_level'],
+                'semester' => $period['semester'],
+            ]);
+        }
         foreach ($allRequirementsQuery->fetchAll() as $requirement) {
             $stationRequirements[(int) $requirement['station_id']][] = $requirement;
         }
@@ -249,12 +251,12 @@ try {
                     submission.submitted_at,submission.return_reason
              FROM student_bookstore_fees student_fee
              INNER JOIN bookstore_fees fee ON fee.id=student_fee.fee_id
-                AND fee.academic_period_id=:period_id AND fee.status='ACTIVE'
+                AND fee.academic_period_id=:period_id AND (:include_archived=1 OR fee.status='ACTIVE')
              LEFT JOIN bookstore_receipt_submissions submission ON submission.student_fee_id=student_fee.id
              WHERE student_fee.student_id=:student_id
              ORDER BY fee.id"
         );
-        $bookstoreFeeQuery->execute(['period_id' => $period['id'], 'student_id' => $student['id']]);
+        $bookstoreFeeQuery->execute(['period_id' => $period['id'], 'student_id' => $student['id'], 'include_archived' => $isHistoricalRecord ? 1 : 0]);
         $bookstoreFees = $bookstoreFeeQuery->fetchAll();
 
         $medicalQuery = $database->prepare("SELECT status FROM medical_requirements WHERE student_id=:student_id AND academic_period_id=:period_id LIMIT 1");
@@ -272,7 +274,7 @@ try {
             $appointmentQuery->execute(['student_id' => $student['id'], 'period_id' => $period['id']]);
             $medicalAppointment = $appointmentQuery->fetch();
 
-            if ($medicalAppointment === false && $period['status'] === 'ACTIVE') {
+            if ($medicalAppointment === false && $canSubmit) {
                 $scheduleQuery = $database->prepare(
                     "SELECT schedule.id,schedule.schedule_date,schedule.schedule_time,schedule.end_time,schedule.capacity,
                             COUNT(appointment.id) AS booked_count
@@ -329,7 +331,9 @@ $setDisplayStatus = static function (string $code, string $status) use (&$displa
 // Organization/YBC; every other college starts at the Dean.
 $deanComplete = $rawStationStatus('DEAN') === 'APPROVED';
 $organizationComplete = $rawStationStatus('ORGANIZATION') === 'APPROVED';
-if ($isCbeStudent && !$organizationComplete) {
+if ($isHistoricalRecord) {
+    // Show the stored station decisions without applying today's workflow.
+} elseif ($isCbeStudent && !$organizationComplete) {
     foreach (['DEAN', 'SASO', 'STUDENT_COUNCIL', 'LIBRARY', 'BOOKSTORE', 'CLINIC', 'FACILITIES', 'COMLAB', 'ACCOUNTING', 'REGISTRAR'] as $code) {
         $setDisplayStatus($code, 'LOCKED');
     }
@@ -380,180 +384,18 @@ foreach ($stations as $station) {
 
 $semesterLabels = ['1ST' => 'First Semester', '2ND' => 'Second Semester', 'SUMMER' => 'Summer'];
 $periodLabel = $period === false
-    ? 'No active academic period'
+    ? 'No semester record'
     : ($semesterLabels[$period['semester']] ?? $period['semester']) . ' A.Y. ' . $period['school_year'];
-$detailStatus = $selectedStation === null
-    ? null
-    : ($displayStationStatuses[(int) $selectedStation['id']]['status'] ?? 'LOCKED');
 $message = pullFlashMessage();
 $csrfToken = createCsrfToken();
 $logoutForm = dashboardLogoutForm();
+require __DIR__ . '/dashboard_view.php';
 ?>
-<!doctype html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Student Dashboard | Digital Clearance System</title>
-    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/student-page.css')) ?>">
-    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/student-dashboard.css')) ?>">
-    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/library-card-camera.css')) ?>">
-</head>
-
-<body class="student-dashboard">
-    <header class="student-header">
-        <div class="student-topbar"><a class="student-brand" href="<?= escapeHtml(applicationUrl('/student/dashboard.php')) ?>"><img src="<?= escapeHtml(clearGoLogoUrl()) ?>" alt="The Lewis College logo"><span class="student-brand-copy"><strong>ClearGo</strong><small>Student Portal</small></span></a>
-            <div class="header-actions">
-                <div class="notification-wrap" data-notification-endpoint="<?= escapeHtml(applicationUrl('/auth/notifications.php')) ?>" data-csrf-token="<?= escapeHtml($csrfToken) ?>" data-latest-notification-id="<?= $notifications === [] ? 0 : max(array_map(static fn(array $notification): int => (int) $notification['id'], $notifications)) ?>">
-                    <button class="notification-button" id="notificationButton" type="button" aria-label="Notifications<?= $unreadNotificationCount > 0 ? ' (' . $unreadNotificationCount . ' unread)' : '' ?>" aria-controls="notificationBox" aria-expanded="false">
-                        <svg viewBox="0 0 24 24" aria-hidden="true">
-                            <path fill="currentColor" d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22Zm7-6v-5a7 7 0 0 0-5-6.71V3a2 2 0 0 0-4 0v1.29A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2Z" />
-                        </svg>
-                        <?php if ($unreadNotificationCount > 0): ?><span class="notification-count"><?= $unreadNotificationCount > 99 ? '99+' : $unreadNotificationCount ?></span><?php endif; ?>
-                    </button>
-                    <div class="notification-box" id="notificationBox" hidden>
-                        <h2>Notifications</h2>
-                        <?php if ($notifications === []): ?><p class="notification-empty muted">You have no notifications yet.</p><ul class="notification-list"></ul><?php else: ?><ul class="notification-list"><?php foreach ($notifications as $notification): ?><li data-notification-id="<?= (int) $notification['id'] ?>" class="<?= (int) $notification['is_read'] === 0 ? 'unread' : '' ?>"><strong><?= escapeHtml($notification['title']) ?></strong>
-                                        <div><?= escapeHtml($notification['message']) ?></div>
-                                        <div class="muted"><?= escapeHtml($notification['created_at']) ?></div>
-                                    </li><?php endforeach; ?></ul><?php endif; ?>
-                    </div>
-                </div>
-                <a class="header-link" href="<?= escapeHtml(applicationUrl('/student/password.php')) ?>" aria-label="Change password"><svg viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M15 7a5 5 0 1 0-4.6 5H13l2 2 2-2 2 2 2-2-4.4-4.4A5 5 0 0 0 15 7Z" />
-                    </svg><span>Change Password</span></a><?= $logoutForm ?>
-            </div>
-        </div>
-    </header>
-    <main class="student-main">
-        <section class="student-hero" aria-labelledby="student-dashboard-title">
-            <div>
-                <p class="eyebrow">Student clearance</p>
-                <h1 id="student-dashboard-title">Welcome, <?= escapeHtml($student['first_name'] . ' ' . $student['last_name']) ?></h1>
-                <p>Track your requirements and see what needs attention.</p>
-            </div><?php if ($clearance !== false): ?><span class="overall-status"><?= escapeHtml(studentStatusLabel($clearance['status'])) ?></span><?php endif; ?>
-        </section>
-        <?php if ($message !== null): ?><p class="notice flash"><?= escapeHtml($message) ?></p><?php endif; ?>
-        <div class="grid">
-            <section class="panel profile-card">
-                <div class="profile-heading"><span class="profile-avatar"><?= escapeHtml(strtoupper(substr($student['first_name'], 0, 1) . substr($student['last_name'], 0, 1))) ?></span>
-                    <div>
-                        <h2><?= escapeHtml($student['first_name'] . ' ' . $student['last_name']) ?></h2>
-                        <p><?= escapeHtml($student['student_number']) ?></p>
-                    </div>
-                </div>
-                <dl class="profile">
-                    <div>
-                        <dt>Program</dt>
-                        <dd><?= escapeHtml($student['program']) ?></dd>
-                    </div>
-                    <?php $section = trim((string) ($student['section'] ?? '')); ?>
-                    <div>
-                        <dt><?= $section === '' || strtoupper($section) === 'N/A' ? 'Year Level' : 'Year and Section' ?></dt>
-                        <dd><?= (int) $student['year_level'] ?><?= $section === '' || strtoupper($section) === 'N/A' ? '' : ' - ' . escapeHtml($section) ?></dd>
-                    </div>
-                    <div>
-                        <dt>Organization</dt>
-                        <dd><?= escapeHtml($student['organization_name'] . ' (' . $student['organization_code'] . ')') ?></dd>
-                    </div>
-                    <div>
-                        <dt>Email</dt>
-                        <dd><?= escapeHtml($student['email']) ?></dd>
-                    </div>
-                </dl>
-            </section>
-            <section class="panel clearance-card">
-                <div class="clearance-card-header">
-                    <div>
-                        <h2>My Clearance</h2>
-                        <p class="section-copy">Progress for <?= escapeHtml($periodLabel) ?></p>
-                    </div>
-                </div>
-                <form class="period-form" method="get"><label for="period">Semester record</label><select id="period" name="period" onchange="this.form.submit()"><?php foreach ($availablePeriods as $availablePeriod): ?><option value="<?= (int) $availablePeriod['id'] ?>" <?= $period !== false && (int) $period['id'] === (int) $availablePeriod['id'] ? 'selected' : '' ?>><?= escapeHtml(($semesterLabels[$availablePeriod['semester']] ?? $availablePeriod['semester']) . ' A.Y. ' . $availablePeriod['school_year']) ?></option><?php endforeach; ?></select></form>
-                <?php if ($clearance === false): ?>
-                    <?php if ($period === false): ?><p class="notice">No semester record is available.</p><?php elseif (!$isEnrolled): ?><p class="notice warning">You are not included in the enrollment roster for this semester.</p><?php elseif ($period['clearance_status'] !== 'OPEN'): ?><p class="notice">Clearance is not open yet. It will appear after all offices are ready and the Registrar opens the semester.</p><?php else: ?><p class="notice warning">Your semester clearance record is unavailable. Please contact the Registrar.</p><?php endif; ?>
-                <?php else: ?>
-                    <p class="clearance-reference">Reference <?= escapeHtml($clearance['reference_number']) ?></p>
-                    <div class="progress-copy"><strong><?= $approved ?> of <?= count($stations) ?> stations cleared</strong><span><?= count($stations) === 0 ? 0 : (int) round(($approved / count($stations)) * 100) ?>%</span></div>
-                    <div class="progress" role="progressbar" aria-label="Clearance progress" aria-valuemin="0" aria-valuemax="<?= count($stations) ?>" aria-valuenow="<?= $approved ?>"><span style="width:<?= count($stations) === 0 ? 0 : ($approved / count($stations)) * 100 ?>%"></span></div>
-                    <p class="clearance-status-line"><strong>Overall status</strong><span class="badge <?= escapeHtml(strtolower(str_replace('_', '-', $clearance['status']))) ?>"><?= escapeHtml(studentStatusLabel($clearance['status'])) ?></span></p>
-                <?php endif; ?>
-            </section>
-        </div>
-
-        <?php if ($comlabViolations !== []): ?>
-        <section class="panel">
-            <h2>Comlab Violation</h2>
-            <p class="notice warning">You have unresolved Comlab violations. Go to the Comlab room to resolve them with the staff before your Computer Laboratory clearance can be approved.</p>
-            <ul class="requirements">
-                <?php foreach ($comlabViolations as $violation): ?>
-                <li><span class="badge returned">VIOLATED</span><p><?= nl2br(escapeHtml($violation['description'])) ?></p><p class="section-copy">Reported <?= escapeHtml($violation['created_at']) ?></p></li>
-                <?php endforeach; ?>
-            </ul>
-        </section>
-        <?php endif; ?>
-        <?php if ($facilitiesItems !== []): ?>
-        <section class="panel">
-            <h2>Facilities Items Pending Return</h2>
-            <p class="section-copy">Return these items to Facilities before your Facilities clearance can be approved.</p>
-            <ul class="requirements">
-                <?php foreach ($facilitiesItems as $facilitiesItem): ?>
-                <li>
-                    <strong><?= escapeHtml($facilitiesItem['description']) ?></strong>
-                    <span class="badge pending">NOT RETURNED</span>
-                    <?php if (trim((string) ($facilitiesItem['remarks'] ?? '')) !== ''): ?>
-                    <p class="notice warning"><strong>Facilities note:</strong> <?= nl2br(escapeHtml($facilitiesItem['remarks'])) ?></p>
-                    <?php endif; ?>
-                </li>
-                <?php endforeach; ?>
-            </ul>
-        </section>
-        <?php endif; ?>
-
-        <section class="panel event-panel">
-            <h2>Organization Event Attendance</h2>
-            <p class="section-copy">Use the ClearGo scanner to scan the QR displayed by your organization officer. Attendance is tied to your student account.</p>
-            <p><a class="button-link" href="<?= escapeHtml(applicationUrl('/student/attendance_scanner.php')) ?>">Open ClearGo Attendance Scanner</a></p>
-            <?php if ($organizationEvents === []): ?>
-                <p class="notice">No required organization events are listed for this semester.</p>
-            <?php else: ?>
-                <ul class="requirements">
-                    <?php foreach ($organizationEvents as $event): ?>
-                        <li><strong><?= escapeHtml($event['name']) ?></strong>
-                            <div class="muted"><?= escapeHtml($event['event_date'] . ($event['start_time'] ? ' · ' . $event['start_time'] : '')) ?></div><?php if ($event['attendance_status'] === 'PRESENT'): ?><span class="badge approved">PRESENT</span><?php else: ?><span class="badge not-submitted">NOT RECORDED</span><?php endif; ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-        </section>
-
-        <section class="panel station-panel">
-            <h2>Clearance Stations</h2>
-            <p class="section-copy">Follow your clearance in order. Available stations can be opened for more details.</p>
-            <?php if ($clearance === false): ?>
-                <p class="muted">Station statuses and requirements will appear after you start your clearance.</p>
-            <?php else: ?>
-                <ol class="stations">
-                    <?php foreach ($stations as $station): ?>
-                        <?php $status = $displayStationStatuses[(int) $station['id']]['status'] ?? 'LOCKED'; ?>
-                        <li class="station">
-                            <span class="step"><?= escapeHtml($station['display_order']) ?></span>
-                            <div class="station-info">
-                                <h3><?= escapeHtml($station['name']) ?></h3><?php if ($station['parent_name'] !== null): ?><div class="muted">SASO sub-check</div><?php endif; ?>
-                            </div>
-                            <span class="badge <?= escapeHtml(strtolower(str_replace('_', '-', $status))) ?>"><?= escapeHtml(studentStatusLabel($status)) ?></span>
-                            <?php if ($status !== 'LOCKED'): ?><button class="requirements-button" type="button" data-requirements-modal="requirements-modal-<?= (int) $station['id'] ?>">View requirements</button><?php endif; ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ol>
-            <?php endif; ?>
-        </section>
 
         <?php if ($clearance !== false): ?>
             <?php foreach ($stations as $station): ?>
                 <?php $modalStatus = $displayStationStatuses[(int) $station['id']]['status'] ?? 'LOCKED'; ?>
-                <?php if ($modalStatus === 'LOCKED') {
+                <?php if ($modalStatus === 'LOCKED' && !$isHistoricalRecord) {
                     continue;
                 } ?>
                 <div class="requirements-modal" id="requirements-modal-<?= (int) $station['id'] ?>" hidden aria-hidden="true">
@@ -563,7 +405,7 @@ $logoutForm = dashboardLogoutForm();
                             <div class="requirements-modal__heading">
                                 <span class="requirements-modal__eyebrow">Clearance requirements</span>
                                 <h2 id="requirements-modal-title-<?= (int) $station['id'] ?>"><?= escapeHtml($station['name']) ?> Requirements</h2>
-                                <p id="requirements-modal-help-<?= (int) $station['id'] ?>">Review the items below and complete any action marked as required.</p>
+                                <p id="requirements-modal-help-<?= (int) $station['id'] ?>"><?= $isHistoricalRecord ? 'Review the saved requirements and decisions for this semester.' : 'Review the items below and complete any action marked as required.' ?></p>
                             </div>
                             <button class="requirements-modal__close" type="button" data-close-requirements-modal aria-label="Close requirements">&times;</button>
                         </div>
@@ -574,15 +416,26 @@ $logoutForm = dashboardLogoutForm();
                         }
                         $completedRequirementStatuses = ['VERIFIED', 'RESOLVED', 'APPROVED'];
                         $completedRequirementCount = count(array_filter($modalRequirements, static fn(array $requirement): bool => in_array((string) ($requirement['status'] ?? ''), $completedRequirementStatuses, true)));
+                        $allModalRequirementsComplete = $modalRequirements !== [] && $completedRequirementCount === count($modalRequirements);
                         $hasReturnedRequirement = count(array_filter($modalRequirements, static fn(array $requirement): bool => in_array((string) ($requirement['status'] ?? ''), ['RETURNED', 'REJECTED', 'ERROR'], true))) > 0;
                         $modalOverviewState = $modalStatus === 'APPROVED' ? 'approved' : ($modalStatus === 'RETURNED' || $hasReturnedRequirement ? 'returned' : strtolower(str_replace('_', '-', $modalStatus)));
                         $modalGuidanceTitle = $modalStatus === 'APPROVED' ? 'You are cleared at this station' : ($modalStatus === 'RETURNED' || $hasReturnedRequirement ? 'Your submission needs attention' : (in_array($modalStatus, ['SUBMITTED', 'UNDER_REVIEW'], true) ? 'Your submission is being reviewed' : 'Complete the items below'));
-                        $modalGuidanceCopy = $modalStatus === 'APPROVED' ? 'No further action is needed. This station has approved your clearance.' : ($modalStatus === 'RETURNED' || $hasReturnedRequirement ? 'Read the highlighted feedback, correct the item, and submit it again.' : (in_array($modalStatus, ['SUBMITTED', 'UNDER_REVIEW'], true) ? 'No need to submit again. You will be notified after the office reviews it.' : 'Check each required item and follow its submission instructions.')); ?>
+                        $modalGuidanceCopy = $modalStatus === 'APPROVED' ? 'No further action is needed. This station has approved your clearance.' : ($modalStatus === 'RETURNED' || $hasReturnedRequirement ? 'Read the highlighted feedback, correct the item, and submit it again.' : (in_array($modalStatus, ['SUBMITTED', 'UNDER_REVIEW'], true) ? 'No need to submit again. You will be notified after the office reviews it.' : 'Check each required item and follow its submission instructions.'));
+                        if ($isHistoricalRecord) {
+                            $modalGuidanceTitle = 'Saved semester status';
+                            $modalGuidanceCopy = 'These are the recorded decisions for this semester. Submissions are closed.';
+                        } elseif ($station['code'] === 'BOOKSTORE' && $allModalRequirementsComplete && $modalStatus !== 'APPROVED') {
+                            $modalGuidanceTitle = 'Required items complete';
+                            $modalGuidanceCopy = 'Your event fees are verified. No further receipt submission is needed.';
+                        } ?>
                         <div class="requirements-overview requirements-overview--<?= escapeHtml($modalOverviewState) ?>">
                             <span class="requirements-overview__icon" aria-hidden="true"><?php if ($modalStatus === 'APPROVED'): ?>&#10003;<?php elseif ($modalStatus === 'RETURNED' || $hasReturnedRequirement): ?>!<?php else: ?>&#8594;<?php endif; ?></span>
                             <div class="requirements-overview__copy"><strong><?= escapeHtml($modalGuidanceTitle) ?></strong><span><?= escapeHtml($modalGuidanceCopy) ?></span></div>
                             <span class="badge <?= escapeHtml(strtolower(str_replace('_', '-', $modalStatus))) ?>"><?= escapeHtml(studentStatusLabel($modalStatus)) ?></span>
                         </div>
+                        <?php if ($station['code'] === 'DEAN' && $evaluationApplicable && in_array($evaluation['status'] ?? '', ['RETURNED', 'REJECTED', 'ERROR'], true)): ?>
+                            <p class="notice warning"><?= escapeHtml((string) ($evaluation['return_reason'] ?? ($evaluation['status'] === 'ERROR' ? 'The previous verification was unavailable. Please submit your screenshots again.' : 'Please check your screenshots and submit corrected proof.'))) ?></p>
+                        <?php endif; ?>
                         <?php if ($modalRequirements === []): ?>
                             <?php if (!in_array($station['code'], ['BOOKSTORE', 'ACCOUNTING', 'LIBRARY'], true)): ?>
                                 <div class="requirements-empty"><span aria-hidden="true">&#10003;</span><div><strong>No document upload is needed</strong><p>This office handles its requirement directly. Check the status above for your next step.</p></div></div>
@@ -606,7 +459,7 @@ $logoutForm = dashboardLogoutForm();
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
-                            <?php if ($station['code'] === 'DEAN' && $evaluationApplicable && $modalStatus !== 'APPROVED' && in_array(($evaluation['status'] ?? 'NOT_SUBMITTED'), ['NOT_SUBMITTED', 'RETURNED', 'REJECTED', 'ERROR'], true)): ?>
+                            <?php if ($canSubmit && $station['code'] === 'DEAN' && $evaluationApplicable && $modalStatus !== 'APPROVED' && in_array(($evaluation['status'] ?? 'NOT_SUBMITTED'), ['NOT_SUBMITTED', 'RETURNED', 'REJECTED', 'ERROR'], true)): ?>
                                 <div class="requirements-section-heading requirements-section-heading--action"><div><span class="requirements-section-heading__step">2</span><div><h3>Submit your proof</h3><p>Upload clear images for Dean review.</p></div></div></div>
                                 <form class="upload-form submission-panel" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/student/evaluation_action.php')) ?>">
                                     <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
@@ -620,12 +473,16 @@ $logoutForm = dashboardLogoutForm();
                         <?php endif; ?>
         <?php if ($station['code'] === 'ACCOUNTING'): ?>
             <div class="accounting-submission-box requirement-action-box">
-                <span class="action-kicker">What to submit</span>
-                <h3>Submit your TLC portal screenshot</h3>
+                <span class="action-kicker"><?= $canSubmit ? 'What to submit' : 'Semester record' ?></span>
+                <h3><?= $canSubmit ? 'Submit your TLC portal screenshot' : 'Accounting assessment' ?></h3>
+                <?php if ($canSubmit): ?>
                 <p>Open the <strong>Assessment of Fees</strong> page in your TLC Student Portal and take one complete, readable screenshot.</p>
                 <div class="submission-checklist" aria-label="Screenshot must show"><strong>Your screenshot must clearly show:</strong><ul><li>Full name</li><li>School year and semester</li><li>Total charges and payments</li><li>Remaining balance</li></ul></div>
+                <?php endif; ?>
                 <?php $accountingSubmissionPending = $accountingReceipt !== false && $accountingReceipt['status'] === 'SCANNED'; ?>
-                <?php if ($modalStatus === 'APPROVED'): ?>
+                <?php if (!$canSubmit): ?>
+                    <p class="notice">Saved Accounting status: <?= escapeHtml(studentStatusLabel($modalStatus)) ?>.</p>
+                <?php elseif ($modalStatus === 'APPROVED'): ?>
                     <p class="notice">Your Accounting clearance has been approved.</p>
                 <?php else: ?>
                     <?php if ($accountingSubmissionPending): ?><p class="notice">Your screenshot has already been submitted and is awaiting manual Accounting review.</p><?php endif; ?>
@@ -645,10 +502,12 @@ $logoutForm = dashboardLogoutForm();
         <?php endif; ?>
                         <?php if ($station['code'] === 'LIBRARY'): ?>
                             <div class="library-card-box requirement-action-box">
-                                <span class="action-kicker">What to submit</span>
-                                <h3>Capture your library card</h3>
+                                <span class="action-kicker"><?= $canSubmit ? 'What to submit' : 'Semester record' ?></span>
+                                <h3><?= $canSubmit ? 'Capture your library card' : 'Library card' ?></h3>
                                 <?php $librarySubmissionStatus = (string) ($libraryCardSubmission['submission_status'] ?? ''); ?>
-                                <?php if ($modalStatus === 'APPROVED' || ($libraryCardSubmission['card_status'] ?? '') === 'VERIFIED'): ?>
+                                <?php if (!$canSubmit): ?>
+                                    <p class="notice">Saved Library status: <?= escapeHtml(studentStatusLabel($modalStatus)) ?>.</p>
+                                <?php elseif ($modalStatus === 'APPROVED' || ($libraryCardSubmission['card_status'] ?? '') === 'VERIFIED'): ?>
                                     <p class="notice">Your library card has been confirmed by the Library.</p>
                                 <?php elseif ($librarySubmissionStatus === 'SUBMITTED'): ?>
                                     <p class="notice">Your captured library card is waiting for Library confirmation.</p>
@@ -668,20 +527,26 @@ $logoutForm = dashboardLogoutForm();
                             </div>
                         <?php endif; ?>
                         <?php if ($station['code'] === 'BOOKSTORE'): ?>
+                            <?php $bookstoreRequirementsComplete = $allModalRequirementsComplete;
+                            $bookstoreIsCleared = $modalStatus === 'APPROVED'
+                                || (($stationStatuses[(int) $station['id']]['status'] ?? '') === 'APPROVED')
+                                || $bookstoreRequirementsComplete; ?>
                             <div class="bookstore-fee-box requirement-action-box">
-                                <span class="action-kicker">What to submit</span>
+                                <span class="action-kicker"><?= $bookstoreIsCleared ? 'Requirement complete' : ($canSubmit ? 'What to submit' : 'Semester record') ?></span>
                                 <h3>Event fee receipts</h3>
-                                <p>Submit one clear receipt image for each event below. Every receipt must be confirmed by the Bookstore before you can be cleared.</p>
-                                <?php if ($bookstoreFees === []): ?>
+                                <?php if ($bookstoreIsCleared): ?>
+                                    <p class="notice">Your required event fees have been verified. No further receipt submission is needed.</p>
+                                <?php elseif ($bookstoreFees === []): ?>
                                     <p class="notice">The Bookstore has not posted any event fees for this semester.</p>
                                 <?php else: ?>
+                                    <p><?= $canSubmit ? 'Submit one clear receipt image for each event below. Every receipt must be confirmed by the Bookstore before you can be cleared.' : 'Saved event fee receipt statuses for this semester.' ?></p>
                                     <div class="bookstore-fee-list">
                                     <?php foreach ($bookstoreFees as $fee): ?>
                                         <article class="bookstore-fee-item">
                                             <div class="bookstore-fee-heading"><div><strong><?= escapeHtml($fee['name']) ?></strong><div class="muted">Required receipt &middot; PHP <?= number_format((float) $fee['amount'], 2) ?></div></div>
                                             <?php if ($fee['payment_status'] === 'PAID'): ?><span class="badge approved">CONFIRMED</span><?php elseif ($fee['submission_status'] === 'SUBMITTED'): ?><span class="badge under-review">AWAITING REVIEW</span><?php elseif ($fee['submission_status'] === 'LOST_REPORTED'): ?><span class="badge under-review">LOST RECEIPT REVIEW</span><?php elseif ($fee['submission_status'] === 'RETURNED'): ?><span class="badge returned">RETURNED</span><?php else: ?><span class="badge not-submitted">NOT SUBMITTED</span><?php endif; ?></div>
                                             <?php if ($fee['submission_status'] === 'RETURNED' && !empty($fee['return_reason'])): ?><p class="notice warning">Action needed: <?= escapeHtml($fee['return_reason']) ?></p><?php endif; ?>
-                                            <?php if ($fee['payment_status'] !== 'PAID' && !in_array($fee['submission_status'] ?? '', ['SUBMITTED', 'LOST_REPORTED'], true)): ?>
+                                            <?php if ($canSubmit && $fee['payment_status'] !== 'PAID' && !in_array($fee['submission_status'] ?? '', ['SUBMITTED', 'LOST_REPORTED'], true)): ?>
                                                 <div class="bookstore-receipt-actions">
                                                     <form class="upload-form submission-panel" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/student/bookstore_receipt_action.php')) ?>">
                                                         <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="student_fee_id" value="<?= (int) $fee['student_fee_id'] ?>">
@@ -694,7 +559,7 @@ $logoutForm = dashboardLogoutForm();
                                                     </form>
                                                 </div>
                                             <?php else: ?>
-                                                <?php if ($fee['payment_status'] !== 'PAID'): ?><p class="muted">Submitted <?= escapeHtml(date('M j, Y g:i A', strtotime((string) $fee['submitted_at']))) ?>. Please wait for Bookstore confirmation.</p><?php endif; ?>
+                                                <?php if ($fee['payment_status'] !== 'PAID' && !empty($fee['submitted_at'])): ?><p class="muted">Submitted <?= escapeHtml(date('M j, Y g:i A', strtotime((string) $fee['submitted_at']))) ?>.<?= $canSubmit ? ' Please wait for Bookstore confirmation.' : '' ?></p><?php endif; ?>
                                             <?php endif; ?>
                                         </article>
                                     <?php endforeach; ?>
@@ -702,7 +567,7 @@ $logoutForm = dashboardLogoutForm();
                                 <?php endif; ?>
                             </div>
                         <?php endif; ?>
-                        <?php if ($station['code'] === 'CLINIC' && $medicalStatus === 'RETURNED'): ?>
+                        <?php if ($canSubmit && $station['code'] === 'CLINIC' && $medicalStatus === 'RETURNED'): ?>
                             <div class="medical-schedule-box requirement-action-box">
                                 <span class="action-kicker">Action required</span>
                                 <h3>Schedule your medical appointment</h3>
@@ -740,31 +605,25 @@ $logoutForm = dashboardLogoutForm();
             <?php endforeach; ?>
         <?php endif; ?>
 
-        <?php if ($selectedStation !== null && $selectedStation['code'] === 'DEAN' && $clearance !== false && $detailStatus !== 'LOCKED' && $evaluationApplicable): ?>
-            <section class="panel">
-                <h2>Faculty Evaluation Verification</h2>
-                <?php $evaluationStatus = $evaluation === false ? 'NOT_SUBMITTED' : $evaluation['status']; ?>
-                <p><strong>Status:</strong> <span class="badge <?= escapeHtml(strtolower(str_replace('_', '-', $evaluationStatus))) ?>"><?= escapeHtml(studentStatusLabel($evaluationStatus)) ?></span></p>
-                <?php if ($evaluationStatus === 'VERIFIED'): ?>
-                    <p class="notice">Your Faculty Evaluation completion is verified and ready for Dean review.</p>
-                <?php elseif ($detailStatus !== 'APPROVED' && in_array($evaluationStatus, ['NOT_SUBMITTED', 'RETURNED', 'REJECTED', 'ERROR'], true)): ?>
-                    <?php if ($evaluationStatus === 'RETURNED'): ?><p class="notice warning"><?= escapeHtml($evaluation['return_reason'] ?? 'Your screenshots need another submission.') ?></p><?php endif; ?>
-                    <?php if ($evaluationStatus === 'ERROR'): ?><p class="notice warning">The previous verification attempt was unavailable. The screenshot was not retained.</p><?php endif; ?>
-                    <form class="upload-form" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/student/evaluation_action.php')) ?>">
-                        <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
-                        <label for="evaluation_proofs"><strong>Evaluation completion screenshots</strong></label>
-                        <input id="evaluation_proofs" name="evaluation_proofs[]" type="file" accept="image/jpeg,image/png,image/webp" multiple required onchange="if(this.files.length>3){alert('Choose no more than 3 screenshots.');this.value=''}">
-                        <p class="muted">Upload 1 to 3 JPG, PNG, or WebP screenshots (8 MB each). Your name and student number are hidden from the CCS Dean during review.</p>
-                        <button class="primary-button" type="submit">Submit for Dean Review</button>
-                    </form>
-                <?php endif; ?>
-            </section>
-        <?php endif; ?>
-
-
-
     </main>
-    <script src="<?= escapeHtml(applicationUrl('/assets/js/student-dashboard.js')) ?>"></script>
+    <?php if ($isEnrolled && !$isHistoricalRecord): ?>
+        <div class="portal-scanner-modal" data-attendance-scanner-modal hidden aria-hidden="true">
+            <div class="portal-scanner-modal__backdrop" data-close-attendance-scanner></div>
+            <section class="portal-scanner-modal__dialog" role="dialog" aria-modal="true" aria-label="ClearGo Attendance Scanner" tabindex="-1">
+                <button class="portal-scanner-modal__close" type="button" data-close-attendance-scanner aria-label="Close attendance scanner">&times;</button>
+                <iframe title="ClearGo Attendance Scanner" allow="camera" data-scanner-src="<?= escapeHtml(applicationUrl('/student/attendance_scanner.php?embed=1')) ?>"></iframe>
+            </section>
+        </div>
+    <?php endif; ?>
+    <div class="portal-password-modal" data-password-modal hidden aria-hidden="true">
+        <div class="portal-password-modal__backdrop" data-close-password-modal></div>
+        <section class="portal-password-modal__dialog" role="dialog" aria-modal="true" aria-label="Change password" tabindex="-1">
+            <button class="portal-password-modal__close" type="button" data-close-password-modal aria-label="Close change password">&times;</button>
+            <iframe title="Change password" data-password-src="<?= escapeHtml(applicationUrl('/student/password.php?embed=1')) ?>"></iframe>
+        </section>
+    </div>
+    <nav class="portal-mobile-nav" aria-label="Mobile navigation"><?php foreach ($dashboardNavigation as $viewName => [$icon, $label]): ?><a href="#<?= $viewName ?>" data-dashboard-link="<?= $viewName ?>" <?= $viewName === 'overview' ? 'aria-current="page"' : '' ?>><?= studentDashboardIcon($icon) ?><span><?= $label ?></span></a><?php endforeach; ?></nav>
+    <script src="<?= escapeHtml(applicationUrl('/assets/js/student-dashboard.js')) ?>?v=<?= escapeHtml($portalScriptVersion) ?>"></script>
     <script src="<?= escapeHtml(applicationUrl('/assets/js/library-card-camera.js')) ?>"></script>
 </body>
 

@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0b2545">
+    <title>My Dashboard | ClearGo</title>
+    <link rel="stylesheet" href="/assets/css/student-page.css">
+    <link rel="stylesheet" href="/assets/css/student-dashboard.css">
+    <link rel="stylesheet" href="/assets/css/library-card-camera.css">
+    <link rel="stylesheet" href="/assets/css/student-portal.css?v=1791876017">
+</head>
+<body class="student-dashboard student-portal" data-initial-view="overview" data-initial-modal="">
+    <a class="portal-skip-link" href="#dashboard-content">Skip to content</a>
+    <header class="student-header">
+        <div class="student-topbar">
+            <a class="student-brand" href="/student/dashboard.php">
+                <img src="/assets/the-lewis-college-logo-blue.png?v=1791874422" alt="The Lewis College logo">
+                <span class="student-brand-copy"><strong>ClearGo<span class="brand-dot">.</span></strong><small>Student portal</small></span>
+            </a>
+            <nav class="portal-desktop-nav" aria-label="Main navigation">
+                                    <a href="#overview" data-dashboard-link="overview" aria-current="page"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></a>
+                                    <a href="#clearance" data-dashboard-link="clearance" ><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg><span>Clearance</span></a>
+                                    <a href="#attendance" data-dashboard-link="attendance" ><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 5h2m4 0h2"/></svg><span>Attendance</span></a>
+                                    <a href="#account" data-dashboard-link="account" ><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><span>Account</span></a>
+                            </nav>
+            <div class="header-actions">
+                <div class="notification-wrap" data-notification-endpoint="" data-csrf-token="test" data-latest-notification-id="0">
+                    <button class="notification-button" id="notificationButton" type="button" aria-label="Notifications" aria-controls="notificationBox" aria-expanded="false">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            </button>
+                    <div class="notification-box" id="notificationBox" hidden>
+                        <h2>Notifications</h2>
+                        <p class="notification-empty muted">You're all caught up.</p><ul class="notification-list"></ul>                    </div>
+                </div>
+                <a class="portal-avatar" href="#account" data-dashboard-link="account" aria-label="Open your account">TS</a>
+            </div>
+        </div>
+    </header>
+    <main class="student-main" id="dashboard-content">
+                <div class="portal-archive-notice"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Saved semester record. Submissions are closed.</span></div>
+        <section class="portal-view" id="overview" data-dashboard-view="overview" aria-label="Dashboard overview" tabindex="-1" >
+            <div class="portal-page-heading">
+                <div><p class="portal-eyebrow">YOUR STUDENT SPACE</p><h1>Hi, Test<span class="greeting-dot">.</span></h1><p class="portal-greeting-meta">BSCS <span aria-hidden="true">&middot;</span> Year 2 <span aria-hidden="true">&middot;</span> CCS</p></div>
+                                    <div class="portal-period-form"><span class="portal-period-label">Viewing semester &middot; Archive</span><div class="portal-period-select portal-period-select--static"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 5h2m4 0h2"/></svg><span class="portal-period-value">First Semester A.Y. 2026-2027</span></div></div>
+                            </div>
+            <div class="portal-overview-grid">
+                <section class="portal-progress-card">
+                    <div class="portal-progress-heading"><span class="portal-card-eyebrow">MY CLEARANCE</span><span class="portal-live-label"><i aria-hidden="true"></i>Semester archive</span></div>
+                    <div class="portal-progress-content">
+                        <div><h2>Your semester, saved.</h2><p>Your clearance progress for this semester.</p><div class="portal-count"><strong>1</strong><span>/ 9 offices cleared</span></div><span class="sr-only">1 of 9 stations cleared</span></div>
+                        <div class="portal-progress-ring" style="--progress: 11" role="progressbar" aria-label="Clearance progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="11"><span><strong>11<small>%</small></strong><em>complete</em></span></div>
+                    </div>
+                    <div class="portal-progress-footer"><span><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg>In progress</span><a href="#clearance" data-dashboard-link="clearance">View clearance <svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></a></div>
+                </section>
+                <section class="portal-next-card ">
+                    <span class="portal-card-eyebrow">LOOKING BACK</span>
+                    <span class="portal-next-icon"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+                                            <h2>Your record is here.</h2><p>Check your saved office decisions and requirements.</p><a class="portal-action-button" href="#clearance" data-dashboard-link="clearance">View saved record <svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></a>
+                                    </section>
+            </div>
+                        <div class="portal-section-title portal-quick-title"><div><span class="portal-card-eyebrow">A PLACE FOR EVERYTHING</span><h2>Quick access</h2></div></div>
+            <div class="portal-shortcut-grid">
+                <a class="portal-shortcut" href="#clearance" data-dashboard-link="clearance"><span class="portal-shortcut-icon tone-teal"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg></span><span><strong>Clearance offices</strong><small>1 cleared</small></span><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></a>
+                <a class="portal-shortcut" href="#attendance" data-dashboard-link="attendance"><span class="portal-shortcut-icon tone-blue"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 5h2m4 0h2"/></svg></span><span><strong>Event attendance</strong><small>Events & QR scanner</small></span><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></a>
+                <a class="portal-shortcut" href="#account" data-dashboard-link="account"><span class="portal-shortcut-icon tone-lilac"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg></span><span><strong>My account</strong><small>TEST-10</small></span><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></a>
+            </div>
+            <div class="portal-footer-note"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 6v2"/></svg><span>Your progress is saved to your student account.</span><span class="portal-footer-brand">ClearGo <span aria-hidden="true">&middot;</span> The Lewis College</span></div>
+        </section>
+
+        <section class="portal-view" id="clearance" data-dashboard-view="clearance" aria-labelledby="clearance-title" tabindex="-1" hidden>
+            <div class="portal-section-title"><div><span class="portal-card-eyebrow">SEMESTER ARCHIVE</span><h2 id="clearance-title">Clearance offices</h2><p>Tap an office to see its requirements.</p></div><span class="portal-summary-pill"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>1 / 9 cleared</span></div>
+                            <div class="portal-clearance-toolbar"><div class="portal-status-key"><span><i class="key-cleared"></i>Cleared</span><span><i class="key-ready"></i>Ready</span><span><i class="key-upcoming"></i>Upcoming</span></div><div class="portal-filter-group" role="group" aria-label="Filter clearance offices"><button type="button" class="is-active" data-station-filter="all" aria-pressed="true">All offices</button><button type="button" data-station-filter="attention" aria-pressed="false">To do</button><button type="button" data-station-filter="cleared" aria-pressed="false">Cleared</button></div></div>
+                <ol class="portal-station-grid">
+                                                                    <li class="portal-station-card is-ready" data-station-status="PENDING">
+                            <div class="portal-station-top"><span class="portal-station-icon"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-5h6v5M9 8h1m4 0h1M9 12h1m4 0h1"/></svg></span><span class="portal-office-step">Step 1</span></div>
+                            <h3 title="DEAN">Dean</h3>
+                            <div class="portal-station-bottom"><span class="portal-station-status"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg>Ready</span><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></div>
+                            <button class="portal-station-open" type="button" data-requirements-modal="requirements-modal-1" aria-label="View Dean requirements"><span class="sr-only">View requirements</span></button>                        </li>
+                                                                    <li class="portal-station-card is-cleared" data-station-status="APPROVED">
+                            <div class="portal-station-top"><span class="portal-station-icon"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3M16 5a3 3 0 0 1 0 6m3 10v-3a6 6 0 0 0-2-4"/></svg></span><span class="portal-office-step">Step 2</span></div>
+                            <h3 title="ORGANIZATION">Organization</h3>
+                            <div class="portal-station-bottom"><span class="portal-station-status"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Cleared</span><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></div>
+                            <button class="portal-station-open" type="button" data-requirements-modal="requirements-modal-2" aria-label="View Organization requirements"><span class="sr-only">View requirements</span></button>                        </li>
+                                                                    <li class="portal-station-card is-ready" data-station-status="PENDING">
+                            <div class="portal-station-top"><span class="portal-station-icon"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3M16 5a3 3 0 0 1 0 6m3 10v-3a6 6 0 0 0-2-4"/></svg></span><span class="portal-office-step">Step 3</span></div>
+                            <h3 title="SASO">Student Affairs</h3>
+                            <div class="portal-station-bottom"><span class="portal-station-status"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg>Ready</span><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></div>
+                            <button class="portal-station-open" type="button" data-requirements-modal="requirements-modal-3" aria-label="View Student Affairs requirements"><span class="sr-only">View requirements</span></button>                        </li>
+                                                                    <li class="portal-station-card is-ready" data-station-status="PENDING">
+                            <div class="portal-station-top"><span class="portal-station-icon"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg></span><span class="portal-office-step">Step 4</span></div>
+                            <h3 title="FACILITIES">Facilities</h3>
+                            <div class="portal-station-bottom"><span class="portal-station-status"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg>Ready</span><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></div>
+                            <button class="portal-station-open" type="button" data-requirements-modal="requirements-modal-4" aria-label="View Facilities requirements"><span class="sr-only">View requirements</span></button>                        </li>
+                                                                    <li class="portal-station-card is-ready" data-station-status="PENDING">
+                            <div class="portal-station-top"><span class="portal-station-icon"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/></svg></span><span class="portal-office-step">Step 5</span></div>
+                            <h3 title="COMLAB">Computer Lab</h3>
+                            <div class="portal-station-bottom"><span class="portal-station-status"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg>Ready</span><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></div>
+                            <button class="portal-station-open" type="button" data-requirements-modal="requirements-modal-5" aria-label="View Computer Lab requirements"><span class="sr-only">View requirements</span></button>                        </li>
+                                                                    <li class="portal-station-card is-ready" data-station-status="PENDING">
+                            <div class="portal-station-top"><span class="portal-station-icon"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 8V5H5a2 2 0 0 0 0 4h16v11H5a2 2 0 0 1-2-2V7m18 5h-6v4h6"/></svg></span><span class="portal-office-step">Step 6</span></div>
+                            <h3 title="ACCOUNTING">Accounting</h3>
+                            <div class="portal-station-bottom"><span class="portal-station-status"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg>Ready</span><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></div>
+                            <button class="portal-station-open" type="button" data-requirements-modal="requirements-modal-6" aria-label="View Accounting requirements"><span class="sr-only">View requirements</span></button>                        </li>
+                                                                    <li class="portal-station-card is-ready" data-station-status="PENDING">
+                            <div class="portal-station-top"><span class="portal-station-icon"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6v15M3 4c4-1 7 0 9 2 2-2 5-3 9-2v15c-4-1-7 0-9 2-2-2-5-3-9-2z"/></svg></span><span class="portal-office-step">Step 7</span></div>
+                            <h3 title="LIBRARY">Library</h3>
+                            <div class="portal-station-bottom"><span class="portal-station-status"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg>Ready</span><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></div>
+                            <button class="portal-station-open" type="button" data-requirements-modal="requirements-modal-7" aria-label="View Library requirements"><span class="sr-only">View requirements</span></button>                        </li>
+                                                                    <li class="portal-station-card is-ready" data-station-status="PENDING">
+                            <div class="portal-station-top"><span class="portal-station-icon"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6v15M3 4c4-1 7 0 9 2 2-2 5-3 9-2v15c-4-1-7 0-9 2-2-2-5-3-9-2z"/></svg></span><span class="portal-office-step">Step 8</span></div>
+                            <h3 title="BOOKSTORE">Bookstore</h3>
+                            <div class="portal-station-bottom"><span class="portal-station-status"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg>Ready</span><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></div>
+                            <button class="portal-station-open" type="button" data-requirements-modal="requirements-modal-8" aria-label="View Bookstore requirements"><span class="sr-only">View requirements</span></button>                        </li>
+                                                                    <li class="portal-station-card is-ready" data-station-status="PENDING">
+                            <div class="portal-station-top"><span class="portal-station-icon"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 5a5 5 0 0 0-8 1 5 5 0 0 0-8-1c-4 5 2 10 8 15 6-5 12-10 8-15Z"/></svg></span><span class="portal-office-step">Step 9</span></div>
+                            <h3 title="CLINIC">Clinic</h3>
+                            <div class="portal-station-bottom"><span class="portal-station-status"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg>Ready</span><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></div>
+                            <button class="portal-station-open" type="button" data-requirements-modal="requirements-modal-9" aria-label="View Clinic requirements"><span class="sr-only">View requirements</span></button>                        </li>
+                                    </ol>
+                <p class="portal-filter-empty" data-filter-empty role="status" hidden>No offices in this filter.</p>
+                <details class="portal-record-details"><summary><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg>Clearance reference<svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></summary><p>FIRST-SEM-RECORD</p></details>
+                    </section>
+
+        <section class="portal-view" id="attendance" data-dashboard-view="attendance" aria-labelledby="attendance-title" tabindex="-1" hidden>
+            <div class="portal-section-title"><div><span class="portal-card-eyebrow">SHOW UP. CHECK IN.</span><h2 id="attendance-title">Event attendance</h2><p>Your saved attendance for this semester.</p></div><span class="portal-summary-pill"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 5h2m4 0h2"/></svg>0 / 0 attended</span></div>
+                        <div class="portal-empty-state"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 5h2m4 0h2"/></svg><h3>No events listed yet</h3><p>Required organization events will appear here.</p></div>        </section>
+
+        <section class="portal-view" id="account" data-dashboard-view="account" aria-labelledby="account-title" tabindex="-1" hidden>
+            <div class="portal-section-title"><div><span class="portal-card-eyebrow">YOUR STUDENT IDENTITY</span><h2 id="account-title">My account</h2></div></div>
+            <div class="portal-account-layout"><section class="portal-account-card"><div class="portal-account-banner"><span class="portal-profile-avatar">TS</span><span class="portal-student-label">STUDENT</span></div><div class="portal-account-info"><h3>Test Student</h3><p>TEST-10</p><dl><div><dt>Program</dt><dd>BSCS</dd></div><div><dt>Year & section</dt><dd>Year 2</dd></div><div><dt>College</dt><dd>Computer Studies</dd></div><div><dt>School email</dt><dd>test@thelewiscollege.edu.ph</dd></div></dl></div></section><section class="portal-account-settings"><h3>Account settings</h3><a class="portal-settings-row" href="/student/password.php" data-open-password-modal><span class="portal-shortcut-icon tone-blue"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="5"/><path d="m12 12 9 9m-6-6 3-3m0 6 3-3"/></svg></span><span><strong>Change password</strong><small>Keep your account secure</small></span><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></a><div class="portal-signout"><p>Finished for now?</p><form class="logout-form" method="post" action="/logout.php"><button type="submit">Log out</button></form></div><p class="portal-account-help">Need to update your student details?<br>Contact the Registrar.</p></section></div>
+        </section>
+
+                                                                    <div class="requirements-modal" id="requirements-modal-1" hidden aria-hidden="true">
+                    <div class="requirements-modal__backdrop" data-close-requirements-modal></div>
+                    <section class="requirements-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="requirements-modal-title-1" aria-describedby="requirements-modal-help-1" tabindex="-1">
+                        <div class="requirements-modal__header">
+                            <div class="requirements-modal__heading">
+                                <span class="requirements-modal__eyebrow">Clearance requirements</span>
+                                <h2 id="requirements-modal-title-1">DEAN Requirements</h2>
+                                <p id="requirements-modal-help-1">Review the saved requirements and decisions for this semester.</p>
+                            </div>
+                            <button class="requirements-modal__close" type="button" data-close-requirements-modal aria-label="Close requirements">&times;</button>
+                        </div>
+                        <div class="requirements-modal__content">
+                                                <div class="requirements-overview requirements-overview--pending">
+                            <span class="requirements-overview__icon" aria-hidden="true">&#8594;</span>
+                            <div class="requirements-overview__copy"><strong>Saved semester status</strong><span>These are the recorded decisions for this semester. Submissions are closed.</span></div>
+                            <span class="badge pending">PENDING</span>
+                        </div>
+                                                                            <div class="requirements-section-heading">
+                                <div><span class="requirements-section-heading__step">1</span><div><h3>Required items</h3><p>Make sure every item is complete.</p></div></div>
+                                <span class="requirements-count">0 of 1 complete</span>
+                            </div>
+                            <ul class="requirements requirements-checklist">
+                                                                                                        <li class="requirement-card is-pending">
+                                        <span class="requirement-card__number" aria-hidden="true">1</span>
+                                        <div class="requirement-card__content">
+                                            <div class="requirement-card__heading"><strong>Saved requirement</strong><span class="badge not-started">NOT STARTED</span></div>
+                                                                                                                                </div>
+                                    </li>
+                                                            </ul>
+                                                                                                                                                            </div>
+                    </section>
+                </div>
+                                                            <div class="requirements-modal" id="requirements-modal-2" hidden aria-hidden="true">
+                    <div class="requirements-modal__backdrop" data-close-requirements-modal></div>
+                    <section class="requirements-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="requirements-modal-title-2" aria-describedby="requirements-modal-help-2" tabindex="-1">
+                        <div class="requirements-modal__header">
+                            <div class="requirements-modal__heading">
+                                <span class="requirements-modal__eyebrow">Clearance requirements</span>
+                                <h2 id="requirements-modal-title-2">ORGANIZATION Requirements</h2>
+                                <p id="requirements-modal-help-2">Review the saved requirements and decisions for this semester.</p>
+                            </div>
+                            <button class="requirements-modal__close" type="button" data-close-requirements-modal aria-label="Close requirements">&times;</button>
+                        </div>
+                        <div class="requirements-modal__content">
+                                                <div class="requirements-overview requirements-overview--approved">
+                            <span class="requirements-overview__icon" aria-hidden="true">&#10003;</span>
+                            <div class="requirements-overview__copy"><strong>Saved semester status</strong><span>These are the recorded decisions for this semester. Submissions are closed.</span></div>
+                            <span class="badge approved">CLEARED</span>
+                        </div>
+                                                                            <div class="requirements-section-heading">
+                                <div><span class="requirements-section-heading__step">1</span><div><h3>Required items</h3><p>Make sure every item is complete.</p></div></div>
+                                <span class="requirements-count">0 of 1 complete</span>
+                            </div>
+                            <ul class="requirements requirements-checklist">
+                                                                                                        <li class="requirement-card is-pending">
+                                        <span class="requirement-card__number" aria-hidden="true">1</span>
+                                        <div class="requirement-card__content">
+                                            <div class="requirement-card__heading"><strong>Saved requirement</strong><span class="badge not-started">NOT STARTED</span></div>
+                                                                                                                                </div>
+                                    </li>
+                                                            </ul>
+                                                                                                                                                            </div>
+                    </section>
+                </div>
+                                                            <div class="requirements-modal" id="requirements-modal-3" hidden aria-hidden="true">
+                    <div class="requirements-modal__backdrop" data-close-requirements-modal></div>
+                    <section class="requirements-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="requirements-modal-title-3" aria-describedby="requirements-modal-help-3" tabindex="-1">
+                        <div class="requirements-modal__header">
+                            <div class="requirements-modal__heading">
+                                <span class="requirements-modal__eyebrow">Clearance requirements</span>
+                                <h2 id="requirements-modal-title-3">SASO Requirements</h2>
+                                <p id="requirements-modal-help-3">Review the saved requirements and decisions for this semester.</p>
+                            </div>
+                            <button class="requirements-modal__close" type="button" data-close-requirements-modal aria-label="Close requirements">&times;</button>
+                        </div>
+                        <div class="requirements-modal__content">
+                                                <div class="requirements-overview requirements-overview--pending">
+                            <span class="requirements-overview__icon" aria-hidden="true">&#8594;</span>
+                            <div class="requirements-overview__copy"><strong>Saved semester status</strong><span>These are the recorded decisions for this semester. Submissions are closed.</span></div>
+                            <span class="badge pending">PENDING</span>
+                        </div>
+                                                                            <div class="requirements-section-heading">
+                                <div><span class="requirements-section-heading__step">1</span><div><h3>Required items</h3><p>Make sure every item is complete.</p></div></div>
+                                <span class="requirements-count">0 of 1 complete</span>
+                            </div>
+                            <ul class="requirements requirements-checklist">
+                                                                                                        <li class="requirement-card is-pending">
+                                        <span class="requirement-card__number" aria-hidden="true">1</span>
+                                        <div class="requirement-card__content">
+                                            <div class="requirement-card__heading"><strong>Saved requirement</strong><span class="badge not-started">NOT STARTED</span></div>
+                                                                                                                                </div>
+                                    </li>
+                                                            </ul>
+                                                                                                                                                            </div>
+                    </section>
+                </div>
+                                                            <div class="requirements-modal" id="requirements-modal-4" hidden aria-hidden="true">
+                    <div class="requirements-modal__backdrop" data-close-requirements-modal></div>
+                    <section class="requirements-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="requirements-modal-title-4" aria-describedby="requirements-modal-help-4" tabindex="-1">
+                        <div class="requirements-modal__header">
+                            <div class="requirements-modal__heading">
+                                <span class="requirements-modal__eyebrow">Clearance requirements</span>
+                                <h2 id="requirements-modal-title-4">FACILITIES Requirements</h2>
+                                <p id="requirements-modal-help-4">Review the saved requirements and decisions for this semester.</p>
+                            </div>
+                            <button class="requirements-modal__close" type="button" data-close-requirements-modal aria-label="Close requirements">&times;</button>
+                        </div>
+                        <div class="requirements-modal__content">
+                                                <div class="requirements-overview requirements-overview--pending">
+                            <span class="requirements-overview__icon" aria-hidden="true">&#8594;</span>
+                            <div class="requirements-overview__copy"><strong>Saved semester status</strong><span>These are the recorded decisions for this semester. Submissions are closed.</span></div>
+                            <span class="badge pending">PENDING</span>
+                        </div>
+                                                                            <div class="requirements-section-heading">
+                                <div><span class="requirements-section-heading__step">1</span><div><h3>Required items</h3><p>Make sure every item is complete.</p></div></div>
+                                <span class="requirements-count">0 of 1 complete</span>
+                            </div>
+                            <ul class="requirements requirements-checklist">
+                                                                                                        <li class="requirement-card is-pending">
+                                        <span class="requirement-card__number" aria-hidden="true">1</span>
+                                        <div class="requirement-card__content">
+                                            <div class="requirement-card__heading"><strong>Saved requirement</strong><span class="badge not-started">NOT STARTED</span></div>
+                                                                                                                                </div>
+                                    </li>
+                                                            </ul>
+                                                                                                                                                            </div>
+                    </section>
+                </div>
+                                                            <div class="requirements-modal" id="requirements-modal-5" hidden aria-hidden="true">
+                    <div class="requirements-modal__backdrop" data-close-requirements-modal></div>
+                    <section class="requirements-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="requirements-modal-title-5" aria-describedby="requirements-modal-help-5" tabindex="-1">
+                        <div class="requirements-modal__header">
+                            <div class="requirements-modal__heading">
+                                <span class="requirements-modal__eyebrow">Clearance requirements</span>
+                                <h2 id="requirements-modal-title-5">COMLAB Requirements</h2>
+                                <p id="requirements-modal-help-5">Review the saved requirements and decisions for this semester.</p>
+                            </div>
+                            <button class="requirements-modal__close" type="button" data-close-requirements-modal aria-label="Close requirements">&times;</button>
+                        </div>
+                        <div class="requirements-modal__content">
+                                                <div class="requirements-overview requirements-overview--pending">
+                            <span class="requirements-overview__icon" aria-hidden="true">&#8594;</span>
+                            <div class="requirements-overview__copy"><strong>Saved semester status</strong><span>These are the recorded decisions for this semester. Submissions are closed.</span></div>
+                            <span class="badge pending">PENDING</span>
+                        </div>
+                                                                            <div class="requirements-section-heading">
+                                <div><span class="requirements-section-heading__step">1</span><div><h3>Required items</h3><p>Make sure every item is complete.</p></div></div>
+                                <span class="requirements-count">0 of 1 complete</span>
+                            </div>
+                            <ul class="requirements requirements-checklist">
+                                                                                                        <li class="requirement-card is-pending">
+                                        <span class="requirement-card__number" aria-hidden="true">1</span>
+                                        <div class="requirement-card__content">
+                                            <div class="requirement-card__heading"><strong>Saved requirement</strong><span class="badge not-started">NOT STARTED</span></div>
+                                                                                                                                </div>
+                                    </li>
+                                                            </ul>
+                                                                                                                                                            </div>
+                    </section>
+                </div>
+                                                            <div class="requirements-modal" id="requirements-modal-6" hidden aria-hidden="true">
+                    <div class="requirements-modal__backdrop" data-close-requirements-modal></div>
+                    <section class="requirements-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="requirements-modal-title-6" aria-describedby="requirements-modal-help-6" tabindex="-1">
+                        <div class="requirements-modal__header">
+                            <div class="requirements-modal__heading">
+                                <span class="requirements-modal__eyebrow">Clearance requirements</span>
+                                <h2 id="requirements-modal-title-6">ACCOUNTING Requirements</h2>
+                                <p id="requirements-modal-help-6">Review the saved requirements and decisions for this semester.</p>
+                            </div>
+                            <button class="requirements-modal__close" type="button" data-close-requirements-modal aria-label="Close requirements">&times;</button>
+                        </div>
+                        <div class="requirements-modal__content">
+                                                <div class="requirements-overview requirements-overview--pending">
+                            <span class="requirements-overview__icon" aria-hidden="true">&#8594;</span>
+                            <div class="requirements-overview__copy"><strong>Saved semester status</strong><span>These are the recorded decisions for this semester. Submissions are closed.</span></div>
+                            <span class="badge pending">PENDING</span>
+                        </div>
+                                                                            <div class="requirements-section-heading">
+                                <div><span class="requirements-section-heading__step">1</span><div><h3>Required items</h3><p>Make sure every item is complete.</p></div></div>
+                                <span class="requirements-count">0 of 1 complete</span>
+                            </div>
+                            <ul class="requirements requirements-checklist">
+                                                                                                        <li class="requirement-card is-pending">
+                                        <span class="requirement-card__number" aria-hidden="true">1</span>
+                                        <div class="requirement-card__content">
+                                            <div class="requirement-card__heading"><strong>Saved requirement</strong><span class="badge not-started">NOT STARTED</span></div>
+                                                                                                                                </div>
+                                    </li>
+                                                            </ul>
+                                                                        <div class="accounting-submission-box requirement-action-box">
+                <span class="action-kicker">Semester record</span>
+                <h3>Accounting assessment</h3>
+                                                                    <p class="notice">Saved Accounting status: PENDING.</p>
+                            </div>
+                                                                                                        </div>
+                    </section>
+                </div>
+                                                            <div class="requirements-modal" id="requirements-modal-7" hidden aria-hidden="true">
+                    <div class="requirements-modal__backdrop" data-close-requirements-modal></div>
+                    <section class="requirements-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="requirements-modal-title-7" aria-describedby="requirements-modal-help-7" tabindex="-1">
+                        <div class="requirements-modal__header">
+                            <div class="requirements-modal__heading">
+                                <span class="requirements-modal__eyebrow">Clearance requirements</span>
+                                <h2 id="requirements-modal-title-7">LIBRARY Requirements</h2>
+                                <p id="requirements-modal-help-7">Review the saved requirements and decisions for this semester.</p>
+                            </div>
+                            <button class="requirements-modal__close" type="button" data-close-requirements-modal aria-label="Close requirements">&times;</button>
+                        </div>
+                        <div class="requirements-modal__content">
+                                                <div class="requirements-overview requirements-overview--pending">
+                            <span class="requirements-overview__icon" aria-hidden="true">&#8594;</span>
+                            <div class="requirements-overview__copy"><strong>Saved semester status</strong><span>These are the recorded decisions for this semester. Submissions are closed.</span></div>
+                            <span class="badge pending">PENDING</span>
+                        </div>
+                                                                            <div class="requirements-section-heading">
+                                <div><span class="requirements-section-heading__step">1</span><div><h3>Required items</h3><p>Make sure every item is complete.</p></div></div>
+                                <span class="requirements-count">0 of 1 complete</span>
+                            </div>
+                            <ul class="requirements requirements-checklist">
+                                                                                                        <li class="requirement-card is-pending">
+                                        <span class="requirement-card__number" aria-hidden="true">1</span>
+                                        <div class="requirement-card__content">
+                                            <div class="requirement-card__heading"><strong>Saved requirement</strong><span class="badge not-started">NOT STARTED</span></div>
+                                                                                                                                </div>
+                                    </li>
+                                                            </ul>
+                                                                                                                <div class="library-card-box requirement-action-box">
+                                <span class="action-kicker">Semester record</span>
+                                <h3>Library card</h3>
+                                                                                                    <p class="notice">Saved Library status: PENDING.</p>
+                                                            </div>
+                                                                                                </div>
+                    </section>
+                </div>
+                                                            <div class="requirements-modal" id="requirements-modal-8" hidden aria-hidden="true">
+                    <div class="requirements-modal__backdrop" data-close-requirements-modal></div>
+                    <section class="requirements-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="requirements-modal-title-8" aria-describedby="requirements-modal-help-8" tabindex="-1">
+                        <div class="requirements-modal__header">
+                            <div class="requirements-modal__heading">
+                                <span class="requirements-modal__eyebrow">Clearance requirements</span>
+                                <h2 id="requirements-modal-title-8">BOOKSTORE Requirements</h2>
+                                <p id="requirements-modal-help-8">Review the saved requirements and decisions for this semester.</p>
+                            </div>
+                            <button class="requirements-modal__close" type="button" data-close-requirements-modal aria-label="Close requirements">&times;</button>
+                        </div>
+                        <div class="requirements-modal__content">
+                                                <div class="requirements-overview requirements-overview--pending">
+                            <span class="requirements-overview__icon" aria-hidden="true">&#8594;</span>
+                            <div class="requirements-overview__copy"><strong>Saved semester status</strong><span>These are the recorded decisions for this semester. Submissions are closed.</span></div>
+                            <span class="badge pending">PENDING</span>
+                        </div>
+                                                                            <div class="requirements-section-heading">
+                                <div><span class="requirements-section-heading__step">1</span><div><h3>Required items</h3><p>Make sure every item is complete.</p></div></div>
+                                <span class="requirements-count">0 of 1 complete</span>
+                            </div>
+                            <ul class="requirements requirements-checklist">
+                                                                                                        <li class="requirement-card is-pending">
+                                        <span class="requirement-card__number" aria-hidden="true">1</span>
+                                        <div class="requirement-card__content">
+                                            <div class="requirement-card__heading"><strong>Saved requirement</strong><span class="badge not-started">NOT STARTED</span></div>
+                                                                                                                                </div>
+                                    </li>
+                                                            </ul>
+                                                                                                                                                                    <div class="bookstore-fee-box requirement-action-box">
+                                <span class="action-kicker">Semester record</span>
+                                <h3>Event fee receipts</h3>
+                                                                    <p>Saved event fee receipt statuses for this semester.</p>
+                                    <div class="bookstore-fee-list">
+                                                                            <article class="bookstore-fee-item">
+                                            <div class="bookstore-fee-heading"><div><strong>Semester event</strong><div class="muted">Required receipt &middot; PHP 100.00</div></div>
+                                            <span class="badge not-submitted">NOT SUBMITTED</span></div>
+                                                                                                                                                                                                                            </article>
+                                                                        </div>
+                                                            </div>
+                                                                        </div>
+                    </section>
+                </div>
+                                                            <div class="requirements-modal" id="requirements-modal-9" hidden aria-hidden="true">
+                    <div class="requirements-modal__backdrop" data-close-requirements-modal></div>
+                    <section class="requirements-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="requirements-modal-title-9" aria-describedby="requirements-modal-help-9" tabindex="-1">
+                        <div class="requirements-modal__header">
+                            <div class="requirements-modal__heading">
+                                <span class="requirements-modal__eyebrow">Clearance requirements</span>
+                                <h2 id="requirements-modal-title-9">CLINIC Requirements</h2>
+                                <p id="requirements-modal-help-9">Review the saved requirements and decisions for this semester.</p>
+                            </div>
+                            <button class="requirements-modal__close" type="button" data-close-requirements-modal aria-label="Close requirements">&times;</button>
+                        </div>
+                        <div class="requirements-modal__content">
+                                                <div class="requirements-overview requirements-overview--pending">
+                            <span class="requirements-overview__icon" aria-hidden="true">&#8594;</span>
+                            <div class="requirements-overview__copy"><strong>Saved semester status</strong><span>These are the recorded decisions for this semester. Submissions are closed.</span></div>
+                            <span class="badge pending">PENDING</span>
+                        </div>
+                                                                            <div class="requirements-section-heading">
+                                <div><span class="requirements-section-heading__step">1</span><div><h3>Required items</h3><p>Make sure every item is complete.</p></div></div>
+                                <span class="requirements-count">0 of 1 complete</span>
+                            </div>
+                            <ul class="requirements requirements-checklist">
+                                                                                                        <li class="requirement-card is-pending">
+                                        <span class="requirement-card__number" aria-hidden="true">1</span>
+                                        <div class="requirement-card__content">
+                                            <div class="requirement-card__heading"><strong>Saved requirement</strong><span class="badge not-started">NOT STARTED</span></div>
+                                                                                                                                </div>
+                                    </li>
+                                                            </ul>
+                                                                                                                                                            </div>
+                    </section>
+                </div>
+                    
+    </main>
+        <div class="portal-password-modal" data-password-modal hidden aria-hidden="true">
+        <div class="portal-password-modal__backdrop" data-close-password-modal></div>
+        <section class="portal-password-modal__dialog" role="dialog" aria-modal="true" aria-label="Change password" tabindex="-1">
+            <button class="portal-password-modal__close" type="button" data-close-password-modal aria-label="Close change password">&times;</button>
+            <iframe title="Change password" data-password-src="/student/password.php?embed=1"></iframe>
+        </section>
+    </div>
+    <nav class="portal-mobile-nav" aria-label="Mobile navigation"><a href="#overview" data-dashboard-link="overview" aria-current="page"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></a><a href="#clearance" data-dashboard-link="clearance" ><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg><span>Clearance</span></a><a href="#attendance" data-dashboard-link="attendance" ><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 5h2m4 0h2"/></svg><span>Attendance</span></a><a href="#account" data-dashboard-link="account" ><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><span>Account</span></a></nav>
+    <script src="/assets/js/student-dashboard.js?v=1791875300"></script>
+    <script src="/assets/js/library-card-camera.js"></script>
+</body>
+
+</html>

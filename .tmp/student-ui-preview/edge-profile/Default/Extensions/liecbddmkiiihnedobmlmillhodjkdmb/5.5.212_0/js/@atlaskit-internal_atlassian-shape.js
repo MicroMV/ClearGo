@@ -1,0 +1,5 @@
+"use strict";
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="23a0a133-9d68-5b47-9f18-1a604b01e955")}catch(e){}}();
+(self.rspackChunk_loomhq_chrome_extension=self.rspackChunk_loomhq_chrome_extension||[]).push([[494],{96818(e,s,r){r.r(s),r.d(s,{},{default:'\nhtml[data-theme~="shape:shape"], [data-subtree-theme][data-theme~="shape:shape"] {\n  --ds-radius-xsmall: 0.125rem;\n  --ds-radius-small: 0.25rem;\n  --ds-radius-medium: 0.375rem;\n  --ds-radius-large: 0.5rem;\n  --ds-radius-xlarge: 0.75rem;\n  --ds-radius-xxlarge: 1rem;\n  --ds-radius-full: 624.9375rem;\n  --ds-radius-tile: 25%;\n  --ds-border-width: 0.0625rem;\n  --ds-border-width-selected: 0.125rem;\n  --ds-border-width-focused: 0.125rem;\n}\n'})}}]);
+//# sourceMappingURL=@atlaskit-internal_atlassian-shape.js.map
+//# debugId=23a0a133-9d68-5b47-9f18-1a604b01e955

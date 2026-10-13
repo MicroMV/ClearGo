@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCsrfToken($_POST['csrf_token
     redirectTo('/student/dashboard.php?station=ACCOUNTING');
 }
 try {
-    $result = processAccountingReceiptUpload(getDatabaseConnection(), $user['id'], $_FILES['accounting_receipt'] ?? []);
+    processAccountingReceiptUpload(getDatabaseConnection(), $user['id'], $_FILES['accounting_receipt'] ?? []);
     setFlashMessage('TLC portal screenshot submitted. Please wait for Accounting review.');
 } catch (Throwable $exception) {
     error_log('Accounting receipt upload failed: ' . $exception->getMessage());

@@ -1,0 +1,80 @@
+ClearGo conservative cleanup audit — 2026-10-04 (Asia/Manila)
+
+Scope and method
+Audited 202 original files, the live lewis_clearance schema (37 tables, 367 columns, 151 indexes, 88 foreign keys), all migrations and historical exports. The live schema contains no views, triggers, routines, or scheduled events.
+Searched all project PHP, JavaScript, CSS, templates, configuration, SQL, route strings, includes, callbacks, forms, redirects, prepared queries, reports, and tests. Reviewed dynamic URLs and PHP template scope. No deletion was based only on a one-file occurrence count. Audit evidence contains complete schema metadata, reference locations, hashes, and validation outcomes; literal references are evidence of use, not a complete semantic call graph.
+
+SAFE TO REMOVE — removed
+Database: no tables, columns, indexes, or relationships removed. No destructive cleanup SQL was generated or applied.
+Files:
+- assets/css/simple-dashboard.css: The only stylesheet reference is inside the dead renderer. No active template, CSS import, JavaScript loader, or dynamic asset loader references it.
+- verification/accounting_receipt_verifier.php: No project include, link, redirect, form, AJAX request, import, callback, or configuration names this utility file. Its two declared functions have no reachable callers. Active processAccountingReceiptUpload stores portal screenshots for manual Accounting review.
+- verification/evaluation_verifier.php: All four named functions are reachable only from the uncalled processEvaluationUpload function or the disconnected Accounting verifier. This file contains declarations only, with no endpoint handler or initialization side effects. Removed its unused include after removing that dead caller.
+
+Functions:
+- renderDashboard (auth/auth_check.php:485 before cleanup). No direct calls, callbacks, function-name dispatch, or dynamic includes in the application reference this named function. Every configured role has its own existing dashboard.
+- processEvaluationUpload (clearance/evaluation_functions.php:166 before cleanup). The live student/evaluation_action.php endpoint calls processEvaluationSubmission, which retains screenshots for manual Dean review. No project call or callback targets processEvaluationUpload.
+- evaluationVisionModel (verification/evaluation_verifier.php:4 before cleanup). Part of the disconnected verifier utility proven above; no reachable production or test caller remains.
+- evaluationConfidenceThreshold (verification/evaluation_verifier.php:10 before cleanup). Part of the disconnected verifier utility proven above; no reachable production or test caller remains.
+- responseOutputText (verification/evaluation_verifier.php:19 before cleanup). Part of the disconnected verifier utility proven above; no reachable production or test caller remains.
+- verifyEvaluationScreenshot (verification/evaluation_verifier.php:34 before cleanup). Part of the disconnected verifier utility proven above; no reachable production or test caller remains.
+- accountingReceiptConfidenceThreshold (verification/accounting_receipt_verifier.php:6 before cleanup). Part of the disconnected verifier utility proven above; no reachable production or test caller remains.
+- verifyAccountingReceiptPhoto (verification/accounting_receipt_verifier.php:15 before cleanup). Part of the disconnected verifier utility proven above; no reachable production or test caller remains.
+
+Unused variables/bindings in otherwise active code:
+- bookstore/fee_action.php: $user; retained requireRole('BOOKSTORE_STAFF').
+- student/action.php: $user; retained requireRole('STUDENT').
+- student/attendance_scanner.php: $user; retained requireRole('STUDENT').
+- student/attendance_scanner_action.php: $user; retained requireRole('STUDENT').
+- student/accounting_receipt_action.php: $result; retained processAccountingReceiptUpload(...).
+- dean/dashboard.php: $verifiedAnonymousCount; retained $verifiedSubmissionQuery->fetchColumn() (prepare and execute also preserved).
+- clearance/office_workflow.php: $total; retained countQuery(...) with the identical SQL and parameters.
+- clearance/office_workflow.php: $verified; retained countQuery(...) with the identical SQL and parameters.
+Only unused assignments were removed. Existing role checks, upload processing, query preparation, execution, parameters, and result consumption still run. Local variables contained entirely inside deleted functions disappeared with those functions.
+
+Includes/code/CSS/JavaScript:
+- Removed the unused evaluation_verifier.php include from clearance/evaluation_functions.php.
+- Removed the dormant generic dashboard HTML block and retired automatic screenshot-verification function bodies.
+- Removed simple-dashboard.css in full because only the dead renderer loaded it.
+- No active CSS rules, JavaScript, constants, migrations, or routes were changed.
+
+POSSIBLY UNUSED — manual review recommended; kept
+- accounting_receipt_verifications: No production source reference found, but its foreign key to accounting_receipts has cascading behavior and it remains part of migration history. No schema change is justified under the requirement to preserve relationships.
+- borrowed_books: No production source reference found, but tests/phase3_office_workflow_test.php explicitly uses it during fixture cleanup. Foreign keys to students, academic_periods, and users remain. Preserve pending manual schema/workflow review.
+- student_documents.file_path, student_documents.file_size: No explicit production token references found. SELECT * is used for student_documents in officeDetailRecords, and existing schema/import/retention contracts cannot be ruled out.
+- database-connection-test.php: No internal incoming route reference found. It is an independently callable database health-check endpoint, so a bookmark, operator, or external monitor may use it.
+- storage/private/evaluation-proofs/.gitignore: The retired upload function was its only code path. Preserve the storage marker and any externally managed contents; deleting it would change ignore/retention behavior.
+- CSS selectors without literal template matches: Status classes, responsive rules, notification toasts, return modals, carousels, and table templates have dynamic or conditional use. No further rule deletion has sufficient proof.
+
+ACTIVE / DO NOT TOUCH — kept
+- All active role dashboards, account-management routes, actions, image endpoints, forms, AJAX endpoints, attendance handlers, reports, and workbook/import utilities were preserved.
+- saveEvaluationResult is called by tests/phase2_dean_clearance_test.php and evaluation_verifications is still read/written by active Dean approval code; both were preserved.
+- The four PHP template-scope variables $qrDisplay, $csrfToken, $councilEvents, and $rows cross require boundaries and were preserved despite single-file occurrence counts.
+- accounting_receipts.issued_at and 32 updated_at columns lack explicit production token reads, but SQL defaults and ON UPDATE clauses populate them automatically. They are database-managed fields, not proven dead columns.
+- All remaining 11 JavaScript files and 22 CSS files have application references. JavaScript callbacks and constants were scanned; no isolated project declaration was found. qrcode.js includes its library exports and compatibility branches, which were preserved.
+- Identical .htaccess files protect distinct directories. Duplicate uploaded image bytes may have separate database identities. All protections, uploads, stored sessions, backups, .gitignore rules, and historical migrations were preserved.
+- Admin was already removed by migration 005. APPLICATION_ROLES and ROLE_DASHBOARDS have 12 current roles, including COMLAB and Registrar. No Admin implementation was introduced or reactivated.
+- Index use cannot be inferred from references to index names: the optimizer and foreign keys depend on indexes implicitly. All indexes, unique constraints, and relationships were preserved.
+
+Verification
+- PHP syntax: 118 files passed. JavaScript syntax: 11 files passed. git diff --check passed.
+- Existing suite: 18/22 tests pass both before and after. The same four preexisting failures and error messages remain; no newly failing test.
+  cbe_dean_workflow_test.php: CBE students were not eligible for direct YBC sign-off when no events were configured.
+  cbe_fourth_year_single_approval_test.php: This student cannot be approved because some organization requirements are incomplete.
+  clinic_workbook_test.php: Clinic import totals are incorrect (existing RuntimeException).
+  readiness_test.php: No not-ready office is available in the preparing semester.
+- HTTP: 194 checks across 21 accounts and all 12 current roles passed. Checked valid/invalid login, CSRF rejection, logout, role redirection, unauthorized role access, all role dashboards, college/year variants, submissions, attendance/scanner pages, filters/search/pagination, Registrar pages, and forms.
+- HTTP before/after comparisons: 189/194 response bodies matched after normalizing CSRF values and filemtime cache-busters. Status codes and final redirect URLs matched in all checks. The five initial body differences were Facilities and Comlab dashboards (including login redirects) and Registrar staff accounts. A controlled replay of the original and modified code against the same current isolated data matched all three affected pages exactly. Those pages include notifications or login timestamps, so separate runs are not a byte-stable fixture; no application behavior difference was observed in the controlled replay.
+- Active SQL literals were compared across the 96 surviving application PHP files: no changes.
+- Live database: all 37 table definitions and 92354 rows fingerprinted before/after; changed tables: []. Original records, AUTO_INCREMENT values, indexes, and relationships are unchanged.
+- All database-writing tests and HTTP logins ran only against a disposable snapshot database named cleargo_cleanup_audit_20261004. HTTP servers used temporary application copies with their own session directories. No test authenticated against the live database or used live sessions. The temporary HTTP processes and audit database were removed after verification.
+- HTTP checks exercise server responses rather than browser execution. Camera capture, browser interactions, and valid multipart uploads were inspected statically; they were not driven in a real browser. Existing integration tests cover approval sequences and updates, but preexisting failing scenarios were not repaired because this request authorizes cleanup only.
+
+Backup / recovery
+No destructive change was made to the live database. A fresh full snapshot was exported before testing and retained at:
+C:\Users\Rongie\AppData\Local\Temp\cleargo-cleanup-audit-before.sql
+SHA-256: 1d98827c73e9b458d4de9a054cb535a69818874daaba503cb8fd31bf51209f98
+The snapshot was successfully imported repeatedly into the isolated audit database for reproducible tests. It contains personal data and is outside the web root and repository. Source removals can be restored from the existing Git revision. No backup, upload, session, or migration belonging to the application was deleted.
+
+Detailed evidence: database/cleanup-audit-evidence-2026-10-04.json
+This report and its evidence are under database/, which is already protected by Require all denied.

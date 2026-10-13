@@ -5,7 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../auth/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
 
-$user = requireRole('BOOKSTORE_STAFF');
+requireRole('BOOKSTORE_STAFF');
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCsrfToken($_POST['csrf_token'] ?? null)) {
     setFlashMessage('Unable to process that request.');
     redirectTo('/bookstore/fees.php');

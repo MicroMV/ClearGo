@@ -4,9 +4,10 @@ declare(strict_types=1);
 require_once __DIR__ . '/../auth/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
 $user = requireRole('STUDENT');
+$passwordRedirect = ($_POST['embed'] ?? '') === '1' ? '/student/password.php?embed=1' : '/student/password.php';
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCsrfToken($_POST['csrf_token'] ?? null)) {
     setFlashMessage('Unable to process that request.');
-    redirectTo('/student/password.php');
+    redirectTo($passwordRedirect);
 }
 try {
     $current = (string) ($_POST['current_password'] ?? '');
@@ -42,4 +43,4 @@ try {
     error_log('Student password change failed: ' . $exception->getMessage());
     setFlashMessage($exception instanceof RuntimeException ? $exception->getMessage() : 'Unable to change the password.');
 }
-redirectTo('/student/password.php');
+redirectTo($passwordRedirect);

@@ -1,0 +1,365 @@
+2026-10-13 06:27:41.974: [INFO] CurrentProfilePath: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 06:27:41.974: [INFO] Profiles total count: 1
+2026-10-13 06:27:41.974: [INFO] Profile: name=Profile 1 path=C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default lastActive=null
+2026-10-13 06:27:41.974: [INFO] LastUsedProfileDir: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 06:27:41.974: [INFO] VisibilityChanged: 0
+2026-10-13 06:27:41.994: [INFO] OnDoneLoading sync enabled: 0
+2026-10-13 06:27:41.994: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-10-13 06:27:41.994: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-10-13 06:27:41.994: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-10-13 06:27:41.995: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-10-13 06:27:44.619: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 0
+2026-10-13 06:27:44.623: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:27:44.626: [INFO] Primary account changed.
+2026-10-13 06:27:44.626: [INFO] OnPrimaryAccountChanged PrimaryAccountChangeEvent::Type::kSet
+2026-10-13 06:27:44.639: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:27:44.655: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:31:09.109: [INFO] CurrentProfilePath: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 06:31:09.109: [INFO] Profiles total count: 1
+2026-10-13 06:31:09.109: [INFO] Profile: name=Profile 1 path=C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default lastActive=null
+2026-10-13 06:31:09.109: [INFO] LastUsedProfileDir: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 06:31:09.109: [INFO] VisibilityChanged: 0
+2026-10-13 06:31:09.127: [INFO] OnDoneLoading sync enabled: 0
+2026-10-13 06:31:09.127: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-10-13 06:31:09.127: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-10-13 06:31:09.127: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-10-13 06:31:09.129: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:31:09.142: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:31:09.194: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:31:09.875: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:31:09.877: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:31:09.879: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:31:09.883: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:31:09.885: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:31:09.886: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:31:09.888: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:31:09.889: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:31:11.639: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:31:11.641: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:31:12.044: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:31:12.312: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:31:12.318: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 06:31:12.321: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 06:31:13.693: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 06:31:13.739: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 06:31:13.897: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 06:34:42.244: [INFO] CurrentProfilePath: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 06:34:42.244: [INFO] Profiles total count: 1
+2026-10-13 06:34:42.244: [INFO] Profile: name=Profile 1 path=C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default lastActive=null
+2026-10-13 06:34:42.244: [INFO] LastUsedProfileDir: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 06:34:42.244: [INFO] VisibilityChanged: 0
+2026-10-13 06:34:42.272: [INFO] OnDoneLoading sync enabled: 0
+2026-10-13 06:34:42.272: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-10-13 06:34:42.272: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-10-13 06:34:42.272: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-10-13 06:34:42.274: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:34:42.286: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:34:42.313: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:38:16.122: [INFO] CurrentProfilePath: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 06:38:16.122: [INFO] Profiles total count: 1
+2026-10-13 06:38:16.122: [INFO] Profile: name=Profile 1 path=C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default lastActive=null
+2026-10-13 06:38:16.122: [INFO] LastUsedProfileDir: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 06:38:16.122: [INFO] VisibilityChanged: 0
+2026-10-13 06:38:16.146: [INFO] OnDoneLoading sync enabled: 0
+2026-10-13 06:38:16.146: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-10-13 06:38:16.146: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-10-13 06:38:16.146: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-10-13 06:38:16.149: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:38:16.188: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:38:17.683: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:38:17.685: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:38:17.686: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:38:17.690: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:38:17.693: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:38:17.696: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:38:17.700: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:38:17.704: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:38:19.328: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:38:19.337: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:38:19.978: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:38:20.246: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:38:20.250: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 06:38:20.255: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 06:40:10.935: [INFO] CurrentProfilePath: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 06:40:10.935: [INFO] Profiles total count: 1
+2026-10-13 06:40:10.935: [INFO] Profile: name=Profile 1 path=C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default lastActive=null
+2026-10-13 06:40:10.935: [INFO] LastUsedProfileDir: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 06:40:10.935: [INFO] VisibilityChanged: 0
+2026-10-13 06:40:10.959: [INFO] OnDoneLoading sync enabled: 0
+2026-10-13 06:40:10.959: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-10-13 06:40:10.959: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-10-13 06:40:10.959: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-10-13 06:40:10.962: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:40:10.975: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:40:11.003: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:40:12.298: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:40:12.300: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:40:12.302: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:40:12.304: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:40:12.306: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:40:12.307: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:40:12.311: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:40:12.317: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:40:14.242: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:40:14.247: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:40:15.613: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:40:15.918: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:40:15.921: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 06:40:15.923: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 06:40:17.028: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 06:40:17.031: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 06:40:17.245: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 06:40:50.828: [INFO] CurrentProfilePath: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 06:40:50.828: [INFO] Profiles total count: 1
+2026-10-13 06:40:50.828: [INFO] Profile: name=Profile 1 path=C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default lastActive=null
+2026-10-13 06:40:50.828: [INFO] LastUsedProfileDir: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 06:40:50.828: [INFO] VisibilityChanged: 0
+2026-10-13 06:40:50.861: [INFO] OnDoneLoading sync enabled: 0
+2026-10-13 06:40:50.861: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-10-13 06:40:50.861: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-10-13 06:40:50.861: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-10-13 06:40:50.864: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:40:50.877: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:40:50.932: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:40:54.192: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:40:54.197: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:40:54.201: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:40:54.206: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:40:54.208: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:40:54.211: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:40:54.215: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:40:54.219: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:40:55.823: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:40:55.825: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:55:16.229: [INFO] CurrentProfilePath: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 06:55:16.229: [INFO] Profiles total count: 1
+2026-10-13 06:55:16.229: [INFO] Profile: name=Profile 1 path=C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default lastActive=null
+2026-10-13 06:55:16.229: [INFO] LastUsedProfileDir: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 06:55:16.229: [INFO] VisibilityChanged: 0
+2026-10-13 06:55:16.257: [INFO] OnDoneLoading sync enabled: 0
+2026-10-13 06:55:16.257: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-10-13 06:55:16.257: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-10-13 06:55:16.257: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-10-13 06:55:16.261: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:55:16.275: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:55:16.301: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:55:20.909: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:55:20.912: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:55:20.917: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:55:20.942: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:55:20.946: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:55:20.950: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:55:20.954: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:55:20.959: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:55:21.569: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:55:21.580: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:56:18.671: [INFO] CurrentProfilePath: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 06:56:18.671: [INFO] Profiles total count: 1
+2026-10-13 06:56:18.671: [INFO] Profile: name=Profile 1 path=C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default lastActive=null
+2026-10-13 06:56:18.671: [INFO] LastUsedProfileDir: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 06:56:18.671: [INFO] VisibilityChanged: 0
+2026-10-13 06:56:18.694: [INFO] OnDoneLoading sync enabled: 0
+2026-10-13 06:56:18.694: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-10-13 06:56:18.694: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-10-13 06:56:18.694: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-10-13 06:56:18.696: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:56:18.709: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:56:18.766: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:56:21.068: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:56:21.071: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:56:21.074: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:56:21.077: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:56:21.080: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:56:21.082: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 06:56:21.085: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:56:21.087: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:56:21.792: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:56:21.803: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:56:23.690: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:56:24.463: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 06:56:24.465: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 06:56:24.467: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:04:14.526: [INFO] CurrentProfilePath: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 07:04:14.526: [INFO] Profiles total count: 1
+2026-10-13 07:04:14.526: [INFO] Profile: name=Profile 1 path=C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default lastActive=null
+2026-10-13 07:04:14.526: [INFO] LastUsedProfileDir: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 07:04:14.526: [INFO] VisibilityChanged: 0
+2026-10-13 07:04:14.555: [INFO] OnDoneLoading sync enabled: 0
+2026-10-13 07:04:14.555: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-10-13 07:04:14.555: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-10-13 07:04:14.555: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-10-13 07:04:14.557: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:04:14.570: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:04:14.632: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:04:19.700: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:04:19.703: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:04:19.705: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:04:19.707: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:04:19.708: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:04:19.709: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:04:19.711: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:04:19.714: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:04:20.321: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:04:20.330: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:04:44.941: [INFO] CurrentProfilePath: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 07:04:44.941: [INFO] Profiles total count: 1
+2026-10-13 07:04:44.941: [INFO] Profile: name=Profile 1 path=C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default lastActive=null
+2026-10-13 07:04:44.941: [INFO] LastUsedProfileDir: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 07:04:44.941: [INFO] VisibilityChanged: 0
+2026-10-13 07:04:44.969: [INFO] OnDoneLoading sync enabled: 0
+2026-10-13 07:04:44.969: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-10-13 07:04:44.969: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-10-13 07:04:44.969: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-10-13 07:04:44.971: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:04:44.984: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:04:45.011: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:04:49.784: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:04:49.789: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:04:49.793: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:04:49.797: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:04:49.800: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:04:49.804: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:04:49.808: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:04:49.812: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:04:50.508: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:04:50.517: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:04:51.334: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:08:50.265: [INFO] CurrentProfilePath: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 07:08:50.266: [INFO] Profiles total count: 1
+2026-10-13 07:08:50.266: [INFO] Profile: name=Profile 1 path=C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default lastActive=null
+2026-10-13 07:08:50.266: [INFO] LastUsedProfileDir: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 07:08:50.266: [INFO] VisibilityChanged: 0
+2026-10-13 07:08:50.291: [INFO] OnDoneLoading sync enabled: 0
+2026-10-13 07:08:50.291: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-10-13 07:08:50.291: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-10-13 07:08:50.291: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-10-13 07:08:50.294: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:08:50.308: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:08:50.339: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:08:53.768: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:08:53.773: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:08:53.776: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:08:53.781: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:08:53.785: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:08:53.789: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:08:53.794: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:08:53.799: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:08:54.851: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:08:56.146: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:08:57.805: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:11:16.610: [INFO] CurrentProfilePath: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 07:11:16.610: [INFO] Profiles total count: 1
+2026-10-13 07:11:16.610: [INFO] Profile: name=Profile 1 path=C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default lastActive=null
+2026-10-13 07:11:16.610: [INFO] LastUsedProfileDir: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 07:11:16.610: [INFO] VisibilityChanged: 0
+2026-10-13 07:11:16.640: [INFO] OnDoneLoading sync enabled: 0
+2026-10-13 07:11:16.640: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-10-13 07:11:16.640: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-10-13 07:11:16.640: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-10-13 07:11:16.642: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:11:16.659: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:11:16.677: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:11:19.237: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:11:19.239: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:11:19.242: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:11:19.246: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:11:19.249: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:11:19.251: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:11:19.255: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:11:19.258: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:11:19.881: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:11:19.891: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:11:20.157: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:11:20.534: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:11:20.537: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:11:20.540: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:11:21.375: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:11:21.379: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:11:21.581: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:14:08.619: [INFO] CurrentProfilePath: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 07:14:08.619: [INFO] Profiles total count: 1
+2026-10-13 07:14:08.619: [INFO] Profile: name=Profile 1 path=C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default lastActive=null
+2026-10-13 07:14:08.619: [INFO] LastUsedProfileDir: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 07:14:08.619: [INFO] VisibilityChanged: 0
+2026-10-13 07:14:08.644: [INFO] OnDoneLoading sync enabled: 0
+2026-10-13 07:14:08.644: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-10-13 07:14:08.644: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-10-13 07:14:08.644: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-10-13 07:14:08.647: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:14:08.664: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:14:08.683: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:14:09.030: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:14:09.033: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:14:09.037: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:14:09.040: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:14:09.043: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:14:09.047: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:14:09.050: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:14:09.053: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:14:10.704: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:14:10.712: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:14:11.879: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:14:12.499: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:14:12.505: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:14:12.511: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:14:13.613: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:14:13.617: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:14:13.824: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:16:36.025: [INFO] CurrentProfilePath: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 07:16:36.025: [INFO] Profiles total count: 1
+2026-10-13 07:16:36.025: [INFO] Profile: name=Profile 1 path=C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default lastActive=null
+2026-10-13 07:16:36.025: [INFO] LastUsedProfileDir: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 07:16:36.025: [INFO] VisibilityChanged: 0
+2026-10-13 07:16:36.050: [INFO] OnDoneLoading sync enabled: 0
+2026-10-13 07:16:36.050: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-10-13 07:16:36.050: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-10-13 07:16:36.050: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-10-13 07:16:36.052: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:16:36.069: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:16:36.095: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:16:37.403: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:16:37.405: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:16:37.407: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:16:37.410: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:16:37.412: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:16:37.415: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:16:37.417: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:16:37.420: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:16:37.990: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:16:37.992: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:16:38.359: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:16:38.633: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:16:38.636: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:16:38.640: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:16:39.420: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:16:39.421: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:16:39.632: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:20:34.251: [INFO] CurrentProfilePath: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 07:20:34.251: [INFO] Profiles total count: 1
+2026-10-13 07:20:34.251: [INFO] Profile: name=Profile 1 path=C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default lastActive=null
+2026-10-13 07:20:34.251: [INFO] LastUsedProfileDir: C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default
+2026-10-13 07:20:34.251: [INFO] VisibilityChanged: 0
+2026-10-13 07:20:34.285: [INFO] OnDoneLoading sync enabled: 0
+2026-10-13 07:20:34.285: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-10-13 07:20:34.285: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-10-13 07:20:34.285: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-10-13 07:20:34.288: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:20:34.305: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:20:34.330: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:20:35.050: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:20:35.055: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:20:35.056: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:20:35.059: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:20:35.062: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:20:35.066: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 3
+2026-10-13 07:20:35.069: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:20:35.073: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:20:35.674: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:20:35.677: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:20:35.963: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:20:37.599: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 5
+2026-10-13 07:20:37.603: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:20:37.608: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:20:39.596: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:20:39.810: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6
+2026-10-13 07:20:40.225: [INFO] RecordSyncInitDuration has_sync_been_enabled: 0 state: 6

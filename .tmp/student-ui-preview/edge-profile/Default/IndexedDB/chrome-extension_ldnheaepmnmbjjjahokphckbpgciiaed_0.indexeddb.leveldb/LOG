@@ -1,0 +1,13 @@
+2026/10/13-15:14:14.992 4628 Reusing MANIFEST C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default\IndexedDB\chrome-extension_ldnheaepmnmbjjjahokphckbpgciiaed_0.indexeddb.leveldb/MANIFEST-000001
+2026/10/13-15:14:14.992 4628 Recovering log #7
+2026/10/13-15:14:14.993 4628 Reusing old log C:\xamppl\htdocs\ClearGo\.tmp\student-ui-preview\edge-profile\Default\IndexedDB\chrome-extension_ldnheaepmnmbjjjahokphckbpgciiaed_0.indexeddb.leveldb/000007.log 
+2026/10/13-15:14:15.027 24ac Level-0 table #11: started
+2026/10/13-15:14:15.029 24ac Level-0 table #11: 985 bytes OK
+2026/10/13-15:14:15.032 24ac Delete type=0 #7
+2026/10/13-15:14:15.033 24ac Manual compaction at level-0 from '\x00\x05\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x06\x00\x00\x00' @ 0 : 0; will stop at '\x00\x05\x00\x00\x05' @ 165 : 1
+2026/10/13-15:14:15.033 24ac Compacting 1@0 + 1@1 files
+2026/10/13-15:14:15.035 24ac Generated table #12@0: 48 keys, 1328 bytes
+2026/10/13-15:14:15.035 24ac Compacted 1@0 + 1@1 files => 1328 bytes
+2026/10/13-15:14:15.037 24ac compacted to: files[ 0 1 1 0 0 0 0 ]
+2026/10/13-15:14:15.037 24ac Delete type=2 #11
+2026/10/13-15:14:15.037 24ac Manual compaction at level-0 from '\x00\x05\x00\x00\x05' @ 165 : 1 .. '\x00\x06\x00\x00\x00' @ 0 : 0; will stop at (end)

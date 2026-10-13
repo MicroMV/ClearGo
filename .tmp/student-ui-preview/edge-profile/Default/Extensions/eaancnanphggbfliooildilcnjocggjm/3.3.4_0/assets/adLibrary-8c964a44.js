@@ -1,0 +1,1 @@
+var e=document.createElement("script");e.src=chrome.runtime.getURL("fbInject.js");(document.head||document.documentElement).insertBefore(e,(document.head||document.documentElement).firstChild);function n(){document.querySelectorAll('link[as="script"]').forEach(t=>{t.removeAttribute("rel")})}const c=setInterval(n,200);setTimeout(()=>{clearInterval(c)},3e3);

@@ -54,13 +54,13 @@ $csrfToken = createCsrfToken();
         <section class="panel">
             <?php if (is_array($confirmation)): ?>
                 <h1>✓ Attendance Confirmed</h1>
-                <p class="success notice">You are marked <strong>PRESENT</strong> for <strong><?= escapeHtml((string) ($confirmation['event_name'] ?? 'this event')) ?></strong>.</p><a href="<?= escapeHtml(applicationUrl('/student/dashboard.php')) ?>">Student Dashboard</a>
+                <p class="success notice">You are marked <strong>PRESENT</strong> for <strong><?= escapeHtml((string) ($confirmation['event_name'] ?? 'this event')) ?></strong>.</p><a target="_top" href="<?= escapeHtml(applicationUrl('/student/dashboard.php#attendance')) ?>">Student Dashboard</a>
             <?php elseif ($context === false): ?>
                 <h1>QR Check-in Unavailable</h1>
-                <p class="notice">This QR code is expired, closed, or belongs to a different organization. Ask your organization officer to open a new QR code.</p><a href="<?= escapeHtml(applicationUrl('/student/dashboard.php')) ?>">Student Dashboard</a>
+                <p class="notice">This QR code is expired, closed, or belongs to a different organization. Ask your organization officer to open a new QR code.</p><a target="_top" href="<?= escapeHtml(applicationUrl('/student/dashboard.php#attendance')) ?>">Student Dashboard</a>
             <?php elseif ($context['attendance_status'] === 'PRESENT'): ?>
                 <h1>Attendance Already Recorded</h1>
-                <p class="success notice">Your attendance for <strong><?= escapeHtml($context['name']) ?></strong> is already marked present.</p><a href="<?= escapeHtml(applicationUrl('/student/dashboard.php')) ?>">Student Dashboard</a>
+                <p class="success notice">Your attendance for <strong><?= escapeHtml($context['name']) ?></strong> is already marked present.</p><a target="_top" href="<?= escapeHtml(applicationUrl('/student/dashboard.php#attendance')) ?>">Student Dashboard</a>
             <?php else: ?>
                 <h1>Confirm Attendance</h1>
                 <p><strong><?= escapeHtml($context['name']) ?></strong></p>

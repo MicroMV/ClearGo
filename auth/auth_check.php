@@ -481,33 +481,3 @@ function registrarDashboardSidebar(array $user, string $activeKey, string $logou
         ['key' => 'audit', 'label' => 'Audit Logs', 'url' => '/registrar/audit_logs.php', 'icon' => 'audit'],
     ], $activeKey, $logoutForm);
 }
-
-function renderDashboard(array $user, string $title): never
-{
-    $email = escapeHtml($user['email']);
-    $role = escapeHtml($user['role']);
-    $pageTitle = escapeHtml($title);
-    $logoutForm = dashboardLogoutForm();
-    $dashboardStylesheet = escapeHtml(applicationUrl('/assets/css/simple-dashboard.css'));
-
-    echo <<<HTML
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{$pageTitle} | Digital Clearance System</title>
-    <link rel="stylesheet" href="{$dashboardStylesheet}">
-</head>
-<body>
-    <main>
-        <h1>Welcome, {$email}</h1>
-        <p>You are signed in to the {$pageTitle}.</p>
-        <p><strong>Role:</strong> {$role}</p>
-        {$logoutForm}
-    </main>
-</body>
-</html>
-HTML;
-    exit;
-}

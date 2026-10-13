@@ -260,8 +260,8 @@ function officeEligibility(PDO $database, string $stationCode, array $row): arra
     $eligible = false;
 
     if ($stationCode === 'STUDENT_COUNCIL') {
-        $total = countQuery($database, "SELECT COUNT(*) FROM requirement_records rr INNER JOIN requirements r ON r.id=rr.requirement_id WHERE rr.clearance_station_id=:id AND r.status='ACTIVE'", ['id' => $clearanceStationId]);
-        $verified = countQuery($database, "SELECT COUNT(*) FROM requirement_records rr INNER JOIN requirements r ON r.id=rr.requirement_id WHERE rr.clearance_station_id=:id AND r.status='ACTIVE' AND rr.status IN ('VERIFIED','RESOLVED')", ['id' => $clearanceStationId]);
+        countQuery($database, "SELECT COUNT(*) FROM requirement_records rr INNER JOIN requirements r ON r.id=rr.requirement_id WHERE rr.clearance_station_id=:id AND r.status='ACTIVE'", ['id' => $clearanceStationId]);
+        countQuery($database, "SELECT COUNT(*) FROM requirement_records rr INNER JOIN requirements r ON r.id=rr.requirement_id WHERE rr.clearance_station_id=:id AND r.status='ACTIVE' AND rr.status IN ('VERIFIED','RESOLVED')", ['id' => $clearanceStationId]);
         $requiredEvents = countQuery($database, "SELECT COUNT(*) FROM events event INNER JOIN stations station ON station.id=event.station_id AND station.code='STUDENT_COUNCIL' WHERE event.academic_period_id=:period_id AND event.is_required=1 AND event.status='ACTIVE'", ['period_id' => $periodId]);
         $attendedEvents = countQuery($database, "SELECT COUNT(*) FROM events event INNER JOIN stations station ON station.id=event.station_id AND station.code='STUDENT_COUNCIL' INNER JOIN event_attendance attendance ON attendance.event_id=event.id AND attendance.student_id=:student_id AND attendance.status='PRESENT' WHERE event.academic_period_id=:period_id AND event.is_required=1 AND event.status='ACTIVE'", ['student_id' => $studentId, 'period_id' => $periodId]);
         $details[] = "Institutional activities attended: {$attendedEvents}/{$requiredEvents}";

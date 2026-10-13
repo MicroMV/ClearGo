@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../auth/auth_check.php';
 
-require_once __DIR__ . '/../verification/evaluation_verifier.php';
-
 function studentEvaluationContext(PDO $database, int $userId): array
 {
     $statement = $database->prepare(
@@ -160,40 +158,6 @@ function saveEvaluationResult(PDO $database, array $context, int $userId, array 
             $database->rollBack();
         }
         throw $exception;
-    }
-}
-
-function processEvaluationUpload(PDO $database, int $userId, array $file): array
-{
-    $context = studentEvaluationContext($database, $userId);
-    $validated = validateEvaluationUpload($file);
-    $storageDirectory = __DIR__ . '/../storage/private/evaluation-proofs';
-    if (!is_dir($storageDirectory) || !is_writable($storageDirectory)) {
-        throw new RuntimeException('Secure temporary upload storage is unavailable.');
-    }
-
-    $temporaryPath = $storageDirectory . '/' . bin2hex(random_bytes(24)) . '.' . $validated['extension'];
-    if (!move_uploaded_file($validated['temporary_name'], $temporaryPath)) {
-        throw new RuntimeException('The screenshot could not be stored securely for verification.');
-    }
-
-    try {
-        try {
-            $result = verifyEvaluationScreenshot($temporaryPath, $validated['mime_type'], $userId);
-        } catch (Throwable $exception) {
-            error_log('Evaluation proof verification failed: ' . $exception->getMessage());
-            $result = [
-                'status' => 'ERROR',
-                'confidence' => null,
-                'model_name' => evaluationVisionModel(),
-            ];
-        }
-        saveEvaluationResult($database, $context, $userId, $result);
-        return $result;
-    } finally {
-        if (is_file($temporaryPath) && !unlink($temporaryPath)) {
-            error_log('Unable to delete a temporary evaluation screenshot.');
-        }
     }
 }
 

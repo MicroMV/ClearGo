@@ -1,0 +1,84 @@
+{
+   "action": {
+   },
+   "background": {
+      "service_worker": "service-worker-loader.js",
+      "type": "module"
+   },
+   "commands": {
+      "_execute_action": {
+         "description": "Toggle Foreplay side panel",
+         "suggested_key": {
+            "default": "Ctrl+Shift+F",
+            "mac": "Command+Shift+F"
+         }
+      }
+   },
+   "content_scripts": [ {
+      "js": [ "assets/adLibrary-loader.js" ],
+      "matches": [ "*://*.facebook.com/ads/library*" ],
+      "run_at": "document_start"
+   }, {
+      "js": [ "assets/controller-loader.js" ],
+      "matches": [ "\u003Call_urls>" ]
+   }, {
+      "js": [ "assets/controller-loader.js" ],
+      "matches": [ "*://app.foreplay.co/*", "*://app.adison.io/*", "*://localhost/*" ]
+   }, {
+      "js": [ "assets/inject.js-loader.js" ],
+      "matches": [ "*://*.instagram.com/*" ],
+      "run_at": "document_start"
+   }, {
+      "js": [ "assets/index.js-loader.js" ],
+      "matches": [ "*://*.chatgpt.com/*" ],
+      "run_at": "document_end"
+   } ],
+   "description": "Save ads from Meta, TikTok, LinkedIn & more. Get real-time brand insights on supported domains.",
+   "externally_connectable": {
+      "matches": [ "*://*.adison.io/*", "*://*.foreplay.co/*", "*://*.foreplay.dev/*", "*://localhost/*" ]
+   },
+   "homepage_url": "https://foreplay.co",
+   "icons": {
+      "128": "src/icons/icon_128.png",
+      "16": "src/icons/icon_16.png",
+      "48": "src/icons/icon_48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjkXomQsey+U78T8/fUV4yqgysEZic0PwMIA8JG915jT+aDDeY5rlyoUZoC3zn2Icd3qCKa7f1kzpihjj4hHpwF2QBt2rGrKWzrCqunuOt9tzcZ7t1sGo3s5BP3u2Xf4JNhWWRZuJkE4peXh5SqheMKjspvMTnEWKSDzpBQx+oOBtQ3Q0k50PzSHWFRiRqCpzi5548+BONFkbMn3rB4SfiWEWBQft4sgVJbhzLgH9oxmgg3hKUAUAGDLDmqDCHo8PIjyla1Z6CsUuMJw9facKk4vWCNgp34gvcVKCp41oOenQ2puiZqgYYutbok1vNJzevnJX/p1JpWyGbDIyHA0pkQIDAQAB",
+   "manifest_version": 3,
+   "name": "Ad Library - Save Facebook TikTok - Foreplay",
+   "permissions": [ "storage", "sidePanel", "tabs", "webNavigation" ],
+   "side_panel": {
+      "default_path": "src/sidepanel.html"
+   },
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "3.3.4",
+   "web_accessible_resources": [ {
+      "matches": [ "\u003Call_urls>" ],
+      "resources": [ "src/assets/index.css", "src/assets/images/empty-folder.png", "src/assets/images/dropdown-no-results.png", "assets/style.css" ],
+      "use_dynamic_url": true
+   }, {
+      "matches": [ "http://*.facebook.com/*", "https://*.facebook.com/*" ],
+      "resources": [ "fbInject.js" ],
+      "use_dynamic_url": false
+   }, {
+      "matches": [ "https://*.instagram.com/*" ],
+      "resources": [ "injected.js" ],
+      "use_dynamic_url": false
+   }, {
+      "matches": [ "*://*.facebook.com/*" ],
+      "resources": [ "assets/adLibrary-8c964a44.js" ],
+      "use_dynamic_url": false
+   }, {
+      "matches": [ "\u003Call_urls>" ],
+      "resources": [ "assets/xx2.svg", "assets/xx.svg", "assets/ad.svg", "assets/ad2.svg", "assets/ae.svg", "assets/ae2.svg", "assets/af.svg", "assets/af2.svg", "assets/ag2.svg", "assets/ag.svg", "assets/ai.svg", "assets/ai2.svg", "assets/al.svg", "assets/al2.svg", "assets/am.svg", "assets/am2.svg", "assets/ao2.svg", "assets/ao.svg", "assets/aq.svg", "assets/aq2.svg", "assets/ar.svg", "assets/ar2.svg", "assets/as2.svg", "assets/as.svg", "assets/at2.svg", "assets/at.svg", "assets/au2.svg", "assets/au.svg", "assets/aw2.svg", "assets/aw.svg", "assets/ax.svg", "assets/ax2.svg", "assets/az.svg", "assets/az2.svg", "assets/ba.svg", "assets/ba2.svg", "assets/bb.svg", "assets/bb2.svg", "assets/bd2.svg", "assets/bd.svg", "assets/be2.svg", "assets/be.svg", "assets/bf2.svg", "assets/bf.svg", "assets/bg.svg", "assets/bg2.svg", "assets/bh.svg", "assets/bh2.svg", "assets/bi.svg", "assets/bi2.svg", "assets/bj.svg", "assets/bj2.svg", "assets/bl.svg", "assets/bl2.svg", "assets/bm.svg", "assets/bm2.svg", "assets/bn.svg", "assets/bn2.svg", "assets/bo2.svg", "assets/bo.svg", "assets/bq.svg", "assets/bq2.svg", "assets/br.svg", "assets/br2.svg", "assets/bs.svg", "assets/bs2.svg", "assets/bt2.svg", "assets/bt.svg", "assets/bv.svg", "assets/bv2.svg", "assets/bw.svg", "assets/bw2.svg", "assets/by.svg", "assets/by2.svg", "assets/bz.svg", "assets/bz2.svg", "assets/ca.svg", "assets/ca2.svg", "assets/cc2.svg", "assets/cc.svg", "assets/cd.svg", "assets/cd2.svg", "assets/cf.svg", "assets/cf2.svg", "assets/cg.svg", "assets/cg2.svg", "assets/ch.svg", "assets/ch2.svg", "assets/ci.svg", "assets/ci2.svg", "assets/ck.svg", "assets/ck2.svg", "assets/cl.svg", "assets/cl2.svg", "assets/cm2.svg", "assets/cm.svg", "assets/cn2.svg", "assets/cn.svg", "assets/co2.svg", "assets/co.svg", "assets/cr.svg", "assets/cr2.svg", "assets/cu.svg", "assets/cu2.svg", "assets/cv2.svg", "assets/cv.svg", "assets/cw.svg", "assets/cw2.svg", "assets/cx.svg", "assets/cx2.svg", "assets/cy2.svg", "assets/cy.svg", "assets/cz.svg", "assets/cz2.svg", "assets/de2.svg", "assets/de.svg", "assets/dj.svg", "assets/dj2.svg", "assets/dk.svg", "assets/dk2.svg", "assets/dm.svg", "assets/dm2.svg", "assets/do2.svg", "assets/do.svg", "assets/dz.svg", "assets/dz2.svg", "assets/ec2.svg", "assets/ec.svg", "assets/ee2.svg", "assets/ee.svg", "assets/eg2.svg", "assets/eg.svg", "assets/eh.svg", "assets/eh2.svg", "assets/er2.svg", "assets/er.svg", "assets/es2.svg", "assets/es.svg", "assets/et.svg", "assets/et2.svg", "assets/fi2.svg", "assets/fi.svg", "assets/fj.svg", "assets/fj2.svg", "assets/fk2.svg", "assets/fk.svg", "assets/fm2.svg", "assets/fm.svg", "assets/fo.svg", "assets/fo2.svg", "assets/fr.svg", "assets/fr2.svg", "assets/ga2.svg", "assets/ga.svg", "assets/gb.svg", "assets/gb2.svg", "assets/gd2.svg", "assets/gd.svg", "assets/ge2.svg", "assets/ge.svg", "assets/gf.svg", "assets/gf2.svg", "assets/gg.svg", "assets/gg2.svg", "assets/gh2.svg", "assets/gh.svg", "assets/gi2.svg", "assets/gi.svg", "assets/gl.svg", "assets/gl2.svg", "assets/gm.svg", "assets/gm2.svg", "assets/gn.svg", "assets/gn2.svg", "assets/gp.svg", "assets/gp2.svg", "assets/gq2.svg", "assets/gq.svg", "assets/gr.svg", "assets/gr2.svg", "assets/gs.svg", "assets/gs2.svg", "assets/gt.svg", "assets/gt2.svg", "assets/gu2.svg", "assets/gu.svg", "assets/gw.svg", "assets/gw2.svg", "assets/gy.svg", "assets/gy2.svg", "assets/hk2.svg", "assets/hk.svg", "assets/hm.svg", "assets/hm2.svg", "assets/hn.svg", "assets/hn2.svg", "assets/hr2.svg", "assets/hr.svg", "assets/ht.svg", "assets/ht2.svg", "assets/hu2.svg", "assets/hu.svg", "assets/id2.svg", "assets/id.svg", "assets/ie2.svg", "assets/ie.svg", "assets/il2.svg", "assets/il.svg", "assets/im.svg", "assets/im2.svg", "assets/in2.svg", "assets/in.svg", "assets/io.svg", "assets/io2.svg", "assets/iq.svg", "assets/iq2.svg", "assets/ir2.svg", "assets/ir.svg", "assets/is.svg", "assets/is2.svg", "assets/it2.svg", "assets/it.svg", "assets/je2.svg", "assets/je.svg", "assets/jm2.svg", "assets/jm.svg", "assets/jo2.svg", "assets/jo.svg", "assets/jp.svg", "assets/jp2.svg", "assets/ke2.svg", "assets/ke.svg", "assets/kg2.svg", "assets/kg.svg", "assets/kh2.svg", "assets/kh.svg", "assets/ki.svg", "assets/ki2.svg", "assets/km.svg", "assets/km2.svg", "assets/kn2.svg", "assets/kn.svg", "assets/kp2.svg", "assets/kp.svg", "assets/kr2.svg", "assets/kr.svg", "assets/kw.svg", "assets/kw2.svg", "assets/ky.svg", "assets/ky2.svg", "assets/kz2.svg", "assets/kz.svg", "assets/la.svg", "assets/la2.svg", "assets/lb2.svg", "assets/lb.svg", "assets/lc2.svg", "assets/lc.svg", "assets/li.svg", "assets/li2.svg", "assets/lk.svg", "assets/lk2.svg", "assets/lr.svg", "assets/lr2.svg", "assets/ls2.svg", "assets/ls.svg", "assets/lt.svg", "assets/lt2.svg", "assets/lu.svg", "assets/lu2.svg", "assets/lv2.svg", "assets/lv.svg", "assets/ly.svg", "assets/ly2.svg", "assets/ma.svg", "assets/ma2.svg", "assets/mc2.svg", "assets/mc.svg", "assets/md.svg", "assets/md2.svg", "assets/me.svg", "assets/me2.svg", "assets/mf2.svg", "assets/mf.svg", "assets/mg.svg", "assets/mg2.svg", "assets/mh.svg", "assets/mh2.svg", "assets/mk.svg", "assets/mk2.svg", "assets/ml.svg", "assets/ml2.svg", "assets/mm2.svg", "assets/mm.svg", "assets/mn2.svg", "assets/mn.svg", "assets/mo.svg", "assets/mo2.svg", "assets/mp.svg", "assets/mp2.svg", "assets/mq2.svg", "assets/mq.svg", "assets/mr2.svg", "assets/mr.svg", "assets/ms2.svg", "assets/ms.svg", "assets/mt.svg", "assets/mt2.svg", "assets/mu2.svg", "assets/mu.svg", "assets/mv2.svg", "assets/mv.svg", "assets/mw2.svg", "assets/mw.svg", "assets/mx.svg", "assets/mx2.svg", "assets/my2.svg", "assets/my.svg", "assets/mz.svg", "assets/mz2.svg", "assets/na2.svg", "assets/na.svg", "assets/nc2.svg", "assets/nc.svg", "assets/ne2.svg", "assets/ne.svg", "assets/nf2.svg", "assets/nf.svg", "assets/ng2.svg", "assets/ng.svg", "assets/ni2.svg", "assets/ni.svg", "assets/nl2.svg", "assets/nl.svg", "assets/no.svg", "assets/no2.svg", "assets/np2.svg", "assets/np.svg", "assets/nr2.svg", "assets/nr.svg", "assets/nu.svg", "assets/nu2.svg", "assets/nz.svg", "assets/nz2.svg", "assets/om2.svg", "assets/om.svg", "assets/pa2.svg", "assets/pa.svg", "assets/pe.svg", "assets/pe2.svg", "assets/pf.svg", "assets/pf2.svg", "assets/pg2.svg", "assets/pg.svg", "assets/ph.svg", "assets/ph2.svg", "assets/pk.svg", "assets/pk2.svg", "assets/pl.svg", "assets/pl2.svg", "assets/pm2.svg", "assets/pm.svg", "assets/pn.svg", "assets/pn2.svg", "assets/pr2.svg", "assets/pr.svg", "assets/ps2.svg", "assets/ps.svg", "assets/pt.svg", "assets/pt2.svg", "assets/pw.svg", "assets/pw2.svg", "assets/py.svg", "assets/py2.svg", "assets/qa.svg", "assets/qa2.svg", "assets/re2.svg", "assets/re.svg", "assets/ro.svg", "assets/ro2.svg", "assets/rs.svg", "assets/rs2.svg", "assets/ru.svg", "assets/ru2.svg", "assets/rw.svg", "assets/rw2.svg", "assets/sa.svg", "assets/sa2.svg", "assets/sb2.svg", "assets/sb.svg", "assets/sc.svg", "assets/sc2.svg", "assets/sd.svg", "assets/sd2.svg", "assets/se2.svg", "assets/se.svg", "assets/sg.svg", "assets/sg2.svg", "assets/sh.svg", "assets/sh2.svg", "assets/si.svg", "assets/si2.svg", "assets/sj.svg", "assets/sj2.svg", "assets/sk.svg", "assets/sk2.svg", "assets/sl2.svg", "assets/sl.svg", "assets/sm2.svg", "assets/sm.svg", "assets/sn2.svg", "assets/sn.svg", "assets/so2.svg", "assets/so.svg", "assets/sr.svg", "assets/sr2.svg", "assets/ss.svg", "assets/ss2.svg", "assets/st.svg", "assets/st2.svg", "assets/sv2.svg", "assets/sv.svg", "assets/sx.svg", "assets/sx2.svg", "assets/sy.svg", "assets/sy2.svg", "assets/sz.svg", "assets/sz2.svg", "assets/tc2.svg", "assets/tc.svg", "assets/td.svg", "assets/td2.svg", "assets/tf.svg", "assets/tf2.svg", "assets/tg.svg", "assets/tg2.svg", "assets/th.svg", "assets/th2.svg", "assets/tj.svg", "assets/tj2.svg", "assets/tk.svg", "assets/tk2.svg", "assets/tl2.svg", "assets/tl.svg", "assets/tm.svg", "assets/tm2.svg", "assets/tn.svg", "assets/tn2.svg", "assets/to2.svg", "assets/to.svg", "assets/tr.svg", "assets/tr2.svg", "assets/tt2.svg", "assets/tt.svg", "assets/tv.svg", "assets/tv2.svg", "assets/tw.svg", "assets/tw2.svg", "assets/tz.svg", "assets/tz2.svg", "assets/ua.svg", "assets/ua2.svg", "assets/ug2.svg", "assets/ug.svg", "assets/um2.svg", "assets/um.svg", "assets/us.svg", "assets/us2.svg", "assets/uy.svg", "assets/uy2.svg", "assets/uz.svg", "assets/uz2.svg", "assets/va2.svg", "assets/va.svg", "assets/vc.svg", "assets/vc2.svg", "assets/ve.svg", "assets/ve2.svg", "assets/vg.svg", "assets/vg2.svg", "assets/vi2.svg", "assets/vi.svg", "assets/vn.svg", "assets/vn2.svg", "assets/vu.svg", "assets/vu2.svg", "assets/wf2.svg", "assets/wf.svg", "assets/ws2.svg", "assets/ws.svg", "assets/ye2.svg", "assets/ye.svg", "assets/yt2.svg", "assets/yt.svg", "assets/za.svg", "assets/za2.svg", "assets/zm2.svg", "assets/zm.svg", "assets/zw.svg", "assets/zw2.svg", "assets/arab.svg", "assets/arab2.svg", "assets/asean.svg", "assets/asean2.svg", "assets/cefta.svg", "assets/cefta2.svg", "assets/cp.svg", "assets/cp2.svg", "assets/dg.svg", "assets/dg2.svg", "assets/eac2.svg", "assets/eac.svg", "assets/es-ct.svg", "assets/es-ct2.svg", "assets/es-ga.svg", "assets/es-ga2.svg", "assets/es-pv.svg", "assets/es-pv2.svg", "assets/eu.svg", "assets/eu2.svg", "assets/gb-eng.svg", "assets/gb-eng2.svg", "assets/gb-nir2.svg", "assets/gb-nir.svg", "assets/gb-sct.svg", "assets/gb-sct2.svg", "assets/gb-wls2.svg", "assets/gb-wls.svg", "assets/ic.svg", "assets/ic2.svg", "assets/pc2.svg", "assets/pc.svg", "assets/sh-ac2.svg", "assets/sh-ac.svg", "assets/sh-hl2.svg", "assets/sh-hl.svg", "assets/sh-ta2.svg", "assets/sh-ta.svg", "assets/un.svg", "assets/un2.svg", "assets/xk2.svg", "assets/xk.svg", "assets/index-0f0aa333.js", "assets/index-0a1d6aaf.js", "assets/controller-addd81a0.js" ],
+      "use_dynamic_url": false
+   }, {
+      "matches": [ "*://*.instagram.com/*" ],
+      "resources": [ "assets/inject.js-6aa1e335.js" ],
+      "use_dynamic_url": false
+   }, {
+      "matches": [ "*://*.chatgpt.com/*" ],
+      "resources": [ "assets/index.js-81c039a0.js" ],
+      "use_dynamic_url": false
+   } ]
+}

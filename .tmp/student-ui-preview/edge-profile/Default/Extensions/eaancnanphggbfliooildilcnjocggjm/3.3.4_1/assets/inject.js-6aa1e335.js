@@ -1,0 +1,1 @@
+var e=document.createElement("script");e.src=chrome.runtime.getURL("injected.js");e.onload=function(){this.remove()};(document.head||document.documentElement).insertBefore(e,(document.head||document.documentElement).firstChild);
