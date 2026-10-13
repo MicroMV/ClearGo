@@ -1,0 +1,20 @@
+# Local environment and credentials
+/.env
+/.env.*
+!/.env.example
+/credentials.json
+/google-credentials.json
+**/credentials.local.json
+
+# Generated browser and UI test artifacts
+/.tmp/
+
+# Runtime sessions
+/storage/sessions/sess_*
+
+# Private user uploads (keep access-control and placeholder files tracked)
+/storage/private/**/*.jpg
+/storage/private/**/*.jpeg
+/storage/private/**/*.png
+/storage/private/**/*.webp
+/storage/private/**/*.pdf
