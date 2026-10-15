@@ -400,7 +400,7 @@ function officeClearanceContext(PDO $database, string $stationCode, int $clearan
 function notifyAndAuditOffice(PDO $database, array $context, int $staffUserId, string $action, string $description, string $oldStatus, string $newStatus): void
 {
     if (($context['clearance_status'] ?? null) === 'OPEN') {
-        createNotification($database, (int) $context['student_user_id'], $context['station_name'] . ' clearance updated', $description);
+        createNotification($database, (int) $context['student_user_id'], $context['station_name'] . ' clearance updated', $description, (int) $context['academic_period_id']);
     }
     $audit = $database->prepare('INSERT INTO audit_logs (user_id,action,station_id,student_id,description,old_status,new_status) VALUES (:user_id,:action,:station_id,:student_id,:description,:old_status,:new_status)');
     $audit->execute([
@@ -445,19 +445,22 @@ function unlockAfterOfficeApproval(PDO $database, string $stationCode, int $clea
         $unlock = $database->prepare("UPDATE clearance_stations cs INNER JOIN stations s ON s.id=cs.station_id SET cs.status='PENDING' WHERE cs.clearance_id=? AND s.code IN ({$placeholders}) AND cs.status='LOCKED'");
         $unlock->execute(array_merge([$clearanceId], $codes));
         if ($unlock->rowCount() > 0 && $roles !== []) {
-            $studentNumberQuery = $database->prepare('SELECT student.student_number FROM clearances clearance INNER JOIN students student ON student.id=clearance.student_id WHERE clearance.id=?');
+            $studentNumberQuery = $database->prepare('SELECT student.student_number,clearance.academic_period_id FROM clearances clearance INNER JOIN students student ON student.id=clearance.student_id WHERE clearance.id=?');
             $studentNumberQuery->execute([$clearanceId]);
-            $studentNumber = (string) $studentNumberQuery->fetchColumn();
-            notifyActiveRoles($database, $roles, 'Clearance ready for your action', $studentNumber . ' has reached your office with PENDING status. Review the record and clear or return it.');
+            $studentContext = $studentNumberQuery->fetch();
+            notifyActiveRoles($database, $roles, 'Clearance ready for your action', $studentContext['student_number'] . ' has reached your office with PENDING status. Review the record and clear or return it.', (int) $studentContext['academic_period_id']);
         }
     }
 }
 
-function approveOfficeClearance(PDO $database, string $stationCode, int $clearanceId, int $staffUserId, ?int $submissionId = null): void
+function approveOfficeClearance(PDO $database, string $stationCode, int $clearanceId, int $staffUserId, ?int $submissionId = null, bool $readyOnly = false): void
 {
     $database->beginTransaction();
     try {
         $context = officeClearanceContext($database, $stationCode, $clearanceId, true);
+        if ($readyOnly && $context['station_status'] !== 'PENDING') {
+            throw new RuntimeException('This student is no longer ready for bulk clearance.');
+        }
         if ($stationCode === 'ACCOUNTING' && $submissionId !== null) {
             $latest = $database->prepare("SELECT id,status,receipt_code FROM accounting_receipts WHERE student_id=:student_id AND academic_period_id=:period_id ORDER BY id DESC LIMIT 1 FOR UPDATE");
             $latest->execute(['student_id' => $context['student_id'], 'period_id' => $context['academic_period_id']]);
@@ -535,11 +538,26 @@ function manuallyClearAccounting(PDO $database, int $clearanceId, int $staffUser
     }
 }
 
-function finalizeRegistrarClearance(PDO $database, int $clearanceId, int $staffUserId): void
+function finalizeRegistrarClearance(PDO $database, int $clearanceId, int $staffUserId, bool $readyOnly = false): void
 {
     $database->beginTransaction();
     try {
         $context = officeClearanceContext($database, 'REGISTRAR', $clearanceId, true);
+        if ($readyOnly && $context['station_status'] !== 'PENDING') {
+            throw new RuntimeException('This student is no longer ready for bulk clearance.');
+        }
+        if ($readyOnly) {
+            $incompleteDocuments = countQuery($database,
+                "SELECT COUNT(*) FROM document_requirements requirement
+                 LEFT JOIN student_documents document ON document.document_requirement_id=requirement.id AND document.student_id=:student_id
+                 WHERE requirement.academic_period_id=:period_id AND requirement.status='ACTIVE' AND requirement.is_required=1
+                   AND (document.id IS NULL OR document.status<>'VERIFIED')",
+                ['student_id' => $context['student_id'], 'period_id' => $context['academic_period_id']]
+            );
+            if ($incompleteDocuments > 0) {
+                throw new RuntimeException('Verify all required documents before bulk Registrar clearance.');
+            }
+        }
         if (!in_array($context['clearance_status'], ['PREPARING', 'OPEN'], true)) {
             throw new RuntimeException('Clearance decisions are not available for this semester.');
         }

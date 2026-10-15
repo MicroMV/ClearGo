@@ -25,7 +25,7 @@ try {
         throw new RuntimeException('Provide a reason for returning the screenshots.');
     }
     $database->beginTransaction();
-    $submission = $database->prepare("SELECT submission.clearance_id, student.user_id, station.id AS station_id FROM evaluation_submissions submission INNER JOIN clearances clearance ON clearance.id=submission.clearance_id INNER JOIN students student ON student.id=clearance.student_id AND student.organization_id=:organization_id INNER JOIN stations station ON station.code='DEAN' WHERE submission.id=:id AND submission.status='SUBMITTED' FOR UPDATE");
+    $submission = $database->prepare("SELECT submission.clearance_id, clearance.academic_period_id, student.user_id, station.id AS station_id FROM evaluation_submissions submission INNER JOIN clearances clearance ON clearance.id=submission.clearance_id INNER JOIN students student ON student.id=clearance.student_id AND student.organization_id=:organization_id INNER JOIN stations station ON station.code='DEAN' WHERE submission.id=:id AND submission.status='SUBMITTED' FOR UPDATE");
     $submission->execute(['organization_id' => $dean['organization_id'], 'id' => $submissionId]);
     $row = $submission->fetch();
     if (!$row) {
@@ -37,7 +37,7 @@ try {
     $database->prepare("UPDATE requirement_records record INNER JOIN clearance_stations clearance_station ON clearance_station.id=record.clearance_station_id INNER JOIN requirements requirement ON requirement.id=record.requirement_id SET record.status=:status,record.remarks=:remarks,record.verified_by=:user_id,record.verified_at=NOW() WHERE clearance_station.clearance_id=:clearance_id AND requirement.requirement_code IN ('CCS_FACULTY_EVALUATION','CCS_FOURTH_YEAR_FACULTY_EVALUATION')")->execute(['status' => $recordStatus, 'remarks' => $action === 'return' ? $reason : null, 'user_id' => $user['id'], 'clearance_id' => $row['clearance_id']]);
     $title = $action === 'verify' ? 'Faculty Evaluation verified' : 'Faculty Evaluation screenshots returned';
     $message = $action === 'verify' ? 'Your Faculty Evaluation screenshots were verified by the CCS Dean.' : $reason;
-    createNotification($database, (int) $row['user_id'], $title, $message);
+    createNotification($database, (int) $row['user_id'], $title, $message, (int) $row['academic_period_id']);
     $database->commit();
     setFlashMessage($action === 'verify' ? 'Submission verified.' : 'Submission returned to the student.');
 } catch (Throwable $exception) {

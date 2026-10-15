@@ -127,7 +127,8 @@ function createOrganizationEvent(
                 $database,
                 (int) $studentUserId,
                 'New required organization activity',
-                '"' . $name . '" is scheduled for ' . $eventDate . $eventTime . '. Use the ClearGo QR scanner when check-in opens.'
+                '"' . $name . '" is scheduled for ' . $eventDate . $eventTime . '. Use the ClearGo QR scanner when check-in opens.',
+                (int) $period['id']
             );
         }
         $audit = $database->prepare(
@@ -244,7 +245,7 @@ function qrAttendanceContext(PDO $database, string $token, int $userId, bool $lo
         return false;
     }
     $statement = $database->prepare(
-        "SELECT event.id AS event_id,event.name,event.description,event.event_date,event.start_time,event.end_time,
+        "SELECT event.id AS event_id,event.academic_period_id,event.name,event.description,event.event_date,event.start_time,event.end_time,
                 event.check_in_closes_at,event.station_id,event.organization_id,organization.name AS organization_name,
                 organization.code AS organization_code,student.id AS student_id,student.student_number,
                 student.first_name,student.last_name,attendance.status AS attendance_status
@@ -302,7 +303,8 @@ function recordQrAttendance(PDO $database, string $token, int $userId): array
             $database,
             $userId,
             'Attendance recorded',
-            'You are marked PRESENT for "' . $context['name'] . '". No further check-in is needed for this event.'
+            'You are marked PRESENT for "' . $context['name'] . '". No further check-in is needed for this event.',
+            (int) $context['academic_period_id']
         );
         $database->commit();
         return ['context' => $context, 'already_recorded' => false];

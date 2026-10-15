@@ -68,7 +68,7 @@ $sidebar = staffDashboardSidebar('Facilities Clearance', $user, [
             <div class="topbar-actions"><?= dashboardNotificationBell($notifications) ?></div>
         </header>
         <main class="staff-main">
-            <?php if ($message !== null): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?>
+            <?php if ($message !== null): ?><p class="message" data-flash-message><?= escapeHtml($message) ?></p><?php endif; ?>
             <section class="panel">
                 <form class="controls" method="get">
                     <input name="search" value="<?= escapeHtml($search) ?>" placeholder="Search student or item" aria-label="Search student or item">
@@ -116,6 +116,6 @@ $sidebar = staffDashboardSidebar('Facilities Clearance', $user, [
         </main>
     </div>
 </div>
-<script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>"></script>
+<script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/js/staff-dashboard.js') ?>"></script>
 </body>
 </html>

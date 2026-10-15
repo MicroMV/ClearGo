@@ -766,6 +766,34 @@ body.staff-dashboard {
     flex-wrap: wrap;
 }
 
+.staff-dashboard .clearance-list-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.staff-dashboard .clearance-list-footer .pagination {
+    flex: 1 1 auto;
+    min-width: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-top: 0;
+}
+
+.staff-dashboard .clearance-list-footer .pagination-link,
+.staff-dashboard .clearance-list-footer .pagination-ellipsis {
+    flex-shrink: 0;
+}
+
+.staff-dashboard .clearance-list-footer .bulk-clearance-form {
+    flex: 0 0 auto;
+    margin: 0 0 0 auto;
+    white-space: nowrap;
+}
+
 .staff-dashboard .pagination-link,
 .staff-dashboard .pagination-ellipsis {
     display: grid;

@@ -57,8 +57,8 @@ function markOfficeReady(PDO $database, int $userId, string $stationCode, string
         $description = $context['station_name'] . ' confirmed readiness for ' . $context['semester'] . ' Semester A.Y. ' . $context['school_year'] . '.';
         $audit = $database->prepare("INSERT INTO audit_logs (user_id,action,station_id,description,old_status,new_status) VALUES (:user_id,'OFFICE_MARKED_READY',:station_id,:description,'NOT_READY','READY')");
         $audit->execute(['user_id' => $userId, 'station_id' => $context['station_id'], 'description' => $description]);
-        $notification = $database->prepare("INSERT INTO notifications (user_id,title,message) SELECT id,'Office ready for semester',:message FROM users WHERE role='REGISTRAR' AND status='ACTIVE'");
-        $notification->execute(['message' => $description]);
+        $notification = $database->prepare("INSERT INTO notifications (user_id,academic_period_id,title,message) SELECT id,:period_id,'Office ready for semester',:message FROM users WHERE role='REGISTRAR' AND status='ACTIVE'");
+        $notification->execute(['period_id' => $context['academic_period_id'], 'message' => $description]);
         $database->commit();
     } catch (Throwable $exception) {
         if ($database->inTransaction()) {
@@ -87,8 +87,8 @@ function markOfficeNotReady(PDO $database, int $userId, string $stationCode): vo
         $description = $context['station_name'] . ' withdrew readiness for ' . $context['semester'] . ' Semester A.Y. ' . $context['school_year'] . '.';
         $audit = $database->prepare("INSERT INTO audit_logs (user_id,action,station_id,description,old_status,new_status) VALUES (:user_id,'OFFICE_MARKED_NOT_READY',:station_id,:description,'READY','NOT_READY')");
         $audit->execute(['user_id' => $userId, 'station_id' => $context['station_id'], 'description' => $description]);
-        $notification = $database->prepare("INSERT INTO notifications (user_id,title,message) SELECT id,'Office readiness withdrawn',:message FROM users WHERE role='REGISTRAR' AND status='ACTIVE'");
-        $notification->execute(['message' => $description]);
+        $notification = $database->prepare("INSERT INTO notifications (user_id,academic_period_id,title,message) SELECT id,:period_id,'Office readiness withdrawn',:message FROM users WHERE role='REGISTRAR' AND status='ACTIVE'");
+        $notification->execute(['period_id' => $context['academic_period_id'], 'message' => $description]);
         $database->commit();
     } catch (Throwable $exception) {
         if ($database->inTransaction()) {

@@ -44,7 +44,7 @@ if ($user === false || !password_verify($password, $user['password_hash'])) {
 }
 
 if ($user['status'] !== 'ACTIVE') {
-    setFlashMessage('This account is currently inactive. Please contact the administrator.');
+    setFlashMessage('This account is currently inactive. Please visit the Registrar\'s Office for assistance.');
     redirectTo('/login.php');
 }
 

@@ -56,7 +56,15 @@
         }
 
         .secondary {
-                background: #587086
+                background: #587086;
+                color: #fff
+        }
+
+        a.button.secondary,
+        a.button.secondary:visited,
+        a.button.secondary:hover,
+        a.button.secondary:focus-visible {
+                color: #fff
         }
 
         h1 {
@@ -115,6 +123,147 @@
         .upload label {
                 display: grid;
                 gap: 7px
+        }
+
+        .staff-dashboard form.upload.import-upload {
+                display: block;
+                width: 100%;
+                margin-top: 22px;
+                padding: 18px;
+                border: 1px solid #d4e3f0;
+                border-radius: 14px;
+                background: #f7fbff
+        }
+
+        .staff-dashboard .import-file-field {
+                display: block;
+                width: 100%
+        }
+
+        .staff-dashboard .import-file-label {
+                display: block;
+                margin-bottom: 9px;
+                color: #36536d;
+                font-size: 12px;
+                font-weight: 750
+        }
+
+        .staff-dashboard .import-file-box {
+                position: relative;
+                display: grid;
+                grid-template-columns: 52px minmax(0, 1fr) auto;
+                align-items: center;
+                gap: 15px;
+                min-height: 112px;
+                padding: 20px;
+                border: 2px dashed #9fc4e3;
+                border-radius: 12px;
+                background: #fff;
+                cursor: pointer;
+                transition: border-color .15s ease, background .15s ease, box-shadow .15s ease
+        }
+
+        .staff-dashboard .import-file-box:hover,
+        .staff-dashboard .import-file-box.is-dragging {
+                border-color: #1769aa;
+                background: #f3f8fd
+        }
+
+        .staff-dashboard .import-file-box:focus-within {
+                border-color: #1769aa;
+                box-shadow: 0 0 0 3px rgba(23, 105, 170, .14)
+        }
+
+        .staff-dashboard .import-file-box.has-file {
+                border-style: solid;
+                border-color: #79add6;
+                background: #f2f8fe
+        }
+
+        .staff-dashboard .import-file-box input[type="file"] {
+                position: absolute;
+                z-index: 2;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                min-height: 0;
+                max-width: none;
+                padding: 0;
+                border: 0;
+                opacity: 0;
+                cursor: pointer
+        }
+
+        .staff-dashboard .import-file-icon {
+                display: grid;
+                width: 52px;
+                height: 52px;
+                place-items: center;
+                border-radius: 12px;
+                background: #e7f2fc;
+                color: #1769aa
+        }
+
+        .staff-dashboard .import-file-icon svg {
+                width: 25px;
+                height: 25px
+        }
+
+        .staff-dashboard .import-file-copy {
+                min-width: 0
+        }
+
+        .staff-dashboard .import-file-copy strong,
+        .staff-dashboard .import-file-copy span {
+                display: block
+        }
+
+        .staff-dashboard .import-file-copy strong {
+                color: #17324d;
+                font-size: 14px
+        }
+
+        .staff-dashboard .import-file-copy span {
+                margin-top: 5px;
+                overflow: hidden;
+                color: #668097;
+                font-size: 12px;
+                font-weight: 500;
+                text-overflow: ellipsis;
+                white-space: nowrap
+        }
+
+        .staff-dashboard .import-file-box.has-file .import-file-copy span {
+                color: #1769aa;
+                font-weight: 700
+        }
+
+        .staff-dashboard .import-file-browse {
+                padding: 9px 13px;
+                border: 1px solid #b9d2e7;
+                border-radius: 8px;
+                background: #fff;
+                color: #1769aa;
+                font-size: 12px;
+                font-weight: 750
+        }
+
+        .staff-dashboard .import-upload-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 10px;
+                margin-top: 14px
+        }
+
+        .staff-dashboard .import-upload-actions .button-link,
+        .staff-dashboard .import-upload-actions button {
+                min-height: 44px;
+                padding-inline: 18px
+        }
+
+        .staff-dashboard .import-upload + .hint {
+                margin: 10px 3px 0;
+                line-height: 1.55
         }
 
         .hint,
@@ -181,6 +330,24 @@
                 color: var(--amber)
         }
 
+        #import-preview {
+                scroll-margin-top: 100px
+        }
+
+        .staff-dashboard .import-preview-pagination {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 14px;
+                margin: 18px 0 22px
+        }
+
+        .staff-dashboard .import-preview-pagination p,
+        .staff-dashboard .import-preview-pagination .pagination {
+                margin: 0
+        }
+
         .actions {
                 display: flex;
                 gap: 10px;
@@ -189,6 +356,11 @@
 
         .actions form {
                 margin: 0
+        }
+
+        .staff-dashboard #import-preview .actions form {
+                flex: 0 0 auto;
+                min-width: 0
         }
 
         @media(max-width:700px) {
@@ -200,5 +372,34 @@
 
                 .topbar {
                         align-items: flex-start
+                }
+
+                .staff-dashboard form.upload.import-upload {
+                        padding: 13px
+                }
+
+                .staff-dashboard .import-file-box {
+                        grid-template-columns: 44px minmax(0, 1fr);
+                        gap: 12px;
+                        min-height: 105px;
+                        padding: 16px
+                }
+
+                .staff-dashboard .import-file-icon {
+                        width: 44px;
+                        height: 44px
+                }
+
+                .staff-dashboard .import-file-browse {
+                        display: none
+                }
+
+                .staff-dashboard .import-upload-actions {
+                        flex-direction: column-reverse
+                }
+
+                .staff-dashboard .import-upload-actions .button-link,
+                .staff-dashboard .import-upload-actions button {
+                        width: 100%
                 }
         }

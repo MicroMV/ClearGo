@@ -45,7 +45,7 @@ function processAccountingReceiptUpload(PDO $database, int $userId, array $file)
         $insert->execute(['student_id' => $context['student_id'], 'period_id' => $context['period_id'], 'code' => $code]);
         $audit = $database->prepare("INSERT INTO audit_logs (user_id,action,station_id,student_id,description,new_status) SELECT :user_id,'ACCOUNTING_SCREENSHOT_SUBMITTED',id,:student_id,'TLC portal screenshot submitted for manual Accounting review.','SUBMITTED' FROM stations WHERE code='ACCOUNTING'");
         $audit->execute(['user_id' => $userId, 'student_id' => $context['student_id']]);
-        notifyActiveRoles($database, ['ACCOUNTING_STAFF'], 'Accounting proof awaiting review', $context['student_number'] . ' submitted a TLC portal screenshot. Open Submitted Requirements to review it.');
+        notifyActiveRoles($database, ['ACCOUNTING_STAFF'], 'Accounting proof awaiting review', $context['student_number'] . ' submitted a TLC portal screenshot. Open Submitted Requirements to review it.', (int) $context['period_id']);
         $database->commit();
         return ['status' => 'SUBMITTED'];
     } catch (Throwable $exception) {

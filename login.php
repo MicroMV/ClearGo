@@ -44,9 +44,6 @@ $csrfToken = createCsrfToken();
             <div class="signin-card">
                 <h2 id="signin-title">Welcome back</h2>
                 <p class="intro">Sign in with your official Lewis College account.</p>
-                <?php if ($message !== null): ?>
-                    <p class="message" role="alert"><?= escapeHtml($message) ?></p>
-                <?php endif; ?>
                 <form method="post" action="<?= escapeHtml(applicationUrl('/auth/login_process.php')) ?>">
                     <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
                     <label for="email">The Lewis College GSuite Address</label>
@@ -59,6 +56,13 @@ $csrfToken = createCsrfToken();
             </div>
         </section>
     </main>
+    <?php if ($message !== null): ?>
+        <aside class="login-toast" role="alert">
+            <div><strong>ClearGo</strong><p><?= escapeHtml($message) ?></p></div>
+            <button type="button" aria-label="Dismiss notification">&times;</button>
+        </aside>
+        <script src="<?= escapeHtml(applicationUrl('/assets/js/login.js')) ?>"></script>
+    <?php endif; ?>
 </body>
 
 </html>

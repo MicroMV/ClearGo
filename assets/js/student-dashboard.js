@@ -2,6 +2,8 @@ const notificationButton = document.getElementById('notificationButton');
 const notificationBox = document.getElementById('notificationBox');
 const notificationWrap = notificationButton?.closest('.notification-wrap');
 let notificationToastTimer = null;
+const notificationToastQueue = [];
+let notificationToastOpen = false;
 
 function updateStudentNotificationBadge(unreadCount) {
     let badge = notificationButton.querySelector('.notification-count');
@@ -20,15 +22,25 @@ function updateStudentNotificationBadge(unreadCount) {
 
 function closeStudentNotificationToast() {
     const toast = document.querySelector('.student-notification-toast');
-    if (toast === null) return;
+    if (toast === null || toast.dataset.closing === 'true') return;
+    toast.dataset.closing = 'true';
     window.clearTimeout(notificationToastTimer);
     toast.classList.remove('visible');
     toast.addEventListener('transitionend', () => toast.remove(), { once: true });
     window.setTimeout(() => { if (toast.isConnected) toast.remove(); }, 500);
+    window.setTimeout(() => {
+        notificationToastOpen = false;
+        const next = notificationToastQueue.shift();
+        if (next) showStudentNotificationToast(next.notification, next.additionalCount);
+    }, 500);
 }
 
 function showStudentNotificationToast(notification, additionalCount = 0) {
-    closeStudentNotificationToast();
+    if (notificationToastOpen) {
+        notificationToastQueue.push({ notification, additionalCount });
+        return;
+    }
+    notificationToastOpen = true;
     const toast = document.createElement('aside');
     toast.className = 'student-notification-toast';
     toast.setAttribute('role', 'status');
@@ -42,7 +54,7 @@ function showStudentNotificationToast(notification, additionalCount = 0) {
     close.type = 'button';
     close.setAttribute('aria-label', 'Dismiss notification');
     close.textContent = '\u00d7';
-    close.addEventListener('click', closeStudentNotificationToast);
+    close.addEventListener('click', closeStudentNotificationToast, { once: true });
     copy.append(title, message);
     toast.append(copy, close);
     document.body.appendChild(toast);
@@ -116,6 +128,11 @@ notificationBox.addEventListener('click', function (event) { event.stopPropagati
 document.addEventListener('click', function () {
     notificationBox.hidden = true;
     notificationButton.setAttribute('aria-expanded', 'false');
+});
+
+document.querySelectorAll('.notice.flash').forEach((message) => {
+    showStudentNotificationToast({ title: 'ClearGo', message: message.textContent.trim() });
+    message.remove();
 });
 
 const newestUnreadNotification = notificationBox.querySelector('.notification-list li.unread');

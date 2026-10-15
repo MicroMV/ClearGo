@@ -60,7 +60,8 @@ try {
         $database,
         ['CLINIC_STAFF'],
         'Medical appointment scheduled',
-        $student['student_number'] . ' scheduled a medical appointment for ' . $schedule['schedule_date'] . ' at ' . $schedule['schedule_time'] . '.'
+        $student['student_number'] . ' scheduled a medical appointment for ' . $schedule['schedule_date'] . ' at ' . $schedule['schedule_time'] . '.',
+        (int) $schedule['academic_period_id']
     );
     $database->commit();
     setFlashMessage('Your medical appointment has been scheduled.');

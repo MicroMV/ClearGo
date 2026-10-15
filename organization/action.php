@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../auth/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/clearance_functions.php';
+require_once __DIR__ . '/../clearance/bulk_clearance.php';
 
 $user = requireRole('ORG_STAFF');
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCsrfToken($_POST['csrf_token'] ?? null)) {
@@ -17,7 +18,10 @@ try {
     $organization = assignedOrganization($database, $user['id']);
     $action = (string) ($_POST['action'] ?? '');
 
-    if ($action === 'return') {
+    if ($action === 'approve_all_ready') {
+        $result = approveAllReadyClearances($database, $user);
+        setFlashMessage('Cleared: ' . $result['approved'] . '. Skipped: ' . $result['skipped'] . '.');
+    } elseif ($action === 'return') {
         $studentId = filter_var($_POST['student_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         $reason = trim((string) ($_POST['reason'] ?? ''));
         if ($studentId === false || $reason === '' || mb_strlen($reason) > 1000) {

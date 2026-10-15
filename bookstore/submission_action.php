@@ -25,7 +25,7 @@ try {
     $database = getDatabaseConnection();
     $database->beginTransaction();
     $query = $database->prepare(
-        "SELECT submission.student_fee_id,submission.status,fee.name,student.user_id
+        "SELECT submission.student_fee_id,submission.status,fee.name,fee.academic_period_id,student.user_id
          FROM bookstore_receipt_submissions submission
          INNER JOIN student_bookstore_fees student_fee ON student_fee.id=submission.student_fee_id
          INNER JOIN bookstore_fees fee ON fee.id=student_fee.fee_id
@@ -50,9 +50,10 @@ try {
         $unpaid = $database->prepare("UPDATE student_bookstore_fees SET status='UNPAID',paid_at=NULL,payment_reference=NULL,remarks=:reason,verified_by=NULL,verified_at=NULL WHERE id=:id");
         $unpaid->execute(['reason' => $reason, 'id' => $submission['student_fee_id']]);
     }
-    $notification = $database->prepare('INSERT INTO notifications (user_id,title,message) VALUES (:user_id,:title,:message)');
+    $notification = $database->prepare('INSERT INTO notifications (user_id,academic_period_id,title,message) VALUES (:user_id,:period_id,:title,:message)');
     $notification->execute([
         'user_id' => $submission['user_id'],
+        'period_id' => $submission['academic_period_id'],
         'title' => $action === 'verify' ? 'Bookstore receipt confirmed' : 'Bookstore receipt returned',
         'message' => $action === 'verify' ? 'Your receipt requirement for ' . $submission['name'] . ' was confirmed.' : $reason,
     ]);

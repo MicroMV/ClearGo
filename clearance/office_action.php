@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../auth/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/office_workflow.php';
+require_once __DIR__ . '/bulk_clearance.php';
 
 $user = requireLogin();
 try {
@@ -36,6 +37,14 @@ function officeMutationNotice(PDO $database, array $context, int $userId, string
 try {
     $database = getDatabaseConnection();
     $action = (string) ($_POST['action'] ?? '');
+    if ($action === 'approve_all_ready') {
+        $audience = strtoupper((string) ($_POST['audience'] ?? 'ALL'));
+        $department = strtoupper((string) ($_POST['department'] ?? 'ALL'));
+        $result = approveAllReadyClearances($database, $user, '', $audience, $department);
+        setFlashMessage('Cleared: ' . $result['approved'] . '. Skipped: ' . $result['skipped'] . '.');
+        $returnQuery = $config['code'] === 'FACILITIES' ? '?' . http_build_query(['audience' => $audience, 'department' => $department]) : '';
+        redirectTo($config['path'] . $returnQuery);
+    }
     $clearanceId = positivePostId('clearance_id');
     $context = officeClearanceContext($database, $config['code'], $clearanceId);
     $canRecordComlabViolation = $config['code'] === 'COMLAB' && in_array($action, ['add_comlab_incident', 'resolve_comlab_incident'], true);

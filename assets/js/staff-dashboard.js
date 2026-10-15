@@ -23,18 +23,30 @@
     });
 
     var toastTimer = null;
+    var toastQueue = [];
+    var toastOpen = false;
 
     function closeNotificationToast() {
         var toast = document.querySelector('.notification-toast');
-        if (!toast) { return; }
+        if (!toast || toast.dataset.closing === 'true') { return; }
+        toast.dataset.closing = 'true';
         window.clearTimeout(toastTimer);
         toast.classList.remove('visible');
         toast.addEventListener('transitionend', function () { toast.remove(); }, { once: true });
         window.setTimeout(function () { if (toast.isConnected) { toast.remove(); } }, 500);
+        window.setTimeout(function () {
+            toastOpen = false;
+            var next = toastQueue.shift();
+            if (next) { showNotificationToast(next.notification, next.additionalCount); }
+        }, 500);
     }
 
     function showNotificationToast(notification, additionalCount) {
-        closeNotificationToast();
+        if (toastOpen) {
+            toastQueue.push({ notification: notification, additionalCount: additionalCount });
+            return;
+        }
+        toastOpen = true;
         var toast = document.createElement('aside');
         toast.className = 'notification-toast';
         toast.setAttribute('role', 'status');
@@ -50,7 +62,7 @@
         close.type = 'button';
         close.setAttribute('aria-label', 'Dismiss notification');
         close.textContent = '\u00d7';
-        close.addEventListener('click', closeNotificationToast);
+        close.addEventListener('click', closeNotificationToast, { once: true });
         copy.appendChild(title);
         copy.appendChild(message);
         toast.appendChild(copy);
@@ -173,6 +185,11 @@
         document.querySelectorAll('.notification-center').forEach(bindNotificationCenter);
     }
 
+    document.querySelectorAll('.staff-dashboard [data-flash-message]').forEach(function (message) {
+        showNotificationToast({ title: 'ClearGo', message: message.textContent.trim() }, 0);
+        message.remove();
+    });
+
     initNotificationCenters();
 
     document.addEventListener('click', function (event) {
@@ -221,23 +238,4 @@
         if (item.textContent.trim() === 'Will be confirmed when the CCS Dean approves') { item.remove(); }
     });
 
-    var submittedPage = document.querySelector('main.page');
-    if (submittedPage && !document.querySelector('.submitted-page-topbar')) {
-        var header = document.createElement('header');
-        header.className = 'staff-topbar submitted-page-topbar';
-        header.innerHTML = '<div class="topbar-title"><h1>CCS Dean Clearance</h1><p>Review academic requirements and process eligible student clearances.</p></div><div class="topbar-actions"><div class="notification-center"><button class="notification-toggle" type="button" aria-label="Notifications" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button><div class="notification-menu" hidden></div></div></div>';
-        header.querySelector('.notification-toggle').addEventListener('click', function () {
-            var dashboard = document.querySelector('.staff-nav a[href*="/dean/dashboard.php"]');
-            var center = header.querySelector('.notification-center');
-            if (!dashboard || !center) { return; }
-            fetch(dashboard.href, { credentials: 'same-origin' }).then(function (response) { return response.text(); }).then(function (html) {
-                var source = new DOMParser().parseFromString(html, 'text/html').querySelector('.notification-center');
-                if (!source) { return; }
-                center.replaceWith(source);
-                initNotificationCenters();
-                source.querySelector('.notification-toggle').click();
-            });
-        });
-        submittedPage.parentNode.insertBefore(header, submittedPage);
-    }
 }());

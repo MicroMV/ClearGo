@@ -48,7 +48,7 @@ $sidebar = registrarDashboardSidebar($user, 'dashboard', $logoutForm);
                 </div>
             </header>
             <main class="staff-main">
-                <?php if ($message): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?>
+                <?php if ($message): ?><p class="message" data-flash-message><?= escapeHtml($message) ?></p><?php endif; ?>
                 <section class="panel">
                     <div class="section-heading">
                         <div>
@@ -108,7 +108,7 @@ $sidebar = registrarDashboardSidebar($user, 'dashboard', $logoutForm);
             </main>
         </div>
     </div>
-    <script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>"></script>
+    <script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/js/staff-dashboard.js') ?>"></script>
 </body>
 
 </html>

@@ -124,7 +124,7 @@ function renderEventAttendancePage(string $role, string $eventSource): void
 <body class="staff-dashboard"><div class="staff-shell"><?= $sidebar ?><div class="staff-workspace">
 <header class="staff-topbar"><button class="mobile-nav-toggle" type="button" data-sidebar-open aria-controls="staff-sidebar" aria-expanded="false" aria-label="Open navigation">&#9776;</button><div class="topbar-title"><h1><?= escapeHtml($title) ?></h1><p>Manage required events, open QR check-in, and view attendance records.</p></div><div class="topbar-actions"><?= dashboardNotificationBell($notifications) ?></div></header>
 <main class="staff-main">
-<?php if ($message !== null): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?>
+<?php if ($message !== null): ?><p class="message" data-flash-message><?= escapeHtml($message) ?></p><?php endif; ?>
 <?php
     if ($eventSource === 'ORGANIZATION') {
         $attendanceEvents = $events;
@@ -142,6 +142,6 @@ function renderEventAttendancePage(string $role, string $eventSource): void
 <div class="attendance-summary"><strong><?= $totalRows ?></strong><span>student<?= $totalRows === 1 ? '' : 's' ?> present</span></div>
 <?php if ($attendees === []): ?><p class="muted">No present students match this view.</p><?php else: ?><div class="table-wrap"><table><thead><tr><th>No.</th><th>Student ID</th><th>Student Name</th><th>Program</th><th>Year Level</th><th>College</th><th>Check-in</th><th>Recorded At</th></tr></thead><tbody><?php foreach ($attendees as $index => $attendee): ?><tr><td><?= (($page - 1) * $pageSize) + $index + 1 ?></td><td><strong><?= escapeHtml($attendee['student_number']) ?></strong></td><td><?= escapeHtml($attendee['last_name'] . ', ' . $attendee['first_name']) ?></td><td><?= escapeHtml($attendee['program']) ?></td><td>Year <?= (int) $attendee['year_level'] ?></td><td><?= escapeHtml($attendee['college']) ?></td><td><span class="badge approved"><?= escapeHtml($attendee['check_in_method']) ?></span></td><td><?= escapeHtml(date('M j, Y g:i A', strtotime($attendee['recorded_at']))) ?></td></tr><?php endforeach; ?></tbody></table></div><?php endif; ?>
 <?php if ($totalPages > 1): ?><nav class="pagination" aria-label="Attendance pages"><?php foreach (paginationPages($page, $totalPages) as $pageNumber): ?><?php if ($pageNumber === 'ellipsis'): ?><span class="pagination-ellipsis">&hellip;</span><?php else: ?><a class="pagination-link <?= $pageNumber === $page ? 'active' : '' ?>" href="<?= escapeHtml(applicationUrl($pageUrl)) ?>?event=<?= (int) $selectedEvent['id'] ?>&amp;search=<?= urlencode($search) ?>&amp;page=<?= $pageNumber ?>"><?= $pageNumber ?></a><?php endif; ?><?php endforeach; ?></nav><?php endif; ?>
-<?php endif; ?></section></main></div></div><script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>"></script></body></html>
+<?php endif; ?></section></main></div></div><script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/js/staff-dashboard.js') ?>"></script></body></html>
 <?php
 }

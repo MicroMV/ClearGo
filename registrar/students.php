@@ -83,6 +83,9 @@ $message = pullFlashMessage();
 $csrfToken = createCsrfToken();
 $logoutForm = dashboardLogoutForm();
 $sidebar = registrarDashboardSidebar($user, 'students', $logoutForm);
+$studentStylesVersion = (string) (filemtime(__DIR__ . '/../assets/css/registrar-students.css') ?: 1);
+$studentScriptVersion = (string) (filemtime(__DIR__ . '/../assets/js/registrar-students.js') ?: 1);
+$staffStylesVersion = (string) (filemtime(__DIR__ . '/../assets/css/staff-dashboard.css') ?: 1);
 $editStudent = null;
 $editId = filter_var($_GET['edit'] ?? null, FILTER_VALIDATE_INT);
 if ($editId !== false) {
@@ -110,8 +113,8 @@ $filterQuery = http_build_query([
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Student Accounts | ClearGo</title>
-    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/registrar-students.css')) ?>">
-    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>">
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/registrar-students.css')) ?>?v=<?= escapeHtml($studentStylesVersion) ?>">
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>?v=<?= escapeHtml($staffStylesVersion) ?>">
 </head>
 
 <body class="staff-dashboard">
@@ -126,7 +129,7 @@ $filterQuery = http_build_query([
                 </div>
             </header>
             <main class="staff-main">
-                <?php if ($message): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?>
+                <?php if ($message): ?><p class="message" data-flash-message><?= escapeHtml($message) ?></p><?php endif; ?>
                 <section class="panel">
                     <div class="section-heading">
                         <div>
@@ -166,7 +169,7 @@ $filterQuery = http_build_query([
                             <option value="INACTIVE" <?= $accountFilter === 'INACTIVE' ? 'selected' : '' ?>>Inactive</option>
                         </select>
                         <button type="submit">Apply Filters</button>
-                        <a class="clear-filter" href="<?= escapeHtml(applicationUrl('/registrar/students.php')) ?>">Clear</a>
+                        <a class="clear-filter" href="<?= escapeHtml(applicationUrl('/registrar/students.php')) ?>">Clear filters</a>
                     </form>
                     <p class="muted"><?= escapeHtml(semesterLabel($period)) ?>; enrollment changes are <?= $period['clearance_status'] === 'PREPARING' ? 'open' : 'unavailable after clearance opening' ?>. Page <?= $page ?> of <?= $totalPages ?> · <?= $totalRows ?> student(s).</p>
                     <div class="table-wrap">
@@ -194,27 +197,62 @@ $filterQuery = http_build_query([
                                         <td>Year <?= (int) $student['year_level'] ?> - <?= escapeHtml($student['organization_code']) ?></td>
                                         <td><span class="badge <?= strtolower($student['enrollment_status']) ?>"><?= escapeHtml($student['enrollment_status']) ?></span></td>
                                         <td>
-                                            <div class="inline"><a href="?<?= escapeHtml($filterQuery . '&edit=' . (int) $student['id']) ?>">Edit</a>
-                                                <form method="post" action="<?= escapeHtml(applicationUrl('/registrar/student_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="student_id" value="<?= (int) $student['id'] ?>"><?php if ($period['clearance_status'] === 'PREPARING'): ?><button name="action" value="<?= $student['enrollment_status'] === 'ENROLLED' ? 'remove_enrollment' : 'enroll' ?>"><?= $student['enrollment_status'] === 'ENROLLED' ? 'Remove from semester' : 'Enroll' ?></button><?php endif; ?><button class="<?= $student['account_status'] === 'ACTIVE' ? 'danger' : '' ?>" name="action" value="toggle_account"><?= $student['account_status'] === 'ACTIVE' ? 'Deactivate' : 'Activate' ?></button></form>
+                                            <div class="student-row-actions"><a class="student-edit-button" href="?<?= escapeHtml($filterQuery . '&edit=' . (int) $student['id']) ?>" data-student-edit data-student-record="<?= escapeHtml(json_encode([
+                                                'student_id' => (int) $student['id'],
+                                                'student_number' => $student['student_number'],
+                                                'full_name' => $student['last_name'] . ', ' . $student['first_name'],
+                                                'email' => $student['email'],
+                                                'program' => $student['program'],
+                                                'year_level' => (int) $student['year_level'],
+                                                'organization_id' => (int) $student['organization_id'],
+                                            ], JSON_THROW_ON_ERROR)) ?>" aria-haspopup="dialog" aria-controls="student-edit-modal">Edit</a>
+                                                <form class="student-action-form" method="post" action="<?= escapeHtml(applicationUrl('/registrar/student_action.php')) ?>">
+                                                    <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
+                                                    <input type="hidden" name="student_id" value="<?= (int) $student['id'] ?>">
+                                                    <?php if ($period['clearance_status'] === 'PREPARING'): ?>
+                                                        <button name="action" value="<?= $student['enrollment_status'] === 'ENROLLED' ? 'remove_enrollment' : 'enroll' ?>" title="<?= $student['enrollment_status'] === 'ENROLLED' ? 'Unenroll this semester' : 'Enroll this semester' ?>"<?php if ($student['enrollment_status'] === 'ENROLLED'): ?> data-confirm="<?= escapeHtml('Are you sure you want to unenroll ' . $student['last_name'] . ', ' . $student['first_name'] . ' (' . $student['student_number'] . ') from this semester? They will no longer be able to process clearance for this semester.') ?>"<?php endif; ?>><?= $student['enrollment_status'] === 'ENROLLED' ? 'Unenroll' : 'Enroll' ?></button>
+                                                    <?php endif; ?>
+                                                    <button class="<?= $student['account_status'] === 'ACTIVE' ? 'danger' : '' ?>" name="action" value="toggle_account" title="<?= $student['account_status'] === 'ACTIVE' ? 'Disable account' : 'Enable account' ?>"<?php if ($student['account_status'] === 'ACTIVE'): ?> data-confirm="<?= escapeHtml('Are you sure you want to disable the account for ' . $student['last_name'] . ', ' . $student['first_name'] . ' (' . $student['student_number'] . ')? They will no longer be able to sign in.') ?>"<?php endif; ?>><?= $student['account_status'] === 'ACTIVE' ? 'Disable' : 'Enable' ?></button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr><?php endforeach; ?></tbody>
                         </table>
                     </div><?= renderPagination($page, $totalPages, $_GET) ?>
                 </section>
-                <?php if ($editStudent): ?><section class="panel">
-                        <div class="section-heading">
-                            <div>
-                                <h2>Edit <?= escapeHtml($editStudent['student_number']) ?></h2>
-                                <p class="muted">Update this student's existing account details.</p>
-                            </div>
-                        </div>
-                        <form class="grid" method="post" action="<?= escapeHtml(applicationUrl('/registrar/student_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="student_id" value="<?= (int) $editStudent['id'] ?>"><input name="student_number" required value="<?= escapeHtml($editStudent['student_number']) ?>"><input name="full_name" required value="<?= escapeHtml($editStudent['last_name'] . ', ' . $editStudent['first_name']) ?>"><input type="email" name="email" pattern=".+@thelewiscollege\.edu\.ph" required value="<?= escapeHtml($editStudent['email']) ?>"><input name="program" required value="<?= escapeHtml($editStudent['program']) ?>"><input type="number" min="1" max="6" name="year_level" required value="<?= (int) $editStudent['year_level'] ?>"><select name="organization_id"><?php foreach ($organizations as $org): ?><option value="<?= (int) $org['id'] ?>" <?= (int)$org['id'] === (int)$editStudent['organization_id'] ? 'selected' : '' ?>><?= escapeHtml($org['code'] . ' - ' . $org['name']) ?></option><?php endforeach; ?></select><button name="action" value="update">Save Changes</button><button name="action" value="reset_password">Reset Password to thelewiscollege</button></form>
-                    </section><?php endif; ?>
             </main>
         </div>
     </div>
-    <script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>"></script>
+    <dialog id="student-edit-modal" class="student-edit-modal" aria-labelledby="student-edit-title" aria-describedby="student-edit-description" data-initial-edit="<?= $editStudent ? 'true' : 'false' ?>">
+        <div class="student-edit-heading">
+            <div>
+                <h2 id="student-edit-title">Edit<?= $editStudent ? ' ' . escapeHtml($editStudent['student_number']) : ' student' ?></h2>
+                <p class="muted" id="student-edit-description">Update this student's existing account details.</p>
+            </div>
+            <button type="button" class="student-edit-close" data-close-student-edit aria-label="Close student editor">&times;</button>
+        </div>
+        <form method="post" action="<?= escapeHtml(applicationUrl('/registrar/student_action.php')) ?>" data-student-edit-form>
+            <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
+            <input type="hidden" name="student_id" value="<?= (int) ($editStudent['id'] ?? 0) ?>">
+            <div class="student-edit-fields">
+                <label>Student number<input name="student_number" required autofocus value="<?= escapeHtml($editStudent['student_number'] ?? '') ?>"></label>
+                <label>Full name<input name="full_name" required value="<?= $editStudent ? escapeHtml($editStudent['last_name'] . ', ' . $editStudent['first_name']) : '' ?>"></label>
+                <label>School email<input type="email" name="email" pattern=".+@thelewiscollege\.edu\.ph" required value="<?= escapeHtml($editStudent['email'] ?? '') ?>"></label>
+                <label>Course<input name="program" required value="<?= escapeHtml($editStudent['program'] ?? '') ?>"></label>
+                <label>Year level<input type="number" min="1" max="6" name="year_level" required value="<?= (int) ($editStudent['year_level'] ?? 1) ?>"></label>
+                <label>College<select name="organization_id" required><?php foreach ($organizations as $org): ?><option value="<?= (int) $org['id'] ?>" <?= (int) $org['id'] === (int) ($editStudent['organization_id'] ?? 0) ? 'selected' : '' ?>><?= escapeHtml($org['code'] . ' - ' . $org['name']) ?></option><?php endforeach; ?></select></label>
+            </div>
+            <div class="student-edit-footer">
+                <div class="student-edit-save-actions">
+                    <button type="button" class="secondary" data-close-student-edit>Cancel</button>
+                    <button name="action" value="update">Save Changes</button>
+                </div>
+                <button class="student-edit-reset" name="action" value="reset_password" formnovalidate>Reset Password to thelewiscollege</button>
+            </div>
+        </form>
+    </dialog>
+    <script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/js/staff-dashboard.js') ?>"></script>
+    <script src="<?= escapeHtml(applicationUrl('/assets/js/registrar-students.js')) ?>?v=<?= escapeHtml($studentScriptVersion) ?>"></script>
 </body>
 
 </html>

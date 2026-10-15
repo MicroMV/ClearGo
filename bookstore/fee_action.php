@@ -38,8 +38,8 @@ try {
         $feeId = (int) $database->lastInsertId();
         $assign = $database->prepare("INSERT IGNORE INTO student_bookstore_fees (student_id,fee_id,status) SELECT enrollment.student_id,:fee_id,'UNPAID' FROM semester_enrollments enrollment INNER JOIN students student ON student.id=enrollment.student_id AND student.status='ACTIVE' WHERE enrollment.academic_period_id=:period_id AND enrollment.status='ENROLLED'");
         $assign->execute(['fee_id' => $feeId, 'period_id' => $periodId]);
-        $notify = $database->prepare("INSERT INTO notifications (user_id,title,message) SELECT student.user_id,'New Bookstore event receipt required',:message FROM student_bookstore_fees student_fee INNER JOIN students student ON student.id=student_fee.student_id WHERE student_fee.fee_id=:fee_id");
-        $notify->execute(['fee_id' => $feeId, 'message' => 'Upload your receipt for ' . $name . ' in the Bookstore requirements.']);
+        $notify = $database->prepare("INSERT INTO notifications (user_id,academic_period_id,title,message) SELECT student.user_id,:period_id,'New Bookstore event receipt required',:message FROM student_bookstore_fees student_fee INNER JOIN students student ON student.id=student_fee.student_id WHERE student_fee.fee_id=:fee_id");
+        $notify->execute(['period_id' => $periodId, 'fee_id' => $feeId, 'message' => 'Upload your receipt for ' . $name . ' in the Bookstore requirements.']);
         $database->commit();
         setFlashMessage('Event fee added for ' . $assign->rowCount() . ' enrolled student(s).');
     } elseif ($action === 'deactivate') {

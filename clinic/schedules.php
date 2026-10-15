@@ -87,7 +87,7 @@ $sidebar = staffDashboardSidebar('Clinic Clearance', $user, [
             <div class="topbar-actions"><?= dashboardNotificationBell($notifications) ?></div>
         </header>
         <main class="staff-main">
-            <?php if ($message !== null): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?>
+            <?php if ($message !== null): ?><p class="message" data-flash-message><?= escapeHtml($message) ?></p><?php endif; ?>
             <section class="panel">
                 <div class="section-heading"><div><h2>Add a medical schedule</h2><p class="muted">Set the date, time, and maximum number of students.</p></div></div>
                 <form class="controls" method="post" action="<?= escapeHtml(applicationUrl('/clinic/schedule_action.php')) ?>">
@@ -137,6 +137,6 @@ $sidebar = staffDashboardSidebar('Clinic Clearance', $user, [
         </main>
     </div>
 </div>
-<script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>"></script>
+<script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/js/staff-dashboard.js') ?>"></script>
 </body>
 </html>

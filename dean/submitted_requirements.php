@@ -48,6 +48,7 @@ foreach ($submissions as &$submission) {
 unset($submission);
 $csrfToken = createCsrfToken();
 $message = pullFlashMessage();
+$notifications = dashboardNotifications($database, (int) $user['id']);
 $sidebar = staffDashboardSidebar('CCS Dean Clearance', $user, [
     ['key' => 'dashboard', 'label' => 'Dashboard', 'url' => '/dean/dashboard.php', 'icon' => 'dashboard'],
     ['key' => 'submitted_requirements', 'label' => 'Submitted Requirements', 'url' => '/dean/submitted_requirements.php', 'icon' => 'document'],
@@ -60,21 +61,33 @@ $sidebar = staffDashboardSidebar('CCS Dean Clearance', $user, [
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Submitted Requirements | CCS Dean</title>
-    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>">
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/css/staff-dashboard.css') ?>">
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/dean-submitted-requirements.css')) ?>">
 </head>
 
 <body class="staff-dashboard">
-    <div class="staff-shell"><?= $sidebar ?><main class="page">
+    <div class="staff-shell"><?= $sidebar ?>
+        <div class="staff-workspace">
+            <header class="staff-topbar">
+                <button class="mobile-nav-toggle" type="button" data-sidebar-open aria-controls="staff-sidebar" aria-expanded="false" aria-label="Open navigation">&#9776;</button>
+                <div class="topbar-title">
+                    <h1>CCS Dean Clearance</h1>
+                    <p>Review academic requirements and process eligible student clearances.</p>
+                </div>
+                <div class="topbar-actions"><?= dashboardNotificationBell($notifications) ?></div>
+            </header>
+            <main class="page staff-main">
             <h1>Submitted Requirements</h1>
-            <p>Review Faculty Evaluation screenshots by anonymous submission code. Student names and IDs are intentionally hidden.</p><?php if ($message): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?><nav class="filters"><?php foreach (['SUBMITTED' => 'Awaiting review', 'RETURNED' => 'Returned', 'VERIFIED' => 'Verified', 'ALL' => 'All'] as $value => $label): ?><a class="<?= $filter === $value ? 'active' : '' ?>" href="?filter=<?= $value ?>"><?= $label ?></a><?php endforeach; ?></nav><?php if ($submissions === []): ?><p>No submissions in this view.</p><?php endif; ?><?php foreach ($submissions as $submission): ?><article class="submission">
+            <p>Review Faculty Evaluation screenshots by anonymous submission code. Student names and IDs are intentionally hidden.</p><?php if ($message): ?><p class="message" data-flash-message><?= escapeHtml($message) ?></p><?php endif; ?><nav class="filters"><?php foreach (['SUBMITTED' => 'Awaiting review', 'RETURNED' => 'Returned', 'VERIFIED' => 'Verified', 'ALL' => 'All'] as $value => $label): ?><a class="<?= $filter === $value ? 'active' : '' ?>" href="?filter=<?= $value ?>"><?= $label ?></a><?php endforeach; ?></nav><?php if ($submissions === []): ?><p>No submissions in this view.</p><?php endif; ?><?php foreach ($submissions as $submission): ?><article class="submission">
                     <div class="submission-head">
                         <div><strong>Submission <?= escapeHtml($submission['anonymous_code']) ?></strong><br><small>Submitted <?= escapeHtml($submission['submitted_at']) ?> · <?= (int) $submission['image_count'] ?> image(s)</small></div><span class="badge <?= strtolower($submission['status']) ?>"><?= escapeHtml($submission['status']) ?></span>
                     </div>
                     <div class="proofs"><?php foreach ($submission['images'] as $image): ?><a href="<?= escapeHtml(applicationUrl('/dean/evaluation_image.php?id=' . (int) $image['id'])) ?>" target="_blank" rel="noopener"><img src="<?= escapeHtml(applicationUrl('/dean/evaluation_image.php?id=' . (int) $image['id'])) ?>" alt="Submitted evaluation screenshot <?= (int) $image['position'] ?>"></a><?php endforeach; ?></div><?php if ($submission['status'] === 'SUBMITTED'): ?><form class="actions" method="post" action="<?= escapeHtml(applicationUrl('/dean/submitted_requirement_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="submission_id" value="<?= (int) $submission['id'] ?>"><button name="action" value="verify">Verify screenshots</button><textarea name="reason" maxlength="1000" placeholder="Reason if returning this submission"></textarea><button class="return" name="action" value="return">Return for resubmission</button></form><?php elseif ($submission['status'] === 'RETURNED'): ?><p>Return reason: <?= escapeHtml($submission['return_reason']) ?></p><?php endif; ?>
                 </article><?php endforeach; ?>
         </main>
+        </div>
     </div>
+    <script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/js/staff-dashboard.js') ?>"></script>
 </body>
 
 </html>

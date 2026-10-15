@@ -7,6 +7,7 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/dashboard_functions.php';
 
 $user = requireRole('STUDENT');
+$profilePictureUrl = userProfilePictureUrl($user);
 
 try {
     $database = getDatabaseConnection();
@@ -292,8 +293,9 @@ try {
         }
     }
 
-    $notifications = dashboardNotificationPreview($database, (int) $user['id']);
-    $unreadNotificationCount = dashboardUnreadNotificationCount($database, (int) $user['id']);
+    $notificationPeriodId = $period === false ? 0 : (int) $period['id'];
+    $notifications = dashboardNotificationPreview($database, (int) $user['id'], $notificationPeriodId);
+    $unreadNotificationCount = dashboardUnreadNotificationCount($database, (int) $user['id'], $notificationPeriodId);
 } catch (Throwable $exception) {
     error_log('Student dashboard failed to load: ' . $exception->getMessage());
     http_response_code(500);
@@ -624,6 +626,7 @@ require __DIR__ . '/dashboard_view.php';
     </div>
     <nav class="portal-mobile-nav" aria-label="Mobile navigation"><?php foreach ($dashboardNavigation as $viewName => [$icon, $label]): ?><a href="#<?= $viewName ?>" data-dashboard-link="<?= $viewName ?>" <?= $viewName === 'overview' ? 'aria-current="page"' : '' ?>><?= studentDashboardIcon($icon) ?><span><?= $label ?></span></a><?php endforeach; ?></nav>
     <script src="<?= escapeHtml(applicationUrl('/assets/js/student-dashboard.js')) ?>?v=<?= escapeHtml($portalScriptVersion) ?>"></script>
+    <script src="<?= escapeHtml(applicationUrl('/assets/js/profile-picture.js')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/js/profile-picture.js') ?>"></script>
     <script src="<?= escapeHtml(applicationUrl('/assets/js/library-card-camera.js')) ?>"></script>
 </body>
 

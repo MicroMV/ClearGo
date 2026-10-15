@@ -154,7 +154,8 @@ function startStudentClearance(PDO $database, int $userId): array
             'Clearance application started',
             $firstStationCode === 'ORGANIZATION'
                 ? 'Your clearance application has started. Complete Organization clearance first.'
-                : 'Your clearance application has started. Review the applicable requirements for your Dean clearance first.'
+                : 'Your clearance application has started. Review the applicable requirements for your Dean clearance first.',
+            (int) $period['id']
         );
 
         $staffUsers = $database->prepare(
@@ -174,7 +175,8 @@ function startStudentClearance(PDO $database, int $userId): array
                 $database,
                 (int) $staffUserId,
                 $firstStationCode === 'ORGANIZATION' ? 'New Organization clearance application' : 'New Dean clearance application',
-                $student['student_number'] . ' reached your office with PENDING status and needs review.'
+                $student['student_number'] . ' reached your office with PENDING status and needs review.',
+                (int) $period['id']
             );
         }
 
@@ -216,16 +218,16 @@ function deanAssignment(PDO $database, int $deanUserId): array
     return $assignment;
 }
 
-function approveDeanClearance(PDO $database, int $deanUserId, int $clearanceId): bool
+function approveDeanClearance(PDO $database, int $deanUserId, int $clearanceId, bool $readyOnly = false): bool
 {
     $database->beginTransaction();
 
     try {
         $dean = deanAssignment($database, $deanUserId);
         $statement = $database->prepare(
-            "SELECT clearances.id, academic_periods.clearance_status,
+            "SELECT clearances.id, clearances.academic_period_id, academic_periods.clearance_status,
                     students.id AS student_id, students.user_id AS student_user_id,
-                    students.student_number, students.organization_id,
+                    students.student_number, students.organization_id, students.year_level,
                     clearance_stations.id AS clearance_station_id,
                     clearance_stations.status AS dean_status,
                     evaluation_verifications.status AS evaluation_status
@@ -245,6 +247,9 @@ function approveDeanClearance(PDO $database, int $deanUserId, int $clearanceId):
 
         if ($clearance === false) {
             throw new RuntimeException('The clearance application was not found.');
+        }
+        if ($readyOnly && $clearance['dean_status'] !== 'PENDING') {
+            throw new RuntimeException('This student is no longer ready for bulk clearance.');
         }
         if (!in_array($clearance['clearance_status'], ['PREPARING', 'OPEN'], true)) {
             throw new RuntimeException('Dean clearance is not available for processing.');
@@ -272,6 +277,22 @@ function approveDeanClearance(PDO $database, int $deanUserId, int $clearanceId):
             $organizationStatus->execute(['clearance_id' => $clearanceId]);
             if ($organizationStatus->fetchColumn() !== 'APPROVED') {
                 throw new RuntimeException('CBE Organization/YBC approval is required before Dean clearance.');
+            }
+        }
+        if ($readyOnly) {
+            $blocking = $database->prepare(
+                "SELECT COUNT(*) FROM requirement_records record
+                 INNER JOIN requirements requirement ON requirement.id=record.requirement_id
+                 WHERE record.clearance_station_id=:station_id AND requirement.status='ACTIVE'
+                   AND requirement.name<>'Dean Approval' AND record.status NOT IN ('VERIFIED','RESOLVED')
+                   AND NOT (:allow_ojt=1 AND requirement.requirement_code='CBE_OJT_REQUIREMENTS')"
+            );
+            $blocking->execute([
+                'station_id' => $clearance['clearance_station_id'],
+                'allow_ojt' => $dean['organization_code'] === 'CBE' && (int) $clearance['year_level'] === 4 ? 1 : 0,
+            ]);
+            if ((int) $blocking->fetchColumn() > 0) {
+                throw new RuntimeException('This student still has incomplete Dean requirements.');
             }
         }
         if ($dean['organization_code'] === 'CCS') {
@@ -384,19 +405,20 @@ function approveDeanClearance(PDO $database, int $deanUserId, int $clearanceId):
         $stationId = $database->query("SELECT id FROM stations WHERE code = 'DEAN' LIMIT 1")->fetchColumn();
         $isCbe = $dean['organization_code'] === 'CBE';
         $notification = $database->prepare(
-            "INSERT INTO notifications (user_id, title, message)
-             VALUES (:user_id, 'Dean clearance approved', :message)"
+            "INSERT INTO notifications (user_id, academic_period_id, title, message)
+             VALUES (:user_id, :period_id, 'Dean clearance approved', :message)"
         );
         $notification->execute([
             'user_id' => $clearance['student_user_id'],
+            'period_id' => $clearance['academic_period_id'],
             'message' => $isCbe
                 ? 'Your Dean clearance is cleared. SASO sub-checks are now available.'
                 : 'Your Dean clearance is cleared. Organization clearance is now available.',
         ]);
 
         $organizationStaffNotification = $database->prepare(
-            "INSERT INTO notifications (user_id,title,message)
-             SELECT assignment.user_id,'Student ready for organization review',:message
+            "INSERT INTO notifications (user_id,academic_period_id,title,message)
+             SELECT assignment.user_id,:period_id,'Student ready for organization review',:message
              FROM staff_assignments assignment
              INNER JOIN students student ON student.organization_id=assignment.organization_id
              INNER JOIN stations station ON station.id=assignment.station_id AND station.code='ORGANIZATION'
@@ -404,6 +426,7 @@ function approveDeanClearance(PDO $database, int $deanUserId, int $clearanceId):
         );
         if (!$isCbe) {
             $organizationStaffNotification->execute([
+                'period_id' => $clearance['academic_period_id'],
                 'message' => $clearance['student_number'] . ' completed Dean clearance and is ready for Organization review.',
                 'student_id' => $clearance['student_id'],
             ]);

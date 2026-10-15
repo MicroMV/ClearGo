@@ -8,6 +8,7 @@ require_once __DIR__ . '/clearance_functions.php';
 require_once __DIR__ . '/event_functions.php';
 require_once __DIR__ . '/../clearance/readiness_functions.php';
 require_once __DIR__ . '/../clearance/report_workbook.php';
+require_once __DIR__ . '/../clearance/bulk_clearance.php';
 
 $user = requireRole('ORG_STAFF');
 $search = trim((string) ($_GET['search'] ?? ''));
@@ -25,6 +26,7 @@ try {
     $database = getDatabaseConnection();
     $readiness = officeReadiness($database, 'ORGANIZATION');
     $organization = assignedOrganization($database, $user['id']);
+    $bulkReadyCount = count(bulkReadyClearanceIds($database, 'ORGANIZATION', (int) $organization['id']));
     $summary = organizationStatusSummary($database, (int) $organization['id']);
     $studentQuery = $database->prepare(
         "SELECT students.id, students.student_number, students.first_name, students.last_name,
@@ -159,7 +161,7 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Organization Clearance | Digital Clearance System</title>
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/organization-dashboard.css')) ?>">
-    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>">
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/css/staff-dashboard.css') ?>">
 </head>
 
 <body class="staff-dashboard">
@@ -176,7 +178,7 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
                 </div>
             </header>
             <main class="staff-main">
-                <?php if ($message !== null): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?>
+                <?php if ($message !== null): ?><p class="message" data-flash-message><?= escapeHtml($message) ?></p><?php endif; ?>
                 <?php if ($readiness['clearance_status'] === 'PREPARING'): ?><section class="panel">
                         <h2>Semester preparation</h2>
                         <p>Review attendance and take action now. Approve complete students or return incomplete records before confirming readiness.</p><?php if ($readiness['readiness_status'] === 'READY'): ?><p class="message">Organization clearance is marked READY.</p>
@@ -250,8 +252,8 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
                                 </table>
                             </div>
                             <p>Page <?= $page ?> of <?= $totalPages ?> · <?= $totalRows ?> student(s)</p>
-                            <?= renderPagination($page, $totalPages, ['search' => $search, 'course' => $courseFilter, 'year_level' => $yearFilter, 'filter' => $filter]) ?>
                         </form><?php endif; ?>
+                    <?= renderBulkClearanceFooter($page, $totalPages, ['search' => $search, 'course' => $courseFilter, 'year_level' => $yearFilter, 'filter' => $filter], applicationUrl('/organization/action.php'), $bulkReadyCount, $organization['code'] . ' Organization clearance') ?>
                 </section>
                 <?php if ($selectedStudent !== null): ?><section class="panel">
                         <h2><?= escapeHtml($selectedStudent['first_name'] . ' ' . $selectedStudent['last_name']) ?></h2>
@@ -264,7 +266,7 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
             </main>
         </div>
     </div>
-    <script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>"></script>
+    <script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/js/staff-dashboard.js') ?>"></script>
 </body>
 
 </html>

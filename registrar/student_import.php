@@ -8,10 +8,20 @@ require_once __DIR__ . '/../config/database.php';
 $user = requireRole('REGISTRAR');
 $message = pullFlashMessage();
 $preview = $_SESSION['student_import_preview'] ?? null;
+$previewPageSize = 30;
+$previewTotalRows = is_array($preview) ? count($preview['rows'] ?? []) : 0;
+$previewTotalPages = max(1, (int) ceil($previewTotalRows / $previewPageSize));
+$previewPage = filter_var($_GET['page'] ?? 1, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]) ?: 1;
+$previewPage = min($previewPage, $previewTotalPages);
+$previewOffset = ($previewPage - 1) * $previewPageSize;
+$previewRows = is_array($preview) ? array_slice($preview['rows'] ?? [], $previewOffset, $previewPageSize) : [];
 $result = $_SESSION['student_import_result'] ?? null;
 unset($_SESSION['student_import_result']);
 $csrfToken = createCsrfToken();
 $logoutForm = dashboardLogoutForm();
+$importStylesVersion = (string) (filemtime(__DIR__ . '/../assets/css/registrar-student-import.css') ?: 1);
+$importScriptVersion = (string) (filemtime(__DIR__ . '/../assets/js/registrar-student-import.js') ?: 1);
+$staffStylesVersion = (string) (filemtime(__DIR__ . '/../assets/css/staff-dashboard.css') ?: 1);
 $notifications = [];
 try {
     $notifications = dashboardNotificationPreview(getDatabaseConnection(), (int) $user['id']);
@@ -27,8 +37,8 @@ $sidebar = registrarDashboardSidebar($user, 'import', $logoutForm);
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Student Data Import | ClearGo</title>
-    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/registrar-student-import.css')) ?>">
-    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>">
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/registrar-student-import.css')) ?>?v=<?= escapeHtml($importStylesVersion) ?>">
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>?v=<?= escapeHtml($staffStylesVersion) ?>">
 </head>
 
 <body class="staff-dashboard">
@@ -45,7 +55,7 @@ $sidebar = registrarDashboardSidebar($user, 'import', $logoutForm);
                 </div>
             </header>
             <main class="staff-main">
-                <?php if ($message !== null): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?>
+                <?php if ($message !== null): ?><p class="message" data-flash-message><?= escapeHtml($message) ?></p><?php endif; ?>
                 <?php if (is_array($result)): ?><div class="panel message result"><strong>Semester roster imported.</strong>
                         <p>Added: <?= (int) $result['added'] ?> &nbsp; Updated: <?= (int) $result['updated'] ?> &nbsp; Removed from this semester: <?= (int) ($result['removed_from_semester'] ?? 0) ?> &nbsp; Skipped: <?= (int) $result['skipped'] ?> &nbsp; Errors: <?= (int) $result['errors'] ?></p>
                     </div><?php endif; ?>
@@ -57,15 +67,23 @@ $sidebar = registrarDashboardSidebar($user, 'import', $logoutForm);
                         </div>
                     </div>
                     <p>Upload the official student master list using the same layout as your existing Excel record. Format names as <strong>Last Name, First Name, Middle Name</strong>. The college is assigned automatically from the Course.</p>
-                    <form class="upload" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/registrar/student_import_action.php')) ?>">
+                    <form class="upload import-upload" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/registrar/student_import_action.php')) ?>">
                         <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="preview">
-                        <label>Excel or CSV file<input name="student_file" type="file" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required></label>
-                        <button type="submit">Upload and Preview</button><a class="button secondary" href="<?= escapeHtml(applicationUrl('/registrar/student_import_template.php')) ?>">Excel Template</a>
+                        <label class="import-file-field">
+                            <span class="import-file-label">Excel or CSV file</span>
+                            <span class="import-file-box">
+                                <input name="student_file" type="file" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required data-import-file>
+                                <span class="import-file-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg></span>
+                                <span class="import-file-copy"><strong>Choose your student roster</strong><span data-import-file-name>Drag and drop an Excel or CSV file here</span></span>
+                                <span class="import-file-browse">Browse file</span>
+                            </span>
+                        </label>
+                        <div class="import-upload-actions"><a class="button-link secondary" href="<?= escapeHtml(applicationUrl('/registrar/student_import_template.php')) ?>">Excel Template</a><button type="submit">Upload and Preview</button></div>
                     </form>
                     <p class="hint">Accepted: .xlsx or .csv, up to 5 MB and 5,000 student rows. Columns: #, Student No., Full Name, Course, Year Level, Gsuite Address. The importer recognizes a title such as “ACADEMIC YEAR 2026-2027 1ST SEMESTER” above the headers.</p>
                 </section>
                 <?php if (is_array($preview)): ?>
-                    <section class="panel">
+                    <section class="panel" id="import-preview">
                         <div class="section-heading">
                             <div>
                                 <h2>Import preview</h2>
@@ -90,7 +108,7 @@ $sidebar = registrarDashboardSidebar($user, 'import', $logoutForm);
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($preview['rows'] as $row): ?><tr>
+                                    <?php foreach ($previewRows as $row): ?><tr>
                                             <td><?= (int) $row['row_number'] ?></td>
                                             <td><span class="badge <?= $row['errors'] !== [] ? 'invalid' : strtolower($row['action']) ?>"><?= $row['errors'] !== [] ? 'INVALID' : escapeHtml($row['action']) ?></span></td>
                                             <td><?= escapeHtml($row['student_id']) ?></td>
@@ -103,6 +121,10 @@ $sidebar = registrarDashboardSidebar($user, 'import', $logoutForm);
                                         </tr><?php endforeach; ?></tbody>
                             </table>
                         </div>
+                        <div class="import-preview-pagination">
+                            <p class="muted">Page <?= $previewPage ?> of <?= $previewTotalPages ?> · Showing <?= $previewTotalRows === 0 ? 0 : $previewOffset + 1 ?>–<?= $previewOffset + count($previewRows) ?> of <?= $previewTotalRows ?> rows</p>
+                            <?= renderPagination($previewPage, $previewTotalPages, [], 'import-preview') ?>
+                        </div>
                         <div class="actions">
                             <form method="post" action="<?= escapeHtml(applicationUrl('/registrar/student_import_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="import"><input type="hidden" name="import_token" value="<?= escapeHtml((string) ($_SESSION['student_import_token'] ?? '')) ?>"><button type="submit" <?= (int) $preview['valid_count'] < 1 ? 'disabled' : '' ?>>Import <?= (int) $preview['valid_count'] ?> Enrolled Students</button></form>
                             <form method="post" action="<?= escapeHtml(applicationUrl('/registrar/student_import_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><button class="secondary" name="action" value="cancel" type="submit">Cancel Preview</button></form>
@@ -112,7 +134,8 @@ $sidebar = registrarDashboardSidebar($user, 'import', $logoutForm);
             </main>
         </div>
     </div>
-    <script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>"></script>
+    <script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/js/staff-dashboard.js') ?>"></script>
+    <script src="<?= escapeHtml(applicationUrl('/assets/js/registrar-student-import.js')) ?>?v=<?= escapeHtml($importScriptVersion) ?>"></script>
 </body>
 
 </html>

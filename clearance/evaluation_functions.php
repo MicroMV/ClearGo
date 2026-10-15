@@ -7,7 +7,7 @@ require_once __DIR__ . '/../auth/auth_check.php';
 function studentEvaluationContext(PDO $database, int $userId): array
 {
     $statement = $database->prepare(
-        "SELECT students.id AS student_id, clearances.id AS clearance_id,
+        "SELECT students.id AS student_id, clearances.id AS clearance_id, clearances.academic_period_id,
                 clearance_stations.id AS clearance_station_id,
                 clearance_stations.status AS dean_status
          FROM students
@@ -135,7 +135,7 @@ function saveEvaluationResult(PDO $database, array $context, int $userId, array 
             'ERROR' => ['Evaluation verification unavailable', 'Your screenshot was not retained. Please try again when the verification service is available.'],
         ];
         [$title, $message] = $messages[$result['status']];
-        createNotification($database, $userId, $title, $message);
+        createNotification($database, $userId, $title, $message, (int) $context['academic_period_id']);
 
         $stationId = $database->query("SELECT id FROM stations WHERE code = 'DEAN' LIMIT 1")->fetchColumn();
         $audit = $database->prepare(
@@ -215,7 +215,7 @@ function processEvaluationSubmission(PDO $database, int $userId, array $files): 
             $deanUsers = $database->prepare("SELECT assignment.user_id FROM staff_assignments assignment INNER JOIN stations station ON station.id=assignment.station_id AND station.code='DEAN' INNER JOIN students student ON student.organization_id=assignment.organization_id WHERE student.id=:student_id AND assignment.status='ACTIVE'");
             $deanUsers->execute(['student_id' => $context['student_id']]);
             foreach ($deanUsers->fetchAll(PDO::FETCH_COLUMN) as $deanUserId) {
-                createNotification($database, (int) $deanUserId, 'Anonymous evaluation submitted', 'Anonymous submission ' . $code . ' is awaiting Faculty Evaluation review.');
+                createNotification($database, (int) $deanUserId, 'Anonymous evaluation submitted', 'Anonymous submission ' . $code . ' is awaiting Faculty Evaluation review.', (int) $context['academic_period_id']);
             }
         }
         $database->prepare("UPDATE requirement_records record INNER JOIN requirements requirement ON requirement.id=record.requirement_id SET record.status='PENDING',record.remarks='Evaluation screenshots submitted for anonymous Dean review.',record.verified_by=NULL,record.verified_at=NULL WHERE record.clearance_station_id=:station_id AND requirement.requirement_code IN ('CCS_FACULTY_EVALUATION','CCS_FOURTH_YEAR_FACULTY_EVALUATION')")->execute(['station_id' => $context['clearance_station_id']]);

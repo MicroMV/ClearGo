@@ -7,6 +7,7 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../clearance/readiness_functions.php';
 require_once __DIR__ . '/../clearance/clearance_functions.php';
 require_once __DIR__ . '/../clearance/report_workbook.php';
+require_once __DIR__ . '/../clearance/bulk_clearance.php';
 
 $user = requireRole('DEAN');
 $search = trim((string) ($_GET['search'] ?? ''));
@@ -28,6 +29,8 @@ try {
     $database = getDatabaseConnection();
     $dean = deanAssignment($database, (int) $user['id']);
     $isCbeDean = $dean['organization_code'] === 'CBE';
+    $minimumBulkCount = deanMinimumBulkCount($database, $dean);
+    $bulkReadyCount = count(bulkReadyClearanceIds($database, 'DEAN', (int) $dean['organization_id'], $isCbeDean ? $cbeGroup : ''));
     $readiness = officeReadiness($database, 'DEAN');
     $verifiedSubmissionQuery = $database->prepare("SELECT COUNT(*) FROM evaluation_submissions submission INNER JOIN clearances clearance ON clearance.id=submission.clearance_id INNER JOIN students student ON student.id=clearance.student_id INNER JOIN academic_periods period ON period.id=clearance.academic_period_id AND period.status='ACTIVE' WHERE student.organization_id=:organization_id AND submission.status='VERIFIED'");
     $verifiedSubmissionQuery->execute(['organization_id' => $dean['organization_id']]);
@@ -219,7 +222,7 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= escapeHtml($dean['organization_code']) ?> Dean Clearance | Digital Clearance System</title>
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/dean-dashboard.css')) ?>">
-    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>">
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/css/staff-dashboard.css') ?>">
 </head>
 
 <body class="staff-dashboard">
@@ -236,7 +239,7 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
                 </div>
             </header>
             <main class="staff-main">
-                <?php if ($message !== null): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?>
+                <?php if ($message !== null): ?><p class="message" data-flash-message><?= escapeHtml($message) ?></p><?php endif; ?>
                 <?php if ($readiness['clearance_status'] === 'PREPARING'): ?><section class="panel">
                         <h2>Semester preparation</h2>
                         <p>Review requirements and take action now. Approve complete students and leave incomplete requirements pending so students can comply when the Registrar opens clearance.</p><?php if ($readiness['readiness_status'] === 'READY'): ?><p class="message">The Dean office is marked READY.</p>
@@ -246,7 +249,6 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
                         <h2>CBE student groups</h2>
                         <div class="group-tabs"><a href="?group=NON_GRADUATING&amp;filter=<?= urlencode($filter) ?>" <?= $cbeGroup === 'NON_GRADUATING' ? 'aria-current="page"' : '' ?>>Non-Graduating · <?= $cbeGroupCounts['NON_GRADUATING'] ?></a><a href="?group=FOURTH_YEAR&amp;filter=<?= urlencode($filter) ?>" <?= $cbeGroup === 'FOURTH_YEAR' ? 'aria-current="page"' : '' ?>>Fourth Year · <?= $cbeGroupCounts['FOURTH_YEAR'] ?></a></div>
                         <p class="muted">All CBE students require Organization/YBC sign-off before the CBE Dean can clear them. Fourth-year Dean approval also confirms the OJT requirement.</p>
-                        <form method="post" action="<?= escapeHtml(applicationUrl('/dean/action.php')) ?>" onsubmit="return confirm('Clear every eligible student in this group?');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="return_group" value="<?= escapeHtml($cbeGroup) ?>"><button name="action" value="approve_all_cbe_group">Clear All Signed by YBC</button></form>
                     </section><?php endif; ?>
                 <section class="panel">
                     <div class="section-heading">
@@ -262,11 +264,6 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
                         <div>Cleared<strong><?= $summary['APPROVED'] ?></strong></div>
                     </div>
                 </section>
-                <?php if ($dean['organization_code'] === 'CCS'): ?><?php $canBulkClear = $summary['VERIFIED'] > 0 && ($summary['VERIFIED'] >= 5 || $summary['WAITING'] < 5); ?><section class="panel">
-                    <h2>Bulk Dean clearance</h2>
-                    <p class="muted"><?= $summary['VERIFIED'] ?> student(s) are ready to clear. Bulk clearance is enabled at 5 ready students, or when fewer than 5 students remain for compliance.</p>
-                    <form method="post" action="<?= escapeHtml(applicationUrl('/dean/action.php')) ?>" onsubmit="return <?= $canBulkClear ? "confirm('Clear all ready CCS students?')" : 'false' ?>;"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><button name="action" value="approve_all_ready_ccs" <?= $canBulkClear ? '' : 'disabled' ?>>Clear all ready to clear</button></form>
-                </section><?php endif; ?>
             <section class="panel">
                 <div class="section-heading">
                     <div>
@@ -294,6 +291,7 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
                     <div>
                         <h2>Student clearance records</h2>
                         <p class="muted">Review applicable requirements before taking action.</p>
+                        <?php if ($dean['organization_code'] === 'CCS'): ?><p class="muted">Clear at least 5 ready students per batch. When fewer than 5 uncleared CCS students remain, you can clear the remaining ready students in bulk or individually.</p><?php endif; ?>
                     </div>
                 </div>
                 <div class="table-wrap">
@@ -333,14 +331,14 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
                                     </td>
                                     <td><span class="badge <?= strtolower($row['dean_status']) ?>"><?= $row['dean_status'] === 'APPROVED' ? 'CLEARED' : escapeHtml(statusDisplayLabel($row['dean_status'])) ?></span></td>
                                     <td>
-                                        <?php if (in_array($readiness['clearance_status'], ['PREPARING', 'OPEN'], true) && (int) $row['blocking_count'] === 0 && $row['dean_status'] === 'PENDING' && (!$isCbeDean || $row['organization_status'] === 'APPROVED') && ($dean['organization_code'] !== 'CCS' || $summary['WAITING'] <= 5)): ?>
+                                        <?php if (in_array($readiness['clearance_status'], ['PREPARING', 'OPEN'], true) && (int) $row['blocking_count'] === 0 && $row['dean_status'] === 'PENDING' && (!$isCbeDean || $row['organization_status'] === 'APPROVED') && $minimumBulkCount === 1): ?>
                                             <form method="post" action="<?= escapeHtml(applicationUrl('/dean/action.php')) ?>" onsubmit="return confirm('Clear this student at the Dean office?');">
                                                 <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
                                                 <?php if ($isCbeDean): ?><input type="hidden" name="return_group" value="<?= escapeHtml($cbeGroup) ?>"><?php endif; ?>
                                                 <input type="hidden" name="clearance_id" value="<?= (int) $row['clearance_id'] ?>">
                                                 <button type="submit" name="action" value="approve">Clear</button>
                                             </form>
-                                        <?php elseif ($row['dean_status'] === 'APPROVED'): ?><span class="muted">Approved</span><?php else: ?><span class="muted">Requirements incomplete</span><?php endif; ?>
+                                        <?php elseif ($row['dean_status'] === 'APPROVED'): ?><span class="muted">Approved</span><?php elseif ($minimumBulkCount > 1 && $row['dean_status'] === 'PENDING' && (int) $row['blocking_count'] === 0): ?><span class="muted">Use bulk clearance (minimum 5)</span><?php else: ?><span class="muted">Requirements incomplete</span><?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -348,12 +346,12 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
                     </table>
                 </div>
                 <p class="muted">Page <?= $page ?> of <?= $totalPages ?> · <?= $totalRows ?> student(s)</p>
-                <?= renderPagination($page, $totalPages, array_filter(['search' => $search, 'course' => $courseFilter, 'year_level' => $yearFilter, 'filter' => $filter, 'group' => $isCbeDean ? $cbeGroup : null], static fn($value): bool => $value !== null)) ?>
+                <?= renderBulkClearanceFooter($page, $totalPages, array_filter(['search' => $search, 'course' => $courseFilter, 'year_level' => $yearFilter, 'filter' => $filter, 'group' => $isCbeDean ? $cbeGroup : null], static fn($value): bool => $value !== null), applicationUrl('/dean/action.php'), $bulkReadyCount, $dean['organization_code'] . ' Dean clearance' . ($isCbeDean ? ' (' . str_replace('_', ' ', $cbeGroup) . ')' : ''), $isCbeDean ? ['return_group' => $cbeGroup] : [], $minimumBulkCount) ?>
             </section>
             </main>
         </div>
     </div>
-    <script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>"></script>
+    <script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/js/staff-dashboard.js') ?>"></script>
 </body>
 
 </html>

@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS user_profile_pictures (
+    user_id BIGINT UNSIGNED NOT NULL,
+    stored_name VARCHAR(100) NOT NULL,
+    mime_type VARCHAR(50) NOT NULL,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id),
+    CONSTRAINT fk_profile_picture_user FOREIGN KEY (user_id)
+        REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

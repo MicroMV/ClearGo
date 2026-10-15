@@ -7,6 +7,7 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/office_workflow.php';
 require_once __DIR__ . '/readiness_functions.php';
 require_once __DIR__ . '/report_workbook.php';
+require_once __DIR__ . '/bulk_clearance.php';
 
 function officeDetailRecords(PDO $database, string $code, array $row): array
 {
@@ -89,6 +90,7 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
             }
         }
         $summary = officeStatusSummary($database, $stationCode);
+        $bulkReadyCount = count(bulkReadyClearanceIds($database, $stationCode, null, '', $facilitiesAudience, $facilitiesDepartment));
         $totalRows = officeRowCount($database, $stationCode, $search, $filter, $facilitiesAudience, $facilitiesDepartment, $courseFilter, $yearFilter);
         $totalPages = max(1, (int) ceil($totalRows / $pageSize));
         $page = min($page, $totalPages);
@@ -213,7 +215,7 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title><?= escapeHtml($title) ?> | ClearGo</title>
         <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/office-dashboard.css')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/css/office-dashboard.css') ?>">
-        <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>">
+        <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/css/staff-dashboard.css') ?>">
     </head>
 
     <body class="staff-dashboard">
@@ -230,7 +232,7 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                     </div>
                 </header>
                 <main class="staff-main">
-                    <?php if ($message !== null): ?><p class="message"><?= escapeHtml($message) ?></p><?php endif; ?>
+                    <?php if ($message !== null): ?><p class="message" data-flash-message><?= escapeHtml($message) ?></p><?php endif; ?>
                     <?php if ($stationCode === 'CLINIC'): ?><section class="panel workbook-panel">
                             <div class="section-heading">
                                 <div>
@@ -391,7 +393,8 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                                 </tbody>
                             </table>
                         </div>
-                        <p class="muted">Page <?= $page ?> of <?= $totalPages ?> · <?= $totalRows ?> student(s)</p><?= renderPagination($page, $totalPages, ['search' => $search, 'course' => $courseFilter, 'year_level' => $yearFilter, 'filter' => $filter, 'audience' => $facilitiesAudience, 'department' => $facilitiesDepartment]) ?>
+                        <p class="muted">Page <?= $page ?> of <?= $totalPages ?> · <?= $totalRows ?> student(s)</p>
+                        <?= renderBulkClearanceFooter($page, $totalPages, ['search' => $search, 'course' => $courseFilter, 'year_level' => $yearFilter, 'filter' => $filter, 'audience' => $facilitiesAudience, 'department' => $facilitiesDepartment], $actionUrl, $bulkReadyCount, $stationCode === 'FACILITIES' ? 'the current Facilities group and department' : $title, ['audience' => $facilitiesAudience, 'department' => $facilitiesDepartment]) ?>
                     </section>
                     <?php if ($stationCode === 'REGISTRAR'): ?>
                         <div id="registrar-compliance-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="registrar-compliance-title">
@@ -498,7 +501,7 @@ function renderOfficeDashboard(string $role, string $stationCode, string $title)
                 </main>
             </div>
         </div>
-        <script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>"></script>
+        <script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/js/staff-dashboard.js') ?>"></script>
     </body>
 
     </html>

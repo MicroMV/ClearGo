@@ -15,6 +15,14 @@ if ($user === null) {
 
 try {
     $database = getDatabaseConnection();
+    $account = $database->prepare("SELECT id FROM users WHERE id=:id AND email=:email AND role=:role AND status='ACTIVE'");
+    $account->execute(['id' => $user['id'], 'email' => $user['email'], 'role' => $user['role']]);
+    if (!$account->fetchColumn()) {
+        http_response_code(401);
+        echo json_encode(['error' => 'Authentication required.']);
+        exit;
+    }
+    $periodId = notificationPeriodForUser($database, $user, $_GET['period'] ?? null);
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $payload = json_decode((string) file_get_contents('php://input'), true);
         if (!is_array($payload) || !verifyCsrfToken($payload['csrf_token'] ?? null)) {
@@ -27,8 +35,7 @@ try {
             echo json_encode(['error' => 'Invalid notification action.']);
             exit;
         }
-        $statement = $database->prepare('UPDATE notifications SET is_read=1 WHERE user_id=:user_id AND is_read=0');
-        $statement->execute(['user_id' => $user['id']]);
+        markSemesterNotificationsRead($database, (int) $user['id'], $periodId);
     } elseif ($_SERVER['REQUEST_METHOD'] !== 'GET') {
         http_response_code(405);
         echo json_encode(['error' => 'Method not allowed.']);
@@ -36,9 +43,10 @@ try {
     }
 
     notifyExpiredAttendanceWindows($database, (int) $user['id']);
-    $notifications = dashboardNotificationPreview($database, (int) $user['id']);
+    $notifications = dashboardNotificationPreview($database, (int) $user['id'], $periodId);
     echo json_encode([
-        'unread_count' => dashboardUnreadNotificationCount($database, (int) $user['id']),
+        'academic_period_id' => $periodId,
+        'unread_count' => dashboardUnreadNotificationCount($database, (int) $user['id'], $periodId),
         'notifications' => array_map(static fn(array $notification): array => [
             'id' => (int) $notification['id'],
             'title' => (string) $notification['title'],
@@ -47,6 +55,9 @@ try {
             'created_at' => (string) $notification['created_at'],
         ], $notifications),
     ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+} catch (InvalidArgumentException $exception) {
+    http_response_code(403);
+    echo json_encode(['error' => $exception->getMessage()]);
 } catch (Throwable $exception) {
     error_log('Notification endpoint failed: ' . $exception->getMessage());
     http_response_code(500);

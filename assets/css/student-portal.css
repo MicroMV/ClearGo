@@ -35,7 +35,8 @@
 .student-portal .portal-desktop-nav a[aria-current] { background: #eaf3fb; color: #155eae; }
 .student-portal .header-actions { gap: 14px; }
 .student-portal .notification-button { width: 44px; height: 44px; border-color: #dce4ed; border-radius: 50%; }
-.student-portal .portal-avatar { display: grid; width: 44px; height: 44px; place-items: center; border: 3px solid #fff; border-radius: 50%; background: #eaf3fb; color: #155eae; font-size: 13px; font-weight: 800; box-shadow: 0 0 0 1px #d7e2ed; }
+.student-portal .portal-avatar { display: grid; width: 44px; height: 44px; place-items: center; overflow: hidden; border: 3px solid #fff; border-radius: 50%; background: #eaf3fb; color: #155eae; font-size: 13px; font-weight: 800; box-shadow: 0 0 0 1px #d7e2ed; }
+.student-portal .portal-avatar img, .student-portal .portal-profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .student-portal main.student-main { max-width: 1220px; padding: 36px 32px 32px; }
 .student-portal .portal-page-heading { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 30px; }
 .student-portal .portal-eyebrow, .student-portal .portal-card-eyebrow { margin: 0 0 8px; color: #62748a; font-size: 10px; font-weight: 750; letter-spacing: 1.7px; }
@@ -177,20 +178,20 @@
 .student-portal .portal-scanner-card p { margin: 6px 0 0; color: #587086; font-size: 12px; }
 .student-portal .portal-scanner-card .portal-action-button { border-color: #155eae; background: #155eae; color: #fff; }
 .student-portal .portal-event-list { display: grid; gap: 12px; list-style: none; margin: 0; padding: 0; }
-.student-portal .portal-event-card { display: flex; min-width: 0; align-items: center; gap: 17px; padding: 21px; border: 1px solid #e1e8e6; border-radius: 14px; background: #fff; }
-.student-portal .portal-event-date { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 54px; height: 60px; flex: 0 0 54px; border: 1px solid #e3ebe7; border-radius: 11px; background: #f6f9f7; }
-.student-portal .portal-event-date span { color: #62776c; font-size: 10px; text-transform: uppercase; }
-.student-portal .portal-event-date strong { margin-top: 1px; color: #315e4e; font-size: 24px; font-weight: 650; line-height: 1.25; }
+.student-portal .portal-event-card { display: flex; min-width: 0; align-items: center; gap: 17px; padding: 21px; border: 1px solid #d8e5f1; border-radius: 14px; background: #fff; }
+.student-portal .portal-event-date { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 54px; height: 60px; flex: 0 0 54px; border: 1px solid #cde1f6; border-radius: 11px; background: #edf5ff; }
+.student-portal .portal-event-date span { color: #47718f; font-size: 10px; text-transform: uppercase; }
+.student-portal .portal-event-date strong { margin-top: 1px; color: #155eae; font-size: 24px; font-weight: 650; line-height: 1.25; }
 .student-portal .portal-event-card>div { min-width: 0; flex: 1; }
 .student-portal .portal-event-card h3 { overflow-wrap: anywhere; font-size: 14px; }
-.student-portal .portal-event-card p { margin: 5px 0 0; color: #61796e; font-size: 11px; }
-.student-portal .portal-event-status { display: flex; align-items: center; gap: 6px; padding: 7px 10px; border-radius: 8px; background: #f0f3f3; color: #596f64; font-size: 10px; font-weight: 600; }
+.student-portal .portal-event-card p { margin: 5px 0 0; color: #587086; font-size: 11px; }
+.student-portal .portal-event-status { display: flex; align-items: center; gap: 6px; padding: 7px 10px; border-radius: 8px; background: #eef3f8; color: #587086; font-size: 10px; font-weight: 600; }
 .student-portal .portal-event-status .portal-icon { width: 13px; height: 13px; flex-basis: 13px; }
-.student-portal .portal-event-status.is-present { background: #eaf6ed; color: #4f865f; }
+.student-portal .portal-event-status.is-present { background: #e7f2fc; color: #1769aa; }
 .student-portal .portal-account-layout { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(0,1fr); gap: 24px; }
 .student-portal .portal-account-card { overflow: hidden; border: 1px solid #d8e3ed; border-radius: 18px; background: #fff; }
 .student-portal .portal-account-banner { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 26px 28px; background: #eaf3fb; }
-.student-portal .portal-profile-avatar { display: grid; width: 58px; height: 58px; place-items: center; border: 4px solid #fff; border-radius: 17px; background: #0b2545; color: #fff; font-size: 20px; font-weight: 750; box-shadow: 0 3px 8px #17324d0b; }
+.student-portal .portal-profile-avatar { display: grid; width: 58px; height: 58px; place-items: center; overflow: hidden; border: 4px solid #fff; border-radius: 17px; background: #0b2545; color: #fff; font-size: 20px; font-weight: 750; box-shadow: 0 3px 8px #17324d0b; }
 .student-portal .portal-student-label { padding: 6px 10px; border: 1px solid #bfd3e5; border-radius: 7px; color: #47718f; font-size: 9px; font-weight: 650; letter-spacing: 1px; }
 .student-portal .portal-account-info { padding: 26px 28px; }
 .student-portal .portal-account-info h3 { font-size: 22px; font-weight: 700; }
@@ -214,6 +215,7 @@
 .student-portal .portal-account-help { margin: 21px 0 0; color: #879a8e; font-size: 11px; line-height: 1.8; }
 .student-portal .portal-mobile-nav { display: none; }
 .student-portal .notification-box { border-radius: 15px; }
+.student-portal .notification-period-label { margin: 4px 0 12px; color: #63758a; font-size: 11px; }
 .student-portal .student-notification-toast { border-left-color: #1769aa; }
 .student-portal .requirements-modal__header { background: #0b2545; }
 .student-portal .requirements-modal__header::after { display: none; }

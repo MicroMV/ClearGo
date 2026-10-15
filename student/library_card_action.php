@@ -49,7 +49,7 @@ try {
     $database = getDatabaseConnection();
     $database->beginTransaction();
     $query = $database->prepare(
-        "SELECT student.id AS student_id,student.student_number,card.id AS library_card_id,card.status AS card_status,
+        "SELECT student.id AS student_id,student.student_number,period.id AS academic_period_id,card.id AS library_card_id,card.status AS card_status,
                 station_record.status AS station_status
          FROM students student
          INNER JOIN library_cards card ON card.student_id=student.id
@@ -86,7 +86,7 @@ try {
     ]);
     $database->prepare("UPDATE library_cards SET status='PENDING',verified_by=NULL,verified_at=NULL WHERE id=:id")
         ->execute(['id' => $card['library_card_id']]);
-    notifyActiveRoles($database, ['LIBRARY_STAFF'], 'Library card awaiting review', $card['student_number'] . ' submitted a library card photo. Open Submitted Requirements to review it.');
+    notifyActiveRoles($database, ['LIBRARY_STAFF'], 'Library card awaiting review', $card['student_number'] . ' submitted a library card photo. Open Submitted Requirements to review it.', (int) $card['academic_period_id']);
     $database->commit();
 
     if ($oldSubmission !== false && !empty($oldSubmission['stored_name']) && $oldSubmission['stored_name'] !== $storedName) {

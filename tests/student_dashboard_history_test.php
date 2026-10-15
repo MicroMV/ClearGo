@@ -104,7 +104,11 @@ dashboardCheck(str_contains($html, 'First Semester A.Y. 2026-2027') && !str_cont
 dashboardCheck(str_contains($html, 'portal-period-select--static') && !str_contains($html, 'data-period-select'), 'A single semester still renders an unnecessary native dropdown.');
 dashboardCheck(str_contains($html, 'FIRST-SEM-RECORD') && str_contains($html, '1 of 9 stations cleared'), 'Historical clearance reference or stored station decision is missing.');
 dashboardCheck(str_contains($html, 'Saved requirement') && str_contains($html, 'Submissions are closed'), 'Historical requirements or viewing notice is missing.');
-dashboardCheck(!preg_match('/<form\b[^>]*method="post"/i', $html), 'Historical dashboard exposes a submission form.');
+preg_match_all('/<form\b[^>]*method="post"[^>]*>/i', $html, $historicalForms);
+foreach ($historicalForms[0] as $historicalForm) {
+    dashboardCheck(str_contains($historicalForm, 'action="/auth/profile_picture_action.php"'), 'Historical dashboard exposes a clearance submission form.');
+}
+dashboardCheck(str_contains($html, 'data-profile-picture-form'), 'Historical viewing prevents account picture updates.');
 dashboardCheck(!str_contains($html, '/student/attendance_scanner.php'), 'Historical dashboard exposes the attendance scanner.');
 
 $activeHtml = renderDashboardFixture($view, $bothSemesters[0], $bothSemesters);

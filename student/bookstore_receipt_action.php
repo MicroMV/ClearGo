@@ -55,7 +55,7 @@ try {
     $database = getDatabaseConnection();
     $database->beginTransaction();
     $feeQuery = $database->prepare(
-        "SELECT student_fee.id,student_fee.status AS payment_status,fee.name,student.student_number,
+        "SELECT student_fee.id,student_fee.status AS payment_status,fee.name,fee.academic_period_id,student.student_number,
                 station_record.status AS station_status
          FROM student_bookstore_fees student_fee
          INNER JOIN students student ON student.id=student_fee.student_id AND student.user_id=:user_id
@@ -93,7 +93,8 @@ try {
         $database,
         ['BOOKSTORE_STAFF'],
         'Bookstore receipt awaiting review',
-        $fee['student_number'] . ($action === 'upload' ? ' uploaded a receipt for ' : ' reported a lost receipt for ') . $fee['name'] . '. Open Submitted Requirements to review it.'
+        $fee['student_number'] . ($action === 'upload' ? ' uploaded a receipt for ' : ' reported a lost receipt for ') . $fee['name'] . '. Open Submitted Requirements to review it.',
+        (int) $fee['academic_period_id']
     );
     $database->commit();
 

@@ -11,15 +11,23 @@ $actionFilter = trim((string) ($_GET['action'] ?? ''));
 try {
     $db = getDatabaseConnection();
     $sql = "SELECT audit.id,audit.created_at,audit.action,audit.description,audit.old_status,audit.new_status,
-                actor.email AS actor_email,station.name AS station_name,student.student_number,
-                CONCAT(student.first_name,' ',student.last_name) AS student_name
+                actor.email AS actor_email,actor.role AS actor_role,
+                COALESCE(station.name,profile_office.name) AS station_name,
+                COALESCE(student.student_number,profile_student.student_number) AS student_number,
+                CONCAT(COALESCE(student.first_name,profile_student.first_name),' ',COALESCE(student.last_name,profile_student.last_name)) AS student_name
             FROM audit_logs audit
             LEFT JOIN users actor ON actor.id=audit.user_id
             LEFT JOIN stations station ON station.id=audit.station_id
             LEFT JOIN students student ON student.id=audit.student_id
+            LEFT JOIN students profile_student ON audit.action='PROFILE_PICTURE_UPDATED'
+                AND actor.role='STUDENT' AND profile_student.user_id=actor.id
+            LEFT JOIN stations profile_office ON audit.action='PROFILE_PICTURE_UPDATED' AND profile_office.code=CASE
+                WHEN actor.role='STUDENT' THEN NULL WHEN actor.role='ORG_STAFF' THEN 'ORGANIZATION'
+                ELSE REPLACE(actor.role,'_STAFF','') END
             WHERE (audit.description LIKE :description OR actor.email LIKE :actor
-                OR student.student_number LIKE :number OR student.first_name LIKE :first_name
-                OR student.last_name LIKE :last_name)";
+                OR COALESCE(student.student_number,profile_student.student_number) LIKE :number
+                OR COALESCE(student.first_name,profile_student.first_name) LIKE :first_name
+                OR COALESCE(student.last_name,profile_student.last_name) LIKE :last_name)";
     $params = [
         'description' => '%' . $search . '%',
         'actor' => '%' . $search . '%',
@@ -102,14 +110,21 @@ $sidebar = registrarDashboardSidebar($user, 'audit', $logoutForm);
                                 <?php if ($logs === []): ?><tr>
                                         <td colspan="7">No audit records match.</td>
                                     </tr><?php endif; ?>
-                                <?php foreach ($logs as $log): ?><tr>
+                                <?php foreach ($logs as $log):
+                                    $isProfileUpdate = $log['action'] === 'PROFILE_PICTURE_UPDATED';
+                                    $studentPlaceholder = $isProfileUpdate && isset($log['actor_role']) && $log['actor_role'] !== 'STUDENT' ? 'Not applicable' : '—';
+                                    $officePlaceholder = $isProfileUpdate && ($log['actor_role'] ?? '') === 'STUDENT' ? 'Not applicable' : '—';
+                                    $oldStatus = $log['old_status'] ?? ($isProfileUpdate ? 'Not recorded' : '—');
+                                    $newStatus = $log['new_status'] ?? '—';
+                                    $change = $isProfileUpdate ? str_replace('_', ' ', $oldStatus . ' → ' . $newStatus) : $oldStatus . ' → ' . $newStatus;
+                                ?><tr>
                                         <td><?= escapeHtml($log['created_at']) ?></td>
                                         <td><?= escapeHtml($log['actor_email'] ?? 'System') ?></td>
                                         <td><strong><?= escapeHtml($log['action']) ?></strong></td>
-                                        <td><?= escapeHtml($log['student_number'] ?? '—') ?><div class="muted"><?= escapeHtml($log['student_name'] ?? '') ?></div>
+                                        <td><?= escapeHtml($log['student_number'] ?? $studentPlaceholder) ?><div class="muted"><?= escapeHtml($log['student_name'] ?? '') ?></div>
                                         </td>
-                                        <td><?= escapeHtml($log['station_name'] ?? '—') ?></td>
-                                        <td><?= escapeHtml(($log['old_status'] ?? '—') . ' → ' . ($log['new_status'] ?? '—')) ?></td>
+                                        <td><?= escapeHtml($log['station_name'] ?? $officePlaceholder) ?></td>
+                                        <td><?= escapeHtml($change) ?></td>
                                         <td><?= escapeHtml($log['description']) ?></td>
                                     </tr><?php endforeach; ?>
                             </tbody>
@@ -119,7 +134,7 @@ $sidebar = registrarDashboardSidebar($user, 'audit', $logoutForm);
             </main>
         </div>
     </div>
-    <script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>"></script>
+    <script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/js/staff-dashboard.js') ?>"></script>
 </body>
 
 </html>

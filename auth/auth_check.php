@@ -96,6 +96,14 @@ function escapeHtml(string $value): string
     return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
+function userProfilePictureUrl(array $user): string
+{
+    $storedName = (string) ($user['profile_picture'] ?? '');
+    return preg_match('/\A[a-f0-9]{40}\.(jpg|png|webp)\z/', $storedName)
+        ? applicationUrl('/auth/profile_image.php?v=' . rawurlencode($storedName))
+        : '';
+}
+
 function statusDisplayLabel(string $status): string
 {
     return strtoupper($status) === 'LOCKED' ? 'UNAVAILABLE' : str_replace('_', ' ', $status);
@@ -117,14 +125,17 @@ function paginationPages(int $currentPage, int $totalPages): array
     return [1, 'ellipsis', $currentPage - 1, $currentPage, $currentPage + 1, 'ellipsis', $totalPages];
 }
 
-function renderPagination(int $currentPage, int $totalPages, array $query = []): string
+function renderPagination(int $currentPage, int $totalPages, array $query = [], string $fragment = ''): string
 {
     if ($totalPages <= 1) {
         return '';
     }
     unset($query['page'], $query['edit'], $query['export']);
-    $pageLink = static function (int $page, string $label, string $class = '') use ($query): string {
+    $pageLink = static function (int $page, string $label, string $class = '') use ($query, $fragment): string {
         $url = '?' . http_build_query(array_merge($query, ['page' => $page]));
+        if ($fragment !== '') {
+            $url .= '#' . rawurlencode($fragment);
+        }
         return '<a class="pagination-link' . ($class !== '' ? ' ' . $class : '') . '" href="'
             . escapeHtml($url) . '">' . escapeHtml($label) . '</a>';
     };
@@ -212,8 +223,11 @@ function requireLogin(): array
     try {
         $database = getDatabaseConnection();
         $statement = $database->prepare(
-            "SELECT id,email,role,status FROM users
-             WHERE id=:id AND email=:email AND role=:role
+            "SELECT user.id,user.email,user.role,user.status,
+                    picture.stored_name AS profile_picture,picture.mime_type AS profile_picture_mime
+             FROM users user
+             LEFT JOIN user_profile_pictures picture ON picture.user_id=user.id
+             WHERE user.id=:id AND user.email=:email AND user.role=:role
              LIMIT 1"
         );
         $statement->execute([
@@ -238,7 +252,10 @@ function requireLogin(): array
     header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
     header('Pragma: no-cache');
 
-    return $user;
+    return array_merge($user, [
+        'profile_picture' => $currentAccount['profile_picture'],
+        'profile_picture_mime' => $currentAccount['profile_picture_mime'],
+    ]);
 }
 
 function requireRole(string $role): array
@@ -274,74 +291,131 @@ function dashboardLogoutForm(): string
 HTML;
 }
 
-/** Returns the current user's notifications without changing their read state. */
-function dashboardNotifications(PDO $database, int $userId): array
+function activeNotificationPeriodId(PDO $database): int
 {
-    return dashboardNotificationPreview($database, $userId);
+    return (int) $database->query("SELECT id FROM academic_periods WHERE status='ACTIVE' ORDER BY id LIMIT 1")->fetchColumn();
+}
+
+/** Resolve the requested semester using the same enrollment/archive access as the dashboard. */
+function notificationPeriodForUser(PDO $database, array $user, mixed $requestedId = null): int
+{
+    $requested = $requestedId === null ? null : filter_var($requestedId, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]);
+    if ($requested === false) {
+        throw new InvalidArgumentException('Select a valid notification semester.');
+    }
+    if ($user['role'] !== 'STUDENT') {
+        $activeId = activeNotificationPeriodId($database);
+        if ($requested !== null && $requested !== $activeId) {
+            throw new InvalidArgumentException('This semester is not available in your office workspace.');
+        }
+        return $activeId;
+    }
+    require_once __DIR__ . '/../student/dashboard_functions.php';
+    $student = $database->prepare("SELECT id FROM students WHERE user_id=:id AND status='ACTIVE' LIMIT 1");
+    $student->execute(['id' => $user['id']]);
+    $studentId = (int) $student->fetchColumn();
+    $periods = $studentId > 0 ? studentDashboardPeriods($database, $studentId) : [];
+    if ($requested === null) {
+        $period = selectStudentDashboardPeriod($periods);
+        return $period === false ? 0 : (int) $period['id'];
+    }
+    if ($requested === 0 && $periods === []) {
+        return 0;
+    }
+    foreach ($periods as $period) {
+        if ((int) $period['id'] === $requested) {
+            return $requested;
+        }
+    }
+    throw new InvalidArgumentException('This semester is not available in your student records.');
+}
+
+/** Returns semester notifications without changing their read state. */
+function dashboardNotifications(PDO $database, int $userId, ?int $periodId = null): array
+{
+    return dashboardNotificationPreview($database, $userId, $periodId);
 }
 
 /** Returns notifications without changing their existing read state. */
-function dashboardNotificationPreview(PDO $database, int $userId): array
+function dashboardNotificationPreview(PDO $database, int $userId, ?int $periodId = null): array
 {
+    $periodId ??= activeNotificationPeriodId($database);
+    if ($periodId < 1) { return []; }
     $statement = $database->prepare(
         'SELECT notification.id,notification.title,notification.message,notification.is_read,notification.created_at
          FROM notifications notification
-         WHERE notification.user_id=:user_id
+         WHERE notification.user_id=:user_id AND notification.academic_period_id=:period_id
            AND NOT EXISTS (
                SELECT 1 FROM notifications newer
                WHERE newer.user_id=notification.user_id
+                 AND newer.academic_period_id=notification.academic_period_id
                  AND newer.title=notification.title AND newer.message=notification.message
                  AND newer.id>notification.id
            )
          ORDER BY notification.created_at DESC,notification.id DESC LIMIT 100'
     );
-    $statement->execute(['user_id' => $userId]);
+    $statement->execute(['user_id' => $userId, 'period_id' => $periodId]);
     return $statement->fetchAll();
 }
 
 /** Counts unread notification events while collapsing any historical exact duplicates. */
-function dashboardUnreadNotificationCount(PDO $database, int $userId): int
+function dashboardUnreadNotificationCount(PDO $database, int $userId, ?int $periodId = null): int
 {
+    $periodId ??= activeNotificationPeriodId($database);
+    if ($periodId < 1) { return 0; }
     $statement = $database->prepare(
         'SELECT COUNT(*) FROM notifications notification
-         WHERE notification.user_id=:user_id AND notification.is_read=0
+         WHERE notification.user_id=:user_id AND notification.academic_period_id=:period_id AND notification.is_read=0
            AND NOT EXISTS (
                SELECT 1 FROM notifications newer
                WHERE newer.user_id=notification.user_id
+                 AND newer.academic_period_id=notification.academic_period_id
                  AND newer.title=notification.title AND newer.message=notification.message
                  AND newer.id>notification.id
            )'
     );
-    $statement->execute(['user_id' => $userId]);
+    $statement->execute(['user_id' => $userId, 'period_id' => $periodId]);
     return (int) $statement->fetchColumn();
+}
+
+function markSemesterNotificationsRead(PDO $database, int $userId, int $periodId): int
+{
+    if ($periodId < 1) { return 0; }
+    $statement = $database->prepare('UPDATE notifications SET is_read=1 WHERE user_id=:user_id AND academic_period_id=:period_id AND is_read=0');
+    $statement->execute(['user_id' => $userId, 'period_id' => $periodId]);
+    return $statement->rowCount();
 }
 
 /**
  * Creates one unread notification for an event. An identical unread item is not inserted again.
  * A later occurrence is allowed after the earlier item has been viewed.
  */
-function createNotification(PDO $database, int $userId, string $title, string $message): bool
+function createNotification(PDO $database, int $userId, string $title, string $message, ?int $periodId = null): bool
 {
     $title = trim($title);
     $message = trim($message);
     if ($userId < 1 || $title === '' || $message === '') {
         return false;
     }
+    $periodId ??= activeNotificationPeriodId($database);
+    if ($periodId < 1) { return false; }
 
     $statement = $database->prepare(
-        "INSERT INTO notifications (user_id,title,message)
-         SELECT :user_id,:title,:message
+        "INSERT INTO notifications (user_id,academic_period_id,title,message)
+         SELECT :user_id,:period_id,:title,:message
          WHERE NOT EXISTS (
              SELECT 1 FROM notifications
-             WHERE user_id=:duplicate_user_id AND title=:duplicate_title
+             WHERE user_id=:duplicate_user_id AND academic_period_id=:duplicate_period_id AND title=:duplicate_title
                AND message=:duplicate_message AND is_read=0
          )"
     );
     $statement->execute([
         'user_id' => $userId,
+        'period_id' => $periodId,
         'title' => mb_substr($title, 0, 200),
         'message' => $message,
         'duplicate_user_id' => $userId,
+        'duplicate_period_id' => $periodId,
         'duplicate_title' => mb_substr($title, 0, 200),
         'duplicate_message' => $message,
     ]);
@@ -349,7 +423,7 @@ function createNotification(PDO $database, int $userId, string $title, string $m
 }
 
 /** Creates a deduplicated notification for each active user in the supplied roles. */
-function notifyActiveRoles(PDO $database, array $roles, string $title, string $message): int
+function notifyActiveRoles(PDO $database, array $roles, string $title, string $message, ?int $periodId = null): int
 {
     $roles = array_values(array_unique(array_filter(
         $roles,
@@ -358,13 +432,15 @@ function notifyActiveRoles(PDO $database, array $roles, string $title, string $m
     if ($roles === []) {
         return 0;
     }
+    $periodId ??= activeNotificationPeriodId($database);
+    if ($periodId < 1) { return 0; }
 
     $placeholders = implode(',', array_fill(0, count($roles), '?'));
     $users = $database->prepare("SELECT id FROM users WHERE role IN ({$placeholders}) AND status='ACTIVE'");
     $users->execute($roles);
     $created = 0;
     foreach ($users->fetchAll(PDO::FETCH_COLUMN) as $userId) {
-        $created += createNotification($database, (int) $userId, $title, $message) ? 1 : 0;
+        $created += createNotification($database, (int) $userId, $title, $message, $periodId) ? 1 : 0;
     }
     return $created;
 }
@@ -374,14 +450,14 @@ function notifyExpiredAttendanceWindows(PDO $database, int $userId): void
 {
     try {
         $query = $database->prepare(
-            "SELECT event.id,event.name,event.check_in_closes_at,
+            "SELECT event.id,event.name,event.academic_period_id,event.check_in_closes_at,
                     COUNT(CASE WHEN attendance.status='PRESENT' THEN 1 END) AS present_count
              FROM events event
              LEFT JOIN event_attendance attendance ON attendance.event_id=event.id
              WHERE event.created_by=:user_id AND event.status='ACTIVE'
                AND event.check_in_token_hash IS NOT NULL
                AND event.check_in_closes_at IS NOT NULL AND event.check_in_closes_at<NOW()
-             GROUP BY event.id,event.name,event.check_in_closes_at"
+             GROUP BY event.id,event.name,event.academic_period_id,event.check_in_closes_at"
         );
         $query->execute(['user_id' => $userId]);
     } catch (Throwable $exception) {
@@ -399,7 +475,8 @@ function notifyExpiredAttendanceWindows(PDO $database, int $userId): void
                 $userId,
                 'Attendance time limit reached',
                 'Check-in for "' . $event['name'] . '" closed at ' . $event['check_in_closes_at']
-                    . '. Recorded present: ' . (int) $event['present_count'] . '.'
+                    . '. Recorded present: ' . (int) $event['present_count'] . '.',
+                (int) $event['academic_period_id']
             );
         }
     }
@@ -436,7 +513,11 @@ function dashboardNotificationBell(array $notifications): string
  */
 function staffDashboardSidebar(string $officeName, array $user, array $items, string $activeKey, string $logoutForm): string
 {
+    if (!in_array('profile', array_column($items, 'key'), true)) {
+        $items[] = ['key' => 'profile', 'label' => 'My Profile', 'url' => '/auth/profile.php', 'icon' => 'profile'];
+    }
     $icons = [
+        'profile' => '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg>',
         'dashboard' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>',
         'students' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1.5a4.5 4.5 0 0 0-4.5-4.5h-3A4.5 4.5 0 0 0 4 18.5V20M10 10a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM17 11a3 3 0 0 0 0-6M20 20v-1a4 4 0 0 0-3-3.87"/></svg>',
         'import' => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v3h16v-3"/></svg>',
@@ -457,17 +538,18 @@ function staffDashboardSidebar(string $officeName, array $user, array $items, st
     $email = escapeHtml((string) $user['email']);
     $initial = escapeHtml(strtoupper(substr((string) $user['email'], 0, 1)));
     $logo = escapeHtml(clearGoLogoUrl());
-    $pageScript = $activeKey === 'submitted_requirements'
-        ? '<script defer src="' . escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) . '"></script>'
-        : '';
+    $pictureUrl = userProfilePictureUrl($user);
+    $avatar = $pictureUrl !== ''
+        ? '<img class="sidebar-avatar" src="' . escapeHtml($pictureUrl) . '" width="35" height="35" style="object-fit:cover" alt="Your profile picture">'
+        : '<span class="sidebar-avatar">' . $initial . '</span>';
 
     return '<aside class="staff-sidebar" id="staff-sidebar" aria-label="Office navigation">'
         . '<button class="sidebar-close" type="button" data-sidebar-close aria-label="Close navigation">&#10005;</button>'
         . '<div class="sidebar-brand"><img src="' . $logo . '" alt="The Lewis College logo"><div class="sidebar-brand-copy"><span>The Lewis College</span><strong>ClearGo</strong></div></div>'
         . '<div class="sidebar-office"><p class="sidebar-kicker">Staff workspace</p><p class="sidebar-office-name">' . escapeHtml($officeName) . '</p></div>'
         . '<nav class="staff-nav">' . $links . '</nav>'
-        . '<div class="sidebar-footer"><div class="sidebar-user"><span class="sidebar-avatar">' . $initial . '</span><span class="sidebar-user-copy"><strong>' . $email . '</strong><span>Authorized staff</span></span></div>'
-        . $logoutForm . '</div></aside><button class="sidebar-overlay" type="button" data-sidebar-close aria-label="Close navigation"></button>' . $pageScript;
+        . '<div class="sidebar-footer"><div class="sidebar-user">' . $avatar . '<span class="sidebar-user-copy"><strong>' . $email . '</strong><span>Authorized staff</span></span></div>'
+        . $logoutForm . '</div></aside><button class="sidebar-overlay" type="button" data-sidebar-close aria-label="Close navigation"></button>';
 }
 
 function registrarDashboardSidebar(array $user, string $activeKey, string $logoutForm): string

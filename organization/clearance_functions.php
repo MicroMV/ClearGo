@@ -109,7 +109,7 @@ function organizationEligibility(PDO $database, int $organizationId, int $studen
     return ['eligible' => true, 'events' => $events, 'reason' => null];
 }
 
-function organizationStudent(PDO $database, int $organizationId, int $studentId): array|false
+function organizationStudent(PDO $database, int $organizationId, int $studentId, bool $lock = false): array|false
 {
     $statement = $database->prepare(
         "SELECT students.id, students.student_number, students.first_name, students.last_name,
@@ -117,7 +117,7 @@ function organizationStudent(PDO $database, int $organizationId, int $studentId)
                 clearances.id AS clearance_id, clearance_stations.id AS clearance_station_id,
                 clearance_stations.status AS clearance_status, clearance_stations.returned_reason,
                 dean_clearance.status AS dean_status,
-                academic_periods.clearance_status AS period_status
+                academic_periods.clearance_status AS period_status, academic_periods.id AS academic_period_id
          FROM students
          INNER JOIN users ON users.id = students.user_id
          INNER JOIN organizations ON organizations.id=students.organization_id
@@ -131,20 +131,23 @@ function organizationStudent(PDO $database, int $organizationId, int $studentId)
          LEFT JOIN clearance_stations AS dean_clearance
             ON dean_clearance.clearance_id = clearances.id AND dean_clearance.station_id = dean_station.id
          WHERE students.id = :student_id AND students.organization_id = :organization_id AND students.status = 'ACTIVE'
-         LIMIT 1"
+         LIMIT 1" . ($lock ? ' FOR UPDATE' : '')
     );
     $statement->execute(['student_id' => $studentId, 'organization_id' => $organizationId]);
 
     return $statement->fetch();
 }
 
-function approveOrganizationStudent(PDO $database, int $staffUserId, int $organizationId, int $studentId): string
+function approveOrganizationStudent(PDO $database, int $staffUserId, int $organizationId, int $studentId, bool $readyOnly = false): string
 {
     $database->beginTransaction();
     try {
-        $student = organizationStudent($database, $organizationId, $studentId);
+        $student = organizationStudent($database, $organizationId, $studentId, true);
         if ($student === false || empty($student['clearance_id']) || empty($student['clearance_station_id'])) {
             throw new RuntimeException('This student does not have an Organization clearance record.');
+        }
+        if ($readyOnly && $student['clearance_status'] !== 'PENDING') {
+            throw new RuntimeException('This student is no longer ready for bulk clearance.');
         }
         if ($student['clearance_status'] === 'APPROVED') {
             throw new RuntimeException('This student is already approved.');
@@ -190,9 +193,10 @@ function approveOrganizationStudent(PDO $database, int $staffUserId, int $organi
         $studentUser->execute(['student_id' => $studentId]);
         $studentUserId = $studentUser->fetchColumn();
         if ($studentUserId !== false) {
-            $notification = $database->prepare("INSERT INTO notifications (user_id,title,message) VALUES (:user_id,:title,:message)");
+            $notification = $database->prepare("INSERT INTO notifications (user_id,academic_period_id,title,message) VALUES (:user_id,:period_id,:title,:message)");
             $notification->execute([
                 'user_id' => $studentUserId,
+                'period_id' => $student['academic_period_id'],
                 'title' => $isYbcSignOff ? 'YBC sign-off approved' : 'Organization clearance approved',
                 'message' => $isCbe
                     ? 'YBC approved your CBE organization clearance. Dean clearance is now available.'
@@ -202,13 +206,13 @@ function approveOrganizationStudent(PDO $database, int $staffUserId, int $organi
 
         if (!$isCbe) {
             $staffNotification = $database->prepare(
-                "INSERT INTO notifications (user_id,title,message)
-                 SELECT id,'Student ready for office review',:message
+                "INSERT INTO notifications (user_id,academic_period_id,title,message)
+                 SELECT id,:period_id,'Student ready for office review',:message
                  FROM users
                  WHERE role IN ('STUDENT_COUNCIL_STAFF','LIBRARY_STAFF','BOOKSTORE_STAFF','CLINIC_STAFF')
                    AND status='ACTIVE'"
             );
-            $staffNotification->execute(['message' => $student['student_number'] . ' completed Organization clearance and is ready for the SASO sub-checks.']);
+            $staffNotification->execute(['period_id' => $student['academic_period_id'], 'message' => $student['student_number'] . ' completed Organization clearance and is ready for the SASO sub-checks.']);
         }
 
         $stationId = $database->query("SELECT id FROM stations WHERE code='ORGANIZATION' LIMIT 1")->fetchColumn();
@@ -261,7 +265,7 @@ function returnOrganizationStudent(PDO $database, int $staffUserId, int $organiz
     $studentUser->execute(['student_id' => $studentId]);
     $studentUserId = $studentUser->fetchColumn();
     if ($studentUserId !== false) {
-        $notification = $database->prepare("INSERT INTO notifications (user_id,title,message) VALUES (:user_id,'Organization clearance returned',:message)");
-        $notification->execute(['user_id' => $studentUserId, 'message' => 'Organization returned your clearance: ' . $reason]);
+        $notification = $database->prepare("INSERT INTO notifications (user_id,academic_period_id,title,message) VALUES (:user_id,:period_id,'Organization clearance returned',:message)");
+        $notification->execute(['user_id' => $studentUserId, 'period_id' => $student['academic_period_id'], 'message' => 'Organization returned your clearance: ' . $reason]);
     }
 }

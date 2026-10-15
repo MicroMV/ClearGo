@@ -6,6 +6,8 @@ if (!isset($student)) {
 }
 
 $studentInitials = strtoupper(mb_substr($student['first_name'], 0, 1) . mb_substr($student['last_name'], 0, 1));
+$profilePictureUrl = $profilePictureUrl ?? '';
+$profilePictureInitials = $studentInitials;
 $shortName = explode(' ', trim($student['first_name']))[0];
 $stationTotal = count($stations);
 $progressPercent = $stationTotal === 0 ? 0 : (int) round($approved / $stationTotal * 100);
@@ -60,6 +62,7 @@ $dashboardNavigation = ['overview' => ['home', 'Home'], 'clearance' => ['clearan
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/student-dashboard.css')) ?>">
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/library-card-camera.css')) ?>">
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/student-portal.css')) ?>?v=<?= escapeHtml($portalStylesVersion) ?>">
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/profile-picture.css')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/css/profile-picture.css') ?>">
 </head>
 <body class="student-dashboard student-portal" data-initial-view="<?= escapeHtml($initialDashboardView) ?>" data-initial-modal="<?= $selectedStation !== null ? 'requirements-modal-' . (int) $selectedStation['id'] : '' ?>">
     <a class="portal-skip-link" href="#dashboard-content">Skip to content</a>
@@ -75,17 +78,18 @@ $dashboardNavigation = ['overview' => ['home', 'Home'], 'clearance' => ['clearan
                 <?php endforeach; ?>
             </nav>
             <div class="header-actions">
-                <div class="notification-wrap" data-notification-endpoint="<?= escapeHtml(applicationUrl('/auth/notifications.php')) ?>" data-csrf-token="<?= escapeHtml($csrfToken) ?>" data-latest-notification-id="<?= $notifications === [] ? 0 : max(array_map(static fn(array $notification): int => (int) $notification['id'], $notifications)) ?>">
+                <div class="notification-wrap" data-notification-endpoint="<?= escapeHtml(applicationUrl('/auth/notifications.php?period=' . ($period === false ? 0 : (int) $period['id']))) ?>" data-csrf-token="<?= escapeHtml($csrfToken) ?>" data-latest-notification-id="<?= $notifications === [] ? 0 : max(array_map(static fn(array $notification): int => (int) $notification['id'], $notifications)) ?>">
                     <button class="notification-button" id="notificationButton" type="button" aria-label="Notifications<?= $unreadNotificationCount > 0 ? ' (' . $unreadNotificationCount . ' unread)' : '' ?>" aria-controls="notificationBox" aria-expanded="false">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         <?php if ($unreadNotificationCount > 0): ?><span class="notification-count"><?= $unreadNotificationCount > 99 ? '99+' : $unreadNotificationCount ?></span><?php endif; ?>
                     </button>
                     <div class="notification-box" id="notificationBox" hidden>
                         <h2>Notifications</h2>
+                        <p class="notification-period-label"><?= escapeHtml($periodLabel) ?></p>
                         <?php if ($notifications === []): ?><p class="notification-empty muted">You're all caught up.</p><ul class="notification-list"></ul><?php else: ?><ul class="notification-list"><?php foreach ($notifications as $notification): ?><li data-notification-id="<?= (int) $notification['id'] ?>" class="<?= (int) $notification['is_read'] === 0 ? 'unread' : '' ?>"><strong><?= escapeHtml($notification['title']) ?></strong><div><?= escapeHtml($notification['message']) ?></div><div class="muted"><?= escapeHtml($notification['created_at']) ?></div></li><?php endforeach; ?></ul><?php endif; ?>
                     </div>
                 </div>
-                <a class="portal-avatar" href="#account" data-dashboard-link="account" aria-label="Open your account"><?= escapeHtml($studentInitials) ?></a>
+                <a class="portal-avatar" href="#account" data-dashboard-link="account" aria-label="Open your account"><?php if ($profilePictureUrl !== ''): ?><img src="<?= escapeHtml($profilePictureUrl) ?>" alt="Your profile picture"><?php else: ?><?= escapeHtml($studentInitials) ?><?php endif; ?></a>
             </div>
         </div>
     </header>
@@ -175,5 +179,16 @@ $dashboardNavigation = ['overview' => ['home', 'Home'], 'clearance' => ['clearan
 
         <section class="portal-view" id="account" data-dashboard-view="account" aria-labelledby="account-title" tabindex="-1" hidden>
             <div class="portal-section-title"><div><span class="portal-card-eyebrow">YOUR STUDENT IDENTITY</span><h2 id="account-title">My account</h2></div></div>
-            <div class="portal-account-layout"><section class="portal-account-card"><div class="portal-account-banner"><span class="portal-profile-avatar"><?= escapeHtml($studentInitials) ?></span><span class="portal-student-label">STUDENT</span></div><div class="portal-account-info"><h3><?= escapeHtml($student['first_name'] . ' ' . $student['last_name']) ?></h3><p><?= escapeHtml($student['student_number']) ?></p><dl><div><dt>Program</dt><dd><?= escapeHtml($student['program']) ?></dd></div><div><dt>Year & section</dt><dd>Year <?= (int) $student['year_level'] ?><?php $section = trim((string) ($student['section'] ?? '')); ?><?= $section === '' || strtoupper($section) === 'N/A' ? '' : ' · ' . escapeHtml($section) ?></dd></div><div><dt>College</dt><dd><?= escapeHtml($student['organization_name']) ?></dd></div><div><dt>School email</dt><dd><?= escapeHtml($student['email']) ?></dd></div></dl></div></section><section class="portal-account-settings"><h3>Account settings</h3><a class="portal-settings-row" href="<?= escapeHtml(applicationUrl('/student/password.php')) ?>" data-open-password-modal><span class="portal-shortcut-icon tone-blue"><?= studentDashboardIcon('key') ?></span><span><strong>Change password</strong><small>Keep your account secure</small></span><?= studentDashboardIcon('chevron') ?></a><div class="portal-signout"><p>Finished for now?</p><?= $logoutForm ?></div><p class="portal-account-help">Need to update your student details?<br>Contact the Registrar.</p></section></div>
+            <div class="portal-account-layout">
+                <section class="portal-account-card">
+                    <div class="portal-account-banner"><span class="portal-profile-avatar"><?php if ($profilePictureUrl !== ''): ?><img src="<?= escapeHtml($profilePictureUrl) ?>" alt="Your profile picture"><?php else: ?><?= escapeHtml($studentInitials) ?><?php endif; ?></span><span class="portal-student-label">STUDENT</span></div>
+                    <div class="portal-account-info"><h3><?= escapeHtml($student['first_name'] . ' ' . $student['last_name']) ?></h3><p><?= escapeHtml($student['student_number']) ?></p><dl><div><dt>Program</dt><dd><?= escapeHtml($student['program']) ?></dd></div><div><dt>Year & section</dt><dd>Year <?= (int) $student['year_level'] ?><?php $section = trim((string) ($student['section'] ?? '')); ?><?= $section === '' || strtoupper($section) === 'N/A' ? '' : ' · ' . escapeHtml($section) ?></dd></div><div><dt>College</dt><dd><?= escapeHtml($student['organization_name']) ?></dd></div><div><dt>School email</dt><dd><?= escapeHtml($student['email']) ?></dd></div></dl></div>
+                </section>
+                <section class="portal-account-settings">
+                    <h3>Account settings</h3>
+                    <?php require __DIR__ . '/../auth/profile_picture_form.php'; ?>
+                    <a class="portal-settings-row" href="<?= escapeHtml(applicationUrl('/student/password.php')) ?>" data-open-password-modal><span class="portal-shortcut-icon tone-blue"><?= studentDashboardIcon('key') ?></span><span><strong>Change password</strong><small>Keep your account secure</small></span><?= studentDashboardIcon('chevron') ?></a>
+                    <div class="portal-signout"><p>Finished for now?</p><?= $logoutForm ?></div><p class="portal-account-help">Need to update your student details?<br>Contact the Registrar.</p>
+                </section>
+            </div>
         </section>

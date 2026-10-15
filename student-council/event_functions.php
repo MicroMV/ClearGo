@@ -45,7 +45,7 @@ function createStudentCouncilEvent(PDO $database, int $userId, string $name, str
     $studentUsers = $database->prepare("SELECT student.user_id FROM students student INNER JOIN semester_enrollments enrollment ON enrollment.student_id=student.id AND enrollment.academic_period_id=:period_id AND enrollment.status='ENROLLED' WHERE student.status='ACTIVE'");
     $studentUsers->execute(['period_id' => $period['id']]);
     foreach ($studentUsers->fetchAll(PDO::FETCH_COLUMN) as $studentUserId) {
-        createNotification($database, (int) $studentUserId, 'New required institutional activity', 'Student Council added "' . $name . '" on ' . $eventDate . '. Use the ClearGo QR scanner when check-in opens.');
+        createNotification($database, (int) $studentUserId, 'New required institutional activity', 'Student Council added "' . $name . '" on ' . $eventDate . '. Use the ClearGo QR scanner when check-in opens.', (int) $period['id']);
     }
     $audit = $database->prepare("INSERT INTO audit_logs (user_id,action,station_id,description,new_status) VALUES (:user_id,'STUDENT_COUNCIL_EVENT_CREATED',:station_id,:description,'ACTIVE')");
     $audit->execute(['user_id' => $userId, 'station_id' => $stationId, 'description' => 'Created required institutional activity: ' . $name . '.']);
