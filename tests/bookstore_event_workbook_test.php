@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+if (PHP_SAPI !== 'cli') {
+    http_response_code(403);
+    exit('Forbidden');
+}
+
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../bookstore/workbook_functions.php';
 
@@ -37,7 +42,8 @@ try {
     $sheet = bookstoreWorksheetXml('CCS', [$student], 'TEST PERIOD');
     eventWorkbookCheck(str_contains($sheet, $eventName . ' - PHP 123.45'), 'Event is missing from Excel XML.');
     $parsed = parseStudentWorksheet($sheet, []);
-    eventWorkbookCheck(count($parsed[2]) === 10 && $parsed[2][9] === 'Clearance Status', 'Clearance Status must be the last of ten columns.');
+    eventWorkbookCheck(count($parsed[2]) === 10 && $parsed[2][8] === 'Clearance Status' && $parsed[2][9] === 'Remarks', 'Remarks must follow Clearance Status as the last of ten columns.');
+    eventWorkbookCheck(str_contains($sheet, 'sqref="I4:I4"'), 'Clearance Status validation is on the wrong column.');
     eventWorkbookCheck($parsed[2][5] === 'Pending Balance' && $parsed[2][6] === 'Payment Event Receipt Status', 'Payment Event Receipt Status must immediately follow Pending Balance.');
     eventWorkbookCheck($parsed[3][4] === normalizeImportText($student['pending_obligations']) && $parsed[3][6] === 'UNPAID', 'Event details or receipt status are in the wrong columns.');
     eventWorkbookCheck(str_contains($sheet, '<formula1>"PAID,UNPAID"</formula1>') && str_contains($sheet, 'sqref="G4:G4"'), 'Receipt status dropdown is missing.');

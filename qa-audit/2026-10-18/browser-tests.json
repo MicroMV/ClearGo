@@ -1,0 +1,1433 @@
+[
+  {
+    "test_id": "UI-001",
+    "role": "Student",
+    "feature": "Navigation 1440px",
+    "test": "Switch to overview",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-002",
+    "role": "Student",
+    "feature": "Layout 1440px",
+    "test": "overview has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-003",
+    "role": "Student",
+    "feature": "Navigation 1440px",
+    "test": "Switch to clearance",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-004",
+    "role": "Student",
+    "feature": "Layout 1440px",
+    "test": "clearance has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-005",
+    "role": "Student",
+    "feature": "Navigation 1440px",
+    "test": "Switch to attendance",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-006",
+    "role": "Student",
+    "feature": "Layout 1440px",
+    "test": "attendance has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-007",
+    "role": "Student",
+    "feature": "Navigation 1440px",
+    "test": "Switch to account",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-008",
+    "role": "Student",
+    "feature": "Layout 1440px",
+    "test": "account has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-009",
+    "role": "Student",
+    "feature": "Navigation 1440px",
+    "test": "Mobile menu matches viewport",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-010",
+    "role": "Student",
+    "feature": "Filter 1440px",
+    "test": "Cleared filter excludes other statuses",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-011",
+    "role": "Student",
+    "feature": "Filter 1440px",
+    "test": "To-do filter shows one actionable office",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":1,\"expected\":1}"
+  },
+  {
+    "test_id": "UI-012",
+    "role": "Student",
+    "feature": "Requirements modal 1440px",
+    "test": "Open modal",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-013",
+    "role": "Student",
+    "feature": "Requirements modal 1440px",
+    "test": "Background navigation is inert",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-014",
+    "role": "Student",
+    "feature": "Requirements modal 1440px",
+    "test": "Escape closes modal",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-015",
+    "role": "Student",
+    "feature": "Requirements modal 1440px",
+    "test": "Focus returns to its opener",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-016",
+    "role": "Student",
+    "feature": "attendance dialog 1440px",
+    "test": "Dialog opens",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-017",
+    "role": "Student",
+    "feature": "attendance dialog 1440px",
+    "test": "Background content is inert",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-018",
+    "role": "Student",
+    "feature": "attendance dialog 1440px",
+    "test": "Escape closes dialog",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-019",
+    "role": "Student",
+    "feature": "account dialog 1440px",
+    "test": "Dialog opens",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-020",
+    "role": "Student",
+    "feature": "account dialog 1440px",
+    "test": "Background content is inert",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-021",
+    "role": "Student",
+    "feature": "account dialog 1440px",
+    "test": "Escape closes dialog",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-022",
+    "role": "Student",
+    "feature": "Navigation 1024px",
+    "test": "Switch to overview",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-023",
+    "role": "Student",
+    "feature": "Layout 1024px",
+    "test": "overview has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-024",
+    "role": "Student",
+    "feature": "Navigation 1024px",
+    "test": "Switch to clearance",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-025",
+    "role": "Student",
+    "feature": "Layout 1024px",
+    "test": "clearance has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-026",
+    "role": "Student",
+    "feature": "Navigation 1024px",
+    "test": "Switch to attendance",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-027",
+    "role": "Student",
+    "feature": "Layout 1024px",
+    "test": "attendance has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-028",
+    "role": "Student",
+    "feature": "Navigation 1024px",
+    "test": "Switch to account",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-029",
+    "role": "Student",
+    "feature": "Layout 1024px",
+    "test": "account has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-030",
+    "role": "Student",
+    "feature": "Navigation 1024px",
+    "test": "Mobile menu matches viewport",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-031",
+    "role": "Student",
+    "feature": "Filter 1024px",
+    "test": "Cleared filter excludes other statuses",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-032",
+    "role": "Student",
+    "feature": "Filter 1024px",
+    "test": "To-do filter shows one actionable office",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":1,\"expected\":1}"
+  },
+  {
+    "test_id": "UI-033",
+    "role": "Student",
+    "feature": "Requirements modal 1024px",
+    "test": "Open modal",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-034",
+    "role": "Student",
+    "feature": "Requirements modal 1024px",
+    "test": "Background navigation is inert",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-035",
+    "role": "Student",
+    "feature": "Requirements modal 1024px",
+    "test": "Escape closes modal",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-036",
+    "role": "Student",
+    "feature": "Requirements modal 1024px",
+    "test": "Focus returns to its opener",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-037",
+    "role": "Student",
+    "feature": "attendance dialog 1024px",
+    "test": "Dialog opens",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-038",
+    "role": "Student",
+    "feature": "attendance dialog 1024px",
+    "test": "Background content is inert",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-039",
+    "role": "Student",
+    "feature": "attendance dialog 1024px",
+    "test": "Escape closes dialog",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-040",
+    "role": "Student",
+    "feature": "account dialog 1024px",
+    "test": "Dialog opens",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-041",
+    "role": "Student",
+    "feature": "account dialog 1024px",
+    "test": "Background content is inert",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-042",
+    "role": "Student",
+    "feature": "account dialog 1024px",
+    "test": "Escape closes dialog",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-043",
+    "role": "Student",
+    "feature": "Navigation 768px",
+    "test": "Switch to overview",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-044",
+    "role": "Student",
+    "feature": "Layout 768px",
+    "test": "overview has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-045",
+    "role": "Student",
+    "feature": "Navigation 768px",
+    "test": "Switch to clearance",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-046",
+    "role": "Student",
+    "feature": "Layout 768px",
+    "test": "clearance has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-047",
+    "role": "Student",
+    "feature": "Navigation 768px",
+    "test": "Switch to attendance",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-048",
+    "role": "Student",
+    "feature": "Layout 768px",
+    "test": "attendance has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-049",
+    "role": "Student",
+    "feature": "Navigation 768px",
+    "test": "Switch to account",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-050",
+    "role": "Student",
+    "feature": "Layout 768px",
+    "test": "account has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-051",
+    "role": "Student",
+    "feature": "Navigation 768px",
+    "test": "Mobile menu matches viewport",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-052",
+    "role": "Student",
+    "feature": "Filter 768px",
+    "test": "Cleared filter excludes other statuses",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-053",
+    "role": "Student",
+    "feature": "Filter 768px",
+    "test": "To-do filter shows one actionable office",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":1,\"expected\":1}"
+  },
+  {
+    "test_id": "UI-054",
+    "role": "Student",
+    "feature": "Requirements modal 768px",
+    "test": "Open modal",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-055",
+    "role": "Student",
+    "feature": "Requirements modal 768px",
+    "test": "Background navigation is inert",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-056",
+    "role": "Student",
+    "feature": "Requirements modal 768px",
+    "test": "Escape closes modal",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-057",
+    "role": "Student",
+    "feature": "Requirements modal 768px",
+    "test": "Focus returns to its opener",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-058",
+    "role": "Student",
+    "feature": "attendance dialog 768px",
+    "test": "Dialog opens",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-059",
+    "role": "Student",
+    "feature": "attendance dialog 768px",
+    "test": "Background content is inert",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-060",
+    "role": "Student",
+    "feature": "attendance dialog 768px",
+    "test": "Escape closes dialog",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-061",
+    "role": "Student",
+    "feature": "account dialog 768px",
+    "test": "Dialog opens",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-062",
+    "role": "Student",
+    "feature": "account dialog 768px",
+    "test": "Background content is inert",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-063",
+    "role": "Student",
+    "feature": "account dialog 768px",
+    "test": "Escape closes dialog",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-064",
+    "role": "Student",
+    "feature": "Navigation 390px",
+    "test": "Switch to overview",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-065",
+    "role": "Student",
+    "feature": "Layout 390px",
+    "test": "overview has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-066",
+    "role": "Student",
+    "feature": "Navigation 390px",
+    "test": "Switch to clearance",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-067",
+    "role": "Student",
+    "feature": "Layout 390px",
+    "test": "clearance has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-068",
+    "role": "Student",
+    "feature": "Navigation 390px",
+    "test": "Switch to attendance",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-069",
+    "role": "Student",
+    "feature": "Layout 390px",
+    "test": "attendance has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-070",
+    "role": "Student",
+    "feature": "Navigation 390px",
+    "test": "Switch to account",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-071",
+    "role": "Student",
+    "feature": "Layout 390px",
+    "test": "account has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-072",
+    "role": "Student",
+    "feature": "Navigation 390px",
+    "test": "Mobile menu matches viewport",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-073",
+    "role": "Student",
+    "feature": "Filter 390px",
+    "test": "Cleared filter excludes other statuses",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-074",
+    "role": "Student",
+    "feature": "Filter 390px",
+    "test": "To-do filter shows one actionable office",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":1,\"expected\":1}"
+  },
+  {
+    "test_id": "UI-075",
+    "role": "Student",
+    "feature": "Requirements modal 390px",
+    "test": "Open modal",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-076",
+    "role": "Student",
+    "feature": "Requirements modal 390px",
+    "test": "Background navigation is inert",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-077",
+    "role": "Student",
+    "feature": "Requirements modal 390px",
+    "test": "Escape closes modal",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-078",
+    "role": "Student",
+    "feature": "Requirements modal 390px",
+    "test": "Focus returns to its opener",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-079",
+    "role": "Student",
+    "feature": "attendance dialog 390px",
+    "test": "Dialog opens",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-080",
+    "role": "Student",
+    "feature": "attendance dialog 390px",
+    "test": "Background content is inert",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-081",
+    "role": "Student",
+    "feature": "attendance dialog 390px",
+    "test": "Escape closes dialog",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-082",
+    "role": "Student",
+    "feature": "account dialog 390px",
+    "test": "Dialog opens",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-083",
+    "role": "Student",
+    "feature": "account dialog 390px",
+    "test": "Background content is inert",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-084",
+    "role": "Student",
+    "feature": "account dialog 390px",
+    "test": "Escape closes dialog",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-085",
+    "role": "Student",
+    "feature": "Navigation 320px",
+    "test": "Switch to overview",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-086",
+    "role": "Student",
+    "feature": "Layout 320px",
+    "test": "overview has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-087",
+    "role": "Student",
+    "feature": "Navigation 320px",
+    "test": "Switch to clearance",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-088",
+    "role": "Student",
+    "feature": "Layout 320px",
+    "test": "clearance has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-089",
+    "role": "Student",
+    "feature": "Navigation 320px",
+    "test": "Switch to attendance",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-090",
+    "role": "Student",
+    "feature": "Layout 320px",
+    "test": "attendance has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-091",
+    "role": "Student",
+    "feature": "Navigation 320px",
+    "test": "Switch to account",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-092",
+    "role": "Student",
+    "feature": "Layout 320px",
+    "test": "account has no horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-093",
+    "role": "Student",
+    "feature": "Navigation 320px",
+    "test": "Mobile menu matches viewport",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-094",
+    "role": "Student",
+    "feature": "Filter 320px",
+    "test": "Cleared filter excludes other statuses",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-095",
+    "role": "Student",
+    "feature": "Filter 320px",
+    "test": "To-do filter shows one actionable office",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":1,\"expected\":1}"
+  },
+  {
+    "test_id": "UI-096",
+    "role": "Student",
+    "feature": "Requirements modal 320px",
+    "test": "Open modal",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-097",
+    "role": "Student",
+    "feature": "Requirements modal 320px",
+    "test": "Background navigation is inert",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-098",
+    "role": "Student",
+    "feature": "Requirements modal 320px",
+    "test": "Escape closes modal",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-099",
+    "role": "Student",
+    "feature": "Requirements modal 320px",
+    "test": "Focus returns to its opener",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-100",
+    "role": "Student",
+    "feature": "attendance dialog 320px",
+    "test": "Dialog opens",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-101",
+    "role": "Student",
+    "feature": "attendance dialog 320px",
+    "test": "Background content is inert",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-102",
+    "role": "Student",
+    "feature": "attendance dialog 320px",
+    "test": "Escape closes dialog",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-103",
+    "role": "Student",
+    "feature": "account dialog 320px",
+    "test": "Dialog opens",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":false,\"expected\":false}"
+  },
+  {
+    "test_id": "UI-104",
+    "role": "Student",
+    "feature": "account dialog 320px",
+    "test": "Background content is inert",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-105",
+    "role": "Student",
+    "feature": "account dialog 320px",
+    "test": "Escape closes dialog",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-106",
+    "role": "Student",
+    "feature": "history dashboard",
+    "test": "No horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-107",
+    "role": "Student",
+    "feature": "Semester archive",
+    "test": "No clearance mutation forms",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":0,\"expected\":0}"
+  },
+  {
+    "test_id": "UI-108",
+    "role": "Student",
+    "feature": "empty dashboard",
+    "test": "No horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-109",
+    "role": "Student",
+    "feature": "complete dashboard",
+    "test": "No horizontal overflow",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-110",
+    "role": "Student",
+    "feature": "Completion message",
+    "test": "All-cleared confirmation visible",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":\"You're good to go!\",\"expected\":\"You're good to go!\"}"
+  },
+  {
+    "test_id": "UI-111",
+    "role": "Student",
+    "feature": "DEAN preview 1440px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-112",
+    "role": "DEAN",
+    "feature": "Dashboard 1440px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":1440,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-113",
+    "role": "Student",
+    "feature": "ORG_STAFF preview 1440px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-114",
+    "role": "ORG_STAFF",
+    "feature": "Dashboard 1440px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":1440,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-115",
+    "role": "Student",
+    "feature": "SASO_STAFF preview 1440px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-116",
+    "role": "SASO_STAFF",
+    "feature": "Dashboard 1440px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":1440,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-117",
+    "role": "Student",
+    "feature": "STUDENT_COUNCIL_STAFF preview 1440px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-118",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Dashboard 1440px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":1440,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-119",
+    "role": "Student",
+    "feature": "LIBRARY_STAFF preview 1440px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-120",
+    "role": "LIBRARY_STAFF",
+    "feature": "Dashboard 1440px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":1440,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-121",
+    "role": "Student",
+    "feature": "BOOKSTORE_STAFF preview 1440px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-122",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Dashboard 1440px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":1440,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-123",
+    "role": "Student",
+    "feature": "CLINIC_STAFF preview 1440px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-124",
+    "role": "CLINIC_STAFF",
+    "feature": "Dashboard 1440px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":1440,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-125",
+    "role": "Student",
+    "feature": "FACILITIES_STAFF preview 1440px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-126",
+    "role": "FACILITIES_STAFF",
+    "feature": "Dashboard 1440px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":1440,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-127",
+    "role": "Student",
+    "feature": "COMLAB_STAFF preview 1440px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-128",
+    "role": "COMLAB_STAFF",
+    "feature": "Dashboard 1440px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":1440,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-129",
+    "role": "Student",
+    "feature": "ACCOUNTING_STAFF preview 1440px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-130",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Dashboard 1440px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":1440,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-131",
+    "role": "Student",
+    "feature": "REGISTRAR preview 1440px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-132",
+    "role": "REGISTRAR",
+    "feature": "Dashboard 1440px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":1440,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-133",
+    "role": "Student",
+    "feature": "DEAN preview 390px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-134",
+    "role": "DEAN",
+    "feature": "Dashboard 390px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":390,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-135",
+    "role": "Student",
+    "feature": "ORG_STAFF preview 390px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-136",
+    "role": "ORG_STAFF",
+    "feature": "Dashboard 390px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":390,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-137",
+    "role": "Student",
+    "feature": "SASO_STAFF preview 390px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-138",
+    "role": "SASO_STAFF",
+    "feature": "Dashboard 390px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":390,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-139",
+    "role": "Student",
+    "feature": "STUDENT_COUNCIL_STAFF preview 390px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-140",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Dashboard 390px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":390,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-141",
+    "role": "Student",
+    "feature": "LIBRARY_STAFF preview 390px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-142",
+    "role": "LIBRARY_STAFF",
+    "feature": "Dashboard 390px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":390,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-143",
+    "role": "Student",
+    "feature": "BOOKSTORE_STAFF preview 390px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-144",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Dashboard 390px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":390,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-145",
+    "role": "Student",
+    "feature": "CLINIC_STAFF preview 390px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-146",
+    "role": "CLINIC_STAFF",
+    "feature": "Dashboard 390px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":390,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-147",
+    "role": "Student",
+    "feature": "FACILITIES_STAFF preview 390px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-148",
+    "role": "FACILITIES_STAFF",
+    "feature": "Dashboard 390px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":390,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-149",
+    "role": "Student",
+    "feature": "COMLAB_STAFF preview 390px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-150",
+    "role": "COMLAB_STAFF",
+    "feature": "Dashboard 390px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":390,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-151",
+    "role": "Student",
+    "feature": "ACCOUNTING_STAFF preview 390px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-152",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Dashboard 390px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":390,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-153",
+    "role": "Student",
+    "feature": "REGISTRAR preview 390px",
+    "test": "Availability overlay is absent",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-154",
+    "role": "REGISTRAR",
+    "feature": "Dashboard 390px",
+    "test": "Check document overflow on synthetic authorized page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"width\":390,\"overflow\":true,\"scope\":\"Static response from the real isolated HTTP dashboard; no mutation controls clicked.\"}"
+  },
+  {
+    "test_id": "UI-155",
+    "role": "All",
+    "feature": "PWA caching",
+    "test": "Cache contains only the public fallback and logo",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "[\"/errors/offline.html\",\"/assets/the-lewis-college-logo.png\"]"
+  },
+  {
+    "test_id": "UI-156",
+    "role": "Student",
+    "feature": "PWA outage fallback",
+    "test": "Cached error page renders without internet advice",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-157",
+    "role": "Student",
+    "feature": "PWA outage fallback",
+    "test": "Application-base placeholder is resolved",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-158",
+    "role": "Student",
+    "feature": "PWA reconnect",
+    "test": "Retry reloads the requested student page",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"actual\":true,\"expected\":true}"
+  },
+  {
+    "test_id": "UI-159",
+    "role": "All",
+    "feature": "Browser runtime",
+    "test": "Observe uncaught JavaScript exceptions",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "[]"
+  }
+]

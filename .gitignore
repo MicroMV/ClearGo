@@ -12,6 +12,14 @@
 # Runtime sessions
 /storage/sessions/sess_*
 
+# Temporary local debug access and generated database backups
+/storage/private/debug-console.enabled
+/storage/backups/debug-console/
+
+# Temporary local debug access and generated database backups
+/storage/private/debug-console.enabled
+/storage/backups/debug-console/
+
 # Private user uploads (keep access-control and placeholder files tracked)
 /storage/private/**/*.jpg
 /storage/private/**/*.jpeg

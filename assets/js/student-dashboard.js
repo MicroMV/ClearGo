@@ -5,24 +5,9 @@ let notificationToastTimer = null;
 const notificationToastQueue = [];
 let notificationToastOpen = false;
 
-function updateStudentNotificationBadge(unreadCount) {
-    let badge = notificationButton.querySelector('.notification-count');
-    if (unreadCount < 1) {
-        badge?.remove();
-    } else {
-        if (badge === null) {
-            badge = document.createElement('span');
-            badge.className = 'notification-count';
-            notificationButton.appendChild(badge);
-        }
-        badge.textContent = unreadCount > 99 ? '99+' : String(unreadCount);
-    }
-    notificationButton.setAttribute('aria-label', 'Notifications' + (unreadCount > 0 ? ' (' + unreadCount + ' unread)' : ''));
-}
-
 function closeStudentNotificationToast() {
     const toast = document.querySelector('.student-notification-toast');
-    if (toast === null || toast.dataset.closing === 'true') return;
+    if (!toast || toast.dataset.closing === 'true') return;
     toast.dataset.closing = 'true';
     window.clearTimeout(notificationToastTimer);
     toast.classList.remove('visible');
@@ -60,6 +45,21 @@ function showStudentNotificationToast(notification, additionalCount = 0) {
     document.body.appendChild(toast);
     window.requestAnimationFrame(() => toast.classList.add('visible'));
     notificationToastTimer = window.setTimeout(closeStudentNotificationToast, 6000);
+}
+
+function updateStudentNotificationBadge(unreadCount) {
+    let badge = notificationButton.querySelector('.notification-count');
+    if (unreadCount < 1) {
+        badge?.remove();
+    } else {
+        if (badge === null) {
+            badge = document.createElement('span');
+            badge.className = 'notification-count';
+            notificationButton.appendChild(badge);
+        }
+        badge.textContent = unreadCount > 99 ? '99+' : String(unreadCount);
+    }
+    notificationButton.setAttribute('aria-label', 'Notifications' + (unreadCount > 0 ? ' (' + unreadCount + ' unread)' : ''));
 }
 
 function renderStudentNotifications(notifications, unreadCount) {
@@ -135,14 +135,7 @@ document.querySelectorAll('.notice.flash').forEach((message) => {
     message.remove();
 });
 
-const newestUnreadNotification = notificationBox.querySelector('.notification-list li.unread');
-if (newestUnreadNotification !== null) {
-    showStudentNotificationToast({
-        title: newestUnreadNotification.querySelector('strong').textContent,
-        message: newestUnreadNotification.querySelector('div').textContent
-    }, Math.max(0, notificationBox.querySelectorAll('.notification-list li.unread').length - 1));
-}
-window.setTimeout(() => refreshStudentNotifications(true), 500);
+window.setTimeout(refreshStudentNotifications, 500);
 window.setInterval(refreshStudentNotifications, 20000);
 document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape' && !notificationBox.hidden && activeRequirementsModal === null) {
@@ -339,6 +332,66 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
+const clearancePreview = document.getElementById('clearance-preview-dialog');
+const clearancePreviewFrame = clearancePreview?.querySelector('[data-clearance-preview-src]');
+const clearancePreviewLoading = clearancePreview?.querySelector('[data-clearance-preview-loading]');
+const clearancePreviewViewer = clearancePreview?.querySelector('.portal-clearance-preview__viewer');
+let clearancePreviewTrigger = null;
+
+function setClearancePreviewLoading(loading) {
+    if (clearancePreviewLoading) clearancePreviewLoading.hidden = !loading;
+    clearancePreviewViewer?.setAttribute('aria-busy', String(loading));
+}
+
+clearancePreviewFrame?.addEventListener('load', () => {
+    if (!clearancePreview?.open || clearancePreviewFrame.getAttribute('src') !== clearancePreviewFrame.dataset.clearancePreviewSrc) return;
+    // Ignore the iframe's initial empty document and the reset navigation on close.
+    try {
+        if (clearancePreviewFrame.contentWindow.location.href === 'about:blank') return;
+    } catch {
+        // The browser's built-in PDF viewer may use a different origin.
+    }
+    setClearancePreviewLoading(false);
+});
+
+function closeClearancePreview() {
+    if (clearancePreview?.open) clearancePreview.close();
+}
+
+document.querySelectorAll('[data-open-clearance-preview]').forEach((trigger) => {
+    trigger.addEventListener('click', (event) => {
+        // Keep the linked page available for browsers without dialogs or an explicit new-tab click.
+        if (!clearancePreview || !clearancePreviewFrame || typeof clearancePreview.showModal !== 'function'
+            || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
+        event.preventDefault();
+        closeAttendanceScanner();
+        closePasswordModal();
+        if (activeRequirementsModal !== null) closeRequirementsModal();
+        clearancePreviewTrigger = trigger;
+        notificationBox.hidden = true;
+        notificationButton.setAttribute('aria-expanded', 'false');
+        clearancePreview.showModal();
+        document.body.classList.add('portal-clearance-preview-open');
+        setClearancePreviewLoading(true);
+        // Load only when opened, so the hidden dialog does not request or download a PDF.
+        clearancePreviewFrame.src = clearancePreviewFrame.dataset.clearancePreviewSrc;
+    });
+});
+
+clearancePreview?.querySelector('[data-close-clearance-preview]').addEventListener('click', closeClearancePreview);
+clearancePreview?.addEventListener('close', () => {
+    setClearancePreviewLoading(false);
+    clearancePreviewFrame.src = 'about:blank';
+    document.body.classList.remove('portal-clearance-preview-open');
+    clearancePreviewTrigger?.focus({ preventScroll: true });
+    clearancePreviewTrigger = null;
+});
+clearancePreview?.addEventListener('click', (event) => {
+    if (event.target !== clearancePreview) return;
+    const bounds = clearancePreview.getBoundingClientRect();
+    if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) closeClearancePreview();
+});
+
 document.querySelectorAll('[data-file-input]').forEach(function (input) {
     const form = input.closest('form');
     const status = form?.querySelector('[data-file-status]');
@@ -374,6 +427,7 @@ let currentDashboardView = document.body.dataset.initialView || 'overview';
 
 function switchDashboardView(name, focus = false) {
     if (!dashboardViewNames.has(name)) name = document.body.dataset.initialView || 'overview';
+    closeClearancePreview();
     if (activeRequirementsModal !== null) closeRequirementsModal();
     currentDashboardView = name;
     dashboardViews.forEach((view) => { view.hidden = view.dataset.dashboardView !== name; });

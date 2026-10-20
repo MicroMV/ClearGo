@@ -8,6 +8,7 @@ require_once __DIR__ . '/readiness_functions.php';
 require_once __DIR__ . '/../organization/clearance_functions.php';
 require_once __DIR__ . '/../organization/event_functions.php';
 require_once __DIR__ . '/../student-council/event_functions.php';
+require_once __DIR__ . '/sanction_functions.php';
 
 function renderEventAttendancePage(string $role, string $eventSource): void
 {
@@ -23,6 +24,7 @@ function renderEventAttendancePage(string $role, string $eventSource): void
         http_response_code(500);
         exit('There is no active semester.');
     }
+    syncExpiredEventSanctions($database, (int)$period['id']);
 
     if ($eventSource === 'ORGANIZATION') {
         $eventQuery = $database->prepare(
@@ -57,6 +59,8 @@ function renderEventAttendancePage(string $role, string $eventSource): void
     }
 
     $search = trim((string) ($_GET['search'] ?? ''));
+    $attendanceStatus = is_string($_GET['attendance_status'] ?? null) ? $_GET['attendance_status'] : 'PRESENT';
+    if (!in_array($attendanceStatus, ['PRESENT','ABSENT','ALL'], true)) { $attendanceStatus = 'PRESENT'; }
     $page = max(1, (int) ($_GET['page'] ?? 1));
     $pageSize = 50;
     $totalRows = 0;
@@ -68,8 +72,9 @@ function renderEventAttendancePage(string $role, string $eventSource): void
         $attendanceFrom = "FROM event_attendance attendance
             INNER JOIN students student ON student.id=attendance.student_id
             INNER JOIN organizations organization ON organization.id=student.organization_id
-            WHERE attendance.event_id=:event_id AND attendance.status='PRESENT'
+            WHERE attendance.event_id=:event_id
               AND (student.student_number LIKE :number_search OR student.first_name LIKE :first_search OR student.last_name LIKE :last_search OR student.program LIKE :program_search)";
+        if ($attendanceStatus !== 'ALL') { $attendanceFrom .= ' AND attendance.status=:attendance_status'; $parameters['attendance_status']=$attendanceStatus; }
         $countQuery = $database->prepare("SELECT COUNT(*) {$attendanceFrom}");
         $countQuery->execute($parameters);
         $totalRows = (int) $countQuery->fetchColumn();
@@ -79,7 +84,7 @@ function renderEventAttendancePage(string $role, string $eventSource): void
         $attendanceQuery = $database->prepare(
             "SELECT student.student_number,student.first_name,student.last_name,student.program,
                     student.year_level,student.section,organization.code AS college,
-                    attendance.check_in_method,attendance.recorded_at
+                    attendance.check_in_method,attendance.recorded_at,attendance.status AS attendance_status,attendance.sanction_verified_at
              {$attendanceFrom}
              ORDER BY student.last_name,student.first_name
              LIMIT {$pageSize} OFFSET {$offset}"
@@ -101,6 +106,7 @@ function renderEventAttendancePage(string $role, string $eventSource): void
         $sidebar = staffDashboardSidebar($organization['code'] === 'CBE' ? 'YBC Organization Clearance' : 'Organization Clearance', $user, [
             ['key' => 'dashboard', 'label' => 'Dashboard', 'url' => '/organization/dashboard.php', 'icon' => 'dashboard'],
             ['key' => 'attendance', 'label' => 'Event Attendance', 'url' => '/organization/attendance.php', 'icon' => 'document'],
+            ['key' => 'sanctions', 'label' => 'Sanction Submissions', 'url' => '/organization/sanction_submissions.php', 'icon' => 'document'],
         ], 'attendance', dashboardLogoutForm());
         $pageUrl = '/organization/attendance.php';
     } else {
@@ -108,13 +114,14 @@ function renderEventAttendancePage(string $role, string $eventSource): void
         $sidebar = staffDashboardSidebar('Student Council Clearance', $user, [
             ['key' => 'dashboard', 'label' => 'Dashboard', 'url' => '/student-council/dashboard.php', 'icon' => 'dashboard'],
             ['key' => 'attendance', 'label' => 'Event Attendance', 'url' => '/student-council/attendance.php', 'icon' => 'document'],
+            ['key' => 'sanctions', 'label' => 'Sanction Submissions', 'url' => '/student-council/sanction_submissions.php', 'icon' => 'document'],
         ], 'attendance', dashboardLogoutForm());
         $pageUrl = '/student-council/attendance.php';
     }
     ?>
 <!doctype html>
 <html lang="en">
-<head>
+<head><?= connectionStatusAssets() ?>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title><?= escapeHtml($title) ?> | ClearGo</title>
@@ -138,10 +145,10 @@ function renderEventAttendancePage(string $role, string $eventSource): void
 ?>
 <section class="panel"><div class="section-heading"><div><h2>Attendance records</h2><p class="muted"><?= escapeHtml($period['semester'] . ' Semester A.Y. ' . $period['school_year']) ?></p></div></div>
 <?php if ($events === []): ?><p class="muted">No events have been created for this semester.</p><?php else: ?>
-<form class="attendance-controls" method="get"><label>Event<select name="event" onchange="this.form.submit()"><?php foreach ($events as $event): ?><option value="<?= (int) $event['id'] ?>" <?= (int) $event['id'] === (int) $selectedEvent['id'] ? 'selected' : '' ?>><?= escapeHtml($event['name'] . ' - ' . $event['event_date']) ?></option><?php endforeach; ?></select></label><label>Search student<input type="search" name="search" value="<?= escapeHtml($search) ?>" placeholder="Student ID, name, or program"></label><button type="submit">Search</button></form>
-<div class="attendance-summary"><strong><?= $totalRows ?></strong><span>student<?= $totalRows === 1 ? '' : 's' ?> present</span></div>
-<?php if ($attendees === []): ?><p class="muted">No present students match this view.</p><?php else: ?><div class="table-wrap"><table><thead><tr><th>No.</th><th>Student ID</th><th>Student Name</th><th>Program</th><th>Year Level</th><th>College</th><th>Check-in</th><th>Recorded At</th></tr></thead><tbody><?php foreach ($attendees as $index => $attendee): ?><tr><td><?= (($page - 1) * $pageSize) + $index + 1 ?></td><td><strong><?= escapeHtml($attendee['student_number']) ?></strong></td><td><?= escapeHtml($attendee['last_name'] . ', ' . $attendee['first_name']) ?></td><td><?= escapeHtml($attendee['program']) ?></td><td>Year <?= (int) $attendee['year_level'] ?></td><td><?= escapeHtml($attendee['college']) ?></td><td><span class="badge approved"><?= escapeHtml($attendee['check_in_method']) ?></span></td><td><?= escapeHtml(date('M j, Y g:i A', strtotime($attendee['recorded_at']))) ?></td></tr><?php endforeach; ?></tbody></table></div><?php endif; ?>
-<?php if ($totalPages > 1): ?><nav class="pagination" aria-label="Attendance pages"><?php foreach (paginationPages($page, $totalPages) as $pageNumber): ?><?php if ($pageNumber === 'ellipsis'): ?><span class="pagination-ellipsis">&hellip;</span><?php else: ?><a class="pagination-link <?= $pageNumber === $page ? 'active' : '' ?>" href="<?= escapeHtml(applicationUrl($pageUrl)) ?>?event=<?= (int) $selectedEvent['id'] ?>&amp;search=<?= urlencode($search) ?>&amp;page=<?= $pageNumber ?>"><?= $pageNumber ?></a><?php endif; ?><?php endforeach; ?></nav><?php endif; ?>
+<form class="attendance-controls" method="get"><label>Event<select name="event" onchange="this.form.submit()"><?php foreach ($events as $event): ?><option value="<?= (int) $event['id'] ?>" <?= (int) $event['id'] === (int) $selectedEvent['id'] ? 'selected' : '' ?>><?= escapeHtml($event['name'] . ' - ' . $event['event_date']) ?></option><?php endforeach; ?></select></label><label>Attendance<select name="attendance_status"><?php foreach(['PRESENT'=>'Present','ABSENT'=>'Absent','ALL'=>'All records'] as $value=>$label): ?><option value="<?= $value ?>" <?= $attendanceStatus===$value?'selected':'' ?>><?= $label ?></option><?php endforeach; ?></select></label><label>Search student<input type="search" name="search" value="<?= escapeHtml($search) ?>" placeholder="Student ID, name, or program"></label><button type="submit">Search</button><a class="button-link secondary filter-clear" aria-label="Clear filters" href="<?= escapeHtml(applicationUrl($pageUrl)) ?>">Clear</a></form>
+<div class="attendance-summary"><strong><?= $totalRows ?></strong><span>matching <?= strtolower($attendanceStatus)==='all'?'attendance':strtolower($attendanceStatus) ?> record<?= $totalRows === 1 ? '' : 's' ?></span></div>
+<?php if ($attendees === []): ?><p class="muted">No attendance records match this view.</p><?php else: ?><div class="table-wrap"><table><thead><tr><th>No.</th><th>Student ID</th><th>Student Name</th><th>Program</th><th>Year Level</th><th>College</th><th>Attendance / sanction</th><th>Recorded At</th></tr></thead><tbody><?php foreach ($attendees as $index => $attendee): ?><tr><td><?= (($page - 1) * $pageSize) + $index + 1 ?></td><td><strong><?= escapeHtml($attendee['student_number']) ?></strong></td><td><?= escapeHtml($attendee['last_name'] . ', ' . $attendee['first_name']) ?></td><td><?= escapeHtml($attendee['program']) ?></td><td>Year <?= (int) $attendee['year_level'] ?></td><td><?= escapeHtml($attendee['college']) ?></td><td><strong><?= escapeHtml(ucfirst(strtolower($attendee['attendance_status']))) ?></strong><br><span class="muted"><?= $attendee['sanction_verified_at']!==null?'Sanction verified':($attendee['attendance_status']==='PRESENT'?escapeHtml($attendee['check_in_method']):'Sanction pending') ?></span></td><td><?= escapeHtml(date('M j, Y g:i A', strtotime($attendee['recorded_at']))) ?></td></tr><?php endforeach; ?></tbody></table></div><?php endif; ?>
+<?php if ($totalPages > 1): ?><nav class="pagination" aria-label="Attendance pages"><?php foreach (paginationPages($page, $totalPages) as $pageNumber): ?><?php if ($pageNumber === 'ellipsis'): ?><span class="pagination-ellipsis">&hellip;</span><?php else: ?><a class="pagination-link <?= $pageNumber === $page ? 'active' : '' ?>" href="<?= escapeHtml(applicationUrl($pageUrl)) ?>?event=<?= (int) $selectedEvent['id'] ?>&amp;search=<?= urlencode($search) ?>&amp;attendance_status=<?= $attendanceStatus ?>&amp;page=<?= $pageNumber ?>"><?= $pageNumber ?></a><?php endif; ?><?php endforeach; ?></nav><?php endif; ?>
 <?php endif; ?></section></main></div></div><script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/js/staff-dashboard.js') ?>"></script></body></html>
 <?php
 }

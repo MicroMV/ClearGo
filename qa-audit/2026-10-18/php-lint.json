@@ -1,0 +1,848 @@
+[
+  {
+    "file": "accounting/assessment_image.php",
+    "status": 0,
+    "ms": 288,
+    "output": "No syntax errors detected in accounting/assessment_image.php\n"
+  },
+  {
+    "file": "accounting/dashboard.php",
+    "status": 0,
+    "ms": 257,
+    "output": "No syntax errors detected in accounting/dashboard.php\n"
+  },
+  {
+    "file": "accounting/submissions.php",
+    "status": 0,
+    "ms": 301,
+    "output": "No syntax errors detected in accounting/submissions.php\n"
+  },
+  {
+    "file": "accounting/submission_action.php",
+    "status": 0,
+    "ms": 269,
+    "output": "No syntax errors detected in accounting/submission_action.php\n"
+  },
+  {
+    "file": "auth/auth_check.php",
+    "status": 0,
+    "ms": 99,
+    "output": "No syntax errors detected in auth/auth_check.php\n"
+  },
+  {
+    "file": "auth/connection_status.php",
+    "status": 0,
+    "ms": 149,
+    "output": "No syntax errors detected in auth/connection_status.php\n"
+  },
+  {
+    "file": "auth/login_process.php",
+    "status": 0,
+    "ms": 250,
+    "output": "No syntax errors detected in auth/login_process.php\n"
+  },
+  {
+    "file": "auth/notifications.php",
+    "status": 0,
+    "ms": 181,
+    "output": "No syntax errors detected in auth/notifications.php\n"
+  },
+  {
+    "file": "auth/profile.php",
+    "status": 0,
+    "ms": 206,
+    "output": "No syntax errors detected in auth/profile.php\n"
+  },
+  {
+    "file": "auth/profile_image.php",
+    "status": 0,
+    "ms": 94,
+    "output": "No syntax errors detected in auth/profile_image.php\n"
+  },
+  {
+    "file": "auth/profile_picture_action.php",
+    "status": 0,
+    "ms": 135,
+    "output": "No syntax errors detected in auth/profile_picture_action.php\n"
+  },
+  {
+    "file": "auth/profile_picture_form.php",
+    "status": 0,
+    "ms": 92,
+    "output": "No syntax errors detected in auth/profile_picture_form.php\n"
+  },
+  {
+    "file": "auth/profile_picture_functions.php",
+    "status": 0,
+    "ms": 102,
+    "output": "No syntax errors detected in auth/profile_picture_functions.php\n"
+  },
+  {
+    "file": "bookstore/dashboard.php",
+    "status": 0,
+    "ms": 201,
+    "output": "No syntax errors detected in bookstore/dashboard.php\n"
+  },
+  {
+    "file": "bookstore/fees.php",
+    "status": 0,
+    "ms": 137,
+    "output": "No syntax errors detected in bookstore/fees.php\n"
+  },
+  {
+    "file": "bookstore/fee_action.php",
+    "status": 0,
+    "ms": 160,
+    "output": "No syntax errors detected in bookstore/fee_action.php\n"
+  },
+  {
+    "file": "bookstore/receipt_image.php",
+    "status": 0,
+    "ms": 230,
+    "output": "No syntax errors detected in bookstore/receipt_image.php\n"
+  },
+  {
+    "file": "bookstore/submissions.php",
+    "status": 0,
+    "ms": 342,
+    "output": "No syntax errors detected in bookstore/submissions.php\n"
+  },
+  {
+    "file": "bookstore/submission_action.php",
+    "status": 0,
+    "ms": 197,
+    "output": "No syntax errors detected in bookstore/submission_action.php\n"
+  },
+  {
+    "file": "bookstore/workbook_functions.php",
+    "status": 0,
+    "ms": 401,
+    "output": "No syntax errors detected in bookstore/workbook_functions.php\n"
+  },
+  {
+    "file": "bookstore/workbook_import.php",
+    "status": 0,
+    "ms": 195,
+    "output": "No syntax errors detected in bookstore/workbook_import.php\n"
+  },
+  {
+    "file": "bookstore/workbook_template.php",
+    "status": 0,
+    "ms": 189,
+    "output": "No syntax errors detected in bookstore/workbook_template.php\n"
+  },
+  {
+    "file": "clearance/accounting_receipt_functions.php",
+    "status": 0,
+    "ms": 182,
+    "output": "No syntax errors detected in clearance/accounting_receipt_functions.php\n"
+  },
+  {
+    "file": "clearance/bulk_clearance.php",
+    "status": 0,
+    "ms": 99,
+    "output": "No syntax errors detected in clearance/bulk_clearance.php\n"
+  },
+  {
+    "file": "clearance/clearance_functions.php",
+    "status": 0,
+    "ms": 133,
+    "output": "No syntax errors detected in clearance/clearance_functions.php\n"
+  },
+  {
+    "file": "clearance/comlab_violations_modal.php",
+    "status": 0,
+    "ms": 224,
+    "output": "No syntax errors detected in clearance/comlab_violations_modal.php\n"
+  },
+  {
+    "file": "clearance/council_event_management.php",
+    "status": 0,
+    "ms": 252,
+    "output": "No syntax errors detected in clearance/council_event_management.php\n"
+  },
+  {
+    "file": "clearance/evaluation_functions.php",
+    "status": 0,
+    "ms": 104,
+    "output": "No syntax errors detected in clearance/evaluation_functions.php\n"
+  },
+  {
+    "file": "clearance/event_attendance_page.php",
+    "status": 0,
+    "ms": 216,
+    "output": "No syntax errors detected in clearance/event_attendance_page.php\n"
+  },
+  {
+    "file": "clearance/facilities_items_modal.php",
+    "status": 0,
+    "ms": 235,
+    "output": "No syntax errors detected in clearance/facilities_items_modal.php\n"
+  },
+  {
+    "file": "clearance/office_action.php",
+    "status": 0,
+    "ms": 178,
+    "output": "No syntax errors detected in clearance/office_action.php\n"
+  },
+  {
+    "file": "clearance/office_dashboard.php",
+    "status": 0,
+    "ms": 849,
+    "output": "No syntax errors detected in clearance/office_dashboard.php\n"
+  },
+  {
+    "file": "clearance/office_workflow.php",
+    "status": 0,
+    "ms": 97,
+    "output": "No syntax errors detected in clearance/office_workflow.php\n"
+  },
+  {
+    "file": "clearance/organization_event_management.php",
+    "status": 0,
+    "ms": 132,
+    "output": "No syntax errors detected in clearance/organization_event_management.php\n"
+  },
+  {
+    "file": "clearance/readiness_action.php",
+    "status": 0,
+    "ms": 162,
+    "output": "No syntax errors detected in clearance/readiness_action.php\n"
+  },
+  {
+    "file": "clearance/readiness_functions.php",
+    "status": 0,
+    "ms": 99,
+    "output": "No syntax errors detected in clearance/readiness_functions.php\n"
+  },
+  {
+    "file": "clearance/remarks_action.php",
+    "status": 0,
+    "ms": 168,
+    "output": "No syntax errors detected in clearance/remarks_action.php\n"
+  },
+  {
+    "file": "clearance/remarks_functions.php",
+    "status": 0,
+    "ms": 239,
+    "output": "No syntax errors detected in clearance/remarks_functions.php\n"
+  },
+  {
+    "file": "clearance/report_workbook.php",
+    "status": 0,
+    "ms": 183,
+    "output": "No syntax errors detected in clearance/report_workbook.php\n"
+  },
+  {
+    "file": "clearance/workbook_styles.php",
+    "status": 0,
+    "ms": 190,
+    "output": "No syntax errors detected in clearance/workbook_styles.php\n"
+  },
+  {
+    "file": "clinic/dashboard.php",
+    "status": 0,
+    "ms": 196,
+    "output": "No syntax errors detected in clinic/dashboard.php\n"
+  },
+  {
+    "file": "clinic/schedules.php",
+    "status": 0,
+    "ms": 295,
+    "output": "No syntax errors detected in clinic/schedules.php\n"
+  },
+  {
+    "file": "clinic/schedule_action.php",
+    "status": 0,
+    "ms": 141,
+    "output": "No syntax errors detected in clinic/schedule_action.php\n"
+  },
+  {
+    "file": "clinic/workbook_functions.php",
+    "status": 0,
+    "ms": 191,
+    "output": "No syntax errors detected in clinic/workbook_functions.php\n"
+  },
+  {
+    "file": "clinic/workbook_import.php",
+    "status": 0,
+    "ms": 249,
+    "output": "No syntax errors detected in clinic/workbook_import.php\n"
+  },
+  {
+    "file": "clinic/workbook_template.php",
+    "status": 0,
+    "ms": 135,
+    "output": "No syntax errors detected in clinic/workbook_template.php\n"
+  },
+  {
+    "file": "comlab/dashboard.php",
+    "status": 0,
+    "ms": 121,
+    "output": "No syntax errors detected in comlab/dashboard.php\n"
+  },
+  {
+    "file": "comlab/violations.php",
+    "status": 0,
+    "ms": 153,
+    "output": "No syntax errors detected in comlab/violations.php\n"
+  },
+  {
+    "file": "config/availability.php",
+    "status": 0,
+    "ms": 91,
+    "output": "No syntax errors detected in config/availability.php\n"
+  },
+  {
+    "file": "config/database.php",
+    "status": 0,
+    "ms": 120,
+    "output": "No syntax errors detected in config/database.php\n"
+  },
+  {
+    "file": "database-connection-test.php",
+    "status": 0,
+    "ms": 235,
+    "output": "No syntax errors detected in database-connection-test.php\n"
+  },
+  {
+    "file": "dean/action.php",
+    "status": 0,
+    "ms": 306,
+    "output": "No syntax errors detected in dean/action.php\n"
+  },
+  {
+    "file": "dean/dashboard.php",
+    "status": 0,
+    "ms": 111,
+    "output": "No syntax errors detected in dean/dashboard.php\n"
+  },
+  {
+    "file": "dean/evaluation_image.php",
+    "status": 0,
+    "ms": 102,
+    "output": "No syntax errors detected in dean/evaluation_image.php\n"
+  },
+  {
+    "file": "dean/submitted_requirements.php",
+    "status": 0,
+    "ms": 255,
+    "output": "No syntax errors detected in dean/submitted_requirements.php\n"
+  },
+  {
+    "file": "dean/submitted_requirement_action.php",
+    "status": 0,
+    "ms": 139,
+    "output": "No syntax errors detected in dean/submitted_requirement_action.php\n"
+  },
+  {
+    "file": "errors/unavailable.php",
+    "status": 0,
+    "ms": 114,
+    "output": "No syntax errors detected in errors/unavailable.php\n"
+  },
+  {
+    "file": "facilities/borrowed-items.php",
+    "status": 0,
+    "ms": 289,
+    "output": "No syntax errors detected in facilities/borrowed-items.php\n"
+  },
+  {
+    "file": "facilities/dashboard.php",
+    "status": 0,
+    "ms": 152,
+    "output": "No syntax errors detected in facilities/dashboard.php\n"
+  },
+  {
+    "file": "library/card_image.php",
+    "status": 0,
+    "ms": 230,
+    "output": "No syntax errors detected in library/card_image.php\n"
+  },
+  {
+    "file": "library/dashboard.php",
+    "status": 0,
+    "ms": 222,
+    "output": "No syntax errors detected in library/dashboard.php\n"
+  },
+  {
+    "file": "library/submissions.php",
+    "status": 0,
+    "ms": 395,
+    "output": "No syntax errors detected in library/submissions.php\n"
+  },
+  {
+    "file": "library/submission_action.php",
+    "status": 0,
+    "ms": 188,
+    "output": "No syntax errors detected in library/submission_action.php\n"
+  },
+  {
+    "file": "library/workbook_functions.php",
+    "status": 0,
+    "ms": 184,
+    "output": "No syntax errors detected in library/workbook_functions.php\n"
+  },
+  {
+    "file": "library/workbook_import.php",
+    "status": 0,
+    "ms": 295,
+    "output": "No syntax errors detected in library/workbook_import.php\n"
+  },
+  {
+    "file": "library/workbook_template.php",
+    "status": 0,
+    "ms": 264,
+    "output": "No syntax errors detected in library/workbook_template.php\n"
+  },
+  {
+    "file": "login.php",
+    "status": 0,
+    "ms": 98,
+    "output": "No syntax errors detected in login.php\n"
+  },
+  {
+    "file": "logout.php",
+    "status": 0,
+    "ms": 117,
+    "output": "No syntax errors detected in logout.php\n"
+  },
+  {
+    "file": "organization/action.php",
+    "status": 0,
+    "ms": 175,
+    "output": "No syntax errors detected in organization/action.php\n"
+  },
+  {
+    "file": "organization/attendance.php",
+    "status": 0,
+    "ms": 256,
+    "output": "No syntax errors detected in organization/attendance.php\n"
+  },
+  {
+    "file": "organization/clearance_functions.php",
+    "status": 0,
+    "ms": 96,
+    "output": "No syntax errors detected in organization/clearance_functions.php\n"
+  },
+  {
+    "file": "organization/dashboard.php",
+    "status": 0,
+    "ms": 381,
+    "output": "No syntax errors detected in organization/dashboard.php\n"
+  },
+  {
+    "file": "organization/event_action.php",
+    "status": 0,
+    "ms": 190,
+    "output": "No syntax errors detected in organization/event_action.php\n"
+  },
+  {
+    "file": "organization/event_functions.php",
+    "status": 0,
+    "ms": 155,
+    "output": "No syntax errors detected in organization/event_functions.php\n"
+  },
+  {
+    "file": "organization/event_qr.php",
+    "status": 0,
+    "ms": 157,
+    "output": "No syntax errors detected in organization/event_qr.php\n"
+  },
+  {
+    "file": "registrar/audit_logs.php",
+    "status": 0,
+    "ms": 329,
+    "output": "No syntax errors detected in registrar/audit_logs.php\n"
+  },
+  {
+    "file": "registrar/clearance.php",
+    "status": 0,
+    "ms": 256,
+    "output": "No syntax errors detected in registrar/clearance.php\n"
+  },
+  {
+    "file": "registrar/dashboard.php",
+    "status": 0,
+    "ms": 260,
+    "output": "No syntax errors detected in registrar/dashboard.php\n"
+  },
+  {
+    "file": "registrar/semester_action.php",
+    "status": 0,
+    "ms": 300,
+    "output": "No syntax errors detected in registrar/semester_action.php\n"
+  },
+  {
+    "file": "registrar/semester_functions.php",
+    "status": 0,
+    "ms": 217,
+    "output": "No syntax errors detected in registrar/semester_functions.php\n"
+  },
+  {
+    "file": "registrar/staff_accounts.php",
+    "status": 0,
+    "ms": 261,
+    "output": "No syntax errors detected in registrar/staff_accounts.php\n"
+  },
+  {
+    "file": "registrar/staff_action.php",
+    "status": 0,
+    "ms": 268,
+    "output": "No syntax errors detected in registrar/staff_action.php\n"
+  },
+  {
+    "file": "registrar/students.php",
+    "status": 0,
+    "ms": 404,
+    "output": "No syntax errors detected in registrar/students.php\n"
+  },
+  {
+    "file": "registrar/student_action.php",
+    "status": 0,
+    "ms": 172,
+    "output": "No syntax errors detected in registrar/student_action.php\n"
+  },
+  {
+    "file": "registrar/student_import.php",
+    "status": 0,
+    "ms": 293,
+    "output": "No syntax errors detected in registrar/student_import.php\n"
+  },
+  {
+    "file": "registrar/student_import_action.php",
+    "status": 0,
+    "ms": 272,
+    "output": "No syntax errors detected in registrar/student_import_action.php\n"
+  },
+  {
+    "file": "registrar/student_import_functions.php",
+    "status": 0,
+    "ms": 109,
+    "output": "No syntax errors detected in registrar/student_import_functions.php\n"
+  },
+  {
+    "file": "registrar/student_import_template.php",
+    "status": 0,
+    "ms": 196,
+    "output": "No syntax errors detected in registrar/student_import_template.php\n"
+  },
+  {
+    "file": "saso/dashboard.php",
+    "status": 0,
+    "ms": 143,
+    "output": "No syntax errors detected in saso/dashboard.php\n"
+  },
+  {
+    "file": "student/accounting_receipt_action.php",
+    "status": 0,
+    "ms": 180,
+    "output": "No syntax errors detected in student/accounting_receipt_action.php\n"
+  },
+  {
+    "file": "student/action.php",
+    "status": 0,
+    "ms": 338,
+    "output": "No syntax errors detected in student/action.php\n"
+  },
+  {
+    "file": "student/attendance_action.php",
+    "status": 0,
+    "ms": 168,
+    "output": "No syntax errors detected in student/attendance_action.php\n"
+  },
+  {
+    "file": "student/attendance_checkin.php",
+    "status": 0,
+    "ms": 158,
+    "output": "No syntax errors detected in student/attendance_checkin.php\n"
+  },
+  {
+    "file": "student/attendance_scanner.php",
+    "status": 0,
+    "ms": 156,
+    "output": "No syntax errors detected in student/attendance_scanner.php\n"
+  },
+  {
+    "file": "student/attendance_scanner_action.php",
+    "status": 0,
+    "ms": 212,
+    "output": "No syntax errors detected in student/attendance_scanner_action.php\n"
+  },
+  {
+    "file": "student/bookstore_receipt_action.php",
+    "status": 0,
+    "ms": 222,
+    "output": "No syntax errors detected in student/bookstore_receipt_action.php\n"
+  },
+  {
+    "file": "student/dashboard.php",
+    "status": 0,
+    "ms": 96,
+    "output": "No syntax errors detected in student/dashboard.php\n"
+  },
+  {
+    "file": "student/dashboard_functions.php",
+    "status": 0,
+    "ms": 139,
+    "output": "No syntax errors detected in student/dashboard_functions.php\n"
+  },
+  {
+    "file": "student/dashboard_view.php",
+    "status": 0,
+    "ms": 171,
+    "output": "No syntax errors detected in student/dashboard_view.php\n"
+  },
+  {
+    "file": "student/evaluation_action.php",
+    "status": 0,
+    "ms": 137,
+    "output": "No syntax errors detected in student/evaluation_action.php\n"
+  },
+  {
+    "file": "student/library_card_action.php",
+    "status": 0,
+    "ms": 217,
+    "output": "No syntax errors detected in student/library_card_action.php\n"
+  },
+  {
+    "file": "student/medical_schedule_action.php",
+    "status": 0,
+    "ms": 280,
+    "output": "No syntax errors detected in student/medical_schedule_action.php\n"
+  },
+  {
+    "file": "student/password.php",
+    "status": 0,
+    "ms": 216,
+    "output": "No syntax errors detected in student/password.php\n"
+  },
+  {
+    "file": "student/password_action.php",
+    "status": 0,
+    "ms": 268,
+    "output": "No syntax errors detected in student/password_action.php\n"
+  },
+  {
+    "file": "student-council/attendance.php",
+    "status": 0,
+    "ms": 275,
+    "output": "No syntax errors detected in student-council/attendance.php\n"
+  },
+  {
+    "file": "student-council/dashboard.php",
+    "status": 0,
+    "ms": 191,
+    "output": "No syntax errors detected in student-council/dashboard.php\n"
+  },
+  {
+    "file": "student-council/event_action.php",
+    "status": 0,
+    "ms": 273,
+    "output": "No syntax errors detected in student-council/event_action.php\n"
+  },
+  {
+    "file": "student-council/event_functions.php",
+    "status": 0,
+    "ms": 182,
+    "output": "No syntax errors detected in student-council/event_functions.php\n"
+  },
+  {
+    "file": "student-council/event_qr.php",
+    "status": 0,
+    "ms": 334,
+    "output": "No syntax errors detected in student-council/event_qr.php\n"
+  },
+  {
+    "file": "tests/bookstore_event_workbook_test.php",
+    "status": 0,
+    "ms": 139,
+    "output": "No syntax errors detected in tests/bookstore_event_workbook_test.php\n"
+  },
+  {
+    "file": "tests/bookstore_workbook_test.php",
+    "status": 0,
+    "ms": 236,
+    "output": "No syntax errors detected in tests/bookstore_workbook_test.php\n"
+  },
+  {
+    "file": "tests/bookstore_workflow_test.php",
+    "status": 0,
+    "ms": 289,
+    "output": "No syntax errors detected in tests/bookstore_workflow_test.php\n"
+  },
+  {
+    "file": "tests/bulk_clearance_test.php",
+    "status": 0,
+    "ms": 228,
+    "output": "No syntax errors detected in tests/bulk_clearance_test.php\n"
+  },
+  {
+    "file": "tests/bulk_dashboard_render_test.php",
+    "status": 0,
+    "ms": 274,
+    "output": "No syntax errors detected in tests/bulk_dashboard_render_test.php\n"
+  },
+  {
+    "file": "tests/cbe_dean_workflow_test.php",
+    "status": 0,
+    "ms": 294,
+    "output": "No syntax errors detected in tests/cbe_dean_workflow_test.php\n"
+  },
+  {
+    "file": "tests/cbe_fourth_year_single_approval_test.php",
+    "status": 0,
+    "ms": 300,
+    "output": "No syntax errors detected in tests/cbe_fourth_year_single_approval_test.php\n"
+  },
+  {
+    "file": "tests/clearance_report_workbook_test.php",
+    "status": 0,
+    "ms": 187,
+    "output": "No syntax errors detected in tests/clearance_report_workbook_test.php\n"
+  },
+  {
+    "file": "tests/clinic_workbook_test.php",
+    "status": 0,
+    "ms": 253,
+    "output": "No syntax errors detected in tests/clinic_workbook_test.php\n"
+  },
+  {
+    "file": "tests/comlab_violations_modal_test.php",
+    "status": 0,
+    "ms": 247,
+    "output": "No syntax errors detected in tests/comlab_violations_modal_test.php\n"
+  },
+  {
+    "file": "tests/dashboard_summary_test.php",
+    "status": 0,
+    "ms": 202,
+    "output": "No syntax errors detected in tests/dashboard_summary_test.php\n"
+  },
+  {
+    "file": "tests/facilities_items_modal_test.php",
+    "status": 0,
+    "ms": 159,
+    "output": "No syntax errors detected in tests/facilities_items_modal_test.php\n"
+  },
+  {
+    "file": "tests/facilities_return_query_test.php",
+    "status": 0,
+    "ms": 350,
+    "output": "No syntax errors detected in tests/facilities_return_query_test.php\n"
+  },
+  {
+    "file": "tests/library_workbook_test.php",
+    "status": 0,
+    "ms": 205,
+    "output": "No syntax errors detected in tests/library_workbook_test.php\n"
+  },
+  {
+    "file": "tests/notification_test.php",
+    "status": 0,
+    "ms": 179,
+    "output": "No syntax errors detected in tests/notification_test.php\n"
+  },
+  {
+    "file": "tests/office_remarks_action_test.php",
+    "status": 0,
+    "ms": 187,
+    "output": "No syntax errors detected in tests/office_remarks_action_test.php\n"
+  },
+  {
+    "file": "tests/office_remarks_report_test.php",
+    "status": 0,
+    "ms": 235,
+    "output": "No syntax errors detected in tests/office_remarks_report_test.php\n"
+  },
+  {
+    "file": "tests/office_remarks_test.php",
+    "status": 0,
+    "ms": 270,
+    "output": "No syntax errors detected in tests/office_remarks_test.php\n"
+  },
+  {
+    "file": "tests/office_workbook_design_test.php",
+    "status": 0,
+    "ms": 177,
+    "output": "No syntax errors detected in tests/office_workbook_design_test.php\n"
+  },
+  {
+    "file": "tests/phase1_clearance_test.php",
+    "status": 0,
+    "ms": 171,
+    "output": "No syntax errors detected in tests/phase1_clearance_test.php\n"
+  },
+  {
+    "file": "tests/phase2_dean_clearance_test.php",
+    "status": 0,
+    "ms": 206,
+    "output": "No syntax errors detected in tests/phase2_dean_clearance_test.php\n"
+  },
+  {
+    "file": "tests/phase3_office_workflow_test.php",
+    "status": 0,
+    "ms": 234,
+    "output": "No syntax errors detected in tests/phase3_office_workflow_test.php\n"
+  },
+  {
+    "file": "tests/profile_picture_test.php",
+    "status": 0,
+    "ms": 247,
+    "output": "No syntax errors detected in tests/profile_picture_test.php\n"
+  },
+  {
+    "file": "tests/qr_attendance_test.php",
+    "status": 0,
+    "ms": 307,
+    "output": "No syntax errors detected in tests/qr_attendance_test.php\n"
+  },
+  {
+    "file": "tests/readiness_test.php",
+    "status": 0,
+    "ms": 313,
+    "output": "No syntax errors detected in tests/readiness_test.php\n"
+  },
+  {
+    "file": "tests/semester_notifications_test.php",
+    "status": 0,
+    "ms": 180,
+    "output": "No syntax errors detected in tests/semester_notifications_test.php\n"
+  },
+  {
+    "file": "tests/staff_navigation_test.php",
+    "status": 0,
+    "ms": 126,
+    "output": "No syntax errors detected in tests/staff_navigation_test.php\n"
+  },
+  {
+    "file": "tests/student_dashboard_history_test.php",
+    "status": 0,
+    "ms": 171,
+    "output": "No syntax errors detected in tests/student_dashboard_history_test.php\n"
+  },
+  {
+    "file": "tests/student_import_mysql_test.php",
+    "status": 0,
+    "ms": 344,
+    "output": "No syntax errors detected in tests/student_import_mysql_test.php\n"
+  },
+  {
+    "file": "tests/student_import_preview_test.php",
+    "status": 0,
+    "ms": 273,
+    "output": "No syntax errors detected in tests/student_import_preview_test.php\n"
+  },
+  {
+    "file": "tests/student_import_scale_test.php",
+    "status": 0,
+    "ms": 125,
+    "output": "No syntax errors detected in tests/student_import_scale_test.php\n"
+  },
+  {
+    "file": "tests/student_import_test.php",
+    "status": 0,
+    "ms": 121,
+    "output": "No syntax errors detected in tests/student_import_test.php\n"
+  }
+]

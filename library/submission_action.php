@@ -46,12 +46,13 @@ try {
     }
 
     if ($action === 'verify') {
+        $outstandingBooks = libraryOutstandingBooks($database, (int) $submission['student_id'], true);
         $database->prepare("UPDATE library_card_submissions SET status='VERIFIED',reviewed_at=NOW(),reviewed_by=:user_id,return_reason=NULL WHERE id=:id")
             ->execute(['user_id' => $user['id'], 'id' => $submissionId]);
         $database->prepare("UPDATE library_cards SET status='VERIFIED',verified_by=:user_id,verified_at=NOW() WHERE id=:id")
             ->execute(['user_id' => $user['id'], 'id' => $submission['library_card_id']]);
 
-        if ($context['station_status'] !== 'APPROVED') {
+        if ($context['station_status'] !== 'APPROVED' && $outstandingBooks === []) {
             $database->prepare("UPDATE clearance_stations SET status='APPROVED',approved_by=:user_id,approved_at=NOW(),returned_by=NULL,returned_at=NULL,returned_reason=NULL WHERE id=:id")
                 ->execute(['user_id' => $user['id'], 'id' => $context['clearance_station_id']]);
             $database->prepare("UPDATE requirement_records SET status='VERIFIED',verified_by=:user_id,verified_at=NOW(),remarks=NULL WHERE clearance_station_id=:id AND status NOT IN ('VERIFIED','RESOLVED')")
@@ -59,7 +60,12 @@ try {
             unlockAfterOfficeApproval($database, 'LIBRARY', (int) $submission['clearance_id']);
             notifyAndAuditOffice($database, $context, (int) $user['id'], 'LIBRARY_CARD_CONFIRMED', 'The Library confirmed your captured library card and cleared your Library requirement.', $context['station_status'], 'APPROVED');
         }
-        setFlashMessage('Library card confirmed and the student was cleared.');
+        if ($outstandingBooks !== []) {
+            notifyAndAuditOffice($database, $context, (int) $user['id'], 'LIBRARY_CARD_CONFIRMED', 'Your library card was confirmed. Return all borrowed books before Library clearance.', $context['station_status'], $context['station_status']);
+            setFlashMessage('Library card confirmed. Return all borrowed books before clearing this student.');
+        } else {
+            setFlashMessage('Library card confirmed and the student was cleared.');
+        }
     } else {
         $database->prepare("UPDATE library_card_submissions SET status='RETURNED',reviewed_at=NOW(),reviewed_by=:user_id,return_reason=:reason WHERE id=:id")
             ->execute(['user_id' => $user['id'], 'reason' => $reason, 'id' => $submissionId]);

@@ -1,0 +1,47 @@
+* { box-sizing: border-box; }
+body { margin: 0; background: #f3f6fa; color: #172b42; font-family: "Segoe UI",Arial,sans-serif; }
+header { display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 18px max(20px,calc((100vw - 1180px)/2)); background: #0b2545; }
+header>a { color: #fff; font-size: 24px; font-weight: 750; text-decoration: none; }
+header>a span { display: block; margin-top: 3px; color: #a8c2df; font-size: 11px; font-weight: 500; }
+header .back { font-size: 13px; font-weight: 600; }
+main { width: min(1180px,100%); margin: 0 auto; padding: 32px 20px; }
+.page-heading { margin-bottom: 24px; }
+.eyebrow { margin: 0 0 9px; color: #1769aa; font-size: 10px; font-weight: 750; letter-spacing: 1.5px; }
+h1 { margin: 0; font-size: 34px; letter-spacing: -1px; }
+h2 { margin: 0; font-size: 20px; }
+p { margin: 10px 0 20px; color: #657991; font-size: 13px; line-height: 1.7; overflow-wrap: anywhere; }
+.panel { min-width: 0; margin-bottom: 20px; padding: 24px; border: 1px solid #dce4ed; border-radius: 15px; background: #fff; }
+.semester-panel,.section-heading,.disable-panel { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.semester-panel p:last-child { margin-bottom: 0; }
+.link-button { color: #1769aa; font-size: 13px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.stats { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 16px; margin-bottom: 20px; }
+.stats>div { display: grid; gap: 5px; padding: 18px; border: 1px solid #dce4ed; border-radius: 12px; background: #fff; }
+.stats strong { color: #1769aa; font-size: 28px; }
+.stats span { color: #657991; font-size: 12px; }
+.tool-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; }
+.tool-grid .panel { display: flex; flex-direction: column; }
+.tool-grid form { margin-top: auto; }
+.reset-intro { border-left: 4px solid #1769aa; }
+.reset-intro p { margin-bottom: 0; }
+.reset-panel { border-color: #e6cfd0; }
+.reset-panel .eyebrow { color: #ab3b43; }
+form { margin: 0; }
+label { display: block; margin-bottom: 16px; color: #657991; font-size: 12px; }
+input { display: block; width: 100%; min-height: 44px; margin-top: 8px; padding: 10px 12px; border: 1px solid #c4d2e1; border-radius: 8px; color: #172b42; font: inherit; }
+.new-semester { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 16px; }
+.new-semester label { flex: 1; min-width: 160px; margin: 0; }
+.new-semester select { display: block; width: 100%; min-height: 44px; margin-top: 8px; padding: 10px 12px; border: 1px solid #c4d2e1; border-radius: 8px; background: #fff; color: #172b42; font: inherit; }
+button { min-height: 42px; padding: 10px 17px; border: 1px solid #1769aa; border-radius: 8px; background: #1769aa; color: #fff; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+button:hover { filter: brightness(.95); }
+button:disabled { opacity: .45; cursor: default; }
+button.secondary { background: #fff; color: #1769aa; }
+button.danger { border-color: #b84149; background: #b84149; }
+a:focus-visible,button:focus-visible,input:focus-visible { outline: 3px solid #8bbbe5; outline-offset: 3px; }
+.message { margin-bottom: 20px; padding: 16px 20px; border: 1px solid #bedacb; border-radius: 10px; background: #eff8f3; color: #216347; font-size: 13px; overflow-wrap: anywhere; }
+.backups { margin: 0; padding: 0; list-style: none; }
+.backups li { display: flex; justify-content: space-between; gap: 16px; padding: 14px 0; border-top: 1px solid #edf1f5; font-size: 12px; }
+.backups a { color: #1769aa; overflow-wrap: anywhere; }
+.backups span { color: #657991; white-space: nowrap; }
+.empty { margin: 0; }
+.disable-panel p { margin-bottom: 0; }
+@media(max-width:680px) { h1 { font-size: 29px; } .stats { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; } .tool-grid { grid-template-columns: minmax(0,1fr); gap: 0; } .semester-panel,.section-heading,.disable-panel { flex-direction: column; align-items: stretch; gap: 16px; } .panel { padding: 20px; } button { width: 100%; } .backups li { flex-direction: column; gap: 5px; } }

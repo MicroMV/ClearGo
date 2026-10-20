@@ -1,0 +1,80 @@
+{
+    "database": "cleargo_qa_20261018_409466ed",
+    "source_database": "lewis_clearance",
+    "tables": 38,
+    "reference_rows": {
+        "organizations": 3,
+        "stations": 11,
+        "requirements": 17,
+        "document_requirements": 0,
+        "bookstore_fees": 3
+    },
+    "accounts": {
+        "REGISTRAR": {
+            "id": 900000,
+            "email": "qa.registrar@thelewiscollege.edu.ph",
+            "password": "QA-only-2026!Test"
+        },
+        "DEAN": {
+            "id": 900001,
+            "email": "qa.dean@thelewiscollege.edu.ph",
+            "password": "QA-only-2026!Test"
+        },
+        "ORG_STAFF": {
+            "id": 900002,
+            "email": "qa.org_staff@thelewiscollege.edu.ph",
+            "password": "QA-only-2026!Test"
+        },
+        "SASO_STAFF": {
+            "id": 900003,
+            "email": "qa.saso_staff@thelewiscollege.edu.ph",
+            "password": "QA-only-2026!Test"
+        },
+        "STUDENT_COUNCIL_STAFF": {
+            "id": 900004,
+            "email": "qa.student_council_staff@thelewiscollege.edu.ph",
+            "password": "QA-only-2026!Test"
+        },
+        "LIBRARY_STAFF": {
+            "id": 900005,
+            "email": "qa.library_staff@thelewiscollege.edu.ph",
+            "password": "QA-only-2026!Test"
+        },
+        "BOOKSTORE_STAFF": {
+            "id": 900006,
+            "email": "qa.bookstore_staff@thelewiscollege.edu.ph",
+            "password": "QA-only-2026!Test"
+        },
+        "CLINIC_STAFF": {
+            "id": 900007,
+            "email": "qa.clinic_staff@thelewiscollege.edu.ph",
+            "password": "QA-only-2026!Test"
+        },
+        "FACILITIES_STAFF": {
+            "id": 900008,
+            "email": "qa.facilities_staff@thelewiscollege.edu.ph",
+            "password": "QA-only-2026!Test"
+        },
+        "COMLAB_STAFF": {
+            "id": 900009,
+            "email": "qa.comlab_staff@thelewiscollege.edu.ph",
+            "password": "QA-only-2026!Test"
+        },
+        "ACCOUNTING_STAFF": {
+            "id": 900010,
+            "email": "qa.accounting_staff@thelewiscollege.edu.ph",
+            "password": "QA-only-2026!Test"
+        },
+        "STUDENT": {
+            "id": 900011,
+            "email": "qa.student@thelewiscollege.edu.ph",
+            "password": "QA-only-2026!Test"
+        }
+    },
+    "student_id": 3337,
+    "period_id": 5,
+    "organization": {
+        "id": 1,
+        "code": "CCS"
+    }
+}

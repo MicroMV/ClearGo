@@ -1,0 +1,5 @@
+{
+  "status": 200,
+  "content_type": "text/html; charset=UTF-8",
+  "excerpt": "<br />\n<b>Fatal error</b>:  Uncaught TypeError: verifyCsrfToken(): Argument #1 ($token) must be of type ?string, array given, called in C:\\xamppl\\htdocs\\ClearGo\\auth\\login_process.php on line 12 and defined in C:\\xamppl\\htdocs\\ClearGo\\auth\\auth_check.php:198\nStack trace:\n#0 C:\\xamppl\\htdocs\\ClearGo\\auth\\login_process.php(12): verifyCsrfToken(Array)\n#1 {main}\n  thrown in <b>C:\\xamppl\\htdocs\\ClearGo\\auth\\auth_check.php</b> on line <b>198</b><br />\n"
+}

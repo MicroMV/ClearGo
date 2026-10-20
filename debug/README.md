@@ -1,0 +1,11 @@
+# Temporary local debug console
+
+Open `http://localhost/ClearGo/debug/` directly. This is a standalone temporary screen, without a school-account login. It uses its own Strict SameSite session cookie and CSRF tokens. It does not sign into, sign out of or impersonate a Registrar account. Debug actions record a null account ID with a local-debug description in the audit log. No data is reset just by opening the page. Use Ready all offices, then Open clearance, to make student clearance and paper previews available.
+
+The console requires a loopback client address, a localhost/loopback Host, no proxy-forwarding headers and the local `storage/private/debug-console.enabled` file containing `local-debug-only`. Setting `CLEAR_GO_DEBUG=0` disables it as well. The flag is excluded from Git, so a normal checkout does not enable debug access. Disable debug screen removes the flag. To re-enable for local testing, recreate that exact flag file manually. Exclude `debug/` from deployment packages.
+
+Reset buttons preserve accounts, password hashes, student profiles, office/requirement definitions, staff assignments, profile pictures, saved/selected signatures and existing audit logs. Clear all semesters removes semester definitions and their operational records. Reset activity additionally removes global library records, violations and notifications. No reset deletes private uploaded files, touches sessions, changes passwords or resets ID sequences. Students must be enrolled in a newly created semester afterward.
+
+Each reset writes a complete compressed SQL snapshot into `storage/backups/debug-console/` before deleting anything, within a serializable transaction. If backup or deletion fails, database changes roll back. Download backups only through the local-only debug backup route. Uploaded files stay in private storage so restored database references still resolve. Recovery is an operator task: extract the `.sql.gz`, import into a separate empty MySQL database, validate it with retained private files, then point the local application at the recovered database. Never import a backup into the live database without reviewing the target.
+
+No buttons bypass student requirements or create fake office signatures. Opening clearance uses the normal Registrar workflow.

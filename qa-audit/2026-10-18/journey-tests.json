@@ -1,0 +1,137 @@
+[
+    {
+        "test_id": "JY-001",
+        "role": "Student",
+        "feature": "Start journey",
+        "test": "Eligible synthetic student signs in and sees current dashboard",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"http_status\":200,\"fixture\":\"Synthetic prerequisites verified; no real evaluation completion claimed.\"}"
+    },
+    {
+        "test_id": "JY-002",
+        "role": "DEAN",
+        "feature": "DEAN approval",
+        "test": "Submit actual office form; inspect saved approver\/timestamp; refresh student dashboard",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"post_status\":303,\"saved\":{\"status\":\"APPROVED\",\"approved_by\":900001,\"approved_at\":\"2026-10-18 11:51:12\"},\"student_refresh\":200,\"approved_count_before\":0}"
+    },
+    {
+        "test_id": "JY-003",
+        "role": "ORG_STAFF",
+        "feature": "ORGANIZATION approval",
+        "test": "Submit actual office form; inspect saved approver\/timestamp; refresh student dashboard",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"post_status\":303,\"saved\":{\"status\":\"APPROVED\",\"approved_by\":900002,\"approved_at\":\"2026-10-18 11:51:12\"},\"student_refresh\":200,\"approved_count_before\":1}"
+    },
+    {
+        "test_id": "JY-004",
+        "role": "STUDENT_COUNCIL_STAFF",
+        "feature": "STUDENT_COUNCIL approval",
+        "test": "Submit actual office form; inspect saved approver\/timestamp; refresh student dashboard",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"post_status\":303,\"saved\":{\"status\":\"APPROVED\",\"approved_by\":900004,\"approved_at\":\"2026-10-18 11:51:13\"},\"student_refresh\":200,\"approved_count_before\":2}"
+    },
+    {
+        "test_id": "JY-005",
+        "role": "LIBRARY_STAFF",
+        "feature": "LIBRARY approval",
+        "test": "Submit actual office form; inspect saved approver\/timestamp; refresh student dashboard",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"post_status\":303,\"saved\":{\"status\":\"APPROVED\",\"approved_by\":900005,\"approved_at\":\"2026-10-18 11:51:13\"},\"student_refresh\":200,\"approved_count_before\":3}"
+    },
+    {
+        "test_id": "JY-006",
+        "role": "BOOKSTORE_STAFF",
+        "feature": "BOOKSTORE approval",
+        "test": "Submit actual office form; inspect saved approver\/timestamp; refresh student dashboard",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"post_status\":303,\"saved\":{\"status\":\"APPROVED\",\"approved_by\":900006,\"approved_at\":\"2026-10-18 11:51:14\"},\"student_refresh\":200,\"approved_count_before\":4}"
+    },
+    {
+        "test_id": "JY-007",
+        "role": "CLINIC_STAFF",
+        "feature": "CLINIC approval",
+        "test": "Submit actual office form; inspect saved approver\/timestamp; refresh student dashboard",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"post_status\":303,\"saved\":{\"status\":\"APPROVED\",\"approved_by\":900007,\"approved_at\":\"2026-10-18 11:51:14\"},\"student_refresh\":200,\"approved_count_before\":5}"
+    },
+    {
+        "test_id": "JY-008",
+        "role": "SASO_STAFF",
+        "feature": "SASO approval",
+        "test": "Submit actual office form; inspect saved approver\/timestamp; refresh student dashboard",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"post_status\":303,\"saved\":{\"status\":\"APPROVED\",\"approved_by\":900003,\"approved_at\":\"2026-10-18 11:51:14\"},\"student_refresh\":200,\"approved_count_before\":6}"
+    },
+    {
+        "test_id": "JY-009",
+        "role": "FACILITIES_STAFF",
+        "feature": "FACILITIES approval",
+        "test": "Submit actual office form; inspect saved approver\/timestamp; refresh student dashboard",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"post_status\":303,\"saved\":{\"status\":\"APPROVED\",\"approved_by\":900008,\"approved_at\":\"2026-10-18 11:51:15\"},\"student_refresh\":200,\"approved_count_before\":7}"
+    },
+    {
+        "test_id": "JY-010",
+        "role": "COMLAB_STAFF",
+        "feature": "COMLAB approval",
+        "test": "Submit actual office form; inspect saved approver\/timestamp; refresh student dashboard",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"post_status\":303,\"saved\":{\"status\":\"APPROVED\",\"approved_by\":900009,\"approved_at\":\"2026-10-18 11:51:15\"},\"student_refresh\":200,\"approved_count_before\":8}"
+    },
+    {
+        "test_id": "JY-011",
+        "role": "ACCOUNTING_STAFF",
+        "feature": "ACCOUNTING approval",
+        "test": "Submit actual office form; inspect saved approver\/timestamp; refresh student dashboard",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"post_status\":303,\"saved\":{\"status\":\"APPROVED\",\"approved_by\":900010,\"approved_at\":\"2026-10-18 11:51:16\"},\"student_refresh\":200,\"approved_count_before\":9}"
+    },
+    {
+        "test_id": "JY-012",
+        "role": "REGISTRAR",
+        "feature": "REGISTRAR approval",
+        "test": "Submit actual office form; inspect saved approver\/timestamp; refresh student dashboard",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"post_status\":303,\"saved\":{\"status\":\"APPROVED\",\"approved_by\":900000,\"approved_at\":\"2026-10-18 11:51:16\"},\"student_refresh\":200,\"approved_count_before\":10}"
+    },
+    {
+        "test_id": "JY-013",
+        "role": "Student \/ Registrar",
+        "feature": "Final completion",
+        "test": "All eleven office rows and overall status agree; confirmation appears",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"saved\":{\"status\":\"COMPLETED\",\"completed_at\":\"2026-10-18 11:51:16\",\"unsigned_count\":0},\"student_confirmation\":true}"
+    },
+    {
+        "test_id": "JY-014",
+        "role": "Student",
+        "feature": "Persistence",
+        "test": "Log out, log in again, and confirm final clearance persists",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"logout_status\":303,\"relogin_page_status\":200,\"completion_visible\":true}"
+    },
+    {
+        "test_id": "JY-015",
+        "role": "Organization",
+        "feature": "Empty bulk selection",
+        "test": "Zero selected students is rejected with a clear message and no saved decisions change",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"http_status\":303,\"approved_count_before\":5,\"approved_count_after\":5,\"validation_message_visible\":true}"
+    }
+]

@@ -1,0 +1,330 @@
+{
+  "scope": "Synthetic real HTTP response snapshots; mutations checked separately against isolated PHP/MySQL.",
+  "checks": [
+    {
+      "name": "preparing 1440px no document overflow",
+      "pass": true
+    },
+    {
+      "name": "preparing 1440px removed navigation stays absent",
+      "pass": true
+    },
+    {
+      "name": "preparing 1440px no nested forms",
+      "pass": true
+    },
+    {
+      "name": "preparing 1440px upload field usable",
+      "pass": true
+    },
+    {
+      "name": "preparing 1440px completion controls aligned",
+      "pass": true
+    },
+    {
+      "name": "preparing 1440px panel has neutral border",
+      "pass": true
+    },
+    {
+      "name": "preparing 1440px panel order",
+      "pass": true
+    },
+    {
+      "name": "preparing 1440px remarks dialog opens",
+      "pass": true
+    },
+    {
+      "name": "preparing 1440px remarks Escape closes",
+      "pass": true
+    },
+    {
+      "name": "open 1440px no document overflow",
+      "pass": true
+    },
+    {
+      "name": "open 1440px removed navigation stays absent",
+      "pass": true
+    },
+    {
+      "name": "open 1440px no nested forms",
+      "pass": true
+    },
+    {
+      "name": "open 1440px upload field usable",
+      "pass": true
+    },
+    {
+      "name": "open 1440px completion controls aligned",
+      "pass": true
+    },
+    {
+      "name": "open 1440px panel has neutral border",
+      "pass": true
+    },
+    {
+      "name": "open 1440px remarks dialog opens",
+      "pass": true
+    },
+    {
+      "name": "open 1440px remarks Escape closes",
+      "pass": true
+    },
+    {
+      "name": "profile 1440px no document overflow",
+      "pass": true
+    },
+    {
+      "name": "profile 1440px removed navigation stays absent",
+      "pass": true
+    },
+    {
+      "name": "profile 1440px no nested forms",
+      "pass": true
+    },
+    {
+      "name": "preparing 768px no document overflow",
+      "pass": true
+    },
+    {
+      "name": "preparing 768px removed navigation stays absent",
+      "pass": true
+    },
+    {
+      "name": "preparing 768px no nested forms",
+      "pass": true
+    },
+    {
+      "name": "preparing 768px upload field usable",
+      "pass": true
+    },
+    {
+      "name": "preparing 768px completion controls aligned",
+      "pass": true
+    },
+    {
+      "name": "preparing 768px panel has neutral border",
+      "pass": true
+    },
+    {
+      "name": "preparing 768px panel order",
+      "pass": true
+    },
+    {
+      "name": "preparing 768px remarks dialog opens",
+      "pass": true
+    },
+    {
+      "name": "preparing 768px remarks Escape closes",
+      "pass": true
+    },
+    {
+      "name": "open 768px no document overflow",
+      "pass": true
+    },
+    {
+      "name": "open 768px removed navigation stays absent",
+      "pass": true
+    },
+    {
+      "name": "open 768px no nested forms",
+      "pass": true
+    },
+    {
+      "name": "open 768px upload field usable",
+      "pass": true
+    },
+    {
+      "name": "open 768px completion controls aligned",
+      "pass": true
+    },
+    {
+      "name": "open 768px panel has neutral border",
+      "pass": true
+    },
+    {
+      "name": "open 768px remarks dialog opens",
+      "pass": true
+    },
+    {
+      "name": "open 768px remarks Escape closes",
+      "pass": true
+    },
+    {
+      "name": "profile 768px no document overflow",
+      "pass": true
+    },
+    {
+      "name": "profile 768px removed navigation stays absent",
+      "pass": true
+    },
+    {
+      "name": "profile 768px no nested forms",
+      "pass": true
+    },
+    {
+      "name": "preparing 390px no document overflow",
+      "pass": true
+    },
+    {
+      "name": "preparing 390px removed navigation stays absent",
+      "pass": true
+    },
+    {
+      "name": "preparing 390px no nested forms",
+      "pass": true
+    },
+    {
+      "name": "preparing 390px upload field usable",
+      "pass": true
+    },
+    {
+      "name": "preparing 390px completion controls aligned",
+      "pass": true
+    },
+    {
+      "name": "preparing 390px panel has neutral border",
+      "pass": true
+    },
+    {
+      "name": "preparing 390px panel order",
+      "pass": true
+    },
+    {
+      "name": "preparing 390px remarks dialog opens",
+      "pass": true
+    },
+    {
+      "name": "preparing 390px remarks Escape closes",
+      "pass": true
+    },
+    {
+      "name": "open 390px no document overflow",
+      "pass": true
+    },
+    {
+      "name": "open 390px removed navigation stays absent",
+      "pass": true
+    },
+    {
+      "name": "open 390px no nested forms",
+      "pass": true
+    },
+    {
+      "name": "open 390px upload field usable",
+      "pass": true
+    },
+    {
+      "name": "open 390px completion controls aligned",
+      "pass": true
+    },
+    {
+      "name": "open 390px panel has neutral border",
+      "pass": true
+    },
+    {
+      "name": "open 390px remarks dialog opens",
+      "pass": true
+    },
+    {
+      "name": "open 390px remarks Escape closes",
+      "pass": true
+    },
+    {
+      "name": "profile 390px no document overflow",
+      "pass": true
+    },
+    {
+      "name": "profile 390px removed navigation stays absent",
+      "pass": true
+    },
+    {
+      "name": "profile 390px no nested forms",
+      "pass": true
+    },
+    {
+      "name": "preparing 320px no document overflow",
+      "pass": true
+    },
+    {
+      "name": "preparing 320px removed navigation stays absent",
+      "pass": true
+    },
+    {
+      "name": "preparing 320px no nested forms",
+      "pass": true
+    },
+    {
+      "name": "preparing 320px upload field usable",
+      "pass": true
+    },
+    {
+      "name": "preparing 320px completion controls aligned",
+      "pass": true
+    },
+    {
+      "name": "preparing 320px panel has neutral border",
+      "pass": true
+    },
+    {
+      "name": "preparing 320px panel order",
+      "pass": true
+    },
+    {
+      "name": "preparing 320px remarks dialog opens",
+      "pass": true
+    },
+    {
+      "name": "preparing 320px remarks Escape closes",
+      "pass": true
+    },
+    {
+      "name": "open 320px no document overflow",
+      "pass": true
+    },
+    {
+      "name": "open 320px removed navigation stays absent",
+      "pass": true
+    },
+    {
+      "name": "open 320px no nested forms",
+      "pass": true
+    },
+    {
+      "name": "open 320px upload field usable",
+      "pass": true
+    },
+    {
+      "name": "open 320px completion controls aligned",
+      "pass": true
+    },
+    {
+      "name": "open 320px panel has neutral border",
+      "pass": true
+    },
+    {
+      "name": "open 320px remarks dialog opens",
+      "pass": true
+    },
+    {
+      "name": "open 320px remarks Escape closes",
+      "pass": true
+    },
+    {
+      "name": "profile 320px no document overflow",
+      "pass": true
+    },
+    {
+      "name": "profile 320px removed navigation stays absent",
+      "pass": true
+    },
+    {
+      "name": "profile 320px no nested forms",
+      "pass": true
+    },
+    {
+      "name": "No uncaught JavaScript exceptions",
+      "pass": true
+    }
+  ],
+  "errors": []
+}

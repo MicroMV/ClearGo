@@ -5,6 +5,8 @@ declare(strict_types=1);
 require_once __DIR__ . '/../auth/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/dashboard_functions.php';
+require_once __DIR__ . '/../library/clearance_policy.php';
+require_once __DIR__ . '/../clearance/sanction_functions.php';
 
 $user = requireRole('STUDENT');
 $profilePictureUrl = userProfilePictureUrl($user);
@@ -12,7 +14,7 @@ $profilePictureUrl = userProfilePictureUrl($user);
 try {
     $database = getDatabaseConnection();
     $studentQuery = $database->prepare(
-        'SELECT s.id, s.student_number, s.first_name, s.last_name, s.program, s.year_level, s.section, s.organization_id,
+        'SELECT s.id, s.student_number, s.first_name, s.middle_name, s.last_name, s.program, s.year_level, s.section, s.organization_id,
                 o.name AS organization_name, o.code AS organization_code, u.email
          FROM students s
          INNER JOIN users u ON u.id = s.user_id
@@ -32,6 +34,8 @@ try {
     $isEnrolled = $period !== false && (int) $period['is_enrolled'] === 1;
     $isHistoricalRecord = studentDashboardIsHistory($period);
     $canSubmit = studentDashboardCanSubmit($period);
+    $libraryBooks = $period !== false && !$isHistoricalRecord
+        ? libraryOutstandingBooks($database, (int) $student['id']) : [];
 
     $comlabQuery = $database->prepare("SELECT violation.description,violation.created_at FROM violations violation INNER JOIN stations station ON station.id=violation.station_id WHERE violation.student_id=:student_id AND station.code='COMLAB' AND violation.status='OPEN' ORDER BY violation.created_at DESC,violation.id DESC");
     $comlabQuery->execute(['student_id' => $student['id']]);
@@ -49,13 +53,16 @@ try {
     }
 
     $organizationEvents = [];
+    $sanctionGroups = [];
     if ($period !== false && $isEnrolled) {
+        if (!$isHistoricalRecord) { syncExpiredEventSanctions($database, (int)$period['id']); $sanctionGroups = studentSanctionGroups($database, (int)$student['id'], (int)$period['id']); }
         $eventQuery = $database->prepare(
-            "SELECT event.name,event.event_date,event.start_time,event.end_time,
-                    attendance.status AS attendance_status,attendance.recorded_at
+            "SELECT event.name,event.event_date,event.start_time,event.end_time,station.code AS owner_code,
+                    attendance.status AS attendance_status,attendance.recorded_at,attendance.sanction_verified_at
              FROM events event
+             INNER JOIN stations station ON station.id=event.station_id AND station.code IN ('ORGANIZATION','STUDENT_COUNCIL')
              LEFT JOIN event_attendance attendance ON attendance.event_id=event.id AND attendance.student_id=:student_id
-             WHERE event.academic_period_id=:period_id AND event.organization_id=:organization_id
+             WHERE event.academic_period_id=:period_id AND (event.organization_id=:organization_id OR event.organization_id IS NULL)
                AND event.is_required=1 AND event.status='ACTIVE'
              ORDER BY event.event_date,event.start_time,event.id"
         );
@@ -127,7 +134,7 @@ try {
 
         if ($clearance !== false) {
             $statusQuery = $database->prepare(
-                'SELECT station_id, id, status, returned_reason
+                'SELECT station_id, id, status, returned_reason, office_remarks
                  FROM clearance_stations
                  WHERE clearance_id = :clearance_id'
             );
@@ -136,24 +143,9 @@ try {
                 $stationStatuses[(int) $stationStatus['station_id']] = $stationStatus;
             }
 
-            $evaluationQuery = $database->prepare(
-                'SELECT status, attempt_count, last_submitted_at, verified_at
-                 FROM evaluation_verifications
-                 WHERE clearance_id = :clearance_id
-                 LIMIT 1'
-            );
+            $evaluationQuery = $database->prepare('SELECT status,recorded_at FROM ccs_evaluation_completions WHERE clearance_id=:clearance_id LIMIT 1');
             $evaluationQuery->execute(['clearance_id' => $clearance['id']]);
             $evaluation = $evaluationQuery->fetch();
-
-            $submissionQuery = $database->prepare(
-                'SELECT status, submitted_at AS last_submitted_at, reviewed_at AS verified_at, return_reason
-                 FROM evaluation_submissions WHERE clearance_id=:clearance_id LIMIT 1'
-            );
-            $submissionQuery->execute(['clearance_id' => $clearance['id']]);
-            $evaluationSubmission = $submissionQuery->fetch();
-            if ($evaluationSubmission !== false) {
-                $evaluation = $evaluationSubmission;
-            }
 
             $evaluationRequirementQuery = $database->prepare(
                 "SELECT COUNT(*)
@@ -412,6 +404,8 @@ require __DIR__ . '/dashboard_view.php';
                             <button class="requirements-modal__close" type="button" data-close-requirements-modal aria-label="Close requirements">&times;</button>
                         </div>
                         <div class="requirements-modal__content">
+                        <?php $officeRemarks = trim((string) ($stationStatuses[(int) $station['id']]['office_remarks'] ?? '')); ?>
+                        <?php if ($officeRemarks !== ''): ?><section class="student-office-remarks" aria-label="Office remarks"><strong>Office remarks</strong><p><?= nl2br(escapeHtml($officeRemarks)) ?></p></section><?php endif; ?>
                         <?php $modalRequirements = $stationRequirements[(int) $station['id']] ?? [];
                         if ($station['code'] === 'DEAN' && $evaluationApplicable) {
                             $modalRequirements = array_values(array_filter($modalRequirements, static fn(array $requirement): bool => in_array($requirement['requirement_code'] ?? '', ['CCS_FACULTY_EVALUATION', 'CCS_FOURTH_YEAR_FACULTY_EVALUATION'], true)));
@@ -426,6 +420,9 @@ require __DIR__ . '/dashboard_view.php';
                         if ($isHistoricalRecord) {
                             $modalGuidanceTitle = 'Saved semester status';
                             $modalGuidanceCopy = 'These are the recorded decisions for this semester. Submissions are closed.';
+                        } elseif ($station['code'] === 'DEAN' && $evaluationApplicable && $modalStatus !== 'APPROVED') {
+                            $modalGuidanceTitle = 'Evaluation completion';
+                            $modalGuidanceCopy = 'Your Dean records completion from the official list. No upload is needed.';
                         } elseif ($station['code'] === 'BOOKSTORE' && $allModalRequirementsComplete && $modalStatus !== 'APPROVED') {
                             $modalGuidanceTitle = 'Required items complete';
                             $modalGuidanceCopy = 'Your event fees are verified. No further receipt submission is needed.';
@@ -435,9 +432,6 @@ require __DIR__ . '/dashboard_view.php';
                             <div class="requirements-overview__copy"><strong><?= escapeHtml($modalGuidanceTitle) ?></strong><span><?= escapeHtml($modalGuidanceCopy) ?></span></div>
                             <span class="badge <?= escapeHtml(strtolower(str_replace('_', '-', $modalStatus))) ?>"><?= escapeHtml(studentStatusLabel($modalStatus)) ?></span>
                         </div>
-                        <?php if ($station['code'] === 'DEAN' && $evaluationApplicable && in_array($evaluation['status'] ?? '', ['RETURNED', 'REJECTED', 'ERROR'], true)): ?>
-                            <p class="notice warning"><?= escapeHtml((string) ($evaluation['return_reason'] ?? ($evaluation['status'] === 'ERROR' ? 'The previous verification was unavailable. Please submit your screenshots again.' : 'Please check your screenshots and submit corrected proof.'))) ?></p>
-                        <?php endif; ?>
                         <?php if ($modalRequirements === []): ?>
                             <?php if (!in_array($station['code'], ['BOOKSTORE', 'ACCOUNTING', 'LIBRARY'], true)): ?>
                                 <div class="requirements-empty"><span aria-hidden="true">&#10003;</span><div><strong>No document upload is needed</strong><p>This office handles its requirement directly. Check the status above for your next step.</p></div></div>
@@ -455,23 +449,12 @@ require __DIR__ . '/dashboard_view.php';
                                         <span class="requirement-card__number" aria-hidden="true"><?= in_array($requirementStatus, $completedRequirementStatuses, true) ? '&#10003;' : (int) $requirementIndex + 1 ?></span>
                                         <div class="requirement-card__content">
                                             <div class="requirement-card__heading"><strong><?= escapeHtml($requirement['name']) ?></strong><span class="badge <?= escapeHtml(strtolower(str_replace('_', '-', $requirementStatus))) ?>"><?= escapeHtml(studentStatusLabel($requirementStatus)) ?></span></div>
-                                            <?php if (!empty($requirement['description'])): ?><p><?= escapeHtml($requirement['description']) ?></p><?php endif; ?>
-                                            <?php if (in_array($requirementStatus, ['RETURNED', 'REJECTED', 'ERROR'], true) && !empty($requirement['remarks'])): ?><div class="requirement-feedback"><strong>What to fix</strong><span><?= escapeHtml($requirement['remarks']) ?></span></div><?php endif; ?>
+                                            <?php if (in_array($requirement['requirement_code'] ?? '', ['CCS_FACULTY_EVALUATION', 'CCS_FOURTH_YEAR_FACULTY_EVALUATION'], true)): ?><p>Evaluation completion is recorded by the CCS Dean. No upload is needed.</p><?php elseif (!empty($requirement['description'])): ?><p><?= escapeHtml($requirement['description']) ?></p><?php endif; ?>
+                                            <?php if (in_array($requirementStatus, ['RETURNED', 'REJECTED', 'ERROR'], true) && !empty($requirement['remarks']) && !in_array($requirement['requirement_code'] ?? '', ['CCS_FACULTY_EVALUATION', 'CCS_FOURTH_YEAR_FACULTY_EVALUATION'], true)): ?><div class="requirement-feedback"><strong>What to fix</strong><span><?= escapeHtml($requirement['remarks']) ?></span></div><?php endif; ?>
                                         </div>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
-                            <?php if ($canSubmit && $station['code'] === 'DEAN' && $evaluationApplicable && $modalStatus !== 'APPROVED' && in_array(($evaluation['status'] ?? 'NOT_SUBMITTED'), ['NOT_SUBMITTED', 'RETURNED', 'REJECTED', 'ERROR'], true)): ?>
-                                <div class="requirements-section-heading requirements-section-heading--action"><div><span class="requirements-section-heading__step">2</span><div><h3>Submit your proof</h3><p>Upload clear images for Dean review.</p></div></div></div>
-                                <form class="upload-form submission-panel" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/student/evaluation_action.php')) ?>">
-                                    <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
-                                    <label for="modal_evaluation_proofs"><strong>Upload evaluation screenshots</strong></label>
-                                    <input id="modal_evaluation_proofs" name="evaluation_proofs[]" type="file" accept="image/jpeg,image/png,image/webp" multiple required data-file-input data-maximum-files="3">
-                                    <p class="file-selection-status" data-file-status aria-live="polite">No files selected</p>
-                                    <p class="muted">Choose 1–3 screenshots. JPG, PNG, or WebP; 8 MB maximum per image. The CCS Dean reviews them anonymously.</p>
-                                    <button class="primary-button" type="submit">Submit screenshots</button>
-                                </form>
-                            <?php endif; ?>
                         <?php endif; ?>
         <?php if ($station['code'] === 'ACCOUNTING'): ?>
             <div class="accounting-submission-box requirement-action-box">
@@ -503,6 +486,7 @@ require __DIR__ . '/dashboard_view.php';
             </div>
         <?php endif; ?>
                         <?php if ($station['code'] === 'LIBRARY'): ?>
+                            <?php if (!empty($libraryBooks)): ?><div class="notice warning"><strong>Return these books before Library clearance:</strong><ul><?php foreach ($libraryBooks as $book): ?><li><?= escapeHtml($book['book_title']) ?><?php if ($book['due_at'] !== null): ?> (due <?= escapeHtml($book['due_at']) ?>)<?php endif; ?></li><?php endforeach; ?></ul></div><?php endif; ?>
                             <div class="library-card-box requirement-action-box">
                                 <span class="action-kicker"><?= $canSubmit ? 'What to submit' : 'Semester record' ?></span>
                                 <h3><?= $canSubmit ? 'Capture your library card' : 'Library card' ?></h3>
@@ -608,6 +592,24 @@ require __DIR__ . '/dashboard_view.php';
         <?php endif; ?>
 
     </main>
+    <?php if ($clearance !== false && $canSubmit): ?>
+        <?php $paperUrl = applicationUrl('/student/clearance_pdf.php?period=' . (int) $period['id']); ?>
+        <dialog class="portal-clearance-preview" id="clearance-preview-dialog" aria-labelledby="clearance-preview-title" aria-describedby="clearance-preview-help">
+            <header class="portal-clearance-preview__header">
+                <div><h2 id="clearance-preview-title">Clearance preview</h2><p><?= escapeHtml($period['school_year'] . ' / ' . $period['semester'] . ' Semester') ?></p></div>
+                <div class="portal-clearance-preview__actions">
+                    <a class="portal-pdf-download" href="<?= escapeHtml($paperUrl) ?>"><?= studentDashboardIcon('download') ?>Download PDF</a>
+                    <button type="button" data-close-clearance-preview aria-label="Close clearance preview" autofocus>&times;</button>
+                </div>
+            </header>
+            <p class="portal-clearance-preview__help" id="clearance-preview-help">Approved offices show their saved signatures. Complete blank fields and personal signature lines after printing.</p>
+            <div class="portal-clearance-preview__viewer" aria-busy="false">
+                <div class="portal-clearance-preview__loading" data-clearance-preview-loading role="status" hidden><span aria-hidden="true"></span>Loading preview&hellip;</div>
+                <iframe class="portal-clearance-preview__paper" title="Your clearance paper" data-clearance-preview-src="<?= escapeHtml($paperUrl . '&view=inline') ?>"></iframe>
+            </div>
+            <p class="portal-clearance-preview__fallback">Paper not showing? <a href="<?= escapeHtml($paperUrl) ?>">Download the PDF</a> to view it.</p>
+        </dialog>
+    <?php endif; ?>
     <?php if ($isEnrolled && !$isHistoricalRecord): ?>
         <div class="portal-scanner-modal" data-attendance-scanner-modal hidden aria-hidden="true">
             <div class="portal-scanner-modal__backdrop" data-close-attendance-scanner></div>

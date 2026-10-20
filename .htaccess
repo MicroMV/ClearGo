@@ -1,0 +1,18 @@
+# Git metadata is private development data, including repositories in subfolders.
+# Keep this file in deployments; Apache must allow FileInfo overrides and mod_rewrite.
+RewriteEngine On
+RewriteRule "(^|/)\.git(?:/|$)" - [F,L,NC]
+
+# Scratch scripts and generated previews are never public application resources.
+RewriteRule "(^|/)\.tmp(?:/|$)" - [F,L,NC]
+
+# Runtime storage is served only through authorized PHP handlers outside this tree.
+RewriteRule "^storage(?:/|$)" - [F,L,NC]
+
+
+# Protect web responses before PHP starts; the application also sets these at runtime.
+<IfModule php_module>
+    php_flag display_errors Off
+    php_flag display_startup_errors Off
+    php_flag log_errors On
+</IfModule>

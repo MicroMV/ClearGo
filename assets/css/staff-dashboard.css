@@ -1003,6 +1003,22 @@ body.staff-dashboard {
     transition: transform .42s cubic-bezier(.2, .8, .2, 1), opacity .3s ease;
 }
 
+.staff-dashboard .office-remarks-cell { min-width: 130px; max-width: 240px; }
+.staff-dashboard .office-remarks-cell button { margin: 0; white-space: nowrap; }
+.staff-dashboard .office-remarks-preview { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin: 8px 0 0; color: var(--cg-muted); font-size: 12px; white-space: normal; overflow-wrap: anywhere; }
+.staff-dashboard .office-remarks-modal { width: min(520px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); margin: auto; padding: 24px; overflow: auto; border: 1px solid var(--cg-border); border-radius: 16px; background: #fff; color: var(--cg-ink); box-shadow: 0 24px 70px rgba(8, 28, 51, .28); }
+.staff-dashboard .office-remarks-modal::backdrop { background: rgba(10, 29, 50, .58); }
+.staff-dashboard .office-remarks-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.staff-dashboard .office-remarks-heading h2 { margin: 0; font-size: 21px; }
+.staff-dashboard .office-remarks-heading .office-remarks-close { width: 32px; min-height: 32px; padding: 0; border-radius: 50%; background: #edf3f8; color: #344b62; font-size: 22px; line-height: 1; }
+.staff-dashboard .office-remarks-student { margin: 8px 0 20px; color: var(--cg-muted); font-size: 13px; overflow-wrap: anywhere; }
+.staff-dashboard .office-remarks-form { display: grid; gap: 9px; margin: 0; }
+.staff-dashboard .office-remarks-form label { margin: 0; font-size: 13px; font-weight: 700; }
+.staff-dashboard .office-remarks-form textarea { width: 100%; min-height: 150px; margin: 0; padding: 10px 12px; resize: vertical; font: inherit; font-size: 14px; line-height: 1.5; }
+.staff-dashboard .office-remarks-form small { color: var(--cg-muted); font-size: 12px; }
+.staff-dashboard .office-remarks-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 12px; }
+.staff-dashboard .office-remarks-actions button { margin: 0; }
+
 .notification-toast.visible {
     opacity: 1;
     transform: translateX(0);

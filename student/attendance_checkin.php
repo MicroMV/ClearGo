@@ -42,7 +42,7 @@ $csrfToken = createCsrfToken();
 <!doctype html>
 <html lang="en">
 
-<head>
+<head><?= connectionStatusAssets() ?>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Confirm Attendance</title>

@@ -38,6 +38,17 @@
     box-shadow: 0 1px 2px rgba(11, 37, 69, .14);
 }
 
+.staff-dashboard .receipt-filters a.filter-clear {
+    border-color: var(--cg-border);
+    background: #fff;
+    color: var(--cg-muted);
+}
+
+.staff-dashboard .receipt-filters a.filter-clear:hover {
+    background: var(--cg-blue-soft);
+    color: var(--cg-blue);
+}
+
 .receipt-card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

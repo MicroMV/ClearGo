@@ -1,0 +1,20 @@
+[
+  {
+    "test_id": "MY-001",
+    "role": "Various",
+    "feature": "profile_picture_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 3109,
+    "evidence": "Profile upload, replacement, ownership and audit-context checks passed for all 12 account roles."
+  },
+  {
+    "test_id": "MY-002",
+    "role": "Various",
+    "feature": "student_import_mysql_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 622,
+    "evidence": "MySQL student import test passed."
+  }
+]

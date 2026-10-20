@@ -1,0 +1,103 @@
+    <!doctype html>
+    <html lang="en">
+
+    <head><link rel="stylesheet" href="/assets/css/connection-status.css?v=1792294403"><link rel="preload" as="image" href="/assets/the-lewis-college-logo.png"><script defer src="/assets/js/connection-status.js?v=1792294403" data-connection-status data-logo-url="/assets/the-lewis-college-logo.png" data-status-url="/auth/connection_status.php" data-worker-url="/connection-worker.js"></script>        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>SASO Clearance | ClearGo</title>
+        <link rel="stylesheet" href="/assets/css/office-dashboard.css?v=1792294403">
+        <link rel="stylesheet" href="/assets/css/staff-dashboard.css?v=1792294403">
+    </head>
+
+    <body class="staff-dashboard">
+        <div class="staff-shell">
+            <aside class="staff-sidebar" id="staff-sidebar" aria-label="Office navigation"><button class="sidebar-close" type="button" data-sidebar-close aria-label="Close navigation">&#10005;</button><div class="sidebar-brand"><img src="/assets/the-lewis-college-logo.png" alt="The Lewis College logo"><div class="sidebar-brand-copy"><span>The Lewis College</span><strong>ClearGo</strong></div></div><div class="sidebar-office"><p class="sidebar-kicker">Staff workspace</p><p class="sidebar-office-name">SASO Clearance</p></div><nav class="staff-nav"><a href="/saso/dashboard.php" class="active" aria-current="page"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg></span><span>Dashboard</span></a><a href="/auth/profile.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg></span><span>My Profile</span></a></nav><div class="sidebar-footer"><div class="sidebar-user"><span class="sidebar-avatar">Q</span><span class="sidebar-user-copy"><strong>qa.saso_staff@thelewiscollege.edu.ph</strong><span>Authorized staff</span></span></div><form class="logout-form" method="post" action="/logout.php">
+    <input type="hidden" name="csrf_token" value="c031614e007ab0a8a80c64c35704e8076a4fd4e42e894bb8487a74905998ae49">
+    <button type="submit">Log out</button>
+</form></div></aside><button class="sidebar-overlay" type="button" data-sidebar-close aria-label="Close navigation"></button>            <div class="staff-workspace">
+                <header class="staff-topbar"><button class="mobile-nav-toggle" type="button" data-sidebar-open aria-controls="staff-sidebar" aria-expanded="false" aria-label="Open navigation">&#9776;</button>
+                    <div class="topbar-title">
+                        <h1>SASO Clearance</h1>
+                        <p>Review student conduct requirements and resolve outstanding cases.</p>
+                    </div>
+                    <div class="topbar-actions">
+                        <div class="notification-center" data-notification-endpoint="/auth/notifications.php" data-csrf-token="c031614e007ab0a8a80c64c35704e8076a4fd4e42e894bb8487a74905998ae49" data-latest-notification-id="0"><button class="notification-toggle" type="button" aria-label="View alerts and notifications" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button><div class="notification-menu" hidden><div class="notification-heading"><strong>Alerts &amp; notifications</strong><span>0 total</span></div><ul><li class="notification-empty">No alerts or notifications yet.</li></ul></div></div>                    </div>
+                </header>
+                <main class="staff-main">
+                                                                                                    <section class="panel">
+                            <h2>Semester preparation</h2>
+                            <p><strong>1ST Semester A.Y. 2098-2099</strong></p>
+                            <p>Review records and take action now. Clear complete students or return incomplete records, then mark the office Ready.</p><form method="post" action="/clearance/readiness_action.php"><input type="hidden" name="csrf_token" value="c031614e007ab0a8a80c64c35704e8076a4fd4e42e894bb8487a74905998ae49"><button type="submit" name="action" value="ready">Mark Office Ready</button></form>                        </section>
+                    <section class="panel">
+                        <div class="section-heading">
+                            <div>
+                                <h2>Clearance summary</h2>
+                                <p class="muted">Current status across the active student roster.</p>
+                            </div>
+                        </div>
+                        <div class="summary">
+                            <div>Total Students<strong>1</strong></div>
+                                                            <div>Ready<strong>0</strong></div>
+                                <div>Pending<strong>1</strong></div>
+                                <div>Returned<strong>0</strong></div>
+                                                        <div>Cleared<strong>0</strong></div>
+                        </div>
+                    </section>
+                    <section class="panel">
+                        <div class="section-heading">
+                            <div>
+                                <h2>Find student records</h2>
+                                <p class="muted">Search the roster or focus on a clearance status.</p>
+                            </div>
+                        </div><form class="controls" method="get"><input type="text" name="search" value="" placeholder="Search student number, name, or program" aria-label="Search students"><select name="course" aria-label="Filter by course">
+                                <option value="">All courses</option><option value="BSCS" >BSCS</option>                            </select><select name="year_level" aria-label="Filter by year level">
+                                <option value="0">All year levels</option><option value="2" >Year 2</option>                            </select><select name="filter" aria-label="Filter by clearance status"><option value="ALL" selected>All students</option><option value="READY" >Ready to Clear</option><option value="PENDING" >Pending</option><option value="RETURNED" >Returned</option><option value="APPROVED" >Cleared</option></select><button type="submit">Search</button><a class="button-link" href="?search=&amp;filter=ALL&amp;audience=ALL&amp;department=ALL&amp;course=&amp;year_level=0&amp;export=xlsx">Export Excel report</a></form>
+                    </section>
+                                                            <section class="panel">
+                        <div class="section-heading">
+                            <div>
+                                <h2>Student clearance records</h2>
+                                <p class="muted">Review each student's current eligibility and available action.</p>
+                            </div>
+                        </div>
+                        <div class="table-wrap">
+                            <table id="clearance-records">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Student ID</th>
+                                        <th>Student Name</th>
+                                        <th>Program</th>
+                                        <th>Year Level</th>
+                                        <th>College</th>
+                                        <th>Requirements</th>
+                                        <th>Clearance Status</th>
+                                        <th>Action</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                                                            <tr>
+                                            <td>1</td>
+                                            <td><strong>QA-AUDIT-001</strong></td>
+                                            <td>QA Synthetic Student</td>
+                                            <td>BSCS</td>
+                                            <td>Year 2</td>
+                                            <td>CCS</td>
+                                            <td>Organization: LOCKED</td>
+                                            <td><span class="badge locked">UNAVAILABLE</span></td>
+                                                                                        <td><span class="muted">—</span></td>
+                                                                                    <td><div class="office-remarks-cell"><button type="button" class="secondary" data-office-remarks-open data-clearance-id="6669" data-remarks="" data-student-name="QA Synthetic Student" aria-haspopup="dialog" aria-controls="office-remarks-modal">Add remarks</button></div></td>
+                                        </tr>
+                                                                    </tbody>
+                            </table>
+                        </div>
+                        <p class="muted">Page 1 of 1 · 1 student(s)</p>
+                        <div class="clearance-list-footer"><form class="bulk-clearance-form" method="post" action="/clearance/office_action.php" onsubmit="return confirm(&quot;Clear 0 ready student(s) in SASO Clearance across all pages? This includes students outside the current search, course, year and status filters.&quot;);"><input type="hidden" name="audience" value="ALL"><input type="hidden" name="department" value="ALL"><input type="hidden" name="csrf_token" value="c031614e007ab0a8a80c64c35704e8076a4fd4e42e894bb8487a74905998ae49"><input type="hidden" name="action" value="approve_all_ready"><button type="submit" disabled title="Clear all eligible students in SASO Clearance across all pages">Clear all ready (0)</button></form></div>                    </section>
+                                        
+                                                        </main>
+            </div>
+        </div>
+        <dialog class="office-remarks-modal" id="office-remarks-modal" aria-labelledby="office-remarks-title"><div class="office-remarks-heading"><h2 id="office-remarks-title">Add remarks</h2><button type="button" class="office-remarks-close" data-office-remarks-close aria-label="Close remarks">&times;</button></div><p class="office-remarks-student" id="office-remarks-student"></p><form class="office-remarks-form" method="post" action="/clearance/remarks_action.php"><input type="hidden" name="csrf_token" value="c031614e007ab0a8a80c64c35704e8076a4fd4e42e894bb8487a74905998ae49"><input type="hidden" name="clearance_id" value=""><label for="office-remarks-text">Remarks</label><textarea id="office-remarks-text" name="remarks" rows="6" maxlength="1000" placeholder="Write remarks for the student" aria-describedby="office-remarks-help"></textarea><small id="office-remarks-help">Visible to the student. Maximum 1,000 characters.</small><div class="office-remarks-actions"><button type="button" class="secondary" data-office-remarks-close>Cancel</button><button type="submit">Save remarks</button></div></form></dialog>    <script src="/assets/js/staff-dashboard.js?v=1792294403"></script>
+    </body>
+
+    </html>

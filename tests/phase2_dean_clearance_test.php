@@ -2,9 +2,14 @@
 
 declare(strict_types=1);
 
+if (PHP_SAPI !== 'cli') {
+    http_response_code(403);
+    exit('Forbidden');
+}
+
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../clearance/clearance_functions.php';
-require_once __DIR__ . '/../clearance/evaluation_functions.php';
+require_once __DIR__ . '/../dean/completion_workbook_functions.php';
 
 $database = getDatabaseConnection();
 $failures = [];
@@ -76,43 +81,19 @@ try {
     $activePeriodId = (int) $activePeriod['id'];
     $originalClearanceStatus = (string) $activePeriod['clearance_status'];
     $database->prepare("UPDATE academic_periods SET clearance_status='OPEN' WHERE id=:id")->execute(['id' => $activePeriodId]);
+    $database->prepare("INSERT INTO semester_enrollments(student_id,academic_period_id,status) VALUES (?,?,'ENROLLED')")->execute([$studentId, $activePeriodId]);
 
     $started = startStudentClearance($database, $studentUserId);
     $clearanceId = (int) $started['clearance']['id'];
 
-    $context = studentEvaluationContext($database, $studentUserId);
-    saveEvaluationResult($database, $context, $studentUserId, [
-        'status' => 'REJECTED',
-        'model_name' => 'test-model',
-        'confidence' => 0.2,
-    ]);
-    $returnedRequirement = $database->prepare(
-        "SELECT record.status
-         FROM requirement_records record
-         INNER JOIN requirements requirement ON requirement.id = record.requirement_id
-         WHERE record.clearance_station_id = :clearance_station_id
-           AND requirement.requirement_code = 'CCS_FACULTY_EVALUATION'"
-    );
-    $returnedRequirement->execute(['clearance_station_id' => $context['clearance_station_id']]);
-    phaseTwoCheck($returnedRequirement->fetchColumn() === 'RETURNED', 'Rejected proof did not return the evaluation requirement.');
-
-    saveEvaluationResult($database, $context, $studentUserId, [
-        'status' => 'VERIFIED',
-        'model_name' => 'test-model',
-        'confidence' => 0.99,
-    ]);
-
-    $resetEvaluation = $database->prepare(
-        "UPDATE requirement_records record
-         INNER JOIN requirements requirement ON requirement.id=record.requirement_id
-         SET record.status='NOT_STARTED',record.verified_by=NULL,record.verified_at=NULL,record.remarks=NULL
-         WHERE record.clearance_station_id=:clearance_station_id
-           AND requirement.requirement_code='CCS_FACULTY_EVALUATION'"
-    );
-    $resetEvaluation->execute(['clearance_station_id' => $context['clearance_station_id']]);
-    phaseTwoCheck(approveDeanClearance($database, $deanUserId, $clearanceId), 'Direct CCS Dean approval failed.');
-    $returnedRequirement->execute(['clearance_station_id' => $context['clearance_station_id']]);
-    phaseTwoCheck($returnedRequirement->fetchColumn() === 'VERIFIED', 'CCS Dean approval did not automatically verify the evaluation requirement.');
+    $blocked = false;
+    try { approveDeanClearance($database, $deanUserId, $clearanceId); }
+    catch (RuntimeException $exception) { $blocked = str_contains($exception->getMessage(), 'Excel completion list'); }
+    phaseTwoCheck($blocked, 'Dean approval accepted missing completion confirmation.');
+    $period = $database->query('SELECT school_year,semester FROM academic_periods WHERE id=' . $activePeriodId)->fetch();
+    $import = importCcsCompletionWorkbook($database, $deanUserId, $activePeriodId, [['student_number' => 'PHASE2-' . $token, 'completed' => 'YES', 'school_year' => $period['school_year'], 'semester' => $period['semester']]]);
+    phaseTwoCheck($import['completed'] === 1, 'Completion list import failed.');
+    phaseTwoCheck(approveDeanClearance($database, $deanUserId, $clearanceId), 'Confirmed CCS Dean approval failed.');
     phaseTwoCheck(!approveDeanClearance($database, $deanUserId, $clearanceId), 'Duplicate Dean approval was not prevented.');
 
     $statusQuery = $database->prepare(
@@ -134,7 +115,7 @@ try {
 
     $columns = $database->query(
         "SELECT COLUMN_NAME FROM information_schema.COLUMNS
-         WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'evaluation_verifications'"
+         WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'ccs_evaluation_completions'"
     )->fetchAll(PDO::FETCH_COLUMN);
     foreach (['file_path', 'original_file_name', 'image', 'content', 'answers', 'comments', 'ratings'] as $forbiddenColumn) {
         phaseTwoCheck(!in_array($forbiddenColumn, $columns, true), 'Private evaluation data column exists: ' . $forbiddenColumn);
@@ -153,6 +134,7 @@ try {
             $deleteSource = $database->prepare("DELETE FROM {$sourceTable} WHERE student_id = :student_id");
             $deleteSource->execute(['student_id' => $studentId]);
         }
+        $database->prepare('DELETE FROM semester_enrollments WHERE student_id=?')->execute([$studentId]);
         $deleteStudent = $database->prepare('DELETE FROM students WHERE id = :student_id');
         $deleteStudent->execute(['student_id' => $studentId]);
     }

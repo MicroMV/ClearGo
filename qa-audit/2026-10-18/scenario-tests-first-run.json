@@ -1,0 +1,146 @@
+[
+    {
+        "test_id": "SC-001",
+        "role": "CBE Organization \/ Dean",
+        "feature": "Registrar-generated workflow",
+        "test": "Organization is pending first and the student can begin the intended flow",
+        "result": "FAIL",
+        "milliseconds": 0,
+        "evidence": "{\"saved_statuses\":{\"ACCOUNTING\":\"LOCKED\",\"BOOKSTORE\":\"LOCKED\",\"CLINIC\":\"LOCKED\",\"COMLAB\":\"LOCKED\",\"DEAN\":\"PENDING\",\"FACILITIES\":\"LOCKED\",\"LIBRARY\":\"LOCKED\",\"ORGANIZATION\":\"LOCKED\",\"REGISTRAR\":\"LOCKED\",\"SASO\":\"LOCKED\",\"STUDENT_COUNCIL\":\"LOCKED\"},\"organization_attempt\":\"Dean clearance must be approved before Organization clearance.\",\"dean_attempt\":\"CBE Organization\/YBC approval is required before Dean clearance.\"}"
+    },
+    {
+        "test_id": "SC-002",
+        "role": "CCS Student",
+        "feature": "First pending office",
+        "test": "Organization precedes Dean according to the supplied specification",
+        "result": "FAIL",
+        "milliseconds": 0,
+        "evidence": "{\"saved_statuses\":{\"ORGANIZATION\":\"LOCKED\",\"DEAN\":\"PENDING\",\"SASO\":\"LOCKED\",\"STUDENT_COUNCIL\":\"LOCKED\",\"LIBRARY\":\"LOCKED\",\"BOOKSTORE\":\"LOCKED\",\"CLINIC\":\"LOCKED\",\"FACILITIES\":\"LOCKED\",\"ACCOUNTING\":\"LOCKED\",\"REGISTRAR\":\"LOCKED\",\"COMLAB\":\"LOCKED\"},\"note\":\"Current migrations and code intentionally use Dean first for CCS\/CTE; this is a specification conflict.\"}"
+    },
+    {
+        "test_id": "SC-003",
+        "role": "CCS Dean",
+        "feature": "Evaluation prerequisite",
+        "test": "An unverified evaluation cannot become verified just by approving the student",
+        "result": "FAIL",
+        "milliseconds": 0,
+        "evidence": "{\"proof_submissions_before\":0,\"dean_status_after\":\"APPROVED\",\"exception\":\"\"}"
+    },
+    {
+        "test_id": "SC-004",
+        "role": "Dean \/ Student",
+        "feature": "Signing not yet open",
+        "test": "A PREPARING semester rejects clearance signing",
+        "result": "FAIL",
+        "milliseconds": 0,
+        "evidence": "{\"period\":\"PREPARING\",\"dean_status_after\":\"APPROVED\",\"exception\":\"\"}"
+    },
+    {
+        "test_id": "SC-005",
+        "role": "Library",
+        "feature": "Borrowed books",
+        "test": "An outstanding borrowed book prevents Library approval",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"borrowed_book_status\":\"BORROWED\",\"eligibility\":{\"eligible\":false,\"details\":[\"Library card: PENDING\"],\"exception\":null},\"library_status_after\":\"PENDING\",\"exception\":\"The student still has incomplete requirements for this office.\"}"
+    },
+    {
+        "test_id": "SC-006",
+        "role": "SASO",
+        "feature": "Disciplinary violations",
+        "test": "An open SASO violation prevents SASO approval",
+        "result": "FAIL",
+        "milliseconds": 0,
+        "evidence": "{\"open_violation\":true,\"saso_status_after\":\"APPROVED\",\"exception\":\"\",\"scope\":\"Configured violations table; no SASO case-management UI is currently implemented.\"}"
+    },
+    {
+        "test_id": "SC-007",
+        "role": "Unauthenticated visitor",
+        "feature": "Public regression helper",
+        "test": "A visitor cannot acquire a staff session by opening a test script",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"test_helper_status\":200,\"protected_dashboard_after\":303,\"staff_page_returned\":false,\"real_records_accessed\":false}"
+    },
+    {
+        "test_id": "SC-008",
+        "role": "Bookstore \/ Student \/ Registrar",
+        "feature": "Revocation after completion",
+        "test": "A reopened unpaid office cannot leave overall clearance marked COMPLETED",
+        "result": "FAIL",
+        "milliseconds": 0,
+        "evidence": "{\"http_status\":303,\"overall\":{\"status\":\"COMPLETED\",\"completed_at\":\"2026-10-18 11:40:36\"},\"bookstore_status\":\"RETURNED\"}"
+    },
+    {
+        "test_id": "SC-009",
+        "role": "Registrar",
+        "feature": "Duplicate staff account message",
+        "test": "A duplicate account produces a friendly validation error without database details",
+        "result": "FAIL",
+        "milliseconds": 0,
+        "evidence": "{\"post_status\":303,\"page_status\":200,\"technical_database_text_visible\":true}"
+    },
+    {
+        "test_id": "SC-010",
+        "role": "Student",
+        "feature": "Uploads before signing opens",
+        "test": "A PREPARING semester rejects evaluation uploads",
+        "result": "FAIL",
+        "milliseconds": 0,
+        "evidence": "{\"period\":\"PREPARING\",\"http_status\":303,\"stored_submission\":{\"id\":1,\"status\":\"SUBMITTED\"}}"
+    },
+    {
+        "test_id": "SC-011",
+        "role": "Dean \/ Student",
+        "feature": "Evaluation confidentiality",
+        "test": "Dean receives only a verification result and cannot retrieve confidential screenshots",
+        "result": "FAIL",
+        "milliseconds": 0,
+        "evidence": "{\"dean_image_status\":200,\"returned_png_signature\":true,\"synthetic_image_only\":true}"
+    },
+    {
+        "test_id": "SC-012",
+        "role": "Student",
+        "feature": "Evaluation resubmission storage",
+        "test": "Replacing a proof removes the superseded stored image",
+        "result": "FAIL",
+        "milliseconds": 0,
+        "evidence": "{\"old_image_still_on_disk\":true,\"old_database_reference_count\":0}"
+    },
+    {
+        "test_id": "SC-013",
+        "role": "Student",
+        "feature": "Evaluation authenticity",
+        "test": "An unrelated valid image is not automatically marked VERIFIED",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"submission_status\":\"SUBMITTED\",\"note\":\"Manual review is implemented. Genuine completion, tampering and identity verification remain untested.\"}"
+    },
+    {
+        "test_id": "SC-014",
+        "role": "Dean",
+        "feature": "Closed semester",
+        "test": "Closed signing prevents approval",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"denied\":true,\"saved_status\":\"PENDING\"}"
+    },
+    {
+        "test_id": "SC-015",
+        "role": "All",
+        "feature": "Data integrity",
+        "test": "No duplicate student\/semester clearance records after repeated initializers",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"duplicate_pairs\":0}"
+    },
+    {
+        "test_id": "SC-016",
+        "role": "Registrar",
+        "feature": "Final approval gate",
+        "test": "Registrar cannot complete a clearance with unsigned offices",
+        "result": "PASS",
+        "milliseconds": 0,
+        "evidence": "{\"denied\":true,\"saved_statuses\":{\"ORGANIZATION\":\"LOCKED\",\"DEAN\":\"PENDING\",\"SASO\":\"LOCKED\",\"STUDENT_COUNCIL\":\"LOCKED\",\"LIBRARY\":\"LOCKED\",\"BOOKSTORE\":\"LOCKED\",\"CLINIC\":\"LOCKED\",\"FACILITIES\":\"LOCKED\",\"ACCOUNTING\":\"LOCKED\",\"REGISTRAR\":\"PENDING\",\"COMLAB\":\"LOCKED\"}}"
+    }
+]

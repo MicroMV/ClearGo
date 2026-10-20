@@ -1,0 +1,1055 @@
+[
+  {
+    "test_id": "TC-001",
+    "role": "All",
+    "feature": "PHP syntax",
+    "test": "Parse 141 files without executing them",
+    "result": "PASS",
+    "milliseconds": 29937,
+    "evidence": "All files parsed successfully."
+  },
+  {
+    "test_id": "TC-002",
+    "role": "All",
+    "feature": "JavaScript syntax",
+    "test": "Parse 17 files without executing them",
+    "result": "PASS",
+    "milliseconds": 3268,
+    "evidence": "All files parsed successfully."
+  },
+  {
+    "test_id": "TC-003",
+    "role": "Various",
+    "feature": "bookstore_event_workbook_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-004",
+    "role": "Various",
+    "feature": "bookstore_workbook_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-005",
+    "role": "Various",
+    "feature": "bookstore_workflow_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-006",
+    "role": "Various",
+    "feature": "bulk_clearance_test.php",
+    "test": "Run existing suite with in-memory fixtures, source rendering, or temporary workbook files",
+    "result": "PASS",
+    "milliseconds": 283,
+    "evidence": "Bulk clearance test passed for all 11 approving offices.\nCCS minimum batch, final 1-4 students, roster scope and server rejection checks passed."
+  },
+  {
+    "test_id": "TC-007",
+    "role": "Various",
+    "feature": "bulk_dashboard_render_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-008",
+    "role": "Various",
+    "feature": "cbe_dean_workflow_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-009",
+    "role": "Various",
+    "feature": "cbe_fourth_year_single_approval_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-010",
+    "role": "Various",
+    "feature": "clearance_report_workbook_test.php",
+    "test": "Run existing suite with in-memory fixtures, source rendering, or temporary workbook files",
+    "result": "PASS",
+    "milliseconds": 294,
+    "evidence": "Clearance report workbook test passed."
+  },
+  {
+    "test_id": "TC-011",
+    "role": "Various",
+    "feature": "clinic_workbook_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-012",
+    "role": "Various",
+    "feature": "comlab_violations_modal_test.php",
+    "test": "Run existing suite with in-memory fixtures, source rendering, or temporary workbook files",
+    "result": "PASS",
+    "milliseconds": 229,
+    "evidence": "Comlab violation modal checks passed."
+  },
+  {
+    "test_id": "TC-013",
+    "role": "Various",
+    "feature": "dashboard_summary_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-014",
+    "role": "Various",
+    "feature": "facilities_items_modal_test.php",
+    "test": "Run existing suite with in-memory fixtures, source rendering, or temporary workbook files",
+    "result": "PASS",
+    "milliseconds": 179,
+    "evidence": "Facilities borrowing modal checks passed."
+  },
+  {
+    "test_id": "TC-015",
+    "role": "Various",
+    "feature": "facilities_return_query_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-016",
+    "role": "Various",
+    "feature": "library_workbook_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-017",
+    "role": "Various",
+    "feature": "notification_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-018",
+    "role": "Various",
+    "feature": "office_remarks_action_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-019",
+    "role": "Various",
+    "feature": "office_remarks_report_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-020",
+    "role": "Various",
+    "feature": "office_remarks_test.php",
+    "test": "Run existing suite with in-memory fixtures, source rendering, or temporary workbook files",
+    "result": "PASS",
+    "milliseconds": 443,
+    "evidence": "Office remarks save, removal, ownership, semester protection, notifications and pending workbook imports passed for all 11 offices.\nMultiline remarks, final template columns and older workbook compatibility passed."
+  },
+  {
+    "test_id": "TC-021",
+    "role": "Various",
+    "feature": "office_workbook_design_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-022",
+    "role": "Various",
+    "feature": "phase1_clearance_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-023",
+    "role": "Various",
+    "feature": "phase2_dean_clearance_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-024",
+    "role": "Various",
+    "feature": "phase3_office_workflow_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-025",
+    "role": "Various",
+    "feature": "profile_picture_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-026",
+    "role": "Various",
+    "feature": "qr_attendance_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-027",
+    "role": "Various",
+    "feature": "readiness_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-028",
+    "role": "Various",
+    "feature": "semester_notifications_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-029",
+    "role": "Various",
+    "feature": "staff_navigation_test.php",
+    "test": "Run existing suite with in-memory fixtures, source rendering, or temporary workbook files",
+    "result": "PASS",
+    "milliseconds": 164,
+    "evidence": "All 11 office return paths preserve filters and pagination; unrelated paths and invalid context are ignored."
+  },
+  {
+    "test_id": "TC-030",
+    "role": "Various",
+    "feature": "student_dashboard_history_test.php",
+    "test": "Run existing suite with in-memory fixtures, source rendering, or temporary workbook files",
+    "result": "PASS",
+    "milliseconds": 231,
+    "evidence": "Student dashboard history tests passed."
+  },
+  {
+    "test_id": "TC-031",
+    "role": "Various",
+    "feature": "student_import_mysql_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-032",
+    "role": "Various",
+    "feature": "student_import_preview_test.php",
+    "test": "Existing suite requires live MySQL or may change actual school records",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Not executed against the existing database. An isolated MySQL fixture is required."
+  },
+  {
+    "test_id": "TC-033",
+    "role": "Various",
+    "feature": "student_import_scale_test.php",
+    "test": "Run existing suite with in-memory fixtures, source rendering, or temporary workbook files",
+    "result": "PASS",
+    "milliseconds": 618,
+    "evidence": "Student import scale test passed: 2,500 students in 0.21 seconds."
+  },
+  {
+    "test_id": "TC-034",
+    "role": "Various",
+    "feature": "student_import_test.php",
+    "test": "Run existing suite with in-memory fixtures, source rendering, or temporary workbook files",
+    "result": "PASS",
+    "milliseconds": 521,
+    "evidence": "Student import tests passed."
+  },
+  {
+    "test_id": "TC-035",
+    "role": "Public",
+    "feature": "Login page",
+    "test": "Unauthenticated login page renders",
+    "result": "PASS",
+    "milliseconds": 256,
+    "evidence": "HTTP 200; form fields present=true"
+  },
+  {
+    "test_id": "TC-036",
+    "role": "All",
+    "feature": "Live database availability",
+    "test": "Ask the real server to execute SELECT 1",
+    "result": "PASS",
+    "milliseconds": 84,
+    "evidence": "{\"status\":200,\"db\":null,\"body\":\"{\\\"available\\\":true}\"}"
+  },
+  {
+    "test_id": "TC-037",
+    "role": "accounting",
+    "feature": "accounting/assessment_image.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 18,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-038",
+    "role": "accounting",
+    "feature": "accounting/dashboard.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 119,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-039",
+    "role": "accounting",
+    "feature": "accounting/submissions.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 13,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-040",
+    "role": "accounting",
+    "feature": "accounting/submission_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 17,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-041",
+    "role": "bookstore",
+    "feature": "bookstore/dashboard.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 164,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-042",
+    "role": "bookstore",
+    "feature": "bookstore/fees.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 98,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-043",
+    "role": "bookstore",
+    "feature": "bookstore/fee_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 19,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-044",
+    "role": "bookstore",
+    "feature": "bookstore/receipt_image.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 105,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-045",
+    "role": "bookstore",
+    "feature": "bookstore/submissions.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 17,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-046",
+    "role": "bookstore",
+    "feature": "bookstore/submission_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 8,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-047",
+    "role": "bookstore",
+    "feature": "bookstore/workbook_import.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 138,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-048",
+    "role": "bookstore",
+    "feature": "bookstore/workbook_template.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 282,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-049",
+    "role": "clinic",
+    "feature": "clinic/dashboard.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 84,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-050",
+    "role": "clinic",
+    "feature": "clinic/schedules.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 16,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-051",
+    "role": "clinic",
+    "feature": "clinic/schedule_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 13,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-052",
+    "role": "clinic",
+    "feature": "clinic/workbook_import.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 36,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-053",
+    "role": "clinic",
+    "feature": "clinic/workbook_template.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 40,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-054",
+    "role": "comlab",
+    "feature": "comlab/dashboard.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 33,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-055",
+    "role": "comlab",
+    "feature": "comlab/violations.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 24,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-056",
+    "role": "dean",
+    "feature": "dean/action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 34,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-057",
+    "role": "dean",
+    "feature": "dean/dashboard.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 269,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-058",
+    "role": "dean",
+    "feature": "dean/evaluation_image.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 13,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-059",
+    "role": "dean",
+    "feature": "dean/submitted_requirements.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 16,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-060",
+    "role": "dean",
+    "feature": "dean/submitted_requirement_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 8,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-061",
+    "role": "facilities",
+    "feature": "facilities/borrowed-items.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 104,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-062",
+    "role": "facilities",
+    "feature": "facilities/dashboard.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 113,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-063",
+    "role": "library",
+    "feature": "library/card_image.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 8,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-064",
+    "role": "library",
+    "feature": "library/dashboard.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 32,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-065",
+    "role": "library",
+    "feature": "library/submissions.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 8,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-066",
+    "role": "library",
+    "feature": "library/submission_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 124,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-067",
+    "role": "library",
+    "feature": "library/workbook_import.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 241,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-068",
+    "role": "library",
+    "feature": "library/workbook_template.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 148,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-069",
+    "role": "organization",
+    "feature": "organization/action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 19,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-070",
+    "role": "organization",
+    "feature": "organization/attendance.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 115,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-071",
+    "role": "organization",
+    "feature": "organization/dashboard.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 45,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-072",
+    "role": "organization",
+    "feature": "organization/event_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 10,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-073",
+    "role": "organization",
+    "feature": "organization/event_qr.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 131,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-074",
+    "role": "registrar",
+    "feature": "registrar/audit_logs.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 33,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-075",
+    "role": "registrar",
+    "feature": "registrar/clearance.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 20,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-076",
+    "role": "registrar",
+    "feature": "registrar/dashboard.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 94,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-077",
+    "role": "registrar",
+    "feature": "registrar/semester_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 9,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-078",
+    "role": "registrar",
+    "feature": "registrar/staff_accounts.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 8,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-079",
+    "role": "registrar",
+    "feature": "registrar/staff_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 13,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-080",
+    "role": "registrar",
+    "feature": "registrar/students.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 99,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-081",
+    "role": "registrar",
+    "feature": "registrar/student_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 13,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-082",
+    "role": "registrar",
+    "feature": "registrar/student_import.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 16,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-083",
+    "role": "registrar",
+    "feature": "registrar/student_import_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 13,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-084",
+    "role": "registrar",
+    "feature": "registrar/student_import_template.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 113,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-085",
+    "role": "saso",
+    "feature": "saso/dashboard.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 39,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-086",
+    "role": "student",
+    "feature": "student/accounting_receipt_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 80,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-087",
+    "role": "student",
+    "feature": "student/action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 25,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-088",
+    "role": "student",
+    "feature": "student/attendance_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 20,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-089",
+    "role": "student",
+    "feature": "student/attendance_checkin.php",
+    "test": "Open protected route without a login cookie",
+    "result": "FAIL",
+    "milliseconds": 19,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/student/dashboard.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-090",
+    "role": "student",
+    "feature": "student/attendance_scanner.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 35,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-091",
+    "role": "student",
+    "feature": "student/attendance_scanner_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 171,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-092",
+    "role": "student",
+    "feature": "student/bookstore_receipt_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 17,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-093",
+    "role": "student",
+    "feature": "student/dashboard.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 116,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-094",
+    "role": "student",
+    "feature": "student/evaluation_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 99,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-095",
+    "role": "student",
+    "feature": "student/library_card_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 71,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-096",
+    "role": "student",
+    "feature": "student/medical_schedule_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 34,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-097",
+    "role": "student",
+    "feature": "student/password.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 16,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-098",
+    "role": "student",
+    "feature": "student/password_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 13,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-099",
+    "role": "student-council",
+    "feature": "student-council/attendance.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 22,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-100",
+    "role": "student-council",
+    "feature": "student-council/dashboard.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 41,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-101",
+    "role": "student-council",
+    "feature": "student-council/event_action.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 16,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-102",
+    "role": "student-council",
+    "feature": "student-council/event_qr.php",
+    "test": "Open protected route without a login cookie",
+    "result": "PASS",
+    "milliseconds": 15,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-103",
+    "role": "Public",
+    "feature": "Login validation",
+    "test": "Missing CSRF token",
+    "result": "PASS",
+    "milliseconds": 19,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-104",
+    "role": "Public",
+    "feature": "Login validation",
+    "test": "Invalid CSRF token",
+    "result": "PASS",
+    "milliseconds": 36,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-105",
+    "role": "Public",
+    "feature": "Login validation",
+    "test": "Empty required fields",
+    "result": "PASS",
+    "milliseconds": 23,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-106",
+    "role": "Public",
+    "feature": "Login validation",
+    "test": "Foreign email domain",
+    "result": "PASS",
+    "milliseconds": 25,
+    "evidence": "{\"status\":303,\"location\":\"/ClearGo/login.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "TC-107",
+    "role": "Public",
+    "feature": "Login validation",
+    "test": "Array CSRF input",
+    "result": "FAIL",
+    "milliseconds": 14,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":true}"
+  },
+  {
+    "test_id": "TC-108",
+    "role": "Public",
+    "feature": "Sensitive route exposure",
+    "test": "HEAD /config/",
+    "result": "PASS",
+    "milliseconds": 8,
+    "evidence": "HTTP 403; no private file body was requested."
+  },
+  {
+    "test_id": "TC-109",
+    "role": "Public",
+    "feature": "Sensitive route exposure",
+    "test": "HEAD /database/",
+    "result": "PASS",
+    "milliseconds": 3,
+    "evidence": "HTTP 403; no private file body was requested."
+  },
+  {
+    "test_id": "TC-110",
+    "role": "Public",
+    "feature": "Sensitive route exposure",
+    "test": "HEAD /storage/",
+    "result": "FAIL",
+    "milliseconds": 39,
+    "evidence": "HTTP 200; no private file body was requested."
+  },
+  {
+    "test_id": "TC-111",
+    "role": "Public",
+    "feature": "Sensitive route exposure",
+    "test": "HEAD /storage/private/",
+    "result": "PASS",
+    "milliseconds": 8,
+    "evidence": "HTTP 403; no private file body was requested."
+  },
+  {
+    "test_id": "TC-112",
+    "role": "Public",
+    "feature": "Sensitive route exposure",
+    "test": "HEAD /storage/sessions/",
+    "result": "PASS",
+    "milliseconds": 8,
+    "evidence": "HTTP 403; no private file body was requested."
+  },
+  {
+    "test_id": "TC-113",
+    "role": "Public",
+    "feature": "Sensitive route exposure",
+    "test": "HEAD /.git/config",
+    "result": "FAIL",
+    "milliseconds": 7,
+    "evidence": "HTTP 200; no private file body was requested."
+  },
+  {
+    "test_id": "TC-114",
+    "role": "Public",
+    "feature": "Sensitive route exposure",
+    "test": "HEAD /.tmp/",
+    "result": "FAIL",
+    "milliseconds": 32,
+    "evidence": "HTTP 200; no private file body was requested."
+  },
+  {
+    "test_id": "TC-115",
+    "role": "Public",
+    "feature": "Sensitive route exposure",
+    "test": "HEAD /tests/",
+    "result": "FAIL",
+    "milliseconds": 31,
+    "evidence": "HTTP 200; no private file body was requested."
+  },
+  {
+    "test_id": "TC-116",
+    "role": "Public",
+    "feature": "Test runner exposure",
+    "test": "Invoke the harmless navigation-only regression through HTTP",
+    "result": "FAIL",
+    "milliseconds": 19,
+    "evidence": "HTTP 200; All 11 office return paths preserve filters and pagination; unrelated paths and invalid context are ignored.\n"
+  },
+  {
+    "test_id": "TC-117",
+    "role": "All",
+    "feature": "PWA install metadata",
+    "test": "Discover a web app manifest and link",
+    "result": "NOT IMPLEMENTED",
+    "milliseconds": 0,
+    "evidence": "Manifest files discovered: 0. Service worker presence alone does not establish installability."
+  }
+]

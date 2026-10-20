@@ -1,0 +1,47 @@
+[
+  {
+    "test_id": "CC-001",
+    "role": "Library / Clinic / SASO",
+    "feature": "Concurrent approvals",
+    "test": "Two independent PHP processes approve separate SASO child offices at the same instant; inspect saved child and parent states",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"workers\":[{\"station\":\"LIBRARY\",\"approved\":true},{\"station\":\"CLINIC\",\"approved\":true}],\"saved\":{\"CLINIC\":\"APPROVED\",\"LIBRARY\":\"APPROVED\",\"SASO\":\"PENDING\"}}"
+  },
+  {
+    "test_id": "CC-002",
+    "role": "Library / Clinic / SASO",
+    "feature": "Concurrent approvals",
+    "test": "Two independent PHP processes approve separate SASO child offices at the same instant; inspect saved child and parent states",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"workers\":[{\"station\":\"LIBRARY\",\"approved\":true},{\"station\":\"CLINIC\",\"approved\":true}],\"saved\":{\"CLINIC\":\"APPROVED\",\"LIBRARY\":\"APPROVED\",\"SASO\":\"PENDING\"}}"
+  },
+  {
+    "test_id": "CC-003",
+    "role": "Library / Clinic / SASO",
+    "feature": "Concurrent approvals",
+    "test": "Two independent PHP processes approve separate SASO child offices at the same instant; inspect saved child and parent states",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"workers\":[{\"station\":\"LIBRARY\",\"approved\":true},{\"station\":\"CLINIC\",\"approved\":true}],\"saved\":{\"CLINIC\":\"APPROVED\",\"LIBRARY\":\"APPROVED\",\"SASO\":\"PENDING\"}}"
+  },
+  {
+    "test_id": "CC-004",
+    "role": "Library / Clinic / SASO",
+    "feature": "Concurrent approvals",
+    "test": "Two independent PHP processes approve separate SASO child offices at the same instant; inspect saved child and parent states",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"workers\":[{\"station\":\"LIBRARY\",\"approved\":true},{\"station\":\"CLINIC\",\"approved\":true}],\"saved\":{\"CLINIC\":\"APPROVED\",\"LIBRARY\":\"APPROVED\",\"SASO\":\"PENDING\"}}"
+  },
+  {
+    "test_id": "CC-005",
+    "role": "Library / Clinic / SASO",
+    "feature": "Concurrent approvals",
+    "test": "Two independent PHP processes approve separate SASO child offices at the same instant; inspect saved child and parent states",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"workers\":[{\"station\":\"LIBRARY\",\"approved\":true},{\"station\":\"CLINIC\",\"approved\":true}],\"saved\":{\"CLINIC\":\"APPROVED\",\"LIBRARY\":\"APPROVED\",\"SASO\":\"PENDING\"}}"
+  }
+]

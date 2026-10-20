@@ -99,6 +99,14 @@ try {
         $database->rollBack();
     }
     error_log('Staff account action failed: ' . $exception->getMessage());
-    setFlashMessage($exception instanceof RuntimeException ? $exception->getMessage() : 'Unable to update the staff account.');
+    if ($exception instanceof PDOException) {
+        $duplicateEmail = (int) ($exception->errorInfo[1] ?? 0) === 1062
+            && in_array($action ?? '', ['create', 'update_email'], true);
+        setFlashMessage($duplicateEmail
+            ? 'That school email already has an account.'
+            : 'Unable to update the staff account. Please try again.');
+    } else {
+        setFlashMessage($exception instanceof RuntimeException ? $exception->getMessage() : 'Unable to update the staff account.');
+    }
 }
 redirectTo('/registrar/staff_accounts.php');

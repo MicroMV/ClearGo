@@ -14,8 +14,8 @@ if (!verifyCsrfToken($_POST['csrf_token'] ?? null)) {
     redirectTo('/login.php');
 }
 
-$email = trim((string) ($_POST['email'] ?? ''));
-$password = (string) ($_POST['password'] ?? '');
+$email = is_string($_POST['email'] ?? null) ? trim($_POST['email']) : '';
+$password = is_string($_POST['password'] ?? null) ? $_POST['password'] : '';
 
 if (
     $email === '' || $password === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)

@@ -1,0 +1,33 @@
+{
+    "migration": "030_remove_evaluation_screenshot_storage.sql",
+    "removed_table_rows": {
+        "evaluation_submission_images": 5,
+        "evaluation_submissions": 5,
+        "evaluation_verifications": 0
+    },
+    "obsolete_tables_absent": true,
+    "preserved_counts_before": {
+        "users": 2332,
+        "students": 2317,
+        "clearances": 4634,
+        "clearance_stations": 50974,
+        "requirement_records": 57674,
+        "ccs_evaluation_completions": 439,
+        "accounting_receipts": 1,
+        "library_cards": 2317
+    },
+    "preserved_counts_after": {
+        "users": 2332,
+        "students": 2317,
+        "clearances": 4634,
+        "clearance_stations": 50974,
+        "requirement_records": 57674,
+        "ccs_evaluation_completions": 439,
+        "accounting_receipts": 1,
+        "library_cards": 2317
+    },
+    "excel_records_unchanged": true,
+    "deleted_evaluation_images": 8,
+    "old_evaluation_storage_directories_absent": true,
+    "removed_page_http_status": 404
+}

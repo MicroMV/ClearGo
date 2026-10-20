@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../registrar/student_import_functions.php';
 require_once __DIR__ . '/../clearance/office_workflow.php';
 require_once __DIR__ . '/../clearance/workbook_styles.php';
+require_once __DIR__ . '/../clearance/remarks_functions.php';
 
 const BOOKSTORE_WORKBOOK_MAX_FILE_SIZE = 5 * 1024 * 1024;
 const BOOKSTORE_WORKBOOK_MAX_ROWS = 5000;
@@ -13,7 +14,7 @@ function bookstoreWorkbookStudents(PDO $database): array
 {
     $students = $database->query(
         "SELECT student.id AS student_id,student.student_number,student.first_name,student.last_name,student.program,student.year_level,
-                organization.code AS organization_code,bookstore_record.status AS bookstore_status,
+                organization.code AS organization_code,bookstore_record.status AS bookstore_status,bookstore_record.office_remarks,
                 COUNT(CASE WHEN obligation.status='UNPAID' THEN 1 END) AS pending_count,
                 COALESCE(SUM(CASE WHEN obligation.status='UNPAID' THEN obligation.amount ELSE 0 END),0) AS pending_balance,
                 GROUP_CONCAT(CASE WHEN obligation.status='UNPAID' THEN obligation.description END ORDER BY obligation.id SEPARATOR '; ') AS pending_obligations
@@ -26,7 +27,7 @@ function bookstoreWorkbookStudents(PDO $database): array
          LEFT JOIN clearance_stations bookstore_record ON bookstore_record.clearance_id=clearance.id AND bookstore_record.station_id=bookstore_station.id
          LEFT JOIN bookstore_obligations obligation ON obligation.student_id=student.id AND obligation.academic_period_id=period.id
          WHERE period.status='ACTIVE'
-         GROUP BY student.id,student.student_number,student.first_name,student.last_name,student.program,student.year_level,organization.code,bookstore_record.status
+         GROUP BY student.id,student.student_number,student.first_name,student.last_name,student.program,student.year_level,organization.code,bookstore_record.status,bookstore_record.office_remarks
          ORDER BY organization.code,student.last_name,student.first_name,student.student_number"
     )->fetchAll();
     // Fetch fees separately so multiple events do not multiply obligation balances.
@@ -61,8 +62,8 @@ function bookstoreWorksheetXml(string $organizationCode, array $students, string
 {
     $rows = [
         [$organizationCode . ' BOOKSTORE CLEARANCE - ' . $periodLabel],
-        ['Search by name or ID using the Full Name or Student Number header filter Search box, or Ctrl+F. Enter CLEARED only after balances/accountabilities are settled. A receipt/reference is required when a pending obligation is listed. Student Number must not be changed.'],
-        ['Student Number', 'Full Name', 'Course', 'Year Level', 'Pending Obligations', 'Pending Balance', 'Payment Event Receipt Status', 'Payment Receipt / Reference', 'Remarks', 'Clearance Status'],
+        ['Search by name or ID using the Full Name or Student Number header filter Search box, or Ctrl+F. Enter CLEARED only after balances/accountabilities are settled. A receipt/reference is required when a pending obligation is listed. Student Number must not be changed. Remarks are saved and shown to the student even when clearance is pending.'],
+        ['Student Number', 'Full Name', 'Course', 'Year Level', 'Pending Obligations', 'Pending Balance', 'Payment Event Receipt Status', 'Payment Receipt / Reference', 'Clearance Status', 'Remarks'],
     ];
     foreach ($students as $student) {
         $rows[] = [
@@ -74,8 +75,8 @@ function bookstoreWorksheetXml(string $organizationCode, array $students, string
             number_format((float) $student['pending_balance'], 2, '.', ''),
             (string) ($student['event_receipt_status'] ?? ''),
             '',
-            '',
             $student['bookstore_status'] === 'APPROVED' ? 'CLEARED' : 'PENDING',
+            (string) ($student['office_remarks'] ?? ''),
         ];
     }
     $xmlRows = '';
@@ -103,11 +104,11 @@ function bookstoreWorksheetXml(string $organizationCode, array $students, string
         . '<col min="1" max="1" width="18" customWidth="1"/><col min="2" max="2" width="34" customWidth="1"/>'
         . '<col min="3" max="3" width="25" customWidth="1"/><col min="4" max="4" width="14" customWidth="1"/>'
         . '<col min="5" max="5" width="42" customWidth="1"/><col min="6" max="6" width="17" customWidth="1"/>'
-        . '<col min="7" max="7" width="28" customWidth="1"/><col min="8" max="9" width="28" customWidth="1"/>'
-        . '<col min="10" max="10" width="20" customWidth="1"/>'
+        . '<col min="7" max="8" width="28" customWidth="1"/><col min="9" max="9" width="20" customWidth="1"/>'
+        . '<col min="10" max="10" width="42" customWidth="1"/>'
         . '</cols><sheetData>' . $xmlRows . '</sheetData><autoFilter ref="A3:J' . max(3, count($rows)) . '"/><mergeCells count="2"><mergeCell ref="A1:J1"/><mergeCell ref="A2:J2"/></mergeCells>'
         . '<dataValidations count="2"><dataValidation type="list" allowBlank="1" showErrorMessage="1" errorStyle="stop" errorTitle="Invalid receipt status" error="Choose PAID or UNPAID." sqref="G4:G' . max(4, count($rows)) . '"><formula1>"PAID,UNPAID"</formula1></dataValidation>'
-        . '<dataValidation type="list" allowBlank="1" showErrorMessage="1" errorStyle="stop" errorTitle="Invalid clearance status" error="Choose CLEARED or PENDING." sqref="J4:J' . max(4, count($rows)) . '"><formula1>"CLEARED,PENDING"</formula1></dataValidation></dataValidations>'
+        . '<dataValidation type="list" allowBlank="1" showErrorMessage="1" errorStyle="stop" errorTitle="Invalid clearance status" error="Choose CLEARED or PENDING." sqref="I4:I' . max(4, count($rows)) . '"><formula1>"CLEARED,PENDING"</formula1></dataValidation></dataValidations>'
         . '<pageMargins left="0.25" right="0.25" top="0.5" bottom="0.5" header="0.2" footer="0.2"/><pageSetup orientation="landscape" paperSize="9"/></worksheet>';
 }
 
@@ -150,7 +151,7 @@ function readBookstoreWorkbook(string $path): array
         $xml = loadImportXml($entries['xl/sharedStrings.xml'], 'shared strings');
         foreach ($xml->xpath('//*[local-name()="si"]') ?: [] as $item) {
             $parts = $item->xpath('.//*[local-name()="t"]') ?: [];
-            $shared[] = normalizeImportText(implode('', array_map(static fn(SimpleXMLElement $part): string => (string)$part, $parts)));
+            $shared[] = implode('', array_map(static fn(SimpleXMLElement $part): string => (string) $part, $parts));
         }
     }
     $worksheets = array_values(array_filter(array_keys($entries), static fn(string $name): bool => preg_match('#^xl/worksheets/sheet\d+\.xml$#i', $name) === 1));
@@ -160,7 +161,7 @@ function readBookstoreWorkbook(string $path): array
     }
     $result = [];
     foreach ($worksheets as $worksheet) {
-        $rows = parseStudentWorksheet($entries[$worksheet], $shared);
+        $rows = parseStudentWorksheet($entries[$worksheet], $shared, true);
         $header = null;
         $map = [];
         foreach ($rows as $index => $row) {
@@ -196,7 +197,7 @@ function readBookstoreWorkbook(string $path): array
                 'student_number' => $number,
                 'status' => strtoupper(normalizeImportText((string)($row[$map['status']] ?? ''))),
                 'reference' => normalizeImportText((string)($row[$map['reference'] ?? -1] ?? '')),
-                'remarks' => normalizeImportText((string)($row[$map['remarks'] ?? -1] ?? ''))
+                'remarks' => isset($map['remarks']) ? trim((string) ($row[$map['remarks']] ?? '')) : null
             ];
             if (count($result) > BOOKSTORE_WORKBOOK_MAX_ROWS) {
                 throw new RuntimeException('The workbook exceeds 5,000 student rows.');
@@ -218,7 +219,7 @@ function clearBookstoreFromWorkbook(PDO $database, int $staffUserId, array $row)
         throw new RuntimeException($row['student_number'] . ': no current-semester Bookstore clearance was found.');
     }
     try {
-        return clearBookstoreClearance($database, (int)$id, $staffUserId, $row['reference'], $row['remarks']) ? 'cleared' : 'already_cleared';
+        return clearBookstoreClearance($database, (int)$id, $staffUserId, $row['reference'], (string) ($row['remarks'] ?? '')) ? 'cleared' : 'already_cleared';
     } catch (RuntimeException $exception) {
         throw new RuntimeException($row['student_number'] . ': ' . $exception->getMessage(), 0, $exception);
     }
@@ -227,7 +228,7 @@ function clearBookstoreFromWorkbook(PDO $database, int $staffUserId, array $row)
 function importBookstoreWorkbook(PDO $database, int $staffUserId, array $rows): array
 {
     $seen = [];
-    $result = ['cleared' => 0, 'already_cleared' => 0, 'skipped' => 0, 'errors' => []];
+    $result = ['cleared' => 0, 'already_cleared' => 0, 'skipped' => 0, 'remarks_updated' => 0, 'errors' => []];
     foreach ($rows as $row) {
         $key = strtoupper(trim($row['student_number']));
         if ($key === '' || isset($seen[$key])) {
@@ -235,11 +236,17 @@ function importBookstoreWorkbook(PDO $database, int $staffUserId, array $rows): 
             continue;
         }
         $seen[$key] = true;
-        if ($row['status'] !== 'CLEARED') {
+        if ($row['status'] !== 'CLEARED' && trim((string) ($row['remarks'] ?? '')) === '') {
             $result['skipped']++;
             continue;
         }
         try {
+            $remarksChanged = saveWorkbookOfficeRemarks($database, $staffUserId, 'BOOKSTORE_STAFF', $row['student_number'], $row['remarks'] ?? null);
+            if ($remarksChanged) { $result['remarks_updated']++; }
+            if ($row['status'] !== 'CLEARED') {
+                if (!$remarksChanged) { $result['skipped']++; }
+                continue;
+            }
             $result[clearBookstoreFromWorkbook($database, $staffUserId, $row)]++;
         } catch (RuntimeException $exception) {
             $result['errors'][] = $exception->getMessage();

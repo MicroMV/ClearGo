@@ -1,0 +1,89 @@
+.connection-error-body { margin: 0; }
+.connection-screen, .connection-screen * { box-sizing: border-box; }
+.connection-screen {
+    position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none;
+    margin: 0; padding: 40px 24px; border: 0; color: #19304d;
+    background: radial-gradient(ellipse at 12% 15%, #deedfc 0, transparent 48%), radial-gradient(ellipse at 92% 90%, #e6edf6 0, transparent 45%), #f5f8fc;
+    font-family: "Segoe UI", Arial, sans-serif; line-height: 1.6; overflow: auto;
+}
+.connection-screen[open], .connection-error-page { display: grid; place-items: center; }
+.connection-screen::backdrop { background: #f5f8fc; }
+.connection-screen .connection-card {
+    display: grid; grid-template-columns: .9fr 1.1fr; width: 100%; max-width: 920px; margin: auto;
+    border: 1px solid #dce6f0; border-radius: 24px; background: white; text-align: left;
+    box-shadow: 0 24px 72px #163f6b12; overflow: hidden;
+}
+.connection-screen .connection-visual {
+    display: flex; flex-direction: column; justify-content: space-between; position: relative; isolation: isolate;
+    min-width: 0; padding: 36px; color: white; background: linear-gradient(145deg, #12375d, #17578b);
+}
+.connection-screen .connection-visual::before {
+    position: absolute; inset: 0; z-index: -1; content: ""; opacity: .12;
+    background-image: radial-gradient(#b8dcf8 1px, transparent 1px); background-size: 22px 22px;
+    mask-image: linear-gradient(160deg, transparent 10%, black 100%);
+}
+.connection-screen .connection-brand { display: flex; align-items: center; gap: 12px; color: white; font-size: 23px; font-weight: 750; letter-spacing: -.6px; }
+.connection-screen .connection-brand-logo {
+    display: block; flex: 0 0 44px; width: 44px; height: 44px; border-radius: 50%; object-fit: cover;
+}
+.connection-screen .connection-art { width: calc(100% + 32px); margin: 20px -16px 10px; aspect-ratio: 360 / 290; background: url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22360%22%20height%3D%22290%22%20viewBox%3D%220%200%20360%20290%22%20fill%3D%22none%22%3E%0A%3Ccircle%20cx%3D%22180%22%20cy%3D%22138%22%20r%3D%22112%22%20stroke%3D%22%2375B6ED%22%20stroke-opacity%3D%22.14%22%2F%3E%0A%3Ccircle%20cx%3D%22180%22%20cy%3D%22138%22%20r%3D%2287%22%20stroke%3D%22%2375B6ED%22%20stroke-opacity%3D%22.14%22%20stroke-dasharray%3D%224%208%22%2F%3E%0A%3Ccircle%20cx%3D%2269%22%20cy%3D%22122%22%20r%3D%225%22%20fill%3D%22%238AC8FA%22%2F%3E%3Ccircle%20cx%3D%22259%22%20cy%3D%2260%22%20r%3D%224%22%20fill%3D%22%238AC8FA%22%2F%3E%0A%3Ccircle%20cx%3D%22289%22%20cy%3D%22181%22%20r%3D%225%22%20fill%3D%22%238AC8FA%22%20fill-opacity%3D%22.5%22%2F%3E%0A%3Cpath%20d%3D%22M180%20135v27m0%2015v30M114%20214h36m60%200h36%22%20stroke%3D%22%238AC8FA%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-dasharray%3D%224%206%22%2F%3E%0A%3Crect%20x%3D%2266%22%20y%3D%22190%22%20width%3D%2272%22%20height%3D%2252%22%20rx%3D%2210%22%20fill%3D%22%232E6A9F%22%20stroke%3D%22%23A5D5FC%22%20stroke-width%3D%222%22%2F%3E%0A%3Cpath%20d%3D%22M76%20200h52v30H76z%22%20fill%3D%22%23153F6B%22%2F%3E%3Cpath%20d%3D%22M102%20243v10m-14%200h28%22%20stroke%3D%22%23A5D5FC%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%2F%3E%0A%3Crect%20x%3D%22225%22%20y%3D%22190%22%20width%3D%2268%22%20height%3D%2252%22%20rx%3D%2210%22%20fill%3D%22%232E6A9F%22%20stroke%3D%22%23A5D5FC%22%20stroke-width%3D%222%22%2F%3E%0A%3Cpath%20d%3D%22M236%20207h31m-31%2017h31%22%20stroke%3D%22%23A5D5FC%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%2F%3E%0A%3Ccircle%20cx%3D%22280%22%20cy%3D%22207%22%20r%3D%222.5%22%20fill%3D%22%238AC8FA%22%2F%3E%3Ccircle%20cx%3D%22280%22%20cy%3D%22224%22%20r%3D%222.5%22%20fill%3D%22%238AC8FA%22%2F%3E%0A%3Cpath%20d%3D%22M133%20134c-21%200-34-14-34-31%200-16%2011-29%2027-32%204-23%2024-40%2048-40%2026%200%2047%2018%2050%2043%2019%201%2034%2014%2034%2030%200%2017-15%2030-35%2030h-90Z%22%20fill%3D%22%23EAF5FF%22%2F%3E%0A%3Cpath%20d%3D%22M133%20134c-21%200-34-14-34-31%200-16%2011-29%2027-32%204-23%2024-40%2048-40%2026%200%2047%2018%2050%2043%2019%201%2034%2014%2034%2030%200%2017-15%2030-35%2030h-90Z%22%20stroke%3D%22%23A5D5FC%22%20stroke-width%3D%222%22%2F%3E%0A%3Cpath%20d%3D%22M146%2087c17-16%2044-16%2061%200m-50%2011c11-10%2028-10%2039%200m-28%2011c5-4%2012-4%2017%200%22%20stroke%3D%22%23367CAD%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22%2F%3E%0A%3Ccircle%20cx%3D%22177%22%20cy%3D%22119%22%20r%3D%223%22%20fill%3D%22%23367CAD%22%2F%3E%0A%3Ccircle%20cx%3D%22222%22%20cy%3D%22135%22%20r%3D%2221%22%20fill%3D%22%23FFF3DC%22%20stroke%3D%22%23F2C777%22%20stroke-width%3D%222%22%2F%3E%0A%3Cpath%20d%3D%22M222%20124v12m0%207v1%22%20stroke%3D%22%23A76C1A%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%2F%3E%0A%3Ccircle%20cx%3D%22180%22%20cy%3D%22214%22%20r%3D%2218%22%20fill%3D%22%23245B8E%22%20stroke%3D%22%237AB8E9%22%20stroke-width%3D%222%22%2F%3E%0A%3Cpath%20d%3D%22m176%20208-5%206%205%206m8-12%205%206-5%206%22%20stroke%3D%22%23D9EEFF%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%0A%3C%2Fsvg%3E') center / contain no-repeat; }
+.connection-screen .connection-school { display: grid; gap: 2px; }
+.connection-screen .connection-school strong { color: #eef7ff; font-size: 13px; font-weight: 600; letter-spacing: .15px; }
+.connection-screen .connection-school span { color: #b9d5ed; font-size: 12px; }
+.connection-screen .connection-content { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; padding: 48px 44px 36px; }
+.connection-screen .connection-status-label {
+    display: inline-flex; align-items: center; gap: 7px; max-width: 100%; margin-bottom: 22px; padding: 5px 10px;
+    border: 1px solid #f2dfbb; border-radius: 6px; background: #fffaef; color: #936018; font-size: 11px; font-weight: 650; letter-spacing: .2px;
+}
+.connection-screen .connection-status-label::before { flex: 0 0 6px; width: 6px; height: 6px; border-radius: 50%; background: #c68a2d; content: ""; }
+.connection-screen h1 { margin: 0 0 14px; color: #163452; font-size: 34px; font-weight: 750; line-height: 1.17; letter-spacing: -1px; }
+.connection-screen p { margin: 0; color: #60748a; font-size: 15px; line-height: 1.7; }
+.connection-screen .connection-help {
+    display: flex; align-items: flex-start; gap: 10px; width: 100%; margin: 24px 0; padding: 14px;
+    border: 1px solid #e4edf6; border-radius: 10px; background: #f6f9fd;
+}
+.connection-screen .connection-help p { font-size: 12px; line-height: 1.65; color: #566e87; }
+.connection-screen .connection-help-icon { display: grid; place-items: center; flex: 0 0 16px; width: 16px; height: 16px; margin-top: 2px; border: 1px solid #8da6bf; border-radius: 50%; color: #597a9a; font: 600 11px/1 Georgia, serif; }
+.connection-screen .connection-retry {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 46px; margin: 0; padding: 11px 24px;
+    border: 1px solid #1769aa; border-radius: 9px; background: #1769aa; color: white; font: 650 14px/1.5 "Segoe UI", Arial, sans-serif;
+    text-decoration: none; cursor: pointer; box-shadow: 0 3px 8px #1769aa18; transition: background .15s, box-shadow .15s;
+}
+.connection-screen .connection-retry:hover { background: #125991; box-shadow: 0 4px 12px #1769aa28; }
+.connection-screen .connection-retry:focus-visible { outline: 3px solid #8cbee6; outline-offset: 4px; }
+.connection-screen .connection-retry-icon { display: inline-block; font: 24px/1 Arial, sans-serif; }
+.connection-screen .connection-retry[aria-disabled="true"], .connection-screen .connection-retry:disabled { opacity: .7; cursor: wait; }
+.connection-screen .connection-retry[aria-disabled="true"] .connection-retry-icon, .connection-screen .connection-retry:disabled .connection-retry-icon { animation: connection-spin 1.2s linear infinite; }
+.connection-screen .connection-feedback { min-height: 34px; padding-top: 10px; font-size: 12px; line-height: 1.6; }
+.connection-screen .connection-feedback:empty { padding-top: 0; }
+.connection-screen .connection-footer { display: flex; align-items: flex-start; gap: 7px; width: 100%; margin-top: auto; padding-top: 18px; border-top: 1px solid #edf1f6; color: #72859a; font-size: 11px; line-height: 1.6; }
+.connection-screen .connection-footer > span { flex: 0 0 5px; width: 5px; height: 5px; margin-top: 6px; border-radius: 50%; background: #8ba7c2; }
+@keyframes connection-spin { to { transform: rotate(360deg); } }
+@media (max-width: 760px) {
+    .connection-screen { padding: 24px; }
+    .connection-screen .connection-card { grid-template-columns: 1fr; max-width: 480px; }
+    .connection-screen .connection-visual { min-height: 190px; padding: 24px 28px; }
+    .connection-screen .connection-brand { font-size: 21px; gap: 10px; }
+    .connection-screen .connection-brand-logo { flex-basis: 40px; width: 40px; height: 40px; }
+    .connection-screen .connection-art { position: absolute; right: 8px; bottom: 0; width: 200px; margin: 0; }
+    .connection-screen .connection-school { position: relative; z-index: 1; max-width: 150px; }
+    .connection-screen .connection-content { padding: 30px 28px 24px; }
+    .connection-screen .connection-status-label { margin-bottom: 16px; }
+    .connection-screen h1 { font-size: 30px; }
+    .connection-screen .connection-help { margin: 20px 0; }
+}
+@media (max-width: 380px) {
+    .connection-screen { padding: 16px; }
+    .connection-screen .connection-card { border-radius: 18px; }
+    .connection-screen .connection-visual { min-height: 175px; padding: 20px; }
+    .connection-screen .connection-art { right: -18px; width: 175px; }
+    .connection-screen .connection-school { max-width: 130px; }
+    .connection-screen .connection-school span { font-size: 10px; }
+    .connection-screen .connection-content { padding: 24px 20px; }
+    .connection-screen h1 { font-size: 28px; }
+    .connection-screen .connection-retry { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .connection-screen .connection-retry { transition: none; }
+    .connection-screen .connection-retry-icon { animation: none !important; }
+}

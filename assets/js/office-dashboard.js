@@ -1,16 +1,22 @@
 let facilitiesModalTrigger = null;
+let facilitiesPreviousOverflow = '';
 function openFacilitiesItemModal(clearanceId) {
     const template = document.getElementById('facilities-items-' + clearanceId);
     if (!template || !facilitiesItemModal) return;
     facilitiesModalTrigger = document.activeElement;
-    document.getElementById('facilities-item-content').replaceChildren(template.content.cloneNode(true));
+    const content = document.getElementById('facilities-item-content');
+    content.replaceChildren(template.content.cloneNode(true));
+    content.scrollTop = 0;
     const addForm = facilitiesItemModal.querySelector('[data-facilities-add-item]');
     const clearButton = facilitiesItemModal.querySelector('[data-facilities-clear]');
     if (addForm && clearButton) {
         const syncClearButtons = function (saving = false) {
-            const hasDraft = Array.from(addForm.querySelectorAll('input[type="text"]')).some(input => input.value.trim() !== '');
+            const hasDraft = Array.from(addForm.querySelectorAll('input:not([type="hidden"]), textarea')).some(input =>
+                input.type === 'datetime-local' ? input.value !== input.defaultValue : input.value.trim() !== '');
             const blocked = saving || hasDraft || clearButton.dataset.clearEligible !== '1';
             clearButton.disabled = blocked;
+            const warning = facilitiesItemModal.querySelector('[data-facilities-draft-warning]');
+            if (warning) warning.hidden = !hasDraft;
             document.querySelectorAll('.facilities-row-actions form').forEach(function (form) {
                 if (form.elements.clearance_id?.value === String(clearanceId)) {
                     const button = form.querySelector('button[value="approve"]');
@@ -22,15 +28,18 @@ function openFacilitiesItemModal(clearanceId) {
         addForm.addEventListener('submit', function () { syncClearButtons(true); });
         syncClearButtons();
     }
+    if (!facilitiesItemModal.classList.contains('open')) facilitiesPreviousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     facilitiesItemModal.classList.add('open');
     facilitiesItemModal.setAttribute('aria-hidden', 'false');
-    facilitiesItemModal.querySelector('.modal').focus();
+    facilitiesItemModal.querySelector('.modal').focus({ preventScroll: true });
 }
 
 function closeFacilitiesItemModal() {
     document.getElementById('facilities-item-modal').classList.remove('open');
     facilitiesItemModal.setAttribute('aria-hidden', 'true');
-    facilitiesModalTrigger?.focus();
+    document.body.style.overflow = facilitiesPreviousOverflow;
+    facilitiesModalTrigger?.focus({ preventScroll: true });
 }
 
 const facilitiesItemModal = document.getElementById('facilities-item-modal');

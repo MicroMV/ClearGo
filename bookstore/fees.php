@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../auth/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../clearance/readiness_functions.php';
+require_once __DIR__ . '/obligation_functions.php';
 
 $user = requireRole('BOOKSTORE_STAFF');
 
@@ -14,6 +15,8 @@ try {
     if ($period === false) {
         throw new RuntimeException('There is no active semester.');
     }
+    $feeLockReason = bookstoreObligationLockReason(bookstoreObligationPreparation($database, (int) $period['id']));
+    $addFeeLockReason = $feeLockReason ?? (bookstoreHasSignedClearances($database, (int) $period['id']) ? 'Event fees cannot be added after Bookstore has cleared students for this semester.' : null);
     $query = $database->prepare(
         "SELECT fee.id,fee.name,fee.amount,fee.status,
                 COUNT(student_fee.id) AS student_count,
@@ -43,7 +46,7 @@ $sidebar = staffDashboardSidebar('Bookstore Clearance', $user, [
 ?>
 <!doctype html>
 <html lang="en">
-<head>
+<head><?= connectionStatusAssets() ?>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Bookstore Event Fees | ClearGo</title>
@@ -55,9 +58,10 @@ $sidebar = staffDashboardSidebar('Bookstore Clearance', $user, [
 <main class="staff-main">
     <?php if ($message !== null): ?><p class="message" data-flash-message><?= escapeHtml($message) ?></p><?php endif; ?>
     <section class="panel"><div class="section-heading"><div><h2>Add event fee</h2><p class="muted"><?= escapeHtml($period['semester'] . ' Semester A.Y. ' . $period['school_year']) ?></p></div></div>
-        <form class="controls" method="post" action="<?= escapeHtml(applicationUrl('/bookstore/fee_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="create"><label>Event name<input type="text" name="name" maxlength="200" required placeholder="Example: Acquaintance Party"></label><label>Fee amount<input type="number" name="amount" min="0" max="99999999.99" step="0.01" required placeholder="0.00"></label><button type="submit">Add Event Fee</button></form>
+        <?php if ($addFeeLockReason !== null): ?><p class="message"><?= escapeHtml($addFeeLockReason) ?></p><?php else: ?><p class="muted">Finish adding event fees before marking Bookstore Ready.</p><?php endif; ?>
+        <form class="controls" method="post" action="<?= escapeHtml(applicationUrl('/bookstore/fee_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="action" value="create"><label>Event name<input type="text" name="name" maxlength="200" required placeholder="Example: Acquaintance Party" <?= $addFeeLockReason !== null ? 'disabled' : '' ?>></label><label>Fee amount<input type="number" name="amount" min="0" max="99999999.99" step="0.01" required placeholder="0.00" <?= $addFeeLockReason !== null ? 'disabled' : '' ?>></label><button type="submit" <?= $addFeeLockReason !== null ? 'disabled' : '' ?>>Add Event Fee</button></form>
     </section>
     <section class="panel"><div class="section-heading"><div><h2>Semester event fees</h2><p class="muted">Each active event requires one receipt or one lost-receipt report per student. Active events and amounts appear in new Excel downloads; closed events are excluded.</p></div></div>
-        <?php if ($fees === []): ?><p class="muted">No event fees have been added.</p><?php else: ?><div class="table-wrap"><table><thead><tr><th>Event</th><th>Amount</th><th>Students</th><th>Confirmed</th><th>Status</th><th>Action</th></tr></thead><tbody><?php foreach ($fees as $fee): ?><tr><td><strong><?= escapeHtml($fee['name']) ?></strong></td><td>PHP <?= number_format((float) $fee['amount'], 2) ?></td><td><?= (int) $fee['student_count'] ?></td><td><?= (int) $fee['verified_count'] ?></td><td><span class="badge <?= strtolower($fee['status']) ?>"><?= escapeHtml($fee['status']) ?></span></td><td><?php if ($fee['status'] === 'ACTIVE'): ?><form method="post" action="<?= escapeHtml(applicationUrl('/bookstore/fee_action.php')) ?>" onsubmit="return confirm('Close this event fee? It will no longer be required for clearance.');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="fee_id" value="<?= (int) $fee['id'] ?>"><button class="secondary" name="action" value="deactivate">Close</button></form><?php else: ?><span class="muted">Closed</span><?php endif; ?></td></tr><?php endforeach; ?></tbody></table></div><?php endif; ?>
+        <?php if ($fees === []): ?><p class="muted">No event fees have been added.</p><?php else: ?><div class="table-wrap"><table><thead><tr><th>Event</th><th>Amount</th><th>Students</th><th>Confirmed</th><th>Status</th><th>Action</th></tr></thead><tbody><?php foreach ($fees as $fee): ?><tr><td><strong><?= escapeHtml($fee['name']) ?></strong></td><td>PHP <?= number_format((float) $fee['amount'], 2) ?></td><td><?= (int) $fee['student_count'] ?></td><td><?= (int) $fee['verified_count'] ?></td><td><span class="badge <?= strtolower($fee['status']) ?>"><?= escapeHtml($fee['status']) ?></span></td><td><?php if ($fee['status'] === 'ACTIVE'): ?><form method="post" action="<?= escapeHtml(applicationUrl('/bookstore/fee_action.php')) ?>" onsubmit="return confirm('Close this event fee? It will no longer be required for clearance.');"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><input type="hidden" name="fee_id" value="<?= (int) $fee['id'] ?>"><button class="secondary" name="action" value="deactivate" <?= $feeLockReason !== null ? 'disabled' : '' ?>>Close</button></form><?php else: ?><span class="muted">Closed</span><?php endif; ?></td></tr><?php endforeach; ?></tbody></table></div><?php endif; ?>
     </section>
 </main></div></div><script src="<?= escapeHtml(applicationUrl('/assets/js/staff-dashboard.js')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/js/staff-dashboard.js') ?>"></script></body></html>

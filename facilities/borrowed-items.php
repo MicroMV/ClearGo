@@ -51,7 +51,7 @@ $sidebar = staffDashboardSidebar('Facilities Clearance', $user, [
 ?>
 <!doctype html>
 <html lang="en">
-<head>
+<head><?= connectionStatusAssets() ?>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Facilities Borrowed Items | ClearGo</title>
@@ -77,7 +77,7 @@ $sidebar = staffDashboardSidebar('Facilities Clearance', $user, [
                         <option value="<?= $value ?>" <?= $status === $value ? 'selected' : '' ?>><?= $label ?></option>
                         <?php endforeach; ?>
                     </select>
-                    <button type="submit">Search</button>
+                    <button type="submit">Search</button><a class="button-link secondary filter-clear" aria-label="Clear filters" href="<?= escapeHtml(applicationUrl('/facilities/borrowed-items.php')) ?>">Clear</a>
                 </form>
             </section>
             <section class="panel">

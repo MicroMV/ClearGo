@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+if (PHP_SAPI !== 'cli') {
+    ini_set('display_errors', '0');
+    ini_set('display_startup_errors', '0');
+    ini_set('log_errors', '1');
+}
+
+require_once __DIR__ . '/../config/availability.php';
+
 const APPLICATION_ROLES = [
     'STUDENT',
     'ORG_STAFF',
@@ -85,8 +93,32 @@ function clearGoLogoUrl(): string
     return applicationUrl('/assets/the-lewis-college-logo.png');
 }
 
+/** Keep a staff form's filters when its action returns to the same page. */
+function staffDashboardReturnPath(string $path, mixed $view): string
+{
+    if (!is_string($view)) { return $path; }
+    $view = json_decode($view, true);
+    $target = parse_url($path);
+    if (!is_array($view) || !is_array($target) || !isset($target['path']) || isset($target['scheme']) || isset($target['host'])
+        || ($view['path'] ?? null) !== applicationUrl($target['path']) || !is_string($view['query'] ?? null)) {
+        return $path;
+    }
+    parse_str($view['query'], $sourceQuery);
+    parse_str($target['query'] ?? '', $query);
+    foreach (['search', 'course', 'program', 'year_level', 'filter', 'status', 'account_status', 'enrollment', 'organization', 'group',
+        'audience', 'department', 'page', 'schedule', 'event', 'period', 'clearance', 'student'] as $key) {
+        if (in_array($key, ['clearance', 'student', 'schedule', 'event'], true) && isset($query[$key])) { continue; }
+        if (isset($sourceQuery[$key]) && is_string($sourceQuery[$key])) { $query[$key] = $sourceQuery[$key]; }
+    }
+    return $target['path'] . ($query === [] ? '' : '?' . http_build_query($query))
+        . (isset($target['fragment']) ? '#' . $target['fragment'] : '');
+}
+
 function redirectTo(string $path): never
 {
+    if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
+        $path = staffDashboardReturnPath($path, $_POST['staff_return_view'] ?? null);
+    }
     header('Location: ' . applicationUrl($path), true, 303);
     exit;
 }
@@ -125,7 +157,7 @@ function paginationPages(int $currentPage, int $totalPages): array
     return [1, 'ellipsis', $currentPage - 1, $currentPage, $currentPage + 1, 'ellipsis', $totalPages];
 }
 
-function renderPagination(int $currentPage, int $totalPages, array $query = [], string $fragment = ''): string
+function renderPagination(int $currentPage, int $totalPages, array $query = [], string $fragment = '', string $ariaLabel = 'Student list pages'): string
 {
     if ($totalPages <= 1) {
         return '';
@@ -140,7 +172,7 @@ function renderPagination(int $currentPage, int $totalPages, array $query = [], 
             . escapeHtml($url) . '">' . escapeHtml($label) . '</a>';
     };
 
-    $html = '<nav class="pagination" aria-label="Student list pages">';
+    $html = '<nav class="pagination" aria-label="' . escapeHtml($ariaLabel) . '">';
     if ($currentPage > 1) {
         $html .= $pageLink($currentPage - 1, 'Previous');
     }
@@ -169,11 +201,13 @@ function createCsrfToken(): string
     return $_SESSION['csrf_token'];
 }
 
-function verifyCsrfToken(?string $token): bool
+function verifyCsrfToken(mixed $token): bool
 {
+    if (!is_string($token) || $token === '') {
+        return false;
+    }
     startSecureSession();
-    return is_string($token)
-        && isset($_SESSION['csrf_token'])
+    return is_string($_SESSION['csrf_token'] ?? null)
         && hash_equals($_SESSION['csrf_token'], $token);
 }
 
@@ -181,6 +215,31 @@ function setFlashMessage(string $message): void
 {
     startSecureSession();
     $_SESSION['flash_message'] = $message;
+    $user = authenticatedUser();
+    if ($user !== null && trim($message) !== '') {
+        $_SESSION['pending_action_notifications'][] = ['user_id' => $user['id'], 'message' => $message];
+    }
+}
+
+/** Save signed-in action feedback when the user's notification list is next loaded. */
+function persistActionNotifications(PDO $database, int $userId, int $periodId): void
+{
+    $user = authenticatedUser();
+    if ($periodId < 1 || $user === null || $user['id'] !== $userId) { return; }
+    $pending = $_SESSION['pending_action_notifications'] ?? [];
+    if (!is_array($pending) || $pending === []) { return; }
+    $retry = [];
+    foreach ($pending as $item) {
+        if (!is_array($item) || ($item['user_id'] ?? null) !== $userId || !is_string($item['message'] ?? null)) { continue; }
+        try {
+            createNotification($database, $userId, 'ClearGo', $item['message'], $periodId);
+        } catch (Throwable $exception) {
+            error_log('Action notification could not be saved: ' . $exception->getMessage());
+            $retry[] = $item;
+        }
+    }
+    if ($retry === []) { unset($_SESSION['pending_action_notifications']); }
+    else { $_SESSION['pending_action_notifications'] = $retry; }
 }
 
 function pullFlashMessage(): ?string
@@ -341,6 +400,7 @@ function dashboardNotificationPreview(PDO $database, int $userId, ?int $periodId
 {
     $periodId ??= activeNotificationPeriodId($database);
     if ($periodId < 1) { return []; }
+    persistActionNotifications($database, $userId, $periodId);
     $statement = $database->prepare(
         'SELECT notification.id,notification.title,notification.message,notification.is_read,notification.created_at
          FROM notifications notification
@@ -363,6 +423,7 @@ function dashboardUnreadNotificationCount(PDO $database, int $userId, ?int $peri
 {
     $periodId ??= activeNotificationPeriodId($database);
     if ($periodId < 1) { return 0; }
+    persistActionNotifications($database, $userId, $periodId);
     $statement = $database->prepare(
         'SELECT COUNT(*) FROM notifications notification
          WHERE notification.user_id=:user_id AND notification.academic_period_id=:period_id AND notification.is_read=0

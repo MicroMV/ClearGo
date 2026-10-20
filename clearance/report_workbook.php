@@ -26,7 +26,8 @@ function createClearanceReportXlsx(string $title, string $periodLabel, array $he
         $sheetEntries['xl/worksheets/sheet' . $sheetNumber . '.xml'] = clearanceReportWorksheetXml(
             $title . ' - ' . $sheetName . ' - ' . $periodLabel,
             $headers,
-            (array) ($sheet['rows'] ?? [])
+            (array) ($sheet['rows'] ?? []),
+            (array) ($sheet['options'] ?? [])
         );
         $sheetDeclarations .= '<sheet name="' . htmlspecialchars($sheetName, ENT_XML1 | ENT_QUOTES, 'UTF-8') . '" sheetId="' . $sheetNumber . '" r:id="rId' . $sheetNumber . '"/>';
         $sheetRelationships .= '<Relationship Id="rId' . $sheetNumber . '" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet' . $sheetNumber . '.xml"/>';
@@ -42,12 +43,12 @@ function createClearanceReportXlsx(string $title, string $periodLabel, array $he
     ], $sheetEntries));
 }
 
-function clearanceReportWorksheetXml(string $title, array $headers, array $dataRows): string
+function clearanceReportWorksheetXml(string $title, array $headers, array $dataRows, array $options = []): string
 {
     $lastColumn = clearanceReportColumnName(count($headers));
     $rows = [
         [$title],
-        ['Generated from the active ClearGo roster. Use the header filters to search or narrow the report; Ctrl+F also finds a student.'],
+        [$options['instructions'] ?? 'Generated from the active ClearGo roster. Use the header filters to search or narrow the report; Ctrl+F also finds a student.'],
         array_values($headers),
     ];
     foreach ($dataRows as $row) {
@@ -80,10 +81,21 @@ function clearanceReportWorksheetXml(string $title, array $headers, array $dataR
         $columnWidths .= '<col min="' . $column . '" max="' . $column . '" width="' . $width . '" customWidth="1"/>';
     }
 
+    $validations = '';
+    foreach ($options['dropdowns'] ?? [] as $dropdown) {
+        $column = (int) $dropdown['column'];
+        if ($column < 1 || $column > count($headers)) { throw new RuntimeException('The dropdown column is outside the worksheet.'); }
+        $columnName = clearanceReportColumnName($column);
+        $values = htmlspecialchars('"' . implode(',', $dropdown['values']) . '"', ENT_XML1 | ENT_QUOTES, 'UTF-8');
+        $validations .= '<dataValidation type="list" allowBlank="1" showDropDown="0" showErrorMessage="1" errorStyle="stop" errorTitle="Invalid selection" error="Choose a value from the dropdown list." sqref="' . $columnName . '4:' . $columnName . max(4, count($rows)) . '"><formula1>' . $values . '</formula1></dataValidation>';
+    }
+    if ($validations !== '') { $validations = '<dataValidations count="' . count($options['dropdowns']) . '">' . $validations . '</dataValidations>'; }
+
     return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
         . '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="3" topLeftCell="A4" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>'
         . $columnWidths . '</cols><sheetData>' . $xmlRows . '</sheetData><autoFilter ref="A3:' . $lastColumn . max(3, count($rows)) . '"/>'
         . '<mergeCells count="2"><mergeCell ref="A1:' . $lastColumn . '1"/><mergeCell ref="A2:' . $lastColumn . '2"/></mergeCells>'
+        . $validations
         . '<pageMargins left="0.25" right="0.25" top="0.5" bottom="0.5" header="0.2" footer="0.2"/><pageSetup orientation="landscape" paperSize="9"/></worksheet>';
 }
 

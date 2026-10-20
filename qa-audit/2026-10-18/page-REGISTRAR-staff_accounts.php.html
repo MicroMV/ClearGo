@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+
+<head><link rel="stylesheet" href="/assets/css/connection-status.css?v=1792294403"><link rel="preload" as="image" href="/assets/the-lewis-college-logo.png"><script defer src="/assets/js/connection-status.js?v=1792294403" data-connection-status data-logo-url="/assets/the-lewis-college-logo.png" data-status-url="/auth/connection_status.php" data-worker-url="/connection-worker.js"></script>    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Staff Accounts | ClearGo</title>
+    <link rel="stylesheet" href="/assets/css/registrar-staff-accounts.css">
+    <link rel="stylesheet" href="/assets/css/staff-dashboard.css">
+</head>
+
+<body class="staff-dashboard">
+    <div class="staff-shell">
+        <aside class="staff-sidebar" id="staff-sidebar" aria-label="Office navigation"><button class="sidebar-close" type="button" data-sidebar-close aria-label="Close navigation">&#10005;</button><div class="sidebar-brand"><img src="/assets/the-lewis-college-logo.png" alt="The Lewis College logo"><div class="sidebar-brand-copy"><span>The Lewis College</span><strong>ClearGo</strong></div></div><div class="sidebar-office"><p class="sidebar-kicker">Staff workspace</p><p class="sidebar-office-name">Registrar Administration</p></div><nav class="staff-nav"><a href="/registrar/dashboard.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg></span><span>Dashboard</span></a><a href="/registrar/student_import.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v3h16v-3"/></svg></span><span>Import Enrollment</span></a><a href="/registrar/students.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1.5a4.5 4.5 0 0 0-4.5-4.5h-3A4.5 4.5 0 0 0 4 18.5V20M10 10a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM17 11a3 3 0 0 0 0-6M20 20v-1a4 4 0 0 0-3-3.87"/></svg></span><span>Student Accounts</span></a><a href="/registrar/staff_accounts.php" class="active" aria-current="page"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M3 21v-2a6 6 0 0 1 12 0v2M17 8h4M19 6v4M17 16h4"/></svg></span><span>Staff Accounts</span></a><a href="/registrar/clearance.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v4H7zM5 5H3v16h18V5h-2M8 13l3 3 5-6"/></svg></span><span>Clearance Review</span></a><a href="/registrar/audit_logs.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zM8 9h8M8 13h8M8 17h5"/></svg></span><span>Audit Logs</span></a><a href="/auth/profile.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg></span><span>My Profile</span></a></nav><div class="sidebar-footer"><div class="sidebar-user"><span class="sidebar-avatar">Q</span><span class="sidebar-user-copy"><strong>qa.registrar@thelewiscollege.edu.ph</strong><span>Authorized staff</span></span></div><form class="logout-form" method="post" action="/logout.php">
+    <input type="hidden" name="csrf_token" value="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e">
+    <button type="submit">Log out</button>
+</form></div></aside><button class="sidebar-overlay" type="button" data-sidebar-close aria-label="Close navigation"></button>        <div class="staff-workspace">
+            <header class="staff-topbar">
+                <button class="mobile-nav-toggle" type="button" data-sidebar-open aria-controls="staff-sidebar" aria-expanded="false" aria-label="Open navigation">&#9776;</button>
+                <div class="topbar-title">
+                    <h1>Staff Accounts</h1>
+                    <p>Manage authorized office accounts and credentials.</p>
+                </div>
+                <div class="topbar-actions">
+                    <div class="notification-center" data-notification-endpoint="/auth/notifications.php" data-csrf-token="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e" data-latest-notification-id="0"><button class="notification-toggle" type="button" aria-label="View alerts and notifications" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button><div class="notification-menu" hidden><div class="notification-heading"><strong>Alerts &amp; notifications</strong><span>0 total</span></div><ul><li class="notification-empty">No alerts or notifications yet.</li></ul></div></div>                </div>
+            </header>
+            <main class="staff-main">
+                                <section class="panel">
+                    <div class="section-heading">
+                        <div>
+                            <h2>Create staff account</h2>
+                            <p class="muted">Add an authorized account for an existing ClearGo office role.</p>
+                        </div>
+                    </div>
+                    <p>Initial password: <strong>thelewiscollege</strong>.</p>
+                    <form class="inline" method="post" action="/registrar/staff_action.php">
+                        <input type="hidden" name="csrf_token" value="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e">
+                        <input type="email" name="email" pattern=".+@thelewiscollege\.edu\.ph" placeholder="Gsuite Address" required>
+                        <select name="role" aria-label="Staff role"><option value="ORG_STAFF">ORG STAFF</option><option value="DEAN">DEAN</option><option value="SASO_STAFF">SASO STAFF</option><option value="STUDENT_COUNCIL_STAFF">STUDENT COUNCIL STAFF</option><option value="LIBRARY_STAFF">LIBRARY STAFF</option><option value="BOOKSTORE_STAFF">BOOKSTORE STAFF</option><option value="CLINIC_STAFF">CLINIC STAFF</option><option value="FACILITIES_STAFF">FACILITIES STAFF</option><option value="COMLAB_STAFF">COMLAB STAFF</option><option value="ACCOUNTING_STAFF">ACCOUNTING STAFF</option><option value="REGISTRAR">REGISTRAR</option></select>
+                        <select name="organization_id" aria-label="Assigned college">
+                            <option value="">College (Dean/Organization Staff)</option><option value="2">CBE - College of Business Education</option><option value="1">CCS - College of Computer Studies</option><option value="3">CTE - College of Teacher Education</option>                        </select>
+                        <button name="action" value="create">Create Staff Account</button>
+                    </form>
+                </section>
+                <section class="panel">
+                    <div class="section-heading">
+                        <div>
+                            <h2>Staff directory</h2>
+                            <p class="muted">Only the Registrar can change office emails and passwords.</p>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Role</th>
+                                    <th>College</th>
+                                    <th>Gsuite Address</th>
+                                    <th>Status</th>
+                                    <th>Last Login</th>
+                                    <th>Registrar Controls</th>
+                                </tr>
+                            </thead>
+                            <tbody><tr>
+                                        <td><strong>ORG STAFF</strong></td>
+                                        <td>CCS</td>
+                                        <td>qa.org_staff@thelewiscollege.edu.ph</td>
+                                        <td><span class="badge active">ACTIVE</span></td>
+                                        <td>2026-10-18 11:34:29</td>
+                                        <td>
+                                            <form class="inline" method="post" action="/registrar/staff_action.php">
+                                                <input type="hidden" name="csrf_token" value="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e">
+                                                <input type="hidden" name="user_id" value="900002">
+                                                <input type="email" name="email" pattern=".+@thelewiscollege\.edu\.ph" value="qa.org_staff@thelewiscollege.edu.ph" required aria-label="Staff email">
+                                                <button name="action" value="update_email">Save Email</button>
+                                                <input type="password" name="new_password" minlength="8" placeholder="New password" aria-label="New password">
+                                                <button name="action" value="change_password">Change Password</button>
+                                                <button class="secondary" name="action" value="reset_default">Reset to Default</button>
+                                            </form>
+                                        </td>
+                                    </tr><tr>
+                                        <td><strong>DEAN</strong></td>
+                                        <td>CCS</td>
+                                        <td>qa.dean@thelewiscollege.edu.ph</td>
+                                        <td><span class="badge active">ACTIVE</span></td>
+                                        <td>2026-10-18 11:34:28</td>
+                                        <td>
+                                            <form class="inline" method="post" action="/registrar/staff_action.php">
+                                                <input type="hidden" name="csrf_token" value="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e">
+                                                <input type="hidden" name="user_id" value="900001">
+                                                <input type="email" name="email" pattern=".+@thelewiscollege\.edu\.ph" value="qa.dean@thelewiscollege.edu.ph" required aria-label="Staff email">
+                                                <button name="action" value="update_email">Save Email</button>
+                                                <input type="password" name="new_password" minlength="8" placeholder="New password" aria-label="New password">
+                                                <button name="action" value="change_password">Change Password</button>
+                                                <button class="secondary" name="action" value="reset_default">Reset to Default</button>
+                                            </form>
+                                        </td>
+                                    </tr><tr>
+                                        <td><strong>SASO STAFF</strong></td>
+                                        <td>—</td>
+                                        <td>qa.saso_staff@thelewiscollege.edu.ph</td>
+                                        <td><span class="badge active">ACTIVE</span></td>
+                                        <td>2026-10-18 11:34:30</td>
+                                        <td>
+                                            <form class="inline" method="post" action="/registrar/staff_action.php">
+                                                <input type="hidden" name="csrf_token" value="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e">
+                                                <input type="hidden" name="user_id" value="900003">
+                                                <input type="email" name="email" pattern=".+@thelewiscollege\.edu\.ph" value="qa.saso_staff@thelewiscollege.edu.ph" required aria-label="Staff email">
+                                                <button name="action" value="update_email">Save Email</button>
+                                                <input type="password" name="new_password" minlength="8" placeholder="New password" aria-label="New password">
+                                                <button name="action" value="change_password">Change Password</button>
+                                                <button class="secondary" name="action" value="reset_default">Reset to Default</button>
+                                            </form>
+                                        </td>
+                                    </tr><tr>
+                                        <td><strong>STUDENT COUNCIL STAFF</strong></td>
+                                        <td>—</td>
+                                        <td>qa.student_council_staff@thelewiscollege.edu.ph</td>
+                                        <td><span class="badge active">ACTIVE</span></td>
+                                        <td>2026-10-18 11:34:30</td>
+                                        <td>
+                                            <form class="inline" method="post" action="/registrar/staff_action.php">
+                                                <input type="hidden" name="csrf_token" value="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e">
+                                                <input type="hidden" name="user_id" value="900004">
+                                                <input type="email" name="email" pattern=".+@thelewiscollege\.edu\.ph" value="qa.student_council_staff@thelewiscollege.edu.ph" required aria-label="Staff email">
+                                                <button name="action" value="update_email">Save Email</button>
+                                                <input type="password" name="new_password" minlength="8" placeholder="New password" aria-label="New password">
+                                                <button name="action" value="change_password">Change Password</button>
+                                                <button class="secondary" name="action" value="reset_default">Reset to Default</button>
+                                            </form>
+                                        </td>
+                                    </tr><tr>
+                                        <td><strong>LIBRARY STAFF</strong></td>
+                                        <td>—</td>
+                                        <td>qa.library_staff@thelewiscollege.edu.ph</td>
+                                        <td><span class="badge active">ACTIVE</span></td>
+                                        <td>2026-10-18 11:34:30</td>
+                                        <td>
+                                            <form class="inline" method="post" action="/registrar/staff_action.php">
+                                                <input type="hidden" name="csrf_token" value="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e">
+                                                <input type="hidden" name="user_id" value="900005">
+                                                <input type="email" name="email" pattern=".+@thelewiscollege\.edu\.ph" value="qa.library_staff@thelewiscollege.edu.ph" required aria-label="Staff email">
+                                                <button name="action" value="update_email">Save Email</button>
+                                                <input type="password" name="new_password" minlength="8" placeholder="New password" aria-label="New password">
+                                                <button name="action" value="change_password">Change Password</button>
+                                                <button class="secondary" name="action" value="reset_default">Reset to Default</button>
+                                            </form>
+                                        </td>
+                                    </tr><tr>
+                                        <td><strong>BOOKSTORE STAFF</strong></td>
+                                        <td>—</td>
+                                        <td>qa.bookstore_staff@thelewiscollege.edu.ph</td>
+                                        <td><span class="badge active">ACTIVE</span></td>
+                                        <td>2026-10-18 11:34:30</td>
+                                        <td>
+                                            <form class="inline" method="post" action="/registrar/staff_action.php">
+                                                <input type="hidden" name="csrf_token" value="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e">
+                                                <input type="hidden" name="user_id" value="900006">
+                                                <input type="email" name="email" pattern=".+@thelewiscollege\.edu\.ph" value="qa.bookstore_staff@thelewiscollege.edu.ph" required aria-label="Staff email">
+                                                <button name="action" value="update_email">Save Email</button>
+                                                <input type="password" name="new_password" minlength="8" placeholder="New password" aria-label="New password">
+                                                <button name="action" value="change_password">Change Password</button>
+                                                <button class="secondary" name="action" value="reset_default">Reset to Default</button>
+                                            </form>
+                                        </td>
+                                    </tr><tr>
+                                        <td><strong>CLINIC STAFF</strong></td>
+                                        <td>—</td>
+                                        <td>qa.clinic_staff@thelewiscollege.edu.ph</td>
+                                        <td><span class="badge active">ACTIVE</span></td>
+                                        <td>2026-10-18 11:34:31</td>
+                                        <td>
+                                            <form class="inline" method="post" action="/registrar/staff_action.php">
+                                                <input type="hidden" name="csrf_token" value="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e">
+                                                <input type="hidden" name="user_id" value="900007">
+                                                <input type="email" name="email" pattern=".+@thelewiscollege\.edu\.ph" value="qa.clinic_staff@thelewiscollege.edu.ph" required aria-label="Staff email">
+                                                <button name="action" value="update_email">Save Email</button>
+                                                <input type="password" name="new_password" minlength="8" placeholder="New password" aria-label="New password">
+                                                <button name="action" value="change_password">Change Password</button>
+                                                <button class="secondary" name="action" value="reset_default">Reset to Default</button>
+                                            </form>
+                                        </td>
+                                    </tr><tr>
+                                        <td><strong>FACILITIES STAFF</strong></td>
+                                        <td>—</td>
+                                        <td>qa.facilities_staff@thelewiscollege.edu.ph</td>
+                                        <td><span class="badge active">ACTIVE</span></td>
+                                        <td>2026-10-18 11:34:31</td>
+                                        <td>
+                                            <form class="inline" method="post" action="/registrar/staff_action.php">
+                                                <input type="hidden" name="csrf_token" value="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e">
+                                                <input type="hidden" name="user_id" value="900008">
+                                                <input type="email" name="email" pattern=".+@thelewiscollege\.edu\.ph" value="qa.facilities_staff@thelewiscollege.edu.ph" required aria-label="Staff email">
+                                                <button name="action" value="update_email">Save Email</button>
+                                                <input type="password" name="new_password" minlength="8" placeholder="New password" aria-label="New password">
+                                                <button name="action" value="change_password">Change Password</button>
+                                                <button class="secondary" name="action" value="reset_default">Reset to Default</button>
+                                            </form>
+                                        </td>
+                                    </tr><tr>
+                                        <td><strong>COMLAB STAFF</strong></td>
+                                        <td>—</td>
+                                        <td>qa.comlab_staff@thelewiscollege.edu.ph</td>
+                                        <td><span class="badge active">ACTIVE</span></td>
+                                        <td>2026-10-18 11:34:32</td>
+                                        <td>
+                                            <form class="inline" method="post" action="/registrar/staff_action.php">
+                                                <input type="hidden" name="csrf_token" value="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e">
+                                                <input type="hidden" name="user_id" value="900009">
+                                                <input type="email" name="email" pattern=".+@thelewiscollege\.edu\.ph" value="qa.comlab_staff@thelewiscollege.edu.ph" required aria-label="Staff email">
+                                                <button name="action" value="update_email">Save Email</button>
+                                                <input type="password" name="new_password" minlength="8" placeholder="New password" aria-label="New password">
+                                                <button name="action" value="change_password">Change Password</button>
+                                                <button class="secondary" name="action" value="reset_default">Reset to Default</button>
+                                            </form>
+                                        </td>
+                                    </tr><tr>
+                                        <td><strong>ACCOUNTING STAFF</strong></td>
+                                        <td>—</td>
+                                        <td>qa.accounting_staff@thelewiscollege.edu.ph</td>
+                                        <td><span class="badge active">ACTIVE</span></td>
+                                        <td>2026-10-18 11:34:32</td>
+                                        <td>
+                                            <form class="inline" method="post" action="/registrar/staff_action.php">
+                                                <input type="hidden" name="csrf_token" value="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e">
+                                                <input type="hidden" name="user_id" value="900010">
+                                                <input type="email" name="email" pattern=".+@thelewiscollege\.edu\.ph" value="qa.accounting_staff@thelewiscollege.edu.ph" required aria-label="Staff email">
+                                                <button name="action" value="update_email">Save Email</button>
+                                                <input type="password" name="new_password" minlength="8" placeholder="New password" aria-label="New password">
+                                                <button name="action" value="change_password">Change Password</button>
+                                                <button class="secondary" name="action" value="reset_default">Reset to Default</button>
+                                            </form>
+                                        </td>
+                                    </tr><tr>
+                                        <td><strong>REGISTRAR</strong></td>
+                                        <td>—</td>
+                                        <td>qa.registrar@thelewiscollege.edu.ph</td>
+                                        <td><span class="badge active">ACTIVE</span></td>
+                                        <td>2026-10-18 11:34:33</td>
+                                        <td>
+                                            <form class="inline" method="post" action="/registrar/staff_action.php">
+                                                <input type="hidden" name="csrf_token" value="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e">
+                                                <input type="hidden" name="user_id" value="900000">
+                                                <input type="email" name="email" pattern=".+@thelewiscollege\.edu\.ph" value="qa.registrar@thelewiscollege.edu.ph" required aria-label="Staff email">
+                                                <button name="action" value="update_email">Save Email</button>
+                                                <input type="password" name="new_password" minlength="8" placeholder="New password" aria-label="New password">
+                                                <button name="action" value="change_password">Change Password</button>
+                                                <button class="secondary" name="action" value="reset_default">Reset to Default</button>
+                                            </form>
+                                        </td>
+                                    </tr></tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+    <script src="/assets/js/staff-dashboard.js?v=1792294403"></script>
+</body>
+
+</html>

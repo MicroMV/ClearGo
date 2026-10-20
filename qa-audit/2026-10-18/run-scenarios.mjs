@@ -1,0 +1,5 @@
+import fs from 'node:fs';import path from 'node:path';import{spawn}from'node:child_process';
+const out=path.resolve('qa-audit/2026-10-18'),fixture=JSON.parse(fs.readFileSync(path.join(out,'sandbox-fixture.json'))),env={...process.env,DB_DATABASE:fixture.database,APP_BASE_URL:'/'},php='C:/xamppl/php/php.exe';
+const log=fs.openSync(path.join(out,'scenario-server.log'),'a');const server=spawn(php,['-S','127.0.0.1:8829','-t',path.join(out,'sandbox-app'),path.join(out,'sandbox-router.php')],{env,windowsHide:true,stdio:['ignore',log,log]});
+await new Promise(r=>setTimeout(r,600));
+try{const testFile=process.argv[2]||'scenario-tests.php';if(!['scenario-tests.php','journey-tests.php'].includes(testFile))throw Error('Unknown audit scenario');const child=spawn(php,[path.join(out,testFile)],{env,windowsHide:true,stdio:['ignore','pipe','pipe']});let text='';child.stdout.on('data',d=>{text+=d;process.stdout.write(d)});child.stderr.on('data',d=>{text+=d;process.stderr.write(d)});const status=await new Promise(r=>child.on('exit',r));fs.writeFileSync(path.join(out,testFile+'.log'),text);process.exitCode=status||0;}finally{server.kill();fs.closeSync(log);}

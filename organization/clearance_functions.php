@@ -36,7 +36,7 @@ function organizationStatusSummary(PDO $database, int $organizationId): array
                     AND NOT EXISTS (
                         SELECT 1 FROM events event
                         LEFT JOIN event_attendance attendance ON attendance.event_id=event.id
-                            AND attendance.student_id=student.id AND attendance.status='PRESENT'
+                            AND attendance.student_id=student.id AND (attendance.status='PRESENT' OR attendance.sanction_verified_at IS NOT NULL)
                         INNER JOIN stations event_station ON event_station.id=event.station_id AND event_station.code='ORGANIZATION'
                         WHERE event.organization_id=student.organization_id AND event.academic_period_id=period.id
                           AND event.is_required=1 AND event.status='ACTIVE' AND attendance.id IS NULL
@@ -73,8 +73,8 @@ function organizationStatusSummary(PDO $database, int $organizationId): array
 function requiredOrganizationEvents(PDO $database, int $organizationId, int $studentId): array
 {
     $statement = $database->prepare(
-        "SELECT events.id, events.name,
-                CASE WHEN event_attendance.status = 'PRESENT' THEN 1 ELSE 0 END AS attended
+        "SELECT events.id, events.name,event_attendance.status AS attendance_status,event_attendance.sanction_verified_at,
+                CASE WHEN event_attendance.status = 'PRESENT' OR event_attendance.sanction_verified_at IS NOT NULL THEN 1 ELSE 0 END AS attended
          FROM events
          INNER JOIN academic_periods ON academic_periods.id=events.academic_period_id
              AND academic_periods.status='ACTIVE'
@@ -103,7 +103,7 @@ function organizationEligibility(PDO $database, int $organizationId, int $studen
     }
 
     if ($missing !== []) {
-        return ['eligible' => false, 'events' => $events, 'reason' => 'Required attendance is incomplete.'];
+        return ['eligible' => false, 'events' => $events, 'reason' => 'Required attendance or sanction verification is incomplete.'];
     }
 
     return ['eligible' => true, 'events' => $events, 'reason' => null];
@@ -221,6 +221,8 @@ function approveOrganizationStudent(PDO $database, int $staffUserId, int $organi
 
         $startClearance = $database->prepare("UPDATE clearances SET status = 'IN_PROGRESS', started_at = COALESCE(started_at, NOW()) WHERE id = :clearance_id AND status = 'NOT_STARTED'");
         $startClearance->execute(['clearance_id' => $student['clearance_id']]);
+        require_once __DIR__ . '/../auth/signature_functions.php';
+        syncClearanceSignatureSnapshots($database, (int) $student['clearance_id']);
         $database->commit();
         return 'approved';
     } catch (Throwable $exception) {

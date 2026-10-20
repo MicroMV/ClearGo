@@ -23,6 +23,7 @@ try {
     $database = getDatabaseConnection();
     $result = importBookstoreWorkbook($database, (int)$user['id'], readBookstoreWorkbook((string)$file['tmp_name']));
     $message = 'Bookstore workbook imported. Cleared: ' . $result['cleared'] . '. Already cleared: ' . $result['already_cleared'] . '. Unchanged: ' . $result['skipped'] . '. Errors: ' . count($result['errors']) . '.';
+    $message .= ' Remarks updated: ' . $result['remarks_updated'] . '.';
     if ($result['errors'] !== []) {
         $message .= ' ' . implode(' ', array_slice($result['errors'], 0, 3));
     }

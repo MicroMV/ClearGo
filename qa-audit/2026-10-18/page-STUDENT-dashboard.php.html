@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="/assets/css/connection-status.css?v=1792294403"><link rel="preload" as="image" href="/assets/the-lewis-college-logo.png"><script defer src="/assets/js/connection-status.js?v=1792294403" data-connection-status data-logo-url="/assets/the-lewis-college-logo.png" data-status-url="/auth/connection_status.php" data-worker-url="/connection-worker.js"></script>    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0b2545">
+    <title>My Dashboard | ClearGo</title>
+    <link rel="stylesheet" href="/assets/css/student-page.css">
+    <link rel="stylesheet" href="/assets/css/student-dashboard.css">
+    <link rel="stylesheet" href="/assets/css/library-card-camera.css">
+    <link rel="stylesheet" href="/assets/css/student-portal.css?v=1792294403">
+    <link rel="stylesheet" href="/assets/css/profile-picture.css?v=1792294403">
+</head>
+<body class="student-dashboard student-portal" data-initial-view="overview" data-initial-modal="">
+    <a class="portal-skip-link" href="#dashboard-content">Skip to content</a>
+    <header class="student-header">
+        <div class="student-topbar">
+            <a class="student-brand" href="/student/dashboard.php">
+                <img src="/assets/the-lewis-college-logo-blue.png?v=1792294403" alt="The Lewis College logo">
+                <span class="student-brand-copy"><strong>ClearGo<span class="brand-dot">.</span></strong><small>Student portal</small></span>
+            </a>
+            <nav class="portal-desktop-nav" aria-label="Main navigation">
+                                    <a href="#overview" data-dashboard-link="overview" aria-current="page"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></a>
+                                    <a href="#clearance" data-dashboard-link="clearance" ><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg><span>Clearance</span></a>
+                                    <a href="#attendance" data-dashboard-link="attendance" ><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 5h2m4 0h2"/></svg><span>Attendance</span></a>
+                                    <a href="#account" data-dashboard-link="account" ><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><span>Account</span></a>
+                            </nav>
+            <div class="header-actions">
+                <div class="notification-wrap" data-notification-endpoint="/auth/notifications.php?period=5" data-csrf-token="d44ab4b098b46cda86ab2802efaa00b74d0f1a0b10f0361054d6b292ebf9f171" data-latest-notification-id="0">
+                    <button class="notification-button" id="notificationButton" type="button" aria-label="Notifications" aria-controls="notificationBox" aria-expanded="false">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            </button>
+                    <div class="notification-box" id="notificationBox" hidden>
+                        <h2>Notifications</h2>
+                        <p class="notification-period-label">First Semester A.Y. 2098-2099</p>
+                        <p class="notification-empty muted">You're all caught up.</p><ul class="notification-list"></ul>                    </div>
+                </div>
+                <a class="portal-avatar" href="#account" data-dashboard-link="account" aria-label="Open your account">QS</a>
+            </div>
+        </div>
+    </header>
+    <main class="student-main" id="dashboard-content">
+                
+        <section class="portal-view" id="overview" data-dashboard-view="overview" aria-label="Dashboard overview" tabindex="-1" >
+            <div class="portal-page-heading">
+                <div><p class="portal-eyebrow">YOUR STUDENT SPACE</p><h1>Hi, QA<span class="greeting-dot">.</span></h1><p class="portal-greeting-meta">BSCS <span aria-hidden="true">&middot;</span> Year 2 <span aria-hidden="true">&middot;</span> CCS</p></div>
+                                    <div class="portal-period-form"><span class="portal-period-label">Viewing semester</span><div class="portal-period-select portal-period-select--static"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 5h2m4 0h2"/></svg><span class="portal-period-value">First Semester A.Y. 2098-2099</span></div></div>
+                            </div>
+            <div class="portal-overview-grid">
+                <section class="portal-progress-card">
+                    <div class="portal-progress-heading"><span class="portal-card-eyebrow">MY CLEARANCE</span><span class="portal-live-label"><i aria-hidden="true"></i>Semester progress</span></div>
+                    <div class="portal-progress-content">
+                        <div><h2>A fresh start.</h2><p>Your clearance will appear here when it opens.</p><div class="portal-count"><strong>0</strong><span>/ 11 offices cleared</span></div><span class="sr-only">0 of 11 stations cleared</span></div>
+                        <div class="portal-progress-ring" style="--progress: 0" role="progressbar" aria-label="Clearance progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span><strong>0<small>%</small></strong><em>complete</em></span></div>
+                    </div>
+                    <div class="portal-progress-footer"><span><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg>Not open yet</span><a href="#clearance" data-dashboard-link="clearance">View clearance <svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></a></div>
+                </section>
+                <section class="portal-next-card ">
+                    <span class="portal-card-eyebrow">YOUR NEXT STEP</span>
+                    <span class="portal-next-icon"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg></span>
+                                            <h2>Getting things ready.</h2><p>The Registrar will open clearance once the offices are ready.</p><a class="portal-action-button" href="#account" data-dashboard-link="account">View my account <svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></a>
+                                    </section>
+            </div>
+                        <div class="portal-section-title portal-quick-title"><div><span class="portal-card-eyebrow">A PLACE FOR EVERYTHING</span><h2>Quick access</h2></div></div>
+            <div class="portal-shortcut-grid">
+                <a class="portal-shortcut" href="#clearance" data-dashboard-link="clearance"><span class="portal-shortcut-icon tone-teal"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg></span><span><strong>Clearance offices</strong><small>0 cleared</small></span><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></a>
+                <a class="portal-shortcut" href="#attendance" data-dashboard-link="attendance"><span class="portal-shortcut-icon tone-blue"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 5h2m4 0h2"/></svg></span><span><strong>Event attendance</strong><small>Events & QR scanner</small></span><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></a>
+                <a class="portal-shortcut" href="#account" data-dashboard-link="account"><span class="portal-shortcut-icon tone-lilac"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg></span><span><strong>My account</strong><small>QA-AUDIT-001</small></span><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></a>
+            </div>
+            <div class="portal-footer-note"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 6v2"/></svg><span>Your progress is saved to your student account.</span><span class="portal-footer-brand">ClearGo <span aria-hidden="true">&middot;</span> The Lewis College</span></div>
+        </section>
+
+        <section class="portal-view" id="clearance" data-dashboard-view="clearance" aria-labelledby="clearance-title" tabindex="-1" hidden>
+            <div class="portal-section-title"><div><span class="portal-card-eyebrow">YOUR CLEARANCE JOURNEY</span><h2 id="clearance-title">Clearance offices</h2><p>Tap an office to see its requirements.</p></div></div>
+                            <div class="portal-empty-state"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg><h3>Clearance is getting ready.</h3><p>Your offices will appear after the Registrar opens clearance.</p></div>
+                    </section>
+
+        <section class="portal-view" id="attendance" data-dashboard-view="attendance" aria-labelledby="attendance-title" tabindex="-1" hidden>
+            <div class="portal-section-title"><div><span class="portal-card-eyebrow">SHOW UP. CHECK IN.</span><h2 id="attendance-title">Event attendance</h2><p>Your organization events, in one place.</p></div><span class="portal-summary-pill"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 5h2m4 0h2"/></svg>0 / 0 attended</span></div>
+            <div class="portal-scanner-card"><span class="portal-scanner-icon"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m8 0h5v-5M3 12h18M7 7h3v3H7zm7 0h3v3h-3zM7 15h3v3H7zm7 0h3v3h-3z"/></svg></span><div><h3>At an event?</h3><p>Scan your officer's QR code to check in.</p></div><a class="portal-action-button" href="/student/attendance_scanner.php" data-open-attendance-scanner><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m8 0h5v-5M3 12h18M7 7h3v3H7zm7 0h3v3h-3zM7 15h3v3H7zm7 0h3v3h-3z"/></svg>Open scanner</a></div>            <div class="portal-empty-state"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 5h2m4 0h2"/></svg><h3>No events listed yet</h3><p>Required organization events will appear here.</p></div>        </section>
+
+        <section class="portal-view" id="account" data-dashboard-view="account" aria-labelledby="account-title" tabindex="-1" hidden>
+            <div class="portal-section-title"><div><span class="portal-card-eyebrow">YOUR STUDENT IDENTITY</span><h2 id="account-title">My account</h2></div></div>
+            <div class="portal-account-layout">
+                <section class="portal-account-card">
+                    <div class="portal-account-banner"><span class="portal-profile-avatar">QS</span><span class="portal-student-label">STUDENT</span></div>
+                    <div class="portal-account-info"><h3>QA Synthetic Student</h3><p>QA-AUDIT-001</p><dl><div><dt>Program</dt><dd>BSCS</dd></div><div><dt>Year & section</dt><dd>Year 2 · QA-ONLY</dd></div><div><dt>College</dt><dd>College of Computer Studies</dd></div><div><dt>School email</dt><dd>qa.student@thelewiscollege.edu.ph</dd></div></dl></div>
+                </section>
+                <section class="portal-account-settings">
+                    <h3>Account settings</h3>
+                    <form class="profile-picture-form" method="post" enctype="multipart/form-data" action="/auth/profile_picture_action.php" data-profile-picture-form>
+    <input type="hidden" name="csrf_token" value="d44ab4b098b46cda86ab2802efaa00b74d0f1a0b10f0361054d6b292ebf9f171">
+    <input type="hidden" name="MAX_FILE_SIZE" value="2097152">
+    <h3>Profile picture</h3>    <div class="profile-picture-editor">
+        <div class="profile-picture-summary">
+        <span class="profile-picture-preview">
+            <img data-profile-picture-preview src="/assets/the-lewis-college-logo.png" alt="Your profile picture preview" hidden>
+            <span data-profile-picture-initials >QS</span>
+        </span>
+                </div>
+        <div class="profile-picture-fields">
+            <label class="profile-picture-field-label" for="profile-picture">Choose your photo</label>
+            <div class="profile-picture-upload">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/></svg>
+                <strong>Click to choose a photo</strong>
+                <small id="profile-picture-help">JPG, PNG or WebP, up to 2 MB</small>
+                <input id="profile-picture" name="profile_picture" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="profile-picture-help profile-picture-selection profile-picture-status" required>
+            </div>
+            <span class="profile-picture-selection" id="profile-picture-selection" data-profile-picture-selection aria-live="polite">No new picture selected</span>
+        </div>
+    </div>
+    <div class="profile-picture-form-footer">
+        <span>Preview your photo before saving.</span>
+        <div class="profile-picture-buttons"><button class="profile-picture-cancel" type="button" data-profile-picture-reset hidden>Cancel</button><button type="submit">Upload picture</button></div>
+    </div>
+    <p class="profile-picture-status" id="profile-picture-status" role="status"></p>
+</form>
+                    <a class="portal-settings-row" href="/student/password.php" data-open-password-modal><span class="portal-shortcut-icon tone-blue"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="5"/><path d="m12 12 9 9m-6-6 3-3m0 6 3-3"/></svg></span><span><strong>Change password</strong><small>Keep your account secure</small></span><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg></a>
+                    <div class="portal-signout"><p>Finished for now?</p><form class="logout-form" method="post" action="/logout.php">
+    <input type="hidden" name="csrf_token" value="d44ab4b098b46cda86ab2802efaa00b74d0f1a0b10f0361054d6b292ebf9f171">
+    <button type="submit">Log out</button>
+</form></div><p class="portal-account-help">Need to update your student details?<br>Contact the Registrar.</p>
+                </section>
+            </div>
+        </section>
+
+        
+    </main>
+            <div class="portal-scanner-modal" data-attendance-scanner-modal hidden aria-hidden="true">
+            <div class="portal-scanner-modal__backdrop" data-close-attendance-scanner></div>
+            <section class="portal-scanner-modal__dialog" role="dialog" aria-modal="true" aria-label="ClearGo Attendance Scanner" tabindex="-1">
+                <button class="portal-scanner-modal__close" type="button" data-close-attendance-scanner aria-label="Close attendance scanner">&times;</button>
+                <iframe title="ClearGo Attendance Scanner" allow="camera" data-scanner-src="/student/attendance_scanner.php?embed=1"></iframe>
+            </section>
+        </div>
+        <div class="portal-password-modal" data-password-modal hidden aria-hidden="true">
+        <div class="portal-password-modal__backdrop" data-close-password-modal></div>
+        <section class="portal-password-modal__dialog" role="dialog" aria-modal="true" aria-label="Change password" tabindex="-1">
+            <button class="portal-password-modal__close" type="button" data-close-password-modal aria-label="Close change password">&times;</button>
+            <iframe title="Change password" data-password-src="/student/password.php?embed=1"></iframe>
+        </section>
+    </div>
+    <nav class="portal-mobile-nav" aria-label="Mobile navigation"><a href="#overview" data-dashboard-link="overview" aria-current="page"><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>Home</span></a><a href="#clearance" data-dashboard-link="clearance" ><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2h6v2M9 11l2 2 4-4M9 17h6"/></svg><span>Clearance</span></a><a href="#attendance" data-dashboard-link="attendance" ><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 5h2m4 0h2"/></svg><span>Attendance</span></a><a href="#account" data-dashboard-link="account" ><svg class="portal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><span>Account</span></a></nav>
+    <script src="/assets/js/student-dashboard.js?v=1792294403"></script>
+    <script src="/assets/js/profile-picture.js?v=1792294403"></script>
+    <script src="/assets/js/library-card-camera.js"></script>
+</body>
+
+</html>

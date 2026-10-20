@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../registrar/student_import_functions.php';
 require_once __DIR__ . '/../clearance/office_workflow.php';
 require_once __DIR__ . '/../clearance/workbook_styles.php';
+require_once __DIR__ . '/../clearance/remarks_functions.php';
 
 const CLINIC_WORKBOOK_MAX_FILE_SIZE = 5 * 1024 * 1024;
 const CLINIC_WORKBOOK_MAX_ROWS = 5000;
@@ -14,7 +15,7 @@ function clinicWorkbookStudents(PDO $database): array
     $statement = $database->query(
         "SELECT student.student_number,student.first_name,student.last_name,student.program,
                 student.year_level,organization.code AS organization_code,
-                medical.status AS medical_status,medical.remarks,
+                medical.status AS medical_status,clinic_record.office_remarks AS remarks,
                 clinic_record.status AS clinic_status
          FROM academic_periods period
          INNER JOIN semester_enrollments enrollment ON enrollment.academic_period_id=period.id AND enrollment.status='ENROLLED'
@@ -36,7 +37,7 @@ function clinicWorksheetXml(string $organizationCode, array $students, string $p
 {
     $rows = [
         [$organizationCode . ' CLINIC CLEARANCE - ' . $periodLabel],
-        ['Search by name or ID using the Full Name or Student Number header filter Search box, or Ctrl+F. Has Medical Record shows the current ClearGo record. Change Clearance Status to CLEARED only after the student has completed all clinic requirements. Student Number must not be changed.'],
+        ['Search by name or ID using the Full Name or Student Number header filter Search box, or Ctrl+F. Has Medical Record shows the current ClearGo record. Change Clearance Status to CLEARED only after the student has completed all clinic requirements. Student Number must not be changed. Remarks are saved and shown to the student even when clearance is pending.'],
         ['Student Number', 'Full Name', 'Course', 'Year Level', 'Has Medical Record', 'Clearance Status', 'Remarks'],
     ];
     foreach ($students as $student) {
@@ -124,7 +125,7 @@ function readClinicWorkbook(string $path): array
         $xml = loadImportXml($entries['xl/sharedStrings.xml'], 'shared strings');
         foreach ($xml->xpath('//*[local-name()="si"]') ?: [] as $item) {
             $parts = $item->xpath('.//*[local-name()="t"]') ?: [];
-            $sharedStrings[] = normalizeImportText(implode('', array_map(static fn(SimpleXMLElement $part): string => (string) $part, $parts)));
+            $sharedStrings[] = implode('', array_map(static fn(SimpleXMLElement $part): string => (string) $part, $parts));
         }
     }
     $worksheetNames = array_values(array_filter(array_keys($entries), static fn(string $name): bool => preg_match('#^xl/worksheets/sheet\d+\.xml$#i', $name) === 1));
@@ -134,7 +135,7 @@ function readClinicWorkbook(string $path): array
     }
     $result = [];
     foreach ($worksheetNames as $worksheetName) {
-        $rows = parseStudentWorksheet($entries[$worksheetName], $sharedStrings);
+        $rows = parseStudentWorksheet($entries[$worksheetName], $sharedStrings, true);
         $headerIndex = null;
         $map = [];
         foreach ($rows as $index => $row) {
@@ -167,7 +168,7 @@ function readClinicWorkbook(string $path): array
             $result[] = [
                 'student_number' => $studentNumber,
                 'status' => strtoupper(normalizeImportText((string) ($row[$map['status']] ?? ''))),
-                'remarks' => normalizeImportText((string) ($row[$map['remarks'] ?? -1] ?? '')),
+                'remarks' => isset($map['remarks']) ? trim((string) ($row[$map['remarks']] ?? '')) : null,
             ];
             if (count($result) > CLINIC_WORKBOOK_MAX_ROWS) {
                 throw new RuntimeException('The workbook exceeds 5,000 student rows.');
@@ -207,7 +208,7 @@ function clearClinicFromWorkbook(PDO $database, int $staffUserId, string $studen
 function importClinicWorkbook(PDO $database, int $staffUserId, array $rows): array
 {
     $seen = [];
-    $result = ['cleared' => 0, 'already_cleared' => 0, 'skipped' => 0, 'errors' => []];
+    $result = ['cleared' => 0, 'already_cleared' => 0, 'skipped' => 0, 'remarks_updated' => 0, 'errors' => []];
     foreach ($rows as $row) {
         $key = strtoupper(trim($row['student_number']));
         if ($key === '' || isset($seen[$key])) {
@@ -215,12 +216,18 @@ function importClinicWorkbook(PDO $database, int $staffUserId, array $rows): arr
             continue;
         }
         $seen[$key] = true;
-        if ($row['status'] !== 'CLEARED') {
+        if ($row['status'] !== 'CLEARED' && trim((string) ($row['remarks'] ?? '')) === '') {
             $result['skipped']++;
             continue;
         }
         try {
-            $outcome = clearClinicFromWorkbook($database, $staffUserId, $row['student_number'], $row['remarks']);
+            $remarksChanged = saveWorkbookOfficeRemarks($database, $staffUserId, 'CLINIC_STAFF', $row['student_number'], $row['remarks'] ?? null);
+            if ($remarksChanged) { $result['remarks_updated']++; }
+            if ($row['status'] !== 'CLEARED') {
+                if (!$remarksChanged) { $result['skipped']++; }
+                continue;
+            }
+            $outcome = clearClinicFromWorkbook($database, $staffUserId, $row['student_number'], (string) ($row['remarks'] ?? ''));
             $result[$outcome]++;
         } catch (RuntimeException $exception) {
             $result['errors'][] = $exception->getMessage();

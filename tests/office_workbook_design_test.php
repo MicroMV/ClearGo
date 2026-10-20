@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+if (PHP_SAPI !== 'cli') {
+    http_response_code(403);
+    exit('Forbidden');
+}
+
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../library/workbook_functions.php';
 require_once __DIR__ . '/../clinic/workbook_functions.php';
@@ -9,7 +14,7 @@ require_once __DIR__ . '/../bookstore/workbook_functions.php';
 
 $database = getDatabaseConnection();
 $workbooks = [
-    'Library' => [createLibraryWorkbookXlsx($database), 'G', 'readLibraryWorkbook'],
+    'Library' => [createLibraryWorkbookXlsx($database), 'H', 'readLibraryWorkbook'],
     'Clinic' => [createClinicWorkbookXlsx($database), 'G', 'readClinicWorkbook'],
     'Bookstore' => [createBookstoreWorkbookXlsx($database), 'J', 'readBookstoreWorkbook'],
     'Registrar' => [createStudentImportTemplateXlsx(), 'F', 'readStudentXlsx'],

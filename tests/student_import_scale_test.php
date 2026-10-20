@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+if (PHP_SAPI !== 'cli') {
+    http_response_code(403);
+    exit('Forbidden');
+}
+
 require_once __DIR__ . '/../registrar/student_import_functions.php';
 
 $database = new PDO('sqlite::memory:', null, null, [
@@ -14,7 +19,7 @@ $database->exec(
     );
     CREATE TABLE students (
         id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER UNIQUE, student_number TEXT UNIQUE,
-        first_name TEXT, last_name TEXT, program TEXT, year_level INTEGER, section TEXT,
+        first_name TEXT, middle_name TEXT NOT NULL DEFAULT '', last_name TEXT, program TEXT, year_level INTEGER, section TEXT,
         organization_id INTEGER, status TEXT
     );"
 );

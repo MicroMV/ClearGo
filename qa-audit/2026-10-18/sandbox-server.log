@@ -1,0 +1,679 @@
+[Sun Oct 18 11:34:28 2026] PHP 8.2.12 Development Server (http://127.0.0.1:8829) started
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26251 Accepted
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26251 [200]: GET /login.php
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26251 Closing
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26252 Accepted
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26252 [200]: GET /login.php
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26252 Closing
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26253 Accepted
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26253 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26253 Closing
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26255 Accepted
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26255 [200]: GET /student/dashboard.php
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26255 Closing
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26257 Accepted
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26257 [200]: GET /student/password.php
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26257 Closing
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26259 Accepted
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26259 [200]: GET /student/attendance_scanner.php
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26259 Closing
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26261 Accepted
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26261 [200]: GET /login.php
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26261 Closing
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26262 Accepted
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26262 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26262 Closing
+[Sun Oct 18 11:34:28 2026] 127.0.0.1:26264 Accepted
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26264 [200]: GET /dean/dashboard.php
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26264 Closing
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26266 Accepted
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26266 [200]: GET /dean/submitted_requirements.php
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26266 Closing
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26268 Accepted
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26268 [200]: GET /login.php
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26268 Closing
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26269 Accepted
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26269 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26269 Closing
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26271 Accepted
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26271 [200]: GET /organization/dashboard.php
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26271 Closing
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26273 Accepted
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26273 [200]: GET /organization/attendance.php
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26273 Closing
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26275 Accepted
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26275 [303]: GET /organization/event_qr.php
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26275 Closing
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26277 Accepted
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26277 [200]: GET /login.php
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26277 Closing
+[Sun Oct 18 11:34:29 2026] 127.0.0.1:26278 Accepted
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26278 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26278 Closing
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26280 Accepted
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26280 [200]: GET /saso/dashboard.php
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26280 Closing
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26282 Accepted
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26282 [200]: GET /login.php
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26282 Closing
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26283 Accepted
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26283 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26283 Closing
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26285 Accepted
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26285 [200]: GET /student-council/dashboard.php
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26285 Closing
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26287 Accepted
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26287 [200]: GET /student-council/attendance.php
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26287 Closing
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26289 Accepted
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26289 [303]: GET /student-council/event_qr.php
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26289 Closing
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26291 Accepted
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26291 [200]: GET /login.php
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26291 Closing
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26292 Accepted
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26292 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26292 Closing
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26294 Accepted
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26294 [200]: GET /library/dashboard.php
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26294 Closing
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26296 Accepted
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26296 [200]: GET /library/submissions.php
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26296 Closing
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26298 Accepted
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26298 [200]: GET /login.php
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26298 Closing
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26299 Accepted
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26299 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26299 Closing
+[Sun Oct 18 11:34:30 2026] 127.0.0.1:26301 Accepted
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26301 [200]: GET /bookstore/dashboard.php
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26301 Closing
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26303 Accepted
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26303 [200]: GET /bookstore/fees.php
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26303 Closing
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26305 Accepted
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26305 [200]: GET /bookstore/submissions.php
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26305 Closing
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26307 Accepted
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26307 [200]: GET /login.php
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26307 Closing
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26308 Accepted
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26308 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26308 Closing
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26310 Accepted
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26310 [200]: GET /clinic/dashboard.php
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26310 Closing
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26312 Accepted
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26312 [200]: GET /clinic/schedules.php
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26312 Closing
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26314 Accepted
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26314 [200]: GET /login.php
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26314 Closing
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26315 Accepted
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26315 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26315 Closing
+[Sun Oct 18 11:34:31 2026] 127.0.0.1:26317 Accepted
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26317 [200]: GET /facilities/dashboard.php
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26317 Closing
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26319 Accepted
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26319 [200]: GET /facilities/borrowed-items.php
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26319 Closing
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26321 Accepted
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26321 [200]: GET /login.php
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26321 Closing
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26322 Accepted
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26322 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26322 Closing
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26324 Accepted
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26324 [200]: GET /comlab/dashboard.php
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26324 Closing
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26326 Accepted
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26326 [200]: GET /comlab/violations.php
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26326 Closing
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26328 Accepted
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26328 [200]: GET /login.php
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26328 Closing
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26329 Accepted
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26329 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26329 Closing
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26331 Accepted
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26331 [200]: GET /accounting/dashboard.php
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26331 Closing
+[Sun Oct 18 11:34:32 2026] 127.0.0.1:26333 Accepted
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26333 [200]: GET /accounting/submissions.php
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26333 Closing
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26335 Accepted
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26335 [200]: GET /login.php
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26335 Closing
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26336 Accepted
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26336 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26336 Closing
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26338 Accepted
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26338 [200]: GET /registrar/dashboard.php
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26338 Closing
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26340 Accepted
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26340 [200]: GET /registrar/students.php
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26340 Closing
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26342 Accepted
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26342 [200]: GET /registrar/staff_accounts.php
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26342 Closing
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26344 Accepted
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26344 [200]: GET /registrar/clearance.php
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26344 Closing
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26346 Accepted
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26346 [200]: GET /registrar/student_import.php
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26346 Closing
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26348 Accepted
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26348 [200]: GET /registrar/audit_logs.php
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26348 Closing
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26350 Accepted
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26350 [403]: GET /dean/dashboard.php
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26350 Closing
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26352 Accepted
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26352 [403]: GET /organization/dashboard.php
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26352 Closing
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26354 Accepted
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26354 [403]: GET /saso/dashboard.php
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26354 Closing
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26356 Accepted
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26356 [403]: GET /student-council/dashboard.php
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26356 Closing
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26358 Accepted
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26358 [403]: GET /library/dashboard.php
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26358 Closing
+[Sun Oct 18 11:34:33 2026] 127.0.0.1:26360 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26360 [403]: GET /bookstore/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26360 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26362 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26362 [403]: GET /clinic/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26362 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26364 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26364 [403]: GET /facilities/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26364 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26366 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26366 [403]: GET /comlab/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26366 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26368 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26368 [403]: GET /accounting/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26368 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26370 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26370 [403]: GET /registrar/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26370 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26372 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26372 [403]: GET /student/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26372 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26374 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26374 [403]: GET /organization/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26374 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26376 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26376 [403]: GET /saso/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26376 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26378 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26378 [403]: GET /student-council/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26378 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26380 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26380 [403]: GET /library/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26380 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26382 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26382 [403]: GET /bookstore/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26382 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26384 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26384 [403]: GET /clinic/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26384 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26386 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26386 [403]: GET /facilities/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26386 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26388 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26388 [403]: GET /comlab/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26388 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26390 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26390 [403]: GET /accounting/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26390 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26392 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26392 [403]: GET /registrar/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26392 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26394 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26394 [403]: GET /student/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26394 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26396 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26396 [403]: GET /dean/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26396 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26398 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26398 [403]: GET /saso/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26398 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26400 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26400 [403]: GET /student-council/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26400 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26402 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26402 [403]: GET /library/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26402 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26404 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26404 [403]: GET /bookstore/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26404 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26406 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26406 [403]: GET /clinic/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26406 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26408 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26408 [403]: GET /facilities/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26408 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26410 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26410 [403]: GET /comlab/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26410 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26412 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26412 [403]: GET /accounting/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26412 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26414 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26414 [403]: GET /registrar/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26414 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26416 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26416 [403]: GET /student/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26416 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26418 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26418 [403]: GET /dean/dashboard.php
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26418 Closing
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26420 Accepted
+[Sun Oct 18 11:34:34 2026] 127.0.0.1:26420 [403]: GET /organization/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26420 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26422 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26422 [403]: GET /student-council/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26422 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26424 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26424 [403]: GET /library/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26424 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26426 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26426 [403]: GET /bookstore/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26426 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26428 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26428 [403]: GET /clinic/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26428 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26430 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26430 [403]: GET /facilities/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26430 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26432 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26432 [403]: GET /comlab/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26432 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26434 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26434 [403]: GET /accounting/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26434 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26436 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26436 [403]: GET /registrar/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26436 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26438 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26438 [403]: GET /student/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26438 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26440 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26440 [403]: GET /dean/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26440 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26442 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26442 [403]: GET /organization/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26442 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26444 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26444 [403]: GET /saso/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26444 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26446 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26446 [403]: GET /library/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26446 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26448 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26448 [403]: GET /bookstore/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26448 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26450 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26450 [403]: GET /clinic/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26450 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26452 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26452 [403]: GET /facilities/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26452 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26454 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26454 [403]: GET /comlab/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26454 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26456 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26456 [403]: GET /accounting/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26456 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26458 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26458 [403]: GET /registrar/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26458 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26460 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26460 [403]: GET /student/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26460 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26462 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26462 [403]: GET /dean/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26462 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26464 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26464 [403]: GET /organization/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26464 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26466 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26466 [403]: GET /saso/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26466 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26468 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26468 [403]: GET /student-council/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26468 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26470 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26470 [403]: GET /bookstore/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26470 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26472 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26472 [403]: GET /clinic/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26472 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26474 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26474 [403]: GET /facilities/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26474 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26476 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26476 [403]: GET /comlab/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26476 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26478 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26478 [403]: GET /accounting/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26478 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26480 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26480 [403]: GET /registrar/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26480 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26482 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26482 [403]: GET /student/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26482 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26484 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26484 [403]: GET /dean/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26484 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26486 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26486 [403]: GET /organization/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26486 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26488 Accepted
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26488 [403]: GET /saso/dashboard.php
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26488 Closing
+[Sun Oct 18 11:34:35 2026] 127.0.0.1:26490 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26490 [403]: GET /student-council/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26490 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26492 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26492 [403]: GET /library/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26492 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26494 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26494 [403]: GET /clinic/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26494 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26496 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26496 [403]: GET /facilities/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26496 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26498 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26498 [403]: GET /comlab/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26498 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26500 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26500 [403]: GET /accounting/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26500 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26502 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26502 [403]: GET /registrar/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26502 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26504 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26504 [403]: GET /student/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26504 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26506 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26506 [403]: GET /dean/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26506 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26508 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26508 [403]: GET /organization/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26508 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26510 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26510 [403]: GET /saso/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26510 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26512 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26512 [403]: GET /student-council/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26512 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26514 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26514 [403]: GET /library/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26514 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26516 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26516 [403]: GET /bookstore/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26516 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26518 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26518 [403]: GET /facilities/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26518 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26520 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26520 [403]: GET /comlab/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26520 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26522 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26522 [403]: GET /accounting/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26522 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26524 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26524 [403]: GET /registrar/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26524 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26526 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26526 [403]: GET /student/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26526 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26528 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26528 [403]: GET /dean/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26528 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26530 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26530 [403]: GET /organization/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26530 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26532 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26532 [403]: GET /saso/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26532 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26534 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26534 [403]: GET /student-council/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26534 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26536 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26536 [403]: GET /library/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26536 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26538 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26538 [403]: GET /bookstore/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26538 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26540 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26540 [403]: GET /clinic/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26540 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26542 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26542 [403]: GET /comlab/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26542 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26544 Accepted
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26544 [403]: GET /accounting/dashboard.php
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26544 Closing
+[Sun Oct 18 11:34:36 2026] 127.0.0.1:26546 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26546 [403]: GET /registrar/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26546 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26548 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26548 [403]: GET /student/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26548 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26550 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26550 [403]: GET /dean/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26550 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26552 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26552 [403]: GET /organization/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26552 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26554 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26554 [403]: GET /saso/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26554 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26556 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26556 [403]: GET /student-council/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26556 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26558 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26558 [403]: GET /library/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26558 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26560 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26560 [403]: GET /bookstore/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26560 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26562 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26562 [403]: GET /clinic/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26562 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26564 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26564 [403]: GET /facilities/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26564 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26566 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26566 [403]: GET /accounting/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26566 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26568 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26568 [403]: GET /registrar/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26568 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26570 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26570 [403]: GET /student/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26570 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26572 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26572 [403]: GET /dean/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26572 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26574 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26574 [403]: GET /organization/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26574 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26576 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26576 [403]: GET /saso/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26576 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26578 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26578 [403]: GET /student-council/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26578 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26580 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26580 [403]: GET /library/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26580 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26582 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26582 [403]: GET /bookstore/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26582 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26584 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26584 [403]: GET /clinic/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26584 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26586 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26586 [403]: GET /facilities/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26586 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26588 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26588 [403]: GET /comlab/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26588 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26590 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26590 [403]: GET /registrar/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26590 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26592 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26592 [403]: GET /student/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26592 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26594 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26594 [403]: GET /dean/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26594 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26596 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26596 [403]: GET /organization/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26596 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26598 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26598 [403]: GET /saso/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26598 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26600 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26600 [403]: GET /student-council/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26600 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26602 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26602 [403]: GET /library/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26602 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26604 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26604 [403]: GET /bookstore/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26604 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26606 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26606 [403]: GET /clinic/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26606 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26608 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26608 [403]: GET /facilities/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26608 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26610 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26610 [403]: GET /comlab/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26610 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26612 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26612 [403]: GET /accounting/dashboard.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26612 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26614 Accepted
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26614 [303]: POST /student/action.php
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26614 Closing
+[Sun Oct 18 11:34:37 2026] 127.0.0.1:26616 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26616 [303]: POST /logout.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26616 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26617 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26617 [303]: GET /student/dashboard.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26617 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26618 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26618 [303]: POST /dean/action.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26618 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26620 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26620 [303]: POST /logout.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26620 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26621 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26621 [303]: GET /dean/dashboard.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26621 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26622 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26622 [303]: POST /organization/action.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26622 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26624 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26624 [303]: POST /logout.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26624 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26625 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26625 [303]: GET /organization/dashboard.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26625 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26626 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26626 [303]: POST /clearance/office_action.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26626 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26628 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26628 [303]: POST /logout.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26628 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26629 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26629 [303]: GET /saso/dashboard.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26629 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26630 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26630 [303]: POST /clearance/office_action.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26630 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26632 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26632 [303]: POST /logout.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26632 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26633 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26633 [303]: GET /student-council/dashboard.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26633 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26634 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26634 [303]: POST /clearance/office_action.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26634 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26636 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26636 [303]: POST /logout.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26636 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26637 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26637 [303]: GET /library/dashboard.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26637 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26638 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26638 [303]: POST /clearance/office_action.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26638 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26640 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26640 [303]: POST /logout.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26640 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26641 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26641 [303]: GET /bookstore/dashboard.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26641 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26642 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26642 [303]: POST /clearance/office_action.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26642 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26644 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26644 [303]: POST /logout.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26644 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26645 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26645 [303]: GET /clinic/dashboard.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26645 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26646 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26646 [303]: POST /clearance/office_action.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26646 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26648 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26648 [303]: POST /logout.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26648 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26649 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26649 [303]: GET /facilities/dashboard.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26649 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26650 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26650 [303]: POST /clearance/office_action.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26650 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26652 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26652 [303]: POST /logout.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26652 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26653 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26653 [303]: GET /comlab/dashboard.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26653 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26654 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26654 [303]: POST /clearance/office_action.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26654 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26656 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26656 [303]: POST /logout.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26656 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26657 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26657 [303]: GET /accounting/dashboard.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26657 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26658 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26658 [303]: POST /clearance/office_action.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26658 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26660 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26660 [303]: POST /logout.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26660 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26661 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26661 [303]: GET /registrar/dashboard.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26661 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26662 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26662 [200]: GET /login.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26662 Closing
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26663 Accepted
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26663 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:34:38 2026] 127.0.0.1:26663 Closing

@@ -1,0 +1,301 @@
+{
+    "organizations": [
+        {
+            "id": 1,
+            "code": "CCS",
+            "name": "College of Computer Studies",
+            "status": "ACTIVE"
+        },
+        {
+            "id": 2,
+            "code": "CBE",
+            "name": "College of Business Education",
+            "status": "ACTIVE"
+        },
+        {
+            "id": 3,
+            "code": "CTE",
+            "name": "College of Teacher Education",
+            "status": "ACTIVE"
+        }
+    ],
+    "stations": [
+        {
+            "id": 1,
+            "code": "ORGANIZATION",
+            "name": "Organization",
+            "parent_station_id": null,
+            "sort_order": 2,
+            "status": "ACTIVE"
+        },
+        {
+            "id": 2,
+            "code": "DEAN",
+            "name": "Dean",
+            "parent_station_id": null,
+            "sort_order": 1,
+            "status": "ACTIVE"
+        },
+        {
+            "id": 4,
+            "code": "STUDENT_COUNCIL",
+            "name": "Student Council",
+            "parent_station_id": 3,
+            "sort_order": 1,
+            "status": "ACTIVE"
+        },
+        {
+            "id": 5,
+            "code": "LIBRARY",
+            "name": "Library",
+            "parent_station_id": 3,
+            "sort_order": 2,
+            "status": "ACTIVE"
+        },
+        {
+            "id": 6,
+            "code": "BOOKSTORE",
+            "name": "Bookstore",
+            "parent_station_id": 3,
+            "sort_order": 3,
+            "status": "ACTIVE"
+        },
+        {
+            "id": 3,
+            "code": "SASO",
+            "name": "SASO",
+            "parent_station_id": null,
+            "sort_order": 3,
+            "status": "ACTIVE"
+        },
+        {
+            "id": 7,
+            "code": "CLINIC",
+            "name": "Clinic",
+            "parent_station_id": 3,
+            "sort_order": 4,
+            "status": "ACTIVE"
+        },
+        {
+            "id": 8,
+            "code": "FACILITIES",
+            "name": "Facilities",
+            "parent_station_id": null,
+            "sort_order": 4,
+            "status": "ACTIVE"
+        },
+        {
+            "id": 9,
+            "code": "ACCOUNTING",
+            "name": "Accounting",
+            "parent_station_id": null,
+            "sort_order": 6,
+            "status": "ACTIVE"
+        },
+        {
+            "id": 10,
+            "code": "REGISTRAR",
+            "name": "Registrar",
+            "parent_station_id": null,
+            "sort_order": 7,
+            "status": "ACTIVE"
+        },
+        {
+            "id": 11,
+            "code": "COMLAB",
+            "name": "Computer Laboratory",
+            "parent_station_id": null,
+            "sort_order": 5,
+            "status": "ACTIVE"
+        }
+    ],
+    "requirements": [
+        {
+            "name": "Dean Approval",
+            "requirement_code": "LEGACY_2",
+            "station": "DEAN",
+            "applicable_organization_id": null,
+            "minimum_year_level": null,
+            "maximum_year_level": null,
+            "applicable_semester": null,
+            "is_required": 1,
+            "status": "ACTIVE"
+        },
+        {
+            "name": "Required Student Council Events",
+            "requirement_code": "LEGACY_4",
+            "station": "STUDENT_COUNCIL",
+            "applicable_organization_id": null,
+            "minimum_year_level": null,
+            "maximum_year_level": null,
+            "applicable_semester": null,
+            "is_required": 1,
+            "status": "ACTIVE"
+        },
+        {
+            "name": "Faculty Evaluation Completion",
+            "requirement_code": "CCS_FACULTY_EVALUATION",
+            "station": "DEAN",
+            "applicable_organization_id": 1,
+            "minimum_year_level": null,
+            "maximum_year_level": 3,
+            "applicable_semester": null,
+            "is_required": 1,
+            "status": "ACTIVE"
+        },
+        {
+            "name": "CBE Organization (YBC) Sign-off",
+            "requirement_code": "CBE_YBC_APPROVAL",
+            "station": "DEAN",
+            "applicable_organization_id": 2,
+            "minimum_year_level": 1,
+            "maximum_year_level": 3,
+            "applicable_semester": null,
+            "is_required": 0,
+            "status": "INACTIVE"
+        },
+        {
+            "name": "OJT Requirements",
+            "requirement_code": "CBE_OJT_REQUIREMENTS",
+            "station": "DEAN",
+            "applicable_organization_id": 2,
+            "minimum_year_level": 4,
+            "maximum_year_level": 4,
+            "applicable_semester": null,
+            "is_required": 1,
+            "status": "ACTIVE"
+        },
+        {
+            "name": "Application for Graduation",
+            "requirement_code": "CCS_GRADUATION_APPLICATION",
+            "station": "DEAN",
+            "applicable_organization_id": 1,
+            "minimum_year_level": 4,
+            "maximum_year_level": 4,
+            "applicable_semester": "2ND",
+            "is_required": 1,
+            "status": "ACTIVE"
+        },
+        {
+            "name": "Faculty Evaluation Completion",
+            "requirement_code": "CCS_FOURTH_YEAR_FACULTY_EVALUATION",
+            "station": "DEAN",
+            "applicable_organization_id": 1,
+            "minimum_year_level": 4,
+            "maximum_year_level": 4,
+            "applicable_semester": "1ST",
+            "is_required": 1,
+            "status": "ACTIVE"
+        },
+        {
+            "name": "Required Organization Events and Meetings",
+            "requirement_code": "LEGACY_1",
+            "station": "ORGANIZATION",
+            "applicable_organization_id": null,
+            "minimum_year_level": null,
+            "maximum_year_level": null,
+            "applicable_semester": null,
+            "is_required": 1,
+            "status": "ACTIVE"
+        },
+        {
+            "name": "Library Card",
+            "requirement_code": "LEGACY_5",
+            "station": "LIBRARY",
+            "applicable_organization_id": null,
+            "minimum_year_level": null,
+            "maximum_year_level": null,
+            "applicable_semester": null,
+            "is_required": 1,
+            "status": "ACTIVE"
+        },
+        {
+            "name": "Borrowed Books",
+            "requirement_code": "LEGACY_6",
+            "station": "LIBRARY",
+            "applicable_organization_id": null,
+            "minimum_year_level": null,
+            "maximum_year_level": null,
+            "applicable_semester": null,
+            "is_required": 1,
+            "status": "ACTIVE"
+        },
+        {
+            "name": "School Rules Violations",
+            "requirement_code": "LEGACY_3",
+            "station": "SASO",
+            "applicable_organization_id": null,
+            "minimum_year_level": null,
+            "maximum_year_level": null,
+            "applicable_semester": null,
+            "is_required": 1,
+            "status": "ACTIVE"
+        },
+        {
+            "name": "Required Event Fees",
+            "requirement_code": "LEGACY_7",
+            "station": "BOOKSTORE",
+            "applicable_organization_id": null,
+            "minimum_year_level": null,
+            "maximum_year_level": null,
+            "applicable_semester": null,
+            "is_required": 1,
+            "status": "ACTIVE"
+        },
+        {
+            "name": "School Medical Requirement",
+            "requirement_code": "LEGACY_8",
+            "station": "CLINIC",
+            "applicable_organization_id": null,
+            "minimum_year_level": null,
+            "maximum_year_level": null,
+            "applicable_semester": null,
+            "is_required": 1,
+            "status": "ACTIVE"
+        },
+        {
+            "name": "Facilities Violations",
+            "requirement_code": "LEGACY_9",
+            "station": "FACILITIES",
+            "applicable_organization_id": null,
+            "minimum_year_level": null,
+            "maximum_year_level": null,
+            "applicable_semester": null,
+            "is_required": 1,
+            "status": "ACTIVE"
+        },
+        {
+            "name": "Financial Obligations",
+            "requirement_code": "LEGACY_10",
+            "station": "ACCOUNTING",
+            "applicable_organization_id": null,
+            "minimum_year_level": null,
+            "maximum_year_level": null,
+            "applicable_semester": null,
+            "is_required": 1,
+            "status": "ACTIVE"
+        },
+        {
+            "name": "Complete Documents",
+            "requirement_code": "REGISTRAR_COMPLETE_DOCUMENTS",
+            "station": "REGISTRAR",
+            "applicable_organization_id": null,
+            "minimum_year_level": null,
+            "maximum_year_level": null,
+            "applicable_semester": null,
+            "is_required": 1,
+            "status": "ACTIVE"
+        },
+        {
+            "name": "Signed by All Offices",
+            "requirement_code": "REGISTRAR_ALL_OFFICES_SIGNED",
+            "station": "REGISTRAR",
+            "applicable_organization_id": null,
+            "minimum_year_level": null,
+            "maximum_year_level": null,
+            "applicable_semester": null,
+            "is_required": 1,
+            "status": "ACTIVE"
+        }
+    ]
+}

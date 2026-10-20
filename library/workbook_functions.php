@@ -5,6 +5,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../registrar/student_import_functions.php';
 require_once __DIR__ . '/../clearance/office_workflow.php';
 require_once __DIR__ . '/../clearance/workbook_styles.php';
+require_once __DIR__ . '/../clearance/remarks_functions.php';
 
 const LIBRARY_WORKBOOK_MAX_FILE_SIZE = 5 * 1024 * 1024;
 const LIBRARY_WORKBOOK_MAX_ROWS = 5000;
@@ -14,7 +15,7 @@ function libraryWorkbookStudents(PDO $database): array
     return $database->query(
         "SELECT student.student_number,student.first_name,student.last_name,student.program,
                 student.year_level,organization.code AS organization_code,
-                library_record.status AS library_status
+                library_record.status AS library_status,library_record.office_remarks
          FROM academic_periods period
          INNER JOIN semester_enrollments enrollment ON enrollment.academic_period_id=period.id AND enrollment.status='ENROLLED'
          INNER JOIN students student ON student.id=enrollment.student_id AND student.status='ACTIVE'
@@ -31,8 +32,8 @@ function libraryWorksheetXml(string $organizationCode, array $students, string $
 {
     $rows = [
         [$organizationCode . ' LIBRARY CLEARANCE - ' . $periodLabel],
-        ["Search by name or ID: open the Full Name or Student Number header filter and type in its Search box. Ctrl+F also finds students.\nVerify the library card before entering CLEARED. Keep Student Number unchanged. Record borrowing in columns F and G."],
-        ['Student Number', 'Full Name', 'Course', 'Year Level', 'Library Status', 'Borrowed Book?', 'Book Title(s)'],
+        ["Search by name or ID: open the Full Name or Student Number header filter and type in its Search box. Ctrl+F also finds students.\nVerify the library card before entering CLEARED. Keep Student Number unchanged. Record borrowing in columns F and G. Remarks are saved and shown to the student even when clearance is pending."],
+        ['Student Number', 'Full Name', 'Course', 'Year Level', 'Library Status', 'Borrowed Book?', 'Book Title(s)', 'Remarks'],
     ];
     foreach ($students as $student) {
         $rows[] = [
@@ -43,6 +44,7 @@ function libraryWorksheetXml(string $organizationCode, array $students, string $
             $student['library_status'] === 'APPROVED' ? 'CLEARED' : '',
             '',
             '',
+            (string) ($student['office_remarks'] ?? ''),
         ];
     }
     $xmlRows = '';
@@ -67,9 +69,9 @@ function libraryWorksheetXml(string $organizationCode, array $students, string $
     return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
         . '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="3" topLeftCell="A4" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>'
         . '<col min="1" max="1" width="18" customWidth="1"/><col min="2" max="2" width="34" customWidth="1"/>'
-        . '<col min="3" max="3" width="25" customWidth="1"/><col min="4" max="6" width="18" customWidth="1"/><col min="7" max="7" width="46" customWidth="1"/>'
-        . '</cols><sheetData>' . $xmlRows . '</sheetData><autoFilter ref="A3:G' . max(3, count($rows)) . '"/>'
-        . '<mergeCells count="2"><mergeCell ref="A1:G1"/><mergeCell ref="A2:G2"/></mergeCells>'
+        . '<col min="3" max="3" width="25" customWidth="1"/><col min="4" max="6" width="18" customWidth="1"/><col min="7" max="8" width="46" customWidth="1"/>'
+        . '</cols><sheetData>' . $xmlRows . '</sheetData><autoFilter ref="A3:H' . max(3, count($rows)) . '"/>'
+        . '<mergeCells count="2"><mergeCell ref="A1:H1"/><mergeCell ref="A2:H2"/></mergeCells>'
         . '<dataValidations count="1"><dataValidation type="list" allowBlank="1" showErrorMessage="1" errorTitle="Choose Yes or No" error="Select Yes or No to record borrowing." sqref="F4:F' . max(4, count($rows)) . '"><formula1>"Yes,No"</formula1></dataValidation></dataValidations>'
         . '<pageMargins left="0.25" right="0.25" top="0.5" bottom="0.5" header="0.2" footer="0.2"/><pageSetup orientation="landscape" paperSize="9"/></worksheet>';
 }
@@ -116,7 +118,7 @@ function readLibraryWorkbook(string $path): array
         $xml = loadImportXml($entries['xl/sharedStrings.xml'], 'shared strings');
         foreach ($xml->xpath('//*[local-name()="si"]') ?: [] as $item) {
             $parts = $item->xpath('.//*[local-name()="t"]') ?: [];
-            $sharedStrings[] = normalizeImportText(implode('', array_map(static fn(SimpleXMLElement $part): string => (string) $part, $parts)));
+            $sharedStrings[] = implode('', array_map(static fn(SimpleXMLElement $part): string => (string) $part, $parts));
         }
     }
     $worksheetNames = array_values(array_filter(array_keys($entries), static fn(string $name): bool => preg_match('#^xl/worksheets/sheet\d+\.xml$#i', $name) === 1));
@@ -126,7 +128,7 @@ function readLibraryWorkbook(string $path): array
     }
     $result = [];
     foreach ($worksheetNames as $worksheetName) {
-        $rows = parseStudentWorksheet($entries[$worksheetName], $sharedStrings);
+        $rows = parseStudentWorksheet($entries[$worksheetName], $sharedStrings, true);
         $headerIndex = null;
         $map = [];
         foreach ($rows as $index => $row) {
@@ -137,6 +139,7 @@ function readLibraryWorkbook(string $path): array
                 if ($value === 'library status') {
                     $map['status'] = $column;
                 }
+                if ($value === 'remarks') { $map['remarks'] = $column; }
             }
             if (isset($map['student_number'], $map['status'])) {
                 $headerIndex = $index;
@@ -152,7 +155,8 @@ function readLibraryWorkbook(string $path): array
             if ($studentNumber === '') {
                 continue;
             }
-            $result[] = ['student_number' => $studentNumber, 'status' => strtoupper(normalizeImportText((string) ($row[$map['status']] ?? '')))];
+            $result[] = ['student_number' => $studentNumber, 'status' => strtoupper(normalizeImportText((string) ($row[$map['status']] ?? ''))),
+                'remarks' => isset($map['remarks']) ? trim((string) ($row[$map['remarks']] ?? '')) : null];
             if (count($result) > LIBRARY_WORKBOOK_MAX_ROWS) {
                 throw new RuntimeException('The workbook exceeds 5,000 student rows.');
             }
@@ -188,7 +192,7 @@ function clearLibraryFromWorkbook(PDO $database, int $staffUserId, string $stude
 function importLibraryWorkbook(PDO $database, int $staffUserId, array $rows): array
 {
     $seen = [];
-    $result = ['cleared' => 0, 'already_cleared' => 0, 'skipped' => 0, 'errors' => []];
+    $result = ['cleared' => 0, 'already_cleared' => 0, 'skipped' => 0, 'remarks_updated' => 0, 'errors' => []];
     foreach ($rows as $row) {
         $key = strtoupper(trim($row['student_number']));
         if ($key === '' || isset($seen[$key])) {
@@ -196,11 +200,17 @@ function importLibraryWorkbook(PDO $database, int $staffUserId, array $rows): ar
             continue;
         }
         $seen[$key] = true;
-        if ($row['status'] !== 'CLEARED') {
+        if ($row['status'] !== 'CLEARED' && trim((string) ($row['remarks'] ?? '')) === '') {
             $result['skipped']++;
             continue;
         }
         try {
+            $remarksChanged = saveWorkbookOfficeRemarks($database, $staffUserId, 'LIBRARY_STAFF', $row['student_number'], $row['remarks'] ?? null);
+            if ($remarksChanged) { $result['remarks_updated']++; }
+            if ($row['status'] !== 'CLEARED') {
+                if (!$remarksChanged) { $result['skipped']++; }
+                continue;
+            }
             $result[clearLibraryFromWorkbook($database, $staffUserId, $row['student_number'])]++;
         } catch (RuntimeException $exception) {
             $result['errors'][] = $exception->getMessage();

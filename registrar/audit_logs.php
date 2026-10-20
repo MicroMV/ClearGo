@@ -8,14 +8,17 @@ require_once __DIR__ . '/../config/database.php';
 $user = requireRole('REGISTRAR');
 $search = trim((string) ($_GET['search'] ?? ''));
 $actionFilter = trim((string) ($_GET['action'] ?? ''));
+$page = filter_var($_GET['page'] ?? 1, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+$page = $page === false ? 1 : $page;
+$pageSize = 30;
 try {
     $db = getDatabaseConnection();
-    $sql = "SELECT audit.id,audit.created_at,audit.action,audit.description,audit.old_status,audit.new_status,
+    $selectSql = "SELECT audit.id,audit.created_at,audit.action,audit.description,audit.old_status,audit.new_status,
                 actor.email AS actor_email,actor.role AS actor_role,
                 COALESCE(station.name,profile_office.name) AS station_name,
                 COALESCE(student.student_number,profile_student.student_number) AS student_number,
-                CONCAT(COALESCE(student.first_name,profile_student.first_name),' ',COALESCE(student.last_name,profile_student.last_name)) AS student_name
-            FROM audit_logs audit
+                CONCAT(COALESCE(student.first_name,profile_student.first_name),' ',COALESCE(student.last_name,profile_student.last_name)) AS student_name";
+    $fromSql = " FROM audit_logs audit
             LEFT JOIN users actor ON actor.id=audit.user_id
             LEFT JOIN stations station ON station.id=audit.station_id
             LEFT JOIN students student ON student.id=audit.student_id
@@ -36,12 +39,22 @@ try {
         'last_name' => '%' . $search . '%',
     ];
     if ($actionFilter !== '') {
-        $sql .= ' AND audit.action=:action';
+        $fromSql .= ' AND audit.action=:action';
         $params['action'] = $actionFilter;
     }
-    $sql .= ' ORDER BY audit.created_at DESC,audit.id DESC LIMIT 1000';
-    $statement = $db->prepare($sql);
-    $statement->execute($params);
+    $countStatement = $db->prepare('SELECT COUNT(*)' . $fromSql);
+    $countStatement->execute($params);
+    $totalRows = (int) $countStatement->fetchColumn();
+    $totalPages = max(1, (int) ceil($totalRows / $pageSize));
+    $page = min($page, $totalPages);
+    $offset = ($page - 1) * $pageSize;
+    $statement = $db->prepare($selectSql . $fromSql . ' ORDER BY audit.created_at DESC,audit.id DESC LIMIT :limit OFFSET :offset');
+    foreach ($params as $name => $value) {
+        $statement->bindValue(':' . $name, $value, PDO::PARAM_STR);
+    }
+    $statement->bindValue(':limit', $pageSize, PDO::PARAM_INT);
+    $statement->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $statement->execute();
     $logs = $statement->fetchAll();
     $actions = $db->query('SELECT DISTINCT action FROM audit_logs ORDER BY action')->fetchAll(PDO::FETCH_COLUMN);
     $notifications = dashboardNotificationPreview($db, (int) $user['id']);
@@ -56,7 +69,7 @@ $sidebar = registrarDashboardSidebar($user, 'audit', $logoutForm);
 <!doctype html>
 <html lang="en">
 
-<head>
+<head><?= connectionStatusAssets() ?>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Audit Logs | ClearGo</title>
@@ -83,7 +96,7 @@ $sidebar = registrarDashboardSidebar($user, 'audit', $logoutForm);
                     <div class="section-heading">
                         <div>
                             <h2>System activity</h2>
-                            <p class="muted">Showing up to 1,000 of the most recent matching audit records.</p>
+                            <p class="muted">Showing <?= $totalRows === 0 ? 0 : $offset + 1 ?>&ndash;<?= min($offset + $pageSize, $totalRows) ?> of <?= number_format($totalRows) ?> matching records. Page <?= $page ?> of <?= $totalPages ?>.</p>
                         </div>
                     </div>
                     <form class="controls" method="get">
@@ -91,7 +104,7 @@ $sidebar = registrarDashboardSidebar($user, 'audit', $logoutForm);
                         <select name="action" aria-label="Filter by action">
                             <option value="">All actions</option><?php foreach ($actions as $action): ?><option value="<?= escapeHtml($action) ?>" <?= $actionFilter === $action ? 'selected' : '' ?>><?= escapeHtml($action) ?></option><?php endforeach; ?>
                         </select>
-                        <button>Filter</button>
+                        <button>Filter</button><a class="button-link secondary filter-clear" aria-label="Clear filters" href="<?= escapeHtml(applicationUrl('/registrar/audit_logs.php')) ?>">Clear</a>
                     </form>
                     <div class="table-wrap">
                         <table>
@@ -130,6 +143,7 @@ $sidebar = registrarDashboardSidebar($user, 'audit', $logoutForm);
                             </tbody>
                         </table>
                     </div>
+                    <?= renderPagination($page, $totalPages, ['search' => $search, 'action' => $actionFilter], '', 'Audit log pages') ?>
                 </section>
             </main>
         </div>

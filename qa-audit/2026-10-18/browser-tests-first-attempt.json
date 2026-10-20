@@ -1,0 +1,11 @@
+[
+  {
+    "test_id": "UI-001",
+    "role": "All",
+    "feature": "Browser availability",
+    "test": "Start browser automation",
+    "result": "BLOCKED",
+    "milliseconds": 0,
+    "evidence": "Error: CDP timeout: Page.enable\n    at Timeout._onTimeout (file:///C:/xamppl/htdocs/ClearGo/qa-audit/2026-10-18/browser-checks.mjs:18:146)\n    at listOnTimeout (node:internal/timers:588:17)\n    at process.processTimers (node:internal/timers:523:7)"
+  }
+]

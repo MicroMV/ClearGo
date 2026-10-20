@@ -8,7 +8,7 @@ function studentCouncilEvents(PDO $database, int $periodId): array
 {
     $statement = $database->prepare(
         "SELECT event.id,event.name,event.event_date,event.start_time,event.end_time,event.status,
-                event.check_in_opens_at,event.check_in_closes_at,
+                event.check_in_opens_at,event.check_in_closes_at,event.attendance_finalized_at,
                 CASE WHEN event.check_in_token_hash IS NOT NULL AND event.check_in_opens_at<=NOW()
                           AND event.check_in_closes_at>=NOW() THEN 1 ELSE 0 END AS qr_is_open,
                 COUNT(CASE WHEN attendance.status='PRESENT' THEN 1 END) AS present_count,
@@ -51,9 +51,9 @@ function createStudentCouncilEvent(PDO $database, int $userId, string $name, str
     $audit->execute(['user_id' => $userId, 'station_id' => $stationId, 'description' => 'Created required institutional activity: ' . $name . '.']);
 }
 
-function studentCouncilEvent(PDO $database, int $periodId, int $eventId): array|false
+function studentCouncilEvent(PDO $database, int $periodId, int $eventId, bool $lock = false): array|false
 {
-    $statement = $database->prepare("SELECT event.* FROM events event INNER JOIN stations station ON station.id=event.station_id AND station.code='STUDENT_COUNCIL' WHERE event.id=:event_id AND event.academic_period_id=:period_id LIMIT 1");
+    $statement = $database->prepare("SELECT event.* FROM events event INNER JOIN stations station ON station.id=event.station_id AND station.code='STUDENT_COUNCIL' WHERE event.id=:event_id AND event.academic_period_id=:period_id LIMIT 1" . ($lock ? ' FOR UPDATE' : ''));
     $statement->execute(['event_id' => $eventId, 'period_id' => $periodId]);
     return $statement->fetch();
 }
@@ -66,12 +66,13 @@ function openStudentCouncilEventQr(PDO $database, int $userId, int $eventId, int
         throw new RuntimeException('The selected event is unavailable.');
     }
     $token = bin2hex(random_bytes(32));
-    $statement = $database->prepare("UPDATE events SET check_in_token_hash=:token_hash,check_in_opens_at=NOW(),check_in_closes_at=DATE_ADD(NOW(),INTERVAL :minutes MINUTE) WHERE id=:event_id AND academic_period_id=:period_id");
+    $statement = $database->prepare("UPDATE events SET check_in_token_hash=:token_hash,check_in_opens_at=NOW(),check_in_closes_at=LEAST(DATE_ADD(NOW(),INTERVAL :minutes MINUTE),COALESCE(TIMESTAMP(event_date,end_time),'9999-12-31 23:59:59')) WHERE id=:event_id AND academic_period_id=:period_id AND attendance_finalized_at IS NULL AND (end_time IS NULL OR TIMESTAMP(event_date,end_time)>NOW())");
     $statement->bindValue(':token_hash', hash('sha256', $token));
     $statement->bindValue(':minutes', max(1, min(720, $minutes)), PDO::PARAM_INT);
     $statement->bindValue(':event_id', $eventId, PDO::PARAM_INT);
     $statement->bindValue(':period_id', (int) $period['id'], PDO::PARAM_INT);
     $statement->execute();
+    if ($statement->rowCount() !== 1) { throw new RuntimeException('This event has ended or attendance has already been finalized.'); }
     return ['token' => $token, 'event_id' => $eventId];
 }
 
@@ -90,10 +91,11 @@ function deleteStudentCouncilEvent(PDO $database, int $userId, int $eventId): vo
     $period = activeEventPeriod($database);
     $database->beginTransaction();
     try {
-        $event = studentCouncilEvent($database, (int) $period['id'], $eventId);
+        $event = studentCouncilEvent($database, (int) $period['id'], $eventId, true);
         if ($event === false) {
             throw new RuntimeException('The selected event is unavailable.');
         }
+        if ($event['attendance_finalized_at'] !== null) { throw new RuntimeException('Events with finalized attendance and sanctions cannot be deleted.'); }
         $database->prepare('DELETE FROM event_attendance WHERE event_id=:event_id')->execute(['event_id' => $eventId]);
         $removeEvent = $database->prepare('DELETE FROM events WHERE id=:event_id AND academic_period_id=:period_id');
         $removeEvent->execute(['event_id' => $eventId, 'period_id' => $period['id']]);

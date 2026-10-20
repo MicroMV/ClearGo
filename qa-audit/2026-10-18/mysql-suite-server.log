@@ -1,0 +1,422 @@
+[Sun Oct 18 11:35:32 2026] PHP 8.2.12 Development Server (http://127.0.0.1:8829) started
+[Sun Oct 18 11:37:13 2026] 127.0.0.1:59966 Accepted
+[Sun Oct 18 11:37:13 2026] 127.0.0.1:59966 [200]: GET /student/dashboard.php
+[Sun Oct 18 11:37:13 2026] 127.0.0.1:59966 Closing
+[Sun Oct 18 11:37:13 2026] 127.0.0.1:59968 Accepted
+[Sun Oct 18 11:37:13 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59968 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59968 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59970 Accepted
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59970 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59970 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59972 Accepted
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59972 [200]: GET /student/dashboard.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59972 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59974 Accepted
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59974 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59974 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59976 Accepted
+[Sun Oct 18 11:37:14 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59976 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59976 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59978 Accepted
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59978 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59978 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59980 Accepted
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59980 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59980 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59982 Accepted
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59982 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59982 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59984 Accepted
+[Sun Oct 18 11:37:14 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59984 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59984 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59986 Accepted
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59986 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59986 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59988 Accepted
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59988 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59988 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59990 Accepted
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59990 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59990 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59992 Accepted
+[Sun Oct 18 11:37:14 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59992 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59992 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59994 Accepted
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59994 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59994 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59996 Accepted
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59996 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59996 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59998 Accepted
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59998 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:59998 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:60000 Accepted
+[Sun Oct 18 11:37:14 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:60000 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:60000 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:1025 Accepted
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:1025 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:1025 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:1027 Accepted
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:1027 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:1027 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:1029 Accepted
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:1029 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:1029 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:1031 Accepted
+[Sun Oct 18 11:37:14 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:1031 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:1031 Closing
+[Sun Oct 18 11:37:14 2026] 127.0.0.1:1033 Accepted
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1033 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1033 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1035 Accepted
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1035 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1035 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1037 Accepted
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1037 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1037 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1039 Accepted
+[Sun Oct 18 11:37:15 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1039 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1039 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1041 Accepted
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1041 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1041 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1043 Accepted
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1043 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1043 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1045 Accepted
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1045 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1045 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1047 Accepted
+[Sun Oct 18 11:37:15 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1047 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1047 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1049 Accepted
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1049 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1049 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1051 Accepted
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1051 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1051 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1053 Accepted
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1053 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1053 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1055 Accepted
+[Sun Oct 18 11:37:15 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1055 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1055 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1057 Accepted
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1057 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1057 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1059 Accepted
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1059 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1059 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1061 Accepted
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1061 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1061 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1063 Accepted
+[Sun Oct 18 11:37:15 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1063 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1063 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1065 Accepted
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1065 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1065 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1067 Accepted
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1067 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1067 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1069 Accepted
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1069 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1069 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1071 Accepted
+[Sun Oct 18 11:37:15 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1071 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1071 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1073 Accepted
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1073 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1073 Closing
+[Sun Oct 18 11:37:15 2026] 127.0.0.1:1075 Accepted
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1075 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1075 Closing
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1077 Accepted
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1077 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1077 Closing
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1079 Accepted
+[Sun Oct 18 11:37:16 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1079 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1079 Closing
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1081 Accepted
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1081 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1081 Closing
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1083 Accepted
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1083 [200]: GET /auth/profile.php
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1083 Closing
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1085 Accepted
+[Sun Oct 18 11:37:16 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1085 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1085 Closing
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1087 Accepted
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1087 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1087 Closing
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1089 Accepted
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1089 [200]: GET /auth/profile_image.php?user_id=901035
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1089 Closing
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1091 Accepted
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1091 [303]: GET /auth/profile_image.php
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1091 Closing
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1092 Accepted
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1092 [200]: GET /storage/private/profile-pictures/68c43c2e338f413aba5e50708261507dc2f4d3f0.png
+[Sun Oct 18 11:37:16 2026] 127.0.0.1:1092 Closing
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1101 Accepted
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1101 [200]: GET /auth/notifications.php
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1101 Closing
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1103 Accepted
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1103 [200]: GET /auth/notifications.php
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1103 Closing
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1105 Accepted
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1105 [200]: GET /auth/notifications.php
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1105 Closing
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1107 Accepted
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1107 [200]: GET /auth/notifications.php
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1107 Closing
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1109 Accepted
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1109 [200]: GET /auth/notifications.php?period=6
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1109 Closing
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1111 Accepted
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1111 [200]: GET /student/dashboard.php?period=6
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1111 Closing
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1113 Accepted
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1113 [200]: GET /student/dashboard.php?period=5
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1113 Closing
+[Sun Oct 18 11:37:28 2026] 127.0.0.1:1115 Accepted
+[Sun Oct 18 11:37:29 2026] 127.0.0.1:1115 [200]: POST /auth/notifications.php?period=6
+[Sun Oct 18 11:37:29 2026] 127.0.0.1:1115 Closing
+[Sun Oct 18 11:37:29 2026] 127.0.0.1:1117 Accepted
+[Sun Oct 18 11:37:29 2026] 127.0.0.1:1117 [403]: POST /auth/notifications.php?period=5
+[Sun Oct 18 11:37:29 2026] 127.0.0.1:1117 Closing
+[Sun Oct 18 11:37:29 2026] 127.0.0.1:1119 Accepted
+[Sun Oct 18 11:37:29 2026] 127.0.0.1:1119 [403]: POST /auth/notifications.php?period=999999999
+[Sun Oct 18 11:37:29 2026] 127.0.0.1:1119 Closing
+[Sun Oct 18 11:37:29 2026] 127.0.0.1:1121 Accepted
+[Sun Oct 18 11:37:29 2026] 127.0.0.1:1121 [403]: GET /auth/notifications.php?period=6
+[Sun Oct 18 11:37:29 2026] 127.0.0.1:1121 Closing
+[Sun Oct 18 11:37:29 2026] 127.0.0.1:1123 Accepted
+[Sun Oct 18 11:37:29 2026] 127.0.0.1:1123 [401]: GET /auth/notifications.php
+[Sun Oct 18 11:37:29 2026] 127.0.0.1:1123 Closing
+[Sun Oct 18 11:37:29 2026] 127.0.0.1:1124 Accepted
+[Sun Oct 18 11:37:29 2026] 127.0.0.1:1124 [401]: GET /auth/notifications.php
+[Sun Oct 18 11:37:29 2026] 127.0.0.1:1124 Closing
+[Sun Oct 18 11:37:39 2026] 127.0.0.1:1134 Accepted
+[Sun Oct 18 11:37:39 2026] 127.0.0.1:1134 [200]: GET /registrar/student_import.php
+[Sun Oct 18 11:37:39 2026] 127.0.0.1:1134 Closing
+[Sun Oct 18 11:37:39 2026] 127.0.0.1:1136 Accepted
+[Sun Oct 18 11:37:39 2026] 127.0.0.1:1136 [200]: GET /registrar/student_import.php?page=2
+[Sun Oct 18 11:37:39 2026] 127.0.0.1:1136 Closing
+[Sun Oct 18 11:37:39 2026] 127.0.0.1:1138 Accepted
+[Sun Oct 18 11:37:39 2026] 127.0.0.1:1138 [200]: GET /registrar/student_import.php?page=78
+[Sun Oct 18 11:37:39 2026] 127.0.0.1:1138 Closing
+[Sun Oct 18 11:37:39 2026] 127.0.0.1:1140 Accepted
+[Sun Oct 18 11:37:39 2026] 127.0.0.1:1140 [200]: GET /registrar/student_import.php?page=99999
+[Sun Oct 18 11:37:39 2026] 127.0.0.1:1140 Closing
+[Sun Oct 18 11:37:39 2026] 127.0.0.1:1142 Accepted
+[Sun Oct 18 11:37:39 2026] 127.0.0.1:1142 [200]: GET /registrar/student_import.php?page=-1
+[Sun Oct 18 11:37:39 2026] 127.0.0.1:1142 Closing
+[Sun Oct 18 11:37:39 2026] 127.0.0.1:1144 Accepted
+[Sun Oct 18 11:37:39 2026] 127.0.0.1:1144 [200]: GET /registrar/student_import.php?page=invalid
+[Sun Oct 18 11:37:39 2026] 127.0.0.1:1144 Closing
+[Sun Oct 18 11:38:35 2026] PHP 8.2.12 Development Server (http://127.0.0.1:8829) started
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31021 Accepted
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31021 [200]: GET /student/dashboard.php
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31021 Closing
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31023 Accepted
+[Sun Oct 18 11:38:41 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31023 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31023 Closing
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31025 Accepted
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31025 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31025 Closing
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31027 Accepted
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31027 [200]: GET /student/dashboard.php
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31027 Closing
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31029 Accepted
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31029 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31029 Closing
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31031 Accepted
+[Sun Oct 18 11:38:41 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31031 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31031 Closing
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31033 Accepted
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31033 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31033 Closing
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31035 Accepted
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31035 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31035 Closing
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31037 Accepted
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31037 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31037 Closing
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31039 Accepted
+[Sun Oct 18 11:38:41 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31039 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31039 Closing
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31041 Accepted
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31041 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31041 Closing
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31043 Accepted
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31043 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31043 Closing
+[Sun Oct 18 11:38:41 2026] 127.0.0.1:31045 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31045 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31045 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31047 Accepted
+[Sun Oct 18 11:38:42 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31047 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31047 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31049 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31049 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31049 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31051 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31051 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31051 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31053 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31053 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31053 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31055 Accepted
+[Sun Oct 18 11:38:42 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31055 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31055 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31057 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31057 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31057 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31059 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31059 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31059 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31061 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31061 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31061 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31063 Accepted
+[Sun Oct 18 11:38:42 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31063 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31063 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31065 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31065 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31065 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31067 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31067 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31067 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31069 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31069 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31069 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31071 Accepted
+[Sun Oct 18 11:38:42 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31071 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31071 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31073 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31073 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31073 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31075 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31075 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31075 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31077 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31077 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31077 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31079 Accepted
+[Sun Oct 18 11:38:42 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31079 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31079 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31081 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31081 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31081 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31083 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31083 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31083 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31085 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31085 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31085 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31087 Accepted
+[Sun Oct 18 11:38:42 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31087 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31087 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31089 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31089 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31089 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31091 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31091 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31091 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31093 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31093 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31093 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31095 Accepted
+[Sun Oct 18 11:38:42 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31095 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31095 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31097 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31097 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31097 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31099 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31099 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31099 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31101 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31101 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31101 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31103 Accepted
+[Sun Oct 18 11:38:42 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31103 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31103 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31105 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31105 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31105 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31107 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31107 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31107 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31109 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31109 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31109 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31111 Accepted
+[Sun Oct 18 11:38:42 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31111 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31111 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31113 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31113 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31113 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31115 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31115 [200]: GET /auth/profile.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31115 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31117 Accepted
+[Sun Oct 18 11:38:42 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31117 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31117 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31119 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31119 [200]: GET /auth/profile_image.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31119 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31121 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31121 [200]: GET /auth/profile_image.php?user_id=901035
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31121 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31123 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31123 [303]: GET /auth/profile_image.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31123 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31124 Accepted
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31124 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31125 Accepted
+[Sun Oct 18 11:38:42 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:38:42 2026] Profile picture update failed: Choose a valid JPG, PNG or WebP picture.
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31125 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31125 Closing
+[Sun Oct 18 11:38:42 2026] 127.0.0.1:31127 Accepted
+[Sun Oct 18 11:38:44 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:38:44 2026] Profile picture update failed: Choose a profile picture no larger than 2 MB.
+[Sun Oct 18 11:38:44 2026] 127.0.0.1:31127 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:38:44 2026] 127.0.0.1:31127 Closing
+[Sun Oct 18 11:38:44 2026] 127.0.0.1:31129 Accepted
+[Sun Oct 18 11:38:44 2026] PHP Notice:  PHP Request Startup: file created in the system's temporary directory in Unknown on line 0
+[Sun Oct 18 11:38:44 2026] 127.0.0.1:31129 [303]: POST /auth/profile_picture_action.php
+[Sun Oct 18 11:38:44 2026] 127.0.0.1:31129 Closing
+[Sun Oct 18 11:38:44 2026] 127.0.0.1:31131 Accepted
+[Sun Oct 18 11:38:44 2026] 127.0.0.1:31131 [200]: GET /registrar/audit_logs.php?action=PROFILE_PICTURE_UPDATED&search=profile-5f1def25f07b-2%40test.invalid
+[Sun Oct 18 11:38:44 2026] 127.0.0.1:31131 Closing
+[Sun Oct 18 11:38:44 2026] 127.0.0.1:31133 Accepted
+[Sun Oct 18 11:38:44 2026] 127.0.0.1:31133 [200]: GET /registrar/audit_logs.php?action=PROFILE_PICTURE_UPDATED&search=PROFILE-STUDENT-5F1DEF25F07B
+[Sun Oct 18 11:38:44 2026] 127.0.0.1:31133 Closing

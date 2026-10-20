@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+
+<head><link rel="stylesheet" href="/assets/css/connection-status.css?v=1792294403"><link rel="preload" as="image" href="/assets/the-lewis-college-logo.png"><script defer src="/assets/js/connection-status.js?v=1792294403" data-connection-status data-logo-url="/assets/the-lewis-college-logo.png" data-status-url="/auth/connection_status.php" data-worker-url="/connection-worker.js"></script>    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Student Data Import | ClearGo</title>
+    <link rel="stylesheet" href="/assets/css/registrar-student-import.css?v=1792294403">
+    <link rel="stylesheet" href="/assets/css/staff-dashboard.css?v=1792294403">
+</head>
+
+<body class="staff-dashboard">
+    <div class="staff-shell">
+        <aside class="staff-sidebar" id="staff-sidebar" aria-label="Office navigation"><button class="sidebar-close" type="button" data-sidebar-close aria-label="Close navigation">&#10005;</button><div class="sidebar-brand"><img src="/assets/the-lewis-college-logo.png" alt="The Lewis College logo"><div class="sidebar-brand-copy"><span>The Lewis College</span><strong>ClearGo</strong></div></div><div class="sidebar-office"><p class="sidebar-kicker">Staff workspace</p><p class="sidebar-office-name">Registrar Administration</p></div><nav class="staff-nav"><a href="/registrar/dashboard.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg></span><span>Dashboard</span></a><a href="/registrar/student_import.php" class="active" aria-current="page"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v3h16v-3"/></svg></span><span>Import Enrollment</span></a><a href="/registrar/students.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1.5a4.5 4.5 0 0 0-4.5-4.5h-3A4.5 4.5 0 0 0 4 18.5V20M10 10a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM17 11a3 3 0 0 0 0-6M20 20v-1a4 4 0 0 0-3-3.87"/></svg></span><span>Student Accounts</span></a><a href="/registrar/staff_accounts.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M3 21v-2a6 6 0 0 1 12 0v2M17 8h4M19 6v4M17 16h4"/></svg></span><span>Staff Accounts</span></a><a href="/registrar/clearance.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v4H7zM5 5H3v16h18V5h-2M8 13l3 3 5-6"/></svg></span><span>Clearance Review</span></a><a href="/registrar/audit_logs.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zM8 9h8M8 13h8M8 17h5"/></svg></span><span>Audit Logs</span></a><a href="/auth/profile.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg></span><span>My Profile</span></a></nav><div class="sidebar-footer"><div class="sidebar-user"><span class="sidebar-avatar">Q</span><span class="sidebar-user-copy"><strong>qa.registrar@thelewiscollege.edu.ph</strong><span>Authorized staff</span></span></div><form class="logout-form" method="post" action="/logout.php">
+    <input type="hidden" name="csrf_token" value="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e">
+    <button type="submit">Log out</button>
+</form></div></aside><button class="sidebar-overlay" type="button" data-sidebar-close aria-label="Close navigation"></button>        <div class="staff-workspace">
+            <header class="staff-topbar"><button class="mobile-nav-toggle" type="button" data-sidebar-open aria-controls="staff-sidebar" aria-expanded="false" aria-label="Open navigation">&#9776;</button>
+                <div class="topbar-title">
+                    <h1>Import Enrollment</h1>
+                    <p>Upload, validate, and confirm the official semester roster.</p>
+                </div>
+                <div class="topbar-actions">
+                    <div class="notification-center" data-notification-endpoint="/auth/notifications.php" data-csrf-token="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e" data-latest-notification-id="0"><button class="notification-toggle" type="button" aria-label="View alerts and notifications" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button><div class="notification-menu" hidden><div class="notification-heading"><strong>Alerts &amp; notifications</strong><span>0 total</span></div><ul><li class="notification-empty">No alerts or notifications yet.</li></ul></div></div>                </div>
+            </header>
+            <main class="staff-main">
+                                                <section class="panel">
+                    <div class="section-heading">
+                        <div>
+                            <h2>Upload student records</h2>
+                            <p class="muted">Prepare the official roster for validation before importing it.</p>
+                        </div>
+                    </div>
+                    <p>Upload the official student master list using the same layout as your existing Excel record. Format names as <strong>Last Name, First Name, Middle Name</strong>. The college is assigned automatically from the Course.</p>
+                    <form class="upload import-upload" method="post" enctype="multipart/form-data" action="/registrar/student_import_action.php">
+                        <input type="hidden" name="csrf_token" value="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e"><input type="hidden" name="action" value="preview">
+                        <label class="import-file-field">
+                            <span class="import-file-label">Excel or CSV file</span>
+                            <span class="import-file-box">
+                                <input name="student_file" type="file" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required data-import-file>
+                                <span class="import-file-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg></span>
+                                <span class="import-file-copy"><strong>Choose your student roster</strong><span data-import-file-name>Drag and drop an Excel or CSV file here</span></span>
+                                <span class="import-file-browse">Browse file</span>
+                            </span>
+                        </label>
+                        <div class="import-upload-actions"><a class="button-link secondary" href="/registrar/student_import_template.php">Excel Template</a><button type="submit">Upload and Preview</button></div>
+                    </form>
+                    <p class="hint">Accepted: .xlsx or .csv, up to 5 MB and 5,000 student rows. Columns: #, Student No., Full Name, Course, Year Level, Gsuite Address. The importer recognizes a title such as “ACADEMIC YEAR 2026-2027 1ST SEMESTER” above the headers.</p>
+                </section>
+                            </main>
+        </div>
+    </div>
+    <script src="/assets/js/staff-dashboard.js?v=1792294403"></script>
+    <script src="/assets/js/registrar-student-import.js?v=1792294403"></script>
+</body>
+
+</html>

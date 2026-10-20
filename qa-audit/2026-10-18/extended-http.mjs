@@ -1,0 +1,37 @@
+import fs from 'node:fs';import path from 'node:path';import{spawn}from'node:child_process';
+const out=path.resolve('qa-audit/2026-10-18'),fixture=JSON.parse(fs.readFileSync(path.join(out,'sandbox-fixture.json'))),env={...process.env,DB_DATABASE:fixture.database,APP_BASE_URL:'/'},php='C:/xamppl/php/php.exe';
+const log=fs.openSync(path.join(out,'extended-server.log'),'a'),server=spawn(php,['-S','127.0.0.1:8829','-t',path.join(out,'sandbox-app'),path.join(out,'sandbox-router.php')],{env,windowsHide:true,stdio:['ignore',log,log]});
+const results=[];let serial=1;
+function record(role,feature,test,result,evidence,ms=0){results.push({test_id:'EX-'+String(serial++).padStart(3,'0'),role,feature,test,result,milliseconds:ms,evidence:JSON.stringify(evidence)});fs.writeFileSync(path.join(out,'extended-tests.json'),JSON.stringify(results,null,2));}
+async function request(url,a={},data){const start=performance.now();const r=await fetch('http://127.0.0.1:8829'+url,{redirect:'manual',signal:AbortSignal.timeout(15000),headers:a.cookie?{Cookie:a.cookie}:{},...(data?{method:'POST',body:new URLSearchParams(data)}:{})});if(r.headers.get('set-cookie'))a.cookie=r.headers.get('set-cookie').split(';')[0];const bytes=Buffer.from(await r.arrayBuffer());return{status:r.status,location:r.headers.get('location'),type:r.headers.get('content-type'),body:bytes.toString(),bytes,ms:Math.round((performance.now()-start)*100)/100};}
+async function login(role){const a={};const first=await request('/login.php',a);a.token=first.body.match(/name="csrf_token" value="([^"]+)/)[1];await request('/auth/login_process.php',a,{csrf_token:a.token,email:fixture.accounts[role].email,password:fixture.accounts[role].password});return a;}
+try{
+await new Promise(r=>setTimeout(r,500));
+const registrar=await login('REGISTRAR'),student=await login('STUDENT');
+const badRole=await request('/registrar/student_action.php',student,{csrf_token:student.token,action:'toggle_account',student_id:String(fixture.student_id)});
+record('Student','Authorization','Student cannot call a Registrar mutation handler',badRole.status===403?'PASS':'FAIL',{status:badRole.status});
+for(const[role,url]of [['DEAN','/dean/dashboard.php'],['ORG_STAFF','/organization/dashboard.php'],['LIBRARY_STAFF','/library/dashboard.php'],['BOOKSTORE_STAFF','/bookstore/dashboard.php'],['CLINIC_STAFF','/clinic/dashboard.php'],['FACILITIES_STAFF','/facilities/dashboard.php'],['COMLAB_STAFF','/comlab/dashboard.php'],['ACCOUNTING_STAFF','/accounting/dashboard.php'],['SASO_STAFF','/saso/dashboard.php'],['STUDENT_COUNCIL_STAFF','/student-council/dashboard.php'],['REGISTRAR','/registrar/clearance.php']]){
+ const a=role==='REGISTRAR'?registrar:await login(role);
+ for(const[name,query]of [['Empty search','?search=QA-NONEXISTENT-934234'],['Special characters','?search='+encodeURIComponent(`' OR 1=1 -- <script>qa</script> & % _`)],['High page number','?page=9999'],['Negative page number','?page=-1']]){
+  const r=await request(url+query,a),raw=/Fatal error|SQLSTATE|<b>Warning<\/b>/.test(r.body);
+  record(role,'Search and pagination',name,r.status===200&&!raw?'PASS':'FAIL',{status:r.status,raw_error:raw},r.ms);
+ }
+ const r=await request(url+'?export=xlsx',a);record(role,'Report download','Export actual authorized XLSX report',r.status===200&&r.bytes.subarray(0,2).toString()==='PK'?'PASS':'FAIL',{status:r.status,type:r.type,bytes:r.bytes.length,zip_signature:r.bytes.subarray(0,2).toString()},r.ms);
+}
+const tokensBefore=student.cookie;const invalidPasswords=[['Wrong current password',{current_password:'wrong',new_password:'New-QA-password!1',confirm_password:'New-QA-password!1'}],['Mismatched confirmation',{current_password:'QA-only-2026!Test',new_password:'New-QA-password!1',confirm_password:'different'}],['Short password',{current_password:'QA-only-2026!Test',new_password:'short',confirm_password:'short'}]];
+for(const[name,fields]of invalidPasswords){const r=await request('/student/password_action.php',student,{csrf_token:student.token,...fields});const fresh=await login('STUDENT');const page=await request('/student/dashboard.php',fresh);record('Student','Password validation',name,r.status===303&&page.status===200?'PASS':'FAIL',{post_status:r.status,old_password_still_works:page.status===200},r.ms);}
+const second=await login('STUDENT');const changed=await request('/student/password_action.php',student,{csrf_token:student.token,current_password:'QA-only-2026!Test',new_password:'Changed-QA-only!2026',confirm_password:'Changed-QA-only!2026'});const oldSession=await request('/student/dashboard.php',second);record('Student','Password-change session behavior','Check whether a second logged-in session survives a password change','NOT TESTED',{observed_second_session_status:oldSession.status,policy:'No documented session-revocation requirement. This observed behavior is a security recommendation, not a failed requirement.'},changed.ms);
+// Disabled-account behavior is verified using only the synthetic student profile.
+const toggle=await request('/registrar/student_action.php',registrar,{csrf_token:registrar.token,action:'toggle_account',student_id:String(fixture.student_id)});const disabled=await request('/student/dashboard.php',second);record('Student / Registrar','Disabled account','Disable synthetic student and reuse an existing session',disabled.status===303&&disabled.location==='/login.php'?'PASS':'FAIL',{toggle_status:toggle.status,existing_session_status:disabled.status,location:disabled.location},disabled.ms);
+await request('/registrar/student_action.php',registrar,{csrf_token:registrar.token,action:'toggle_account',student_id:String(fixture.student_id)});
+const wrongScope=await request('/dean/evaluation_image.php?id=1',await login('LIBRARY_STAFF'));record('Library staff','Confidential image authorization','Library staff cannot fetch a Dean evaluation image',wrongScope.status===403?'PASS':'FAIL',{status:wrongScope.status});
+const metric=[];
+for(const[requests,concurrency]of [[1,1],[30,4],[100,8]]){
+ const start=performance.now(),timings=[],codes=[];let next=0;
+ await Promise.all(Array.from({length:concurrency},async()=>{while(next<requests){next++;const r=await request('/registrar/students.php?search=QA',registrar);timings.push(r.ms);codes.push(r.status);}}));
+ timings.sort((a,b)=>a-b);const wall=Math.round(performance.now()-start),m={requests,concurrency,wall_ms:wall,median_ms:timings[Math.floor(timings.length*.5)],p95_ms:timings[Math.min(timings.length-1,Math.floor(timings.length*.95))],max_ms:timings.at(-1),all_http_200:codes.every(x=>x===200),scope:'Synthetic roster, one staff account, local single-process PHP server; request batch is not a count of simultaneously active students.'};metric.push(m);record('Registrar','Measured request batches',requests+' requests at concurrency '+concurrency,m.all_http_200?'PASS':'FAIL',m,wall);
+}
+fs.writeFileSync(path.join(out,'performance.json'),JSON.stringify(metric,null,2));
+for(const n of [500,1000])record('All','Concurrent-user performance',n+' simultaneously active students','NOT TESTED',{reason:'Single-process local PHP test server is not representative of school deployment; no large live-system load was attempted.'});
+}catch(e){record('All','Extended test harness','Run extra HTTP tests','BLOCKED',{error:e.stack});process.exitCode=1;}finally{server.kill();fs.closeSync(log);}
+console.log(JSON.stringify({tests:results.length,counts:results.reduce((n,r)=>(n[r.result]=(n[r.result]||0)+1,n),{}),failures:results.filter(r=>r.result==='FAIL')},null,2));

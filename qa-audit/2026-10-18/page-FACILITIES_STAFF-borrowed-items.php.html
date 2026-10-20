@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head><link rel="stylesheet" href="/assets/css/connection-status.css?v=1792294403"><link rel="preload" as="image" href="/assets/the-lewis-college-logo.png"><script defer src="/assets/js/connection-status.js?v=1792294403" data-connection-status data-logo-url="/assets/the-lewis-college-logo.png" data-status-url="/auth/connection_status.php" data-worker-url="/connection-worker.js"></script>    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Facilities Borrowed Items | ClearGo</title>
+    <link rel="stylesheet" href="/assets/css/office-dashboard.css">
+    <link rel="stylesheet" href="/assets/css/staff-dashboard.css">
+</head>
+<body class="staff-dashboard">
+<div class="staff-shell">
+    <aside class="staff-sidebar" id="staff-sidebar" aria-label="Office navigation"><button class="sidebar-close" type="button" data-sidebar-close aria-label="Close navigation">&#10005;</button><div class="sidebar-brand"><img src="/assets/the-lewis-college-logo.png" alt="The Lewis College logo"><div class="sidebar-brand-copy"><span>The Lewis College</span><strong>ClearGo</strong></div></div><div class="sidebar-office"><p class="sidebar-kicker">Staff workspace</p><p class="sidebar-office-name">Facilities Clearance</p></div><nav class="staff-nav"><a href="/facilities/dashboard.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg></span><span>Dashboard</span></a><a href="/facilities/borrowed-items.php" class="active" aria-current="page"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h8l4 4v14H6zM14 3v5h5M9 12h6M9 16h6"/></svg></span><span>Borrowed Items</span></a><a href="/auth/profile.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg></span><span>My Profile</span></a></nav><div class="sidebar-footer"><div class="sidebar-user"><span class="sidebar-avatar">Q</span><span class="sidebar-user-copy"><strong>qa.facilities_staff@thelewiscollege.edu.ph</strong><span>Authorized staff</span></span></div><form class="logout-form" method="post" action="/logout.php">
+    <input type="hidden" name="csrf_token" value="08b6f4a0c7b689f2d4bd8e82f436254a24b786063d9279cd5f8e47fd3af640ed">
+    <button type="submit">Log out</button>
+</form></div></aside><button class="sidebar-overlay" type="button" data-sidebar-close aria-label="Close navigation"></button>    <div class="staff-workspace">
+        <header class="staff-topbar">
+            <button class="mobile-nav-toggle" type="button" data-sidebar-open aria-controls="staff-sidebar" aria-expanded="false" aria-label="Open navigation">&#9776;</button>
+            <div class="topbar-title"><h1>Borrowed Items</h1><p>Facilities borrowing and return history across semesters.</p></div>
+            <div class="topbar-actions"><div class="notification-center" data-notification-endpoint="/auth/notifications.php" data-csrf-token="08b6f4a0c7b689f2d4bd8e82f436254a24b786063d9279cd5f8e47fd3af640ed" data-latest-notification-id="0"><button class="notification-toggle" type="button" aria-label="View alerts and notifications" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button><div class="notification-menu" hidden><div class="notification-heading"><strong>Alerts &amp; notifications</strong><span>0 total</span></div><ul><li class="notification-empty">No alerts or notifications yet.</li></ul></div></div></div>
+        </header>
+        <main class="staff-main">
+                        <section class="panel">
+                <form class="controls" method="get">
+                    <input name="search" value="" placeholder="Search student or item" aria-label="Search student or item">
+                    <select name="status" aria-label="Return status">
+                                                <option value="ALL" selected>All items</option>
+                                                <option value="OUTSTANDING" >Pending return</option>
+                                                <option value="RETURNED" >Returned</option>
+                                            </select>
+                    <button type="submit">Search</button>
+                </form>
+            </section>
+            <section class="panel">
+                <div class="table-wrap"><table>
+                    <thead><tr><th>Student ID</th><th>Student Name</th><th>Item Borrowed</th><th>Borrowed On</th><th>Semester</th><th>Status</th><th>Returned On</th><th>Action</th></tr></thead>
+                    <tbody>
+                        <tr><td colspan="8">No borrowed items match this view.</td></tr>                                            </tbody>
+                </table></div>
+                <p class="muted">Page 1 of 1 · 0 item(s)</p>
+                            </section>
+        </main>
+    </div>
+</div>
+<script src="/assets/js/staff-dashboard.js?v=1792294403"></script>
+</body>
+</html>

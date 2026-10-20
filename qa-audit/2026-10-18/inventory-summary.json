@@ -1,0 +1,26 @@
+{
+  "audit_date": "2026-10-18",
+  "timezone": "Asia/Manila",
+  "roles": [
+    "STUDENT",
+    "ORG_STAFF",
+    "DEAN",
+    "SASO_STAFF",
+    "STUDENT_COUNCIL_STAFF",
+    "LIBRARY_STAFF",
+    "BOOKSTORE_STAFF",
+    "CLINIC_STAFF",
+    "FACILITIES_STAFF",
+    "COMLAB_STAFF",
+    "ACCOUNTING_STAFF",
+    "REGISTRAR"
+  ],
+  "source_files": 185,
+  "php_files": 109,
+  "ui_source_files": 38,
+  "function_declarations": 223,
+  "control_occurrences": 633,
+  "action_occurrences": 160,
+  "inventory_cases": 1125,
+  "limitations": "Counts are source occurrences, not unique rendered controls; dynamically generated controls and expanded loop instances require browser inspection."
+}

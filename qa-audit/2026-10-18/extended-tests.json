@@ -1,0 +1,605 @@
+[
+  {
+    "test_id": "EX-001",
+    "role": "Student",
+    "feature": "Authorization",
+    "test": "Student cannot call a Registrar mutation handler",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"status\":403}"
+  },
+  {
+    "test_id": "EX-002",
+    "role": "DEAN",
+    "feature": "Search and pagination",
+    "test": "Empty search",
+    "result": "PASS",
+    "milliseconds": 38.71,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-003",
+    "role": "DEAN",
+    "feature": "Search and pagination",
+    "test": "Special characters",
+    "result": "PASS",
+    "milliseconds": 27.02,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-004",
+    "role": "DEAN",
+    "feature": "Search and pagination",
+    "test": "High page number",
+    "result": "PASS",
+    "milliseconds": 488.36,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-005",
+    "role": "DEAN",
+    "feature": "Search and pagination",
+    "test": "Negative page number",
+    "result": "PASS",
+    "milliseconds": 370.5,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-006",
+    "role": "DEAN",
+    "feature": "Report download",
+    "test": "Export actual authorized XLSX report",
+    "result": "PASS",
+    "milliseconds": 43.88,
+    "evidence": "{\"status\":200,\"type\":\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\"bytes\":18272,\"zip_signature\":\"PK\"}"
+  },
+  {
+    "test_id": "EX-007",
+    "role": "ORG_STAFF",
+    "feature": "Search and pagination",
+    "test": "Empty search",
+    "result": "PASS",
+    "milliseconds": 93.3,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-008",
+    "role": "ORG_STAFF",
+    "feature": "Search and pagination",
+    "test": "Special characters",
+    "result": "PASS",
+    "milliseconds": 60.71,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-009",
+    "role": "ORG_STAFF",
+    "feature": "Search and pagination",
+    "test": "High page number",
+    "result": "PASS",
+    "milliseconds": 61.99,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-010",
+    "role": "ORG_STAFF",
+    "feature": "Search and pagination",
+    "test": "Negative page number",
+    "result": "PASS",
+    "milliseconds": 182.7,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-011",
+    "role": "ORG_STAFF",
+    "feature": "Report download",
+    "test": "Export actual authorized XLSX report",
+    "result": "PASS",
+    "milliseconds": 241.32,
+    "evidence": "{\"status\":200,\"type\":\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\"bytes\":18334,\"zip_signature\":\"PK\"}"
+  },
+  {
+    "test_id": "EX-012",
+    "role": "LIBRARY_STAFF",
+    "feature": "Search and pagination",
+    "test": "Empty search",
+    "result": "PASS",
+    "milliseconds": 116.8,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-013",
+    "role": "LIBRARY_STAFF",
+    "feature": "Search and pagination",
+    "test": "Special characters",
+    "result": "PASS",
+    "milliseconds": 120.6,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-014",
+    "role": "LIBRARY_STAFF",
+    "feature": "Search and pagination",
+    "test": "High page number",
+    "result": "PASS",
+    "milliseconds": 152.82,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-015",
+    "role": "LIBRARY_STAFF",
+    "feature": "Search and pagination",
+    "test": "Negative page number",
+    "result": "PASS",
+    "milliseconds": 125.84,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-016",
+    "role": "LIBRARY_STAFF",
+    "feature": "Report download",
+    "test": "Export actual authorized XLSX report",
+    "result": "PASS",
+    "milliseconds": 212.74,
+    "evidence": "{\"status\":200,\"type\":\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\"bytes\":28620,\"zip_signature\":\"PK\"}"
+  },
+  {
+    "test_id": "EX-017",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Search and pagination",
+    "test": "Empty search",
+    "result": "PASS",
+    "milliseconds": 160.97,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-018",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Search and pagination",
+    "test": "Special characters",
+    "result": "PASS",
+    "milliseconds": 180.83,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-019",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Search and pagination",
+    "test": "High page number",
+    "result": "PASS",
+    "milliseconds": 217.25,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-020",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Search and pagination",
+    "test": "Negative page number",
+    "result": "PASS",
+    "milliseconds": 271.04,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-021",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Report download",
+    "test": "Export actual authorized XLSX report",
+    "result": "PASS",
+    "milliseconds": 289.81,
+    "evidence": "{\"status\":200,\"type\":\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\"bytes\":29035,\"zip_signature\":\"PK\"}"
+  },
+  {
+    "test_id": "EX-022",
+    "role": "CLINIC_STAFF",
+    "feature": "Search and pagination",
+    "test": "Empty search",
+    "result": "PASS",
+    "milliseconds": 78.05,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-023",
+    "role": "CLINIC_STAFF",
+    "feature": "Search and pagination",
+    "test": "Special characters",
+    "result": "PASS",
+    "milliseconds": 128.63,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-024",
+    "role": "CLINIC_STAFF",
+    "feature": "Search and pagination",
+    "test": "High page number",
+    "result": "PASS",
+    "milliseconds": 233.11,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-025",
+    "role": "CLINIC_STAFF",
+    "feature": "Search and pagination",
+    "test": "Negative page number",
+    "result": "PASS",
+    "milliseconds": 158.88,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-026",
+    "role": "CLINIC_STAFF",
+    "feature": "Report download",
+    "test": "Export actual authorized XLSX report",
+    "result": "PASS",
+    "milliseconds": 180.55,
+    "evidence": "{\"status\":200,\"type\":\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\"bytes\":28659,\"zip_signature\":\"PK\"}"
+  },
+  {
+    "test_id": "EX-027",
+    "role": "FACILITIES_STAFF",
+    "feature": "Search and pagination",
+    "test": "Empty search",
+    "result": "PASS",
+    "milliseconds": 64.24,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-028",
+    "role": "FACILITIES_STAFF",
+    "feature": "Search and pagination",
+    "test": "Special characters",
+    "result": "PASS",
+    "milliseconds": 79.51,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-029",
+    "role": "FACILITIES_STAFF",
+    "feature": "Search and pagination",
+    "test": "High page number",
+    "result": "PASS",
+    "milliseconds": 245.85,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-030",
+    "role": "FACILITIES_STAFF",
+    "feature": "Search and pagination",
+    "test": "Negative page number",
+    "result": "PASS",
+    "milliseconds": 377.01,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-031",
+    "role": "FACILITIES_STAFF",
+    "feature": "Report download",
+    "test": "Export actual authorized XLSX report",
+    "result": "PASS",
+    "milliseconds": 478.58,
+    "evidence": "{\"status\":200,\"type\":\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\"bytes\":28869,\"zip_signature\":\"PK\"}"
+  },
+  {
+    "test_id": "EX-032",
+    "role": "COMLAB_STAFF",
+    "feature": "Search and pagination",
+    "test": "Empty search",
+    "result": "PASS",
+    "milliseconds": 71.59,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-033",
+    "role": "COMLAB_STAFF",
+    "feature": "Search and pagination",
+    "test": "Special characters",
+    "result": "PASS",
+    "milliseconds": 44.95,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-034",
+    "role": "COMLAB_STAFF",
+    "feature": "Search and pagination",
+    "test": "High page number",
+    "result": "PASS",
+    "milliseconds": 214.82,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-035",
+    "role": "COMLAB_STAFF",
+    "feature": "Search and pagination",
+    "test": "Negative page number",
+    "result": "PASS",
+    "milliseconds": 176.04,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-036",
+    "role": "COMLAB_STAFF",
+    "feature": "Report download",
+    "test": "Export actual authorized XLSX report",
+    "result": "PASS",
+    "milliseconds": 922.74,
+    "evidence": "{\"status\":200,\"type\":\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\"bytes\":29160,\"zip_signature\":\"PK\"}"
+  },
+  {
+    "test_id": "EX-037",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Search and pagination",
+    "test": "Empty search",
+    "result": "PASS",
+    "milliseconds": 74.47,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-038",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Search and pagination",
+    "test": "Special characters",
+    "result": "PASS",
+    "milliseconds": 75.22,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-039",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Search and pagination",
+    "test": "High page number",
+    "result": "PASS",
+    "milliseconds": 166.44,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-040",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Search and pagination",
+    "test": "Negative page number",
+    "result": "PASS",
+    "milliseconds": 156.8,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-041",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Report download",
+    "test": "Export actual authorized XLSX report",
+    "result": "PASS",
+    "milliseconds": 277.09,
+    "evidence": "{\"status\":200,\"type\":\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\"bytes\":29551,\"zip_signature\":\"PK\"}"
+  },
+  {
+    "test_id": "EX-042",
+    "role": "SASO_STAFF",
+    "feature": "Search and pagination",
+    "test": "Empty search",
+    "result": "PASS",
+    "milliseconds": 57.92,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-043",
+    "role": "SASO_STAFF",
+    "feature": "Search and pagination",
+    "test": "Special characters",
+    "result": "PASS",
+    "milliseconds": 66.57,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-044",
+    "role": "SASO_STAFF",
+    "feature": "Search and pagination",
+    "test": "High page number",
+    "result": "PASS",
+    "milliseconds": 162.09,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-045",
+    "role": "SASO_STAFF",
+    "feature": "Search and pagination",
+    "test": "Negative page number",
+    "result": "PASS",
+    "milliseconds": 163.6,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-046",
+    "role": "SASO_STAFF",
+    "feature": "Report download",
+    "test": "Export actual authorized XLSX report",
+    "result": "PASS",
+    "milliseconds": 308.05,
+    "evidence": "{\"status\":200,\"type\":\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\"bytes\":30305,\"zip_signature\":\"PK\"}"
+  },
+  {
+    "test_id": "EX-047",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Search and pagination",
+    "test": "Empty search",
+    "result": "PASS",
+    "milliseconds": 87.78,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-048",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Search and pagination",
+    "test": "Special characters",
+    "result": "PASS",
+    "milliseconds": 58.15,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-049",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Search and pagination",
+    "test": "High page number",
+    "result": "PASS",
+    "milliseconds": 435.36,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-050",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Search and pagination",
+    "test": "Negative page number",
+    "result": "PASS",
+    "milliseconds": 226.28,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-051",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Report download",
+    "test": "Export actual authorized XLSX report",
+    "result": "PASS",
+    "milliseconds": 503.15,
+    "evidence": "{\"status\":200,\"type\":\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\"bytes\":29016,\"zip_signature\":\"PK\"}"
+  },
+  {
+    "test_id": "EX-052",
+    "role": "REGISTRAR",
+    "feature": "Search and pagination",
+    "test": "Empty search",
+    "result": "PASS",
+    "milliseconds": 46.35,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-053",
+    "role": "REGISTRAR",
+    "feature": "Search and pagination",
+    "test": "Special characters",
+    "result": "PASS",
+    "milliseconds": 61.3,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-054",
+    "role": "REGISTRAR",
+    "feature": "Search and pagination",
+    "test": "High page number",
+    "result": "PASS",
+    "milliseconds": 282.93,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-055",
+    "role": "REGISTRAR",
+    "feature": "Search and pagination",
+    "test": "Negative page number",
+    "result": "PASS",
+    "milliseconds": 165.92,
+    "evidence": "{\"status\":200,\"raw_error\":false}"
+  },
+  {
+    "test_id": "EX-056",
+    "role": "REGISTRAR",
+    "feature": "Report download",
+    "test": "Export actual authorized XLSX report",
+    "result": "PASS",
+    "milliseconds": 447.2,
+    "evidence": "{\"status\":200,\"type\":\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\"bytes\":30276,\"zip_signature\":\"PK\"}"
+  },
+  {
+    "test_id": "EX-057",
+    "role": "Student",
+    "feature": "Password validation",
+    "test": "Wrong current password",
+    "result": "PASS",
+    "milliseconds": 150.03,
+    "evidence": "{\"post_status\":303,\"old_password_still_works\":true}"
+  },
+  {
+    "test_id": "EX-058",
+    "role": "Student",
+    "feature": "Password validation",
+    "test": "Mismatched confirmation",
+    "result": "PASS",
+    "milliseconds": 28.21,
+    "evidence": "{\"post_status\":303,\"old_password_still_works\":true}"
+  },
+  {
+    "test_id": "EX-059",
+    "role": "Student",
+    "feature": "Password validation",
+    "test": "Short password",
+    "result": "PASS",
+    "milliseconds": 35.83,
+    "evidence": "{\"post_status\":303,\"old_password_still_works\":true}"
+  },
+  {
+    "test_id": "EX-060",
+    "role": "Student",
+    "feature": "Password-change session behavior",
+    "test": "Check whether a second logged-in session survives a password change",
+    "result": "NOT TESTED",
+    "milliseconds": 304.35,
+    "evidence": "{\"observed_second_session_status\":200,\"policy\":\"No documented session-revocation requirement. This observed behavior is a security recommendation, not a failed requirement.\"}"
+  },
+  {
+    "test_id": "EX-061",
+    "role": "Student / Registrar",
+    "feature": "Disabled account",
+    "test": "Disable synthetic student and reuse an existing session",
+    "result": "PASS",
+    "milliseconds": 14.36,
+    "evidence": "{\"toggle_status\":303,\"existing_session_status\":303,\"location\":\"/login.php\"}"
+  },
+  {
+    "test_id": "EX-062",
+    "role": "Library staff",
+    "feature": "Confidential image authorization",
+    "test": "Library staff cannot fetch a Dean evaluation image",
+    "result": "PASS",
+    "milliseconds": 0,
+    "evidence": "{\"status\":403}"
+  },
+  {
+    "test_id": "EX-063",
+    "role": "Registrar",
+    "feature": "Measured request batches",
+    "test": "1 requests at concurrency 1",
+    "result": "PASS",
+    "milliseconds": 48,
+    "evidence": "{\"requests\":1,\"concurrency\":1,\"wall_ms\":48,\"median_ms\":47.73,\"p95_ms\":47.73,\"max_ms\":47.73,\"all_http_200\":true,\"scope\":\"Synthetic roster, one staff account, local single-process PHP server; request batch is not a count of simultaneously active students.\"}"
+  },
+  {
+    "test_id": "EX-064",
+    "role": "Registrar",
+    "feature": "Measured request batches",
+    "test": "30 requests at concurrency 4",
+    "result": "PASS",
+    "milliseconds": 967,
+    "evidence": "{\"requests\":30,\"concurrency\":4,\"wall_ms\":967,\"median_ms\":120.14,\"p95_ms\":178.88,\"max_ms\":179.2,\"all_http_200\":true,\"scope\":\"Synthetic roster, one staff account, local single-process PHP server; request batch is not a count of simultaneously active students.\"}"
+  },
+  {
+    "test_id": "EX-065",
+    "role": "Registrar",
+    "feature": "Measured request batches",
+    "test": "100 requests at concurrency 8",
+    "result": "PASS",
+    "milliseconds": 3676,
+    "evidence": "{\"requests\":100,\"concurrency\":8,\"wall_ms\":3676,\"median_ms\":267.71,\"p95_ms\":453.35,\"max_ms\":474.02,\"all_http_200\":true,\"scope\":\"Synthetic roster, one staff account, local single-process PHP server; request batch is not a count of simultaneously active students.\"}"
+  },
+  {
+    "test_id": "EX-066",
+    "role": "All",
+    "feature": "Concurrent-user performance",
+    "test": "500 simultaneously active students",
+    "result": "NOT TESTED",
+    "milliseconds": 0,
+    "evidence": "{\"reason\":\"Single-process local PHP test server is not representative of school deployment; no large live-system load was attempted.\"}"
+  },
+  {
+    "test_id": "EX-067",
+    "role": "All",
+    "feature": "Concurrent-user performance",
+    "test": "1000 simultaneously active students",
+    "result": "NOT TESTED",
+    "milliseconds": 0,
+    "evidence": "{\"reason\":\"Single-process local PHP test server is not representative of school deployment; no large live-system load was attempted.\"}"
+  }
+]

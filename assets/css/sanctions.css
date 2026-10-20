@@ -1,0 +1,29 @@
+.sanction-panel { margin-top: 24px; }
+.sanction-policy-form,.sanction-review-form,.sanction-upload-form { display: grid; gap: 14px; margin: 0; }
+.sanction-policy-form label,.sanction-review-form label,.sanction-upload-form label { display: grid; gap: 8px; min-width: 0; font-size: 13px; font-weight: 650; }
+.sanction-policy-form textarea,.sanction-review-form textarea { width: 100%; min-height: 86px; padding: 12px; resize: vertical; border: 1px solid #c8d9e8; border-radius: 10px; font: inherit; }
+.sanction-policy-fields,.sanction-photo-pair { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
+.sanction-policy-form button,.sanction-upload-form button { justify-self: start; }
+.sanction-policy-summary { padding: 16px; border: 1px solid #d8e5f1; border-radius: 12px; background: #f5f9fd; }
+.sanction-policy-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 16px; }
+.sanction-policy-actions form { margin: 0; }
+.sanction-policy-locked { padding: 12px 14px; border: 1px solid #d8e5f1; border-radius: 10px; background: #eef5fd; color: #385a7a; font-size: 13px; line-height: 1.5; }
+.sanction-review-card,.student-sanction-card { min-width: 0; margin-top: 18px; padding: 22px; border: 1px solid #d8e5f1; border-radius: 16px; background: #fff; }
+.sanction-card-heading { display: flex; flex-wrap: wrap; align-items: start; justify-content: space-between; gap: 12px; }
+.sanction-card-heading h3 { margin: 0; }
+.sanction-card-heading p,.sanction-task-list small,.sanction-upload-form p,.student-sanctions>p { color: #60758d; font-size: 12px; line-height: 1.6; }
+.sanction-task-list { display: grid; gap: 12px; margin: 18px 0; padding: 0; list-style: none; }
+.sanction-task-list li { display: grid; gap: 5px; padding-bottom: 12px; border-bottom: 1px solid #edf1f5; overflow-wrap: anywhere; }
+.sanction-task-list strong,.sanction-task-list span { font-size: 13px; line-height: 1.5; }
+.sanction-photo-pair figure { margin: 0; min-width: 0; }
+.sanction-photo-pair figcaption { margin-bottom: 8px; font-weight: 650; }
+.sanction-photo-pair img { display: block; width: 100%; height: 210px; object-fit: contain; border: 1px solid #d8e5f1; border-radius: 10px; background: #f4f8fc; }
+.sanction-review-form { margin-top: 20px; }
+.sanction-review-form .sanction-monitor-confirm { display: flex; align-items: start; gap: 10px; line-height: 1.5; }
+.sanction-monitor-confirm input { flex-shrink: 0; margin-top: 3px; }
+.sanction-review-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.student-sanctions { margin-top: 28px; color: #17324d; }
+.sanction-submitted,.sanction-returned { padding: 14px; border-radius: 10px; background: #eef5fd; font-size: 13px; line-height: 1.6; }
+.sanction-returned { background: #fff5e7; }
+.sanction-upload-form input[type=file] { width: 100%; min-width: 0; padding: 14px 10px; border: 1px dashed #a8c5e0; border-radius: 10px; background: #f7fbff; font: inherit; font-size: 12px; }
+@media(max-width:600px){ .sanction-policy-fields,.sanction-photo-pair { grid-template-columns: minmax(0,1fr); } .sanction-review-card,.student-sanction-card { padding: 16px; } .sanction-policy-form button,.sanction-upload-form button { width: 100%; } }

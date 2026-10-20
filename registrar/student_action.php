@@ -42,21 +42,20 @@ try {
 
     if ($action === 'create') {
         $number = normalizeImportText((string) ($_POST['student_number'] ?? ''));
-        $name = normalizeImportText((string) ($_POST['full_name'] ?? ''));
         $email = strtolower(trim((string) ($_POST['email'] ?? '')));
         $program = normalizeImportText((string) ($_POST['program'] ?? ''));
         $year = filter_var($_POST['year_level'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 6]]);
         $organizationId = filter_var($_POST['organization_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         $section = normalizeImportText((string) ($_POST['section'] ?? 'N/A'));
-        [$firstName, $lastName] = splitStudentName($name);
+        [$firstName, $lastName, $middleName] = registrarStudentNameInput($_POST);
         if ($number === '' || $firstName === '' || $lastName === '' || !validSchoolEmail($email) || $program === '' || $year === false || $organizationId === false) {
             throw new RuntimeException('Complete all fields with a valid Lewis College GSuite Address.');
         }
         $database->beginTransaction();
         $insertUser = $database->prepare("INSERT INTO users(email,password_hash,role,status) VALUES(:email,:hash,'STUDENT','ACTIVE')");
         $insertUser->execute(['email' => $email, 'hash' => password_hash(CLEAR_GO_INITIAL_PASSWORD, PASSWORD_DEFAULT)]);
-        $insertStudent = $database->prepare("INSERT INTO students(user_id,student_number,first_name,last_name,program,year_level,section,organization_id,status) VALUES(:user_id,:number,:first,:last,:program,:year,:section,:organization,'ACTIVE')");
-        $insertStudent->execute(['user_id' => (int) $database->lastInsertId(), 'number' => $number, 'first' => $firstName, 'last' => $lastName, 'program' => $program, 'year' => $year, 'section' => $section ?: 'N/A', 'organization' => $organizationId]);
+        $insertStudent = $database->prepare("INSERT INTO students(user_id,student_number,first_name,middle_name,last_name,program,year_level,section,organization_id,status) VALUES(:user_id,:number,:first,:middle,:last,:program,:year,:section,:organization,'ACTIVE')");
+        $insertStudent->execute(['user_id' => (int) $database->lastInsertId(), 'number' => $number, 'first' => $firstName, 'middle' => $middleName, 'last' => $lastName, 'program' => $program, 'year' => $year, 'section' => $section ?: 'N/A', 'organization' => $organizationId]);
         $studentId = (int) $database->lastInsertId();
         if ($period['clearance_status'] === 'PREPARING') {
             $enroll = $database->prepare("INSERT INTO semester_enrollments(academic_period_id,student_id,status,enrolled_by) VALUES(:period,:student,'ENROLLED',:user)");
@@ -78,19 +77,24 @@ try {
 
         if ($action === 'update') {
             $number = normalizeImportText((string) ($_POST['student_number'] ?? ''));
-            $name = normalizeImportText((string) ($_POST['full_name'] ?? ''));
             $email = strtolower(trim((string) ($_POST['email'] ?? '')));
             $program = normalizeImportText((string) ($_POST['program'] ?? ''));
             $year = filter_var($_POST['year_level'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 6]]);
             $organizationId = filter_var($_POST['organization_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
             $section = normalizeImportText((string) $student['section']);
-            [$firstName, $lastName] = splitStudentName($name);
+            [$firstName, $lastName, $middleName] = registrarStudentNameInput($_POST);
+            if (!array_key_exists('first_name', $_POST) && substr_count((string) ($_POST['full_name'] ?? ''), ',') < 2) {
+                $middleName = $student['middle_name'];
+                if ($middleName !== '' && normalizedImportKey($firstName) === normalizedImportKey($student['first_name'] . ' ' . $middleName)) {
+                    $firstName = $student['first_name'];
+                }
+            }
             if ($number === '' || $firstName === '' || $lastName === '' || !validSchoolEmail($email) || $program === '' || $year === false || $organizationId === false) {
                 throw new RuntimeException('Complete all fields with a valid Lewis College GSuite Address.');
             }
             $database->beginTransaction();
             $database->prepare('UPDATE users SET email=:email WHERE id=:id')->execute(['email' => $email, 'id' => $student['user_id']]);
-            $database->prepare('UPDATE students SET student_number=:number,first_name=:first,last_name=:last,program=:program,year_level=:year,section=:section,organization_id=:organization WHERE id=:id')->execute(['number' => $number, 'first' => $firstName, 'last' => $lastName, 'program' => $program, 'year' => $year, 'section' => $section ?: 'N/A', 'organization' => $organizationId, 'id' => $studentId]);
+            $database->prepare('UPDATE students SET student_number=:number,first_name=:first,middle_name=:middle,last_name=:last,program=:program,year_level=:year,section=:section,organization_id=:organization WHERE id=:id')->execute(['number' => $number, 'first' => $firstName, 'middle' => $middleName, 'last' => $lastName, 'program' => $program, 'year' => $year, 'section' => $section ?: 'N/A', 'organization' => $organizationId, 'id' => $studentId]);
             auditStudentAccount($database, $user['id'], $stationId, $studentId, 'STUDENT_ACCOUNT_UPDATED', 'Registrar modified the student account.', null, 'UPDATED');
             $database->commit();
             setFlashMessage('Student account updated.');

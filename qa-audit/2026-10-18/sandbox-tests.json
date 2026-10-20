@@ -1,0 +1,1793 @@
+[
+  {
+    "test_id": "SB-001",
+    "role": "STUDENT",
+    "feature": "Authentication",
+    "test": "Sign in through real login form using synthetic credentials",
+    "result": "PASS",
+    "milliseconds": 153,
+    "evidence": "{\"status\":303,\"location\":\"/student/dashboard.php\",\"error\":\"\"}"
+  },
+  {
+    "test_id": "SB-002",
+    "role": "STUDENT",
+    "feature": "/student/dashboard.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 27,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-003",
+    "role": "STUDENT",
+    "feature": "/student/password.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 10,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-004",
+    "role": "STUDENT",
+    "feature": "/student/attendance_scanner.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 14,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-005",
+    "role": "DEAN",
+    "feature": "Authentication",
+    "test": "Sign in through real login form using synthetic credentials",
+    "result": "PASS",
+    "milliseconds": 260,
+    "evidence": "{\"status\":303,\"location\":\"/dean/dashboard.php\",\"error\":\"\"}"
+  },
+  {
+    "test_id": "SB-006",
+    "role": "DEAN",
+    "feature": "/dean/dashboard.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 225,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-007",
+    "role": "DEAN",
+    "feature": "/dean/submitted_requirements.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 124,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-008",
+    "role": "ORG_STAFF",
+    "feature": "Authentication",
+    "test": "Sign in through real login form using synthetic credentials",
+    "result": "PASS",
+    "milliseconds": 351,
+    "evidence": "{\"status\":303,\"location\":\"/organization/dashboard.php\",\"error\":\"\"}"
+  },
+  {
+    "test_id": "SB-009",
+    "role": "ORG_STAFF",
+    "feature": "/organization/dashboard.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 67,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-010",
+    "role": "ORG_STAFF",
+    "feature": "/organization/attendance.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 145,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-011",
+    "role": "ORG_STAFF",
+    "feature": "/organization/event_qr.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 26,
+    "evidence": "{\"status\":303,\"location\":\"/organization/attendance.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-012",
+    "role": "SASO_STAFF",
+    "feature": "Authentication",
+    "test": "Sign in through real login form using synthetic credentials",
+    "result": "PASS",
+    "milliseconds": 131,
+    "evidence": "{\"status\":303,\"location\":\"/saso/dashboard.php\",\"error\":\"\"}"
+  },
+  {
+    "test_id": "SB-013",
+    "role": "SASO_STAFF",
+    "feature": "/saso/dashboard.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 65,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-014",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Authentication",
+    "test": "Sign in through real login form using synthetic credentials",
+    "result": "PASS",
+    "milliseconds": 116,
+    "evidence": "{\"status\":303,\"location\":\"/student-council/dashboard.php\",\"error\":\"\"}"
+  },
+  {
+    "test_id": "SB-015",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "/student-council/dashboard.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 59,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-016",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "/student-council/attendance.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 40,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-017",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "/student-council/event_qr.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 33,
+    "evidence": "{\"status\":303,\"location\":\"/student-council/attendance.php\",\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-018",
+    "role": "LIBRARY_STAFF",
+    "feature": "Authentication",
+    "test": "Sign in through real login form using synthetic credentials",
+    "result": "PASS",
+    "milliseconds": 146,
+    "evidence": "{\"status\":303,\"location\":\"/library/dashboard.php\",\"error\":\"\"}"
+  },
+  {
+    "test_id": "SB-019",
+    "role": "LIBRARY_STAFF",
+    "feature": "/library/dashboard.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 43,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-020",
+    "role": "LIBRARY_STAFF",
+    "feature": "/library/submissions.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 154,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-021",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Authentication",
+    "test": "Sign in through real login form using synthetic credentials",
+    "result": "PASS",
+    "milliseconds": 124,
+    "evidence": "{\"status\":303,\"location\":\"/bookstore/dashboard.php\",\"error\":\"\"}"
+  },
+  {
+    "test_id": "SB-022",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "/bookstore/dashboard.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 339,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-023",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "/bookstore/fees.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 116,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-024",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "/bookstore/submissions.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 140,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-025",
+    "role": "CLINIC_STAFF",
+    "feature": "Authentication",
+    "test": "Sign in through real login form using synthetic credentials",
+    "result": "PASS",
+    "milliseconds": 192,
+    "evidence": "{\"status\":303,\"location\":\"/clinic/dashboard.php\",\"error\":\"\"}"
+  },
+  {
+    "test_id": "SB-026",
+    "role": "CLINIC_STAFF",
+    "feature": "/clinic/dashboard.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 65,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-027",
+    "role": "CLINIC_STAFF",
+    "feature": "/clinic/schedules.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 43,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-028",
+    "role": "FACILITIES_STAFF",
+    "feature": "Authentication",
+    "test": "Sign in through real login form using synthetic credentials",
+    "result": "PASS",
+    "milliseconds": 142,
+    "evidence": "{\"status\":303,\"location\":\"/facilities/dashboard.php\",\"error\":\"\"}"
+  },
+  {
+    "test_id": "SB-029",
+    "role": "FACILITIES_STAFF",
+    "feature": "/facilities/dashboard.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 149,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-030",
+    "role": "FACILITIES_STAFF",
+    "feature": "/facilities/borrowed-items.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 18,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-031",
+    "role": "COMLAB_STAFF",
+    "feature": "Authentication",
+    "test": "Sign in through real login form using synthetic credentials",
+    "result": "PASS",
+    "milliseconds": 187,
+    "evidence": "{\"status\":303,\"location\":\"/comlab/dashboard.php\",\"error\":\"\"}"
+  },
+  {
+    "test_id": "SB-032",
+    "role": "COMLAB_STAFF",
+    "feature": "/comlab/dashboard.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 291,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-033",
+    "role": "COMLAB_STAFF",
+    "feature": "/comlab/violations.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 38,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-034",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Authentication",
+    "test": "Sign in through real login form using synthetic credentials",
+    "result": "PASS",
+    "milliseconds": 126,
+    "evidence": "{\"status\":303,\"location\":\"/accounting/dashboard.php\",\"error\":\"\"}"
+  },
+  {
+    "test_id": "SB-035",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "/accounting/dashboard.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 165,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-036",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "/accounting/submissions.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 65,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-037",
+    "role": "REGISTRAR",
+    "feature": "Authentication",
+    "test": "Sign in through real login form using synthetic credentials",
+    "result": "PASS",
+    "milliseconds": 133,
+    "evidence": "{\"status\":303,\"location\":\"/registrar/dashboard.php\",\"error\":\"\"}"
+  },
+  {
+    "test_id": "SB-038",
+    "role": "REGISTRAR",
+    "feature": "/registrar/dashboard.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 145,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-039",
+    "role": "REGISTRAR",
+    "feature": "/registrar/students.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 22,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-040",
+    "role": "REGISTRAR",
+    "feature": "/registrar/staff_accounts.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 54,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-041",
+    "role": "REGISTRAR",
+    "feature": "/registrar/clearance.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 185,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-042",
+    "role": "REGISTRAR",
+    "feature": "/registrar/student_import.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 10,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-043",
+    "role": "REGISTRAR",
+    "feature": "/registrar/audit_logs.php",
+    "test": "Load authorized page with synthetic account",
+    "result": "PASS",
+    "milliseconds": 121,
+    "evidence": "{\"status\":200,\"location\":null,\"raw_error\":false}"
+  },
+  {
+    "test_id": "SB-044",
+    "role": "STUDENT",
+    "feature": "Role separation",
+    "test": "Open DEAN dashboard",
+    "result": "PASS",
+    "milliseconds": 125,
+    "evidence": "{\"status\":403,\"target\":\"DEAN\"}"
+  },
+  {
+    "test_id": "SB-045",
+    "role": "STUDENT",
+    "feature": "Role separation",
+    "test": "Open ORG_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 24,
+    "evidence": "{\"status\":403,\"target\":\"ORG_STAFF\"}"
+  },
+  {
+    "test_id": "SB-046",
+    "role": "STUDENT",
+    "feature": "Role separation",
+    "test": "Open SASO_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 44,
+    "evidence": "{\"status\":403,\"target\":\"SASO_STAFF\"}"
+  },
+  {
+    "test_id": "SB-047",
+    "role": "STUDENT",
+    "feature": "Role separation",
+    "test": "Open STUDENT_COUNCIL_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 40,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT_COUNCIL_STAFF\"}"
+  },
+  {
+    "test_id": "SB-048",
+    "role": "STUDENT",
+    "feature": "Role separation",
+    "test": "Open LIBRARY_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 31,
+    "evidence": "{\"status\":403,\"target\":\"LIBRARY_STAFF\"}"
+  },
+  {
+    "test_id": "SB-049",
+    "role": "STUDENT",
+    "feature": "Role separation",
+    "test": "Open BOOKSTORE_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 38,
+    "evidence": "{\"status\":403,\"target\":\"BOOKSTORE_STAFF\"}"
+  },
+  {
+    "test_id": "SB-050",
+    "role": "STUDENT",
+    "feature": "Role separation",
+    "test": "Open CLINIC_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 40,
+    "evidence": "{\"status\":403,\"target\":\"CLINIC_STAFF\"}"
+  },
+  {
+    "test_id": "SB-051",
+    "role": "STUDENT",
+    "feature": "Role separation",
+    "test": "Open FACILITIES_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 40,
+    "evidence": "{\"status\":403,\"target\":\"FACILITIES_STAFF\"}"
+  },
+  {
+    "test_id": "SB-052",
+    "role": "STUDENT",
+    "feature": "Role separation",
+    "test": "Open COMLAB_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 24,
+    "evidence": "{\"status\":403,\"target\":\"COMLAB_STAFF\"}"
+  },
+  {
+    "test_id": "SB-053",
+    "role": "STUDENT",
+    "feature": "Role separation",
+    "test": "Open ACCOUNTING_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 38,
+    "evidence": "{\"status\":403,\"target\":\"ACCOUNTING_STAFF\"}"
+  },
+  {
+    "test_id": "SB-054",
+    "role": "STUDENT",
+    "feature": "Role separation",
+    "test": "Open REGISTRAR dashboard",
+    "result": "PASS",
+    "milliseconds": 33,
+    "evidence": "{\"status\":403,\"target\":\"REGISTRAR\"}"
+  },
+  {
+    "test_id": "SB-055",
+    "role": "DEAN",
+    "feature": "Role separation",
+    "test": "Open STUDENT dashboard",
+    "result": "PASS",
+    "milliseconds": 22,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT\"}"
+  },
+  {
+    "test_id": "SB-056",
+    "role": "DEAN",
+    "feature": "Role separation",
+    "test": "Open ORG_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 41,
+    "evidence": "{\"status\":403,\"target\":\"ORG_STAFF\"}"
+  },
+  {
+    "test_id": "SB-057",
+    "role": "DEAN",
+    "feature": "Role separation",
+    "test": "Open SASO_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 32,
+    "evidence": "{\"status\":403,\"target\":\"SASO_STAFF\"}"
+  },
+  {
+    "test_id": "SB-058",
+    "role": "DEAN",
+    "feature": "Role separation",
+    "test": "Open STUDENT_COUNCIL_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 40,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT_COUNCIL_STAFF\"}"
+  },
+  {
+    "test_id": "SB-059",
+    "role": "DEAN",
+    "feature": "Role separation",
+    "test": "Open LIBRARY_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 15,
+    "evidence": "{\"status\":403,\"target\":\"LIBRARY_STAFF\"}"
+  },
+  {
+    "test_id": "SB-060",
+    "role": "DEAN",
+    "feature": "Role separation",
+    "test": "Open BOOKSTORE_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 31,
+    "evidence": "{\"status\":403,\"target\":\"BOOKSTORE_STAFF\"}"
+  },
+  {
+    "test_id": "SB-061",
+    "role": "DEAN",
+    "feature": "Role separation",
+    "test": "Open CLINIC_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 47,
+    "evidence": "{\"status\":403,\"target\":\"CLINIC_STAFF\"}"
+  },
+  {
+    "test_id": "SB-062",
+    "role": "DEAN",
+    "feature": "Role separation",
+    "test": "Open FACILITIES_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 24,
+    "evidence": "{\"status\":403,\"target\":\"FACILITIES_STAFF\"}"
+  },
+  {
+    "test_id": "SB-063",
+    "role": "DEAN",
+    "feature": "Role separation",
+    "test": "Open COMLAB_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 31,
+    "evidence": "{\"status\":403,\"target\":\"COMLAB_STAFF\"}"
+  },
+  {
+    "test_id": "SB-064",
+    "role": "DEAN",
+    "feature": "Role separation",
+    "test": "Open ACCOUNTING_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 15,
+    "evidence": "{\"status\":403,\"target\":\"ACCOUNTING_STAFF\"}"
+  },
+  {
+    "test_id": "SB-065",
+    "role": "DEAN",
+    "feature": "Role separation",
+    "test": "Open REGISTRAR dashboard",
+    "result": "PASS",
+    "milliseconds": 27,
+    "evidence": "{\"status\":403,\"target\":\"REGISTRAR\"}"
+  },
+  {
+    "test_id": "SB-066",
+    "role": "ORG_STAFF",
+    "feature": "Role separation",
+    "test": "Open STUDENT dashboard",
+    "result": "PASS",
+    "milliseconds": 10,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT\"}"
+  },
+  {
+    "test_id": "SB-067",
+    "role": "ORG_STAFF",
+    "feature": "Role separation",
+    "test": "Open DEAN dashboard",
+    "result": "PASS",
+    "milliseconds": 101,
+    "evidence": "{\"status\":403,\"target\":\"DEAN\"}"
+  },
+  {
+    "test_id": "SB-068",
+    "role": "ORG_STAFF",
+    "feature": "Role separation",
+    "test": "Open SASO_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 33,
+    "evidence": "{\"status\":403,\"target\":\"SASO_STAFF\"}"
+  },
+  {
+    "test_id": "SB-069",
+    "role": "ORG_STAFF",
+    "feature": "Role separation",
+    "test": "Open STUDENT_COUNCIL_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 37,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT_COUNCIL_STAFF\"}"
+  },
+  {
+    "test_id": "SB-070",
+    "role": "ORG_STAFF",
+    "feature": "Role separation",
+    "test": "Open LIBRARY_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 30,
+    "evidence": "{\"status\":403,\"target\":\"LIBRARY_STAFF\"}"
+  },
+  {
+    "test_id": "SB-071",
+    "role": "ORG_STAFF",
+    "feature": "Role separation",
+    "test": "Open BOOKSTORE_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 31,
+    "evidence": "{\"status\":403,\"target\":\"BOOKSTORE_STAFF\"}"
+  },
+  {
+    "test_id": "SB-072",
+    "role": "ORG_STAFF",
+    "feature": "Role separation",
+    "test": "Open CLINIC_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 22,
+    "evidence": "{\"status\":403,\"target\":\"CLINIC_STAFF\"}"
+  },
+  {
+    "test_id": "SB-073",
+    "role": "ORG_STAFF",
+    "feature": "Role separation",
+    "test": "Open FACILITIES_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 31,
+    "evidence": "{\"status\":403,\"target\":\"FACILITIES_STAFF\"}"
+  },
+  {
+    "test_id": "SB-074",
+    "role": "ORG_STAFF",
+    "feature": "Role separation",
+    "test": "Open COMLAB_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 17,
+    "evidence": "{\"status\":403,\"target\":\"COMLAB_STAFF\"}"
+  },
+  {
+    "test_id": "SB-075",
+    "role": "ORG_STAFF",
+    "feature": "Role separation",
+    "test": "Open ACCOUNTING_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 38,
+    "evidence": "{\"status\":403,\"target\":\"ACCOUNTING_STAFF\"}"
+  },
+  {
+    "test_id": "SB-076",
+    "role": "ORG_STAFF",
+    "feature": "Role separation",
+    "test": "Open REGISTRAR dashboard",
+    "result": "PASS",
+    "milliseconds": 23,
+    "evidence": "{\"status\":403,\"target\":\"REGISTRAR\"}"
+  },
+  {
+    "test_id": "SB-077",
+    "role": "SASO_STAFF",
+    "feature": "Role separation",
+    "test": "Open STUDENT dashboard",
+    "result": "PASS",
+    "milliseconds": 22,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT\"}"
+  },
+  {
+    "test_id": "SB-078",
+    "role": "SASO_STAFF",
+    "feature": "Role separation",
+    "test": "Open DEAN dashboard",
+    "result": "PASS",
+    "milliseconds": 32,
+    "evidence": "{\"status\":403,\"target\":\"DEAN\"}"
+  },
+  {
+    "test_id": "SB-079",
+    "role": "SASO_STAFF",
+    "feature": "Role separation",
+    "test": "Open ORG_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 16,
+    "evidence": "{\"status\":403,\"target\":\"ORG_STAFF\"}"
+  },
+  {
+    "test_id": "SB-080",
+    "role": "SASO_STAFF",
+    "feature": "Role separation",
+    "test": "Open STUDENT_COUNCIL_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 16,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT_COUNCIL_STAFF\"}"
+  },
+  {
+    "test_id": "SB-081",
+    "role": "SASO_STAFF",
+    "feature": "Role separation",
+    "test": "Open LIBRARY_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 15,
+    "evidence": "{\"status\":403,\"target\":\"LIBRARY_STAFF\"}"
+  },
+  {
+    "test_id": "SB-082",
+    "role": "SASO_STAFF",
+    "feature": "Role separation",
+    "test": "Open BOOKSTORE_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 23,
+    "evidence": "{\"status\":403,\"target\":\"BOOKSTORE_STAFF\"}"
+  },
+  {
+    "test_id": "SB-083",
+    "role": "SASO_STAFF",
+    "feature": "Role separation",
+    "test": "Open CLINIC_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 22,
+    "evidence": "{\"status\":403,\"target\":\"CLINIC_STAFF\"}"
+  },
+  {
+    "test_id": "SB-084",
+    "role": "SASO_STAFF",
+    "feature": "Role separation",
+    "test": "Open FACILITIES_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 17,
+    "evidence": "{\"status\":403,\"target\":\"FACILITIES_STAFF\"}"
+  },
+  {
+    "test_id": "SB-085",
+    "role": "SASO_STAFF",
+    "feature": "Role separation",
+    "test": "Open COMLAB_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 18,
+    "evidence": "{\"status\":403,\"target\":\"COMLAB_STAFF\"}"
+  },
+  {
+    "test_id": "SB-086",
+    "role": "SASO_STAFF",
+    "feature": "Role separation",
+    "test": "Open ACCOUNTING_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 30,
+    "evidence": "{\"status\":403,\"target\":\"ACCOUNTING_STAFF\"}"
+  },
+  {
+    "test_id": "SB-087",
+    "role": "SASO_STAFF",
+    "feature": "Role separation",
+    "test": "Open REGISTRAR dashboard",
+    "result": "PASS",
+    "milliseconds": 36,
+    "evidence": "{\"status\":403,\"target\":\"REGISTRAR\"}"
+  },
+  {
+    "test_id": "SB-088",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Role separation",
+    "test": "Open STUDENT dashboard",
+    "result": "PASS",
+    "milliseconds": 11,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT\"}"
+  },
+  {
+    "test_id": "SB-089",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Role separation",
+    "test": "Open DEAN dashboard",
+    "result": "PASS",
+    "milliseconds": 39,
+    "evidence": "{\"status\":403,\"target\":\"DEAN\"}"
+  },
+  {
+    "test_id": "SB-090",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Role separation",
+    "test": "Open ORG_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 30,
+    "evidence": "{\"status\":403,\"target\":\"ORG_STAFF\"}"
+  },
+  {
+    "test_id": "SB-091",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Role separation",
+    "test": "Open SASO_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 41,
+    "evidence": "{\"status\":403,\"target\":\"SASO_STAFF\"}"
+  },
+  {
+    "test_id": "SB-092",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Role separation",
+    "test": "Open LIBRARY_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 37,
+    "evidence": "{\"status\":403,\"target\":\"LIBRARY_STAFF\"}"
+  },
+  {
+    "test_id": "SB-093",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Role separation",
+    "test": "Open BOOKSTORE_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 33,
+    "evidence": "{\"status\":403,\"target\":\"BOOKSTORE_STAFF\"}"
+  },
+  {
+    "test_id": "SB-094",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Role separation",
+    "test": "Open CLINIC_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 39,
+    "evidence": "{\"status\":403,\"target\":\"CLINIC_STAFF\"}"
+  },
+  {
+    "test_id": "SB-095",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Role separation",
+    "test": "Open FACILITIES_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 45,
+    "evidence": "{\"status\":403,\"target\":\"FACILITIES_STAFF\"}"
+  },
+  {
+    "test_id": "SB-096",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Role separation",
+    "test": "Open COMLAB_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 31,
+    "evidence": "{\"status\":403,\"target\":\"COMLAB_STAFF\"}"
+  },
+  {
+    "test_id": "SB-097",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Role separation",
+    "test": "Open ACCOUNTING_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 22,
+    "evidence": "{\"status\":403,\"target\":\"ACCOUNTING_STAFF\"}"
+  },
+  {
+    "test_id": "SB-098",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Role separation",
+    "test": "Open REGISTRAR dashboard",
+    "result": "PASS",
+    "milliseconds": 23,
+    "evidence": "{\"status\":403,\"target\":\"REGISTRAR\"}"
+  },
+  {
+    "test_id": "SB-099",
+    "role": "LIBRARY_STAFF",
+    "feature": "Role separation",
+    "test": "Open STUDENT dashboard",
+    "result": "PASS",
+    "milliseconds": 32,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT\"}"
+  },
+  {
+    "test_id": "SB-100",
+    "role": "LIBRARY_STAFF",
+    "feature": "Role separation",
+    "test": "Open DEAN dashboard",
+    "result": "PASS",
+    "milliseconds": 23,
+    "evidence": "{\"status\":403,\"target\":\"DEAN\"}"
+  },
+  {
+    "test_id": "SB-101",
+    "role": "LIBRARY_STAFF",
+    "feature": "Role separation",
+    "test": "Open ORG_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 30,
+    "evidence": "{\"status\":403,\"target\":\"ORG_STAFF\"}"
+  },
+  {
+    "test_id": "SB-102",
+    "role": "LIBRARY_STAFF",
+    "feature": "Role separation",
+    "test": "Open SASO_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 46,
+    "evidence": "{\"status\":403,\"target\":\"SASO_STAFF\"}"
+  },
+  {
+    "test_id": "SB-103",
+    "role": "LIBRARY_STAFF",
+    "feature": "Role separation",
+    "test": "Open STUDENT_COUNCIL_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 40,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT_COUNCIL_STAFF\"}"
+  },
+  {
+    "test_id": "SB-104",
+    "role": "LIBRARY_STAFF",
+    "feature": "Role separation",
+    "test": "Open BOOKSTORE_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 31,
+    "evidence": "{\"status\":403,\"target\":\"BOOKSTORE_STAFF\"}"
+  },
+  {
+    "test_id": "SB-105",
+    "role": "LIBRARY_STAFF",
+    "feature": "Role separation",
+    "test": "Open CLINIC_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 19,
+    "evidence": "{\"status\":403,\"target\":\"CLINIC_STAFF\"}"
+  },
+  {
+    "test_id": "SB-106",
+    "role": "LIBRARY_STAFF",
+    "feature": "Role separation",
+    "test": "Open FACILITIES_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 44,
+    "evidence": "{\"status\":403,\"target\":\"FACILITIES_STAFF\"}"
+  },
+  {
+    "test_id": "SB-107",
+    "role": "LIBRARY_STAFF",
+    "feature": "Role separation",
+    "test": "Open COMLAB_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 31,
+    "evidence": "{\"status\":403,\"target\":\"COMLAB_STAFF\"}"
+  },
+  {
+    "test_id": "SB-108",
+    "role": "LIBRARY_STAFF",
+    "feature": "Role separation",
+    "test": "Open ACCOUNTING_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 22,
+    "evidence": "{\"status\":403,\"target\":\"ACCOUNTING_STAFF\"}"
+  },
+  {
+    "test_id": "SB-109",
+    "role": "LIBRARY_STAFF",
+    "feature": "Role separation",
+    "test": "Open REGISTRAR dashboard",
+    "result": "PASS",
+    "milliseconds": 10,
+    "evidence": "{\"status\":403,\"target\":\"REGISTRAR\"}"
+  },
+  {
+    "test_id": "SB-110",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Role separation",
+    "test": "Open STUDENT dashboard",
+    "result": "PASS",
+    "milliseconds": 29,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT\"}"
+  },
+  {
+    "test_id": "SB-111",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Role separation",
+    "test": "Open DEAN dashboard",
+    "result": "PASS",
+    "milliseconds": 13,
+    "evidence": "{\"status\":403,\"target\":\"DEAN\"}"
+  },
+  {
+    "test_id": "SB-112",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Role separation",
+    "test": "Open ORG_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 16,
+    "evidence": "{\"status\":403,\"target\":\"ORG_STAFF\"}"
+  },
+  {
+    "test_id": "SB-113",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Role separation",
+    "test": "Open SASO_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 27,
+    "evidence": "{\"status\":403,\"target\":\"SASO_STAFF\"}"
+  },
+  {
+    "test_id": "SB-114",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Role separation",
+    "test": "Open STUDENT_COUNCIL_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 47,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT_COUNCIL_STAFF\"}"
+  },
+  {
+    "test_id": "SB-115",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Role separation",
+    "test": "Open LIBRARY_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 31,
+    "evidence": "{\"status\":403,\"target\":\"LIBRARY_STAFF\"}"
+  },
+  {
+    "test_id": "SB-116",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Role separation",
+    "test": "Open CLINIC_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 44,
+    "evidence": "{\"status\":403,\"target\":\"CLINIC_STAFF\"}"
+  },
+  {
+    "test_id": "SB-117",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Role separation",
+    "test": "Open FACILITIES_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 22,
+    "evidence": "{\"status\":403,\"target\":\"FACILITIES_STAFF\"}"
+  },
+  {
+    "test_id": "SB-118",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Role separation",
+    "test": "Open COMLAB_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 31,
+    "evidence": "{\"status\":403,\"target\":\"COMLAB_STAFF\"}"
+  },
+  {
+    "test_id": "SB-119",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Role separation",
+    "test": "Open ACCOUNTING_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 31,
+    "evidence": "{\"status\":403,\"target\":\"ACCOUNTING_STAFF\"}"
+  },
+  {
+    "test_id": "SB-120",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Role separation",
+    "test": "Open REGISTRAR dashboard",
+    "result": "PASS",
+    "milliseconds": 8,
+    "evidence": "{\"status\":403,\"target\":\"REGISTRAR\"}"
+  },
+  {
+    "test_id": "SB-121",
+    "role": "CLINIC_STAFF",
+    "feature": "Role separation",
+    "test": "Open STUDENT dashboard",
+    "result": "PASS",
+    "milliseconds": 30,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT\"}"
+  },
+  {
+    "test_id": "SB-122",
+    "role": "CLINIC_STAFF",
+    "feature": "Role separation",
+    "test": "Open DEAN dashboard",
+    "result": "PASS",
+    "milliseconds": 95,
+    "evidence": "{\"status\":403,\"target\":\"DEAN\"}"
+  },
+  {
+    "test_id": "SB-123",
+    "role": "CLINIC_STAFF",
+    "feature": "Role separation",
+    "test": "Open ORG_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 35,
+    "evidence": "{\"status\":403,\"target\":\"ORG_STAFF\"}"
+  },
+  {
+    "test_id": "SB-124",
+    "role": "CLINIC_STAFF",
+    "feature": "Role separation",
+    "test": "Open SASO_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 32,
+    "evidence": "{\"status\":403,\"target\":\"SASO_STAFF\"}"
+  },
+  {
+    "test_id": "SB-125",
+    "role": "CLINIC_STAFF",
+    "feature": "Role separation",
+    "test": "Open STUDENT_COUNCIL_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 37,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT_COUNCIL_STAFF\"}"
+  },
+  {
+    "test_id": "SB-126",
+    "role": "CLINIC_STAFF",
+    "feature": "Role separation",
+    "test": "Open LIBRARY_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 44,
+    "evidence": "{\"status\":403,\"target\":\"LIBRARY_STAFF\"}"
+  },
+  {
+    "test_id": "SB-127",
+    "role": "CLINIC_STAFF",
+    "feature": "Role separation",
+    "test": "Open BOOKSTORE_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 38,
+    "evidence": "{\"status\":403,\"target\":\"BOOKSTORE_STAFF\"}"
+  },
+  {
+    "test_id": "SB-128",
+    "role": "CLINIC_STAFF",
+    "feature": "Role separation",
+    "test": "Open FACILITIES_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 24,
+    "evidence": "{\"status\":403,\"target\":\"FACILITIES_STAFF\"}"
+  },
+  {
+    "test_id": "SB-129",
+    "role": "CLINIC_STAFF",
+    "feature": "Role separation",
+    "test": "Open COMLAB_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 43,
+    "evidence": "{\"status\":403,\"target\":\"COMLAB_STAFF\"}"
+  },
+  {
+    "test_id": "SB-130",
+    "role": "CLINIC_STAFF",
+    "feature": "Role separation",
+    "test": "Open ACCOUNTING_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 36,
+    "evidence": "{\"status\":403,\"target\":\"ACCOUNTING_STAFF\"}"
+  },
+  {
+    "test_id": "SB-131",
+    "role": "CLINIC_STAFF",
+    "feature": "Role separation",
+    "test": "Open REGISTRAR dashboard",
+    "result": "PASS",
+    "milliseconds": 31,
+    "evidence": "{\"status\":403,\"target\":\"REGISTRAR\"}"
+  },
+  {
+    "test_id": "SB-132",
+    "role": "FACILITIES_STAFF",
+    "feature": "Role separation",
+    "test": "Open STUDENT dashboard",
+    "result": "PASS",
+    "milliseconds": 34,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT\"}"
+  },
+  {
+    "test_id": "SB-133",
+    "role": "FACILITIES_STAFF",
+    "feature": "Role separation",
+    "test": "Open DEAN dashboard",
+    "result": "PASS",
+    "milliseconds": 19,
+    "evidence": "{\"status\":403,\"target\":\"DEAN\"}"
+  },
+  {
+    "test_id": "SB-134",
+    "role": "FACILITIES_STAFF",
+    "feature": "Role separation",
+    "test": "Open ORG_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 107,
+    "evidence": "{\"status\":403,\"target\":\"ORG_STAFF\"}"
+  },
+  {
+    "test_id": "SB-135",
+    "role": "FACILITIES_STAFF",
+    "feature": "Role separation",
+    "test": "Open SASO_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 25,
+    "evidence": "{\"status\":403,\"target\":\"SASO_STAFF\"}"
+  },
+  {
+    "test_id": "SB-136",
+    "role": "FACILITIES_STAFF",
+    "feature": "Role separation",
+    "test": "Open STUDENT_COUNCIL_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 16,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT_COUNCIL_STAFF\"}"
+  },
+  {
+    "test_id": "SB-137",
+    "role": "FACILITIES_STAFF",
+    "feature": "Role separation",
+    "test": "Open LIBRARY_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 28,
+    "evidence": "{\"status\":403,\"target\":\"LIBRARY_STAFF\"}"
+  },
+  {
+    "test_id": "SB-138",
+    "role": "FACILITIES_STAFF",
+    "feature": "Role separation",
+    "test": "Open BOOKSTORE_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 32,
+    "evidence": "{\"status\":403,\"target\":\"BOOKSTORE_STAFF\"}"
+  },
+  {
+    "test_id": "SB-139",
+    "role": "FACILITIES_STAFF",
+    "feature": "Role separation",
+    "test": "Open CLINIC_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 25,
+    "evidence": "{\"status\":403,\"target\":\"CLINIC_STAFF\"}"
+  },
+  {
+    "test_id": "SB-140",
+    "role": "FACILITIES_STAFF",
+    "feature": "Role separation",
+    "test": "Open COMLAB_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 15,
+    "evidence": "{\"status\":403,\"target\":\"COMLAB_STAFF\"}"
+  },
+  {
+    "test_id": "SB-141",
+    "role": "FACILITIES_STAFF",
+    "feature": "Role separation",
+    "test": "Open ACCOUNTING_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 29,
+    "evidence": "{\"status\":403,\"target\":\"ACCOUNTING_STAFF\"}"
+  },
+  {
+    "test_id": "SB-142",
+    "role": "FACILITIES_STAFF",
+    "feature": "Role separation",
+    "test": "Open REGISTRAR dashboard",
+    "result": "PASS",
+    "milliseconds": 23,
+    "evidence": "{\"status\":403,\"target\":\"REGISTRAR\"}"
+  },
+  {
+    "test_id": "SB-143",
+    "role": "COMLAB_STAFF",
+    "feature": "Role separation",
+    "test": "Open STUDENT dashboard",
+    "result": "PASS",
+    "milliseconds": 24,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT\"}"
+  },
+  {
+    "test_id": "SB-144",
+    "role": "COMLAB_STAFF",
+    "feature": "Role separation",
+    "test": "Open DEAN dashboard",
+    "result": "PASS",
+    "milliseconds": 16,
+    "evidence": "{\"status\":403,\"target\":\"DEAN\"}"
+  },
+  {
+    "test_id": "SB-145",
+    "role": "COMLAB_STAFF",
+    "feature": "Role separation",
+    "test": "Open ORG_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 15,
+    "evidence": "{\"status\":403,\"target\":\"ORG_STAFF\"}"
+  },
+  {
+    "test_id": "SB-146",
+    "role": "COMLAB_STAFF",
+    "feature": "Role separation",
+    "test": "Open SASO_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 21,
+    "evidence": "{\"status\":403,\"target\":\"SASO_STAFF\"}"
+  },
+  {
+    "test_id": "SB-147",
+    "role": "COMLAB_STAFF",
+    "feature": "Role separation",
+    "test": "Open STUDENT_COUNCIL_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 47,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT_COUNCIL_STAFF\"}"
+  },
+  {
+    "test_id": "SB-148",
+    "role": "COMLAB_STAFF",
+    "feature": "Role separation",
+    "test": "Open LIBRARY_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 47,
+    "evidence": "{\"status\":403,\"target\":\"LIBRARY_STAFF\"}"
+  },
+  {
+    "test_id": "SB-149",
+    "role": "COMLAB_STAFF",
+    "feature": "Role separation",
+    "test": "Open BOOKSTORE_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 26,
+    "evidence": "{\"status\":403,\"target\":\"BOOKSTORE_STAFF\"}"
+  },
+  {
+    "test_id": "SB-150",
+    "role": "COMLAB_STAFF",
+    "feature": "Role separation",
+    "test": "Open CLINIC_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 20,
+    "evidence": "{\"status\":403,\"target\":\"CLINIC_STAFF\"}"
+  },
+  {
+    "test_id": "SB-151",
+    "role": "COMLAB_STAFF",
+    "feature": "Role separation",
+    "test": "Open FACILITIES_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 20,
+    "evidence": "{\"status\":403,\"target\":\"FACILITIES_STAFF\"}"
+  },
+  {
+    "test_id": "SB-152",
+    "role": "COMLAB_STAFF",
+    "feature": "Role separation",
+    "test": "Open ACCOUNTING_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 31,
+    "evidence": "{\"status\":403,\"target\":\"ACCOUNTING_STAFF\"}"
+  },
+  {
+    "test_id": "SB-153",
+    "role": "COMLAB_STAFF",
+    "feature": "Role separation",
+    "test": "Open REGISTRAR dashboard",
+    "result": "PASS",
+    "milliseconds": 14,
+    "evidence": "{\"status\":403,\"target\":\"REGISTRAR\"}"
+  },
+  {
+    "test_id": "SB-154",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Role separation",
+    "test": "Open STUDENT dashboard",
+    "result": "PASS",
+    "milliseconds": 33,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT\"}"
+  },
+  {
+    "test_id": "SB-155",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Role separation",
+    "test": "Open DEAN dashboard",
+    "result": "PASS",
+    "milliseconds": 25,
+    "evidence": "{\"status\":403,\"target\":\"DEAN\"}"
+  },
+  {
+    "test_id": "SB-156",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Role separation",
+    "test": "Open ORG_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 17,
+    "evidence": "{\"status\":403,\"target\":\"ORG_STAFF\"}"
+  },
+  {
+    "test_id": "SB-157",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Role separation",
+    "test": "Open SASO_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 38,
+    "evidence": "{\"status\":403,\"target\":\"SASO_STAFF\"}"
+  },
+  {
+    "test_id": "SB-158",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Role separation",
+    "test": "Open STUDENT_COUNCIL_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 17,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT_COUNCIL_STAFF\"}"
+  },
+  {
+    "test_id": "SB-159",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Role separation",
+    "test": "Open LIBRARY_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 16,
+    "evidence": "{\"status\":403,\"target\":\"LIBRARY_STAFF\"}"
+  },
+  {
+    "test_id": "SB-160",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Role separation",
+    "test": "Open BOOKSTORE_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 27,
+    "evidence": "{\"status\":403,\"target\":\"BOOKSTORE_STAFF\"}"
+  },
+  {
+    "test_id": "SB-161",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Role separation",
+    "test": "Open CLINIC_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 32,
+    "evidence": "{\"status\":403,\"target\":\"CLINIC_STAFF\"}"
+  },
+  {
+    "test_id": "SB-162",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Role separation",
+    "test": "Open FACILITIES_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 22,
+    "evidence": "{\"status\":403,\"target\":\"FACILITIES_STAFF\"}"
+  },
+  {
+    "test_id": "SB-163",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Role separation",
+    "test": "Open COMLAB_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 40,
+    "evidence": "{\"status\":403,\"target\":\"COMLAB_STAFF\"}"
+  },
+  {
+    "test_id": "SB-164",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Role separation",
+    "test": "Open REGISTRAR dashboard",
+    "result": "PASS",
+    "milliseconds": 28,
+    "evidence": "{\"status\":403,\"target\":\"REGISTRAR\"}"
+  },
+  {
+    "test_id": "SB-165",
+    "role": "REGISTRAR",
+    "feature": "Role separation",
+    "test": "Open STUDENT dashboard",
+    "result": "PASS",
+    "milliseconds": 10,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT\"}"
+  },
+  {
+    "test_id": "SB-166",
+    "role": "REGISTRAR",
+    "feature": "Role separation",
+    "test": "Open DEAN dashboard",
+    "result": "PASS",
+    "milliseconds": 32,
+    "evidence": "{\"status\":403,\"target\":\"DEAN\"}"
+  },
+  {
+    "test_id": "SB-167",
+    "role": "REGISTRAR",
+    "feature": "Role separation",
+    "test": "Open ORG_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 33,
+    "evidence": "{\"status\":403,\"target\":\"ORG_STAFF\"}"
+  },
+  {
+    "test_id": "SB-168",
+    "role": "REGISTRAR",
+    "feature": "Role separation",
+    "test": "Open SASO_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 31,
+    "evidence": "{\"status\":403,\"target\":\"SASO_STAFF\"}"
+  },
+  {
+    "test_id": "SB-169",
+    "role": "REGISTRAR",
+    "feature": "Role separation",
+    "test": "Open STUDENT_COUNCIL_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 23,
+    "evidence": "{\"status\":403,\"target\":\"STUDENT_COUNCIL_STAFF\"}"
+  },
+  {
+    "test_id": "SB-170",
+    "role": "REGISTRAR",
+    "feature": "Role separation",
+    "test": "Open LIBRARY_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 20,
+    "evidence": "{\"status\":403,\"target\":\"LIBRARY_STAFF\"}"
+  },
+  {
+    "test_id": "SB-171",
+    "role": "REGISTRAR",
+    "feature": "Role separation",
+    "test": "Open BOOKSTORE_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 26,
+    "evidence": "{\"status\":403,\"target\":\"BOOKSTORE_STAFF\"}"
+  },
+  {
+    "test_id": "SB-172",
+    "role": "REGISTRAR",
+    "feature": "Role separation",
+    "test": "Open CLINIC_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 32,
+    "evidence": "{\"status\":403,\"target\":\"CLINIC_STAFF\"}"
+  },
+  {
+    "test_id": "SB-173",
+    "role": "REGISTRAR",
+    "feature": "Role separation",
+    "test": "Open FACILITIES_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 38,
+    "evidence": "{\"status\":403,\"target\":\"FACILITIES_STAFF\"}"
+  },
+  {
+    "test_id": "SB-174",
+    "role": "REGISTRAR",
+    "feature": "Role separation",
+    "test": "Open COMLAB_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 26,
+    "evidence": "{\"status\":403,\"target\":\"COMLAB_STAFF\"}"
+  },
+  {
+    "test_id": "SB-175",
+    "role": "REGISTRAR",
+    "feature": "Role separation",
+    "test": "Open ACCOUNTING_STAFF dashboard",
+    "result": "PASS",
+    "milliseconds": 97,
+    "evidence": "{\"status\":403,\"target\":\"ACCOUNTING_STAFF\"}"
+  },
+  {
+    "test_id": "SB-176",
+    "role": "STUDENT",
+    "feature": "CSRF protection",
+    "test": "Send synthetic approval request with invalid token",
+    "result": "PASS",
+    "milliseconds": 9,
+    "evidence": "{\"status\":303,\"location\":\"/student/dashboard.php\"}"
+  },
+  {
+    "test_id": "SB-177",
+    "role": "STUDENT",
+    "feature": "Logout",
+    "test": "Log out and revisit protected dashboard",
+    "result": "PASS",
+    "milliseconds": 27,
+    "evidence": "{\"logout\":303,\"after\":303,\"location\":\"/login.php\"}"
+  },
+  {
+    "test_id": "SB-178",
+    "role": "DEAN",
+    "feature": "CSRF protection",
+    "test": "Send synthetic approval request with invalid token",
+    "result": "PASS",
+    "milliseconds": 11,
+    "evidence": "{\"status\":303,\"location\":\"/dean/dashboard.php\"}"
+  },
+  {
+    "test_id": "SB-179",
+    "role": "DEAN",
+    "feature": "Logout",
+    "test": "Log out and revisit protected dashboard",
+    "result": "PASS",
+    "milliseconds": 29,
+    "evidence": "{\"logout\":303,\"after\":303,\"location\":\"/login.php\"}"
+  },
+  {
+    "test_id": "SB-180",
+    "role": "ORG_STAFF",
+    "feature": "CSRF protection",
+    "test": "Send synthetic approval request with invalid token",
+    "result": "PASS",
+    "milliseconds": 33,
+    "evidence": "{\"status\":303,\"location\":\"/organization/dashboard.php\"}"
+  },
+  {
+    "test_id": "SB-181",
+    "role": "ORG_STAFF",
+    "feature": "Logout",
+    "test": "Log out and revisit protected dashboard",
+    "result": "PASS",
+    "milliseconds": 27,
+    "evidence": "{\"logout\":303,\"after\":303,\"location\":\"/login.php\"}"
+  },
+  {
+    "test_id": "SB-182",
+    "role": "SASO_STAFF",
+    "feature": "CSRF protection",
+    "test": "Send synthetic approval request with invalid token",
+    "result": "PASS",
+    "milliseconds": 23,
+    "evidence": "{\"status\":303,\"location\":\"/saso/dashboard.php\"}"
+  },
+  {
+    "test_id": "SB-183",
+    "role": "SASO_STAFF",
+    "feature": "Logout",
+    "test": "Log out and revisit protected dashboard",
+    "result": "PASS",
+    "milliseconds": 37,
+    "evidence": "{\"logout\":303,\"after\":303,\"location\":\"/login.php\"}"
+  },
+  {
+    "test_id": "SB-184",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "CSRF protection",
+    "test": "Send synthetic approval request with invalid token",
+    "result": "PASS",
+    "milliseconds": 29,
+    "evidence": "{\"status\":303,\"location\":\"/student-council/dashboard.php\"}"
+  },
+  {
+    "test_id": "SB-185",
+    "role": "STUDENT_COUNCIL_STAFF",
+    "feature": "Logout",
+    "test": "Log out and revisit protected dashboard",
+    "result": "PASS",
+    "milliseconds": 36,
+    "evidence": "{\"logout\":303,\"after\":303,\"location\":\"/login.php\"}"
+  },
+  {
+    "test_id": "SB-186",
+    "role": "LIBRARY_STAFF",
+    "feature": "CSRF protection",
+    "test": "Send synthetic approval request with invalid token",
+    "result": "PASS",
+    "milliseconds": 40,
+    "evidence": "{\"status\":303,\"location\":\"/library/dashboard.php\"}"
+  },
+  {
+    "test_id": "SB-187",
+    "role": "LIBRARY_STAFF",
+    "feature": "Logout",
+    "test": "Log out and revisit protected dashboard",
+    "result": "PASS",
+    "milliseconds": 35,
+    "evidence": "{\"logout\":303,\"after\":303,\"location\":\"/login.php\"}"
+  },
+  {
+    "test_id": "SB-188",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "CSRF protection",
+    "test": "Send synthetic approval request with invalid token",
+    "result": "PASS",
+    "milliseconds": 17,
+    "evidence": "{\"status\":303,\"location\":\"/bookstore/dashboard.php\"}"
+  },
+  {
+    "test_id": "SB-189",
+    "role": "BOOKSTORE_STAFF",
+    "feature": "Logout",
+    "test": "Log out and revisit protected dashboard",
+    "result": "PASS",
+    "milliseconds": 32,
+    "evidence": "{\"logout\":303,\"after\":303,\"location\":\"/login.php\"}"
+  },
+  {
+    "test_id": "SB-190",
+    "role": "CLINIC_STAFF",
+    "feature": "CSRF protection",
+    "test": "Send synthetic approval request with invalid token",
+    "result": "PASS",
+    "milliseconds": 17,
+    "evidence": "{\"status\":303,\"location\":\"/clinic/dashboard.php\"}"
+  },
+  {
+    "test_id": "SB-191",
+    "role": "CLINIC_STAFF",
+    "feature": "Logout",
+    "test": "Log out and revisit protected dashboard",
+    "result": "PASS",
+    "milliseconds": 32,
+    "evidence": "{\"logout\":303,\"after\":303,\"location\":\"/login.php\"}"
+  },
+  {
+    "test_id": "SB-192",
+    "role": "FACILITIES_STAFF",
+    "feature": "CSRF protection",
+    "test": "Send synthetic approval request with invalid token",
+    "result": "PASS",
+    "milliseconds": 17,
+    "evidence": "{\"status\":303,\"location\":\"/facilities/dashboard.php\"}"
+  },
+  {
+    "test_id": "SB-193",
+    "role": "FACILITIES_STAFF",
+    "feature": "Logout",
+    "test": "Log out and revisit protected dashboard",
+    "result": "PASS",
+    "milliseconds": 27,
+    "evidence": "{\"logout\":303,\"after\":303,\"location\":\"/login.php\"}"
+  },
+  {
+    "test_id": "SB-194",
+    "role": "COMLAB_STAFF",
+    "feature": "CSRF protection",
+    "test": "Send synthetic approval request with invalid token",
+    "result": "PASS",
+    "milliseconds": 32,
+    "evidence": "{\"status\":303,\"location\":\"/comlab/dashboard.php\"}"
+  },
+  {
+    "test_id": "SB-195",
+    "role": "COMLAB_STAFF",
+    "feature": "Logout",
+    "test": "Log out and revisit protected dashboard",
+    "result": "PASS",
+    "milliseconds": 37,
+    "evidence": "{\"logout\":303,\"after\":303,\"location\":\"/login.php\"}"
+  },
+  {
+    "test_id": "SB-196",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "CSRF protection",
+    "test": "Send synthetic approval request with invalid token",
+    "result": "PASS",
+    "milliseconds": 21,
+    "evidence": "{\"status\":303,\"location\":\"/accounting/dashboard.php\"}"
+  },
+  {
+    "test_id": "SB-197",
+    "role": "ACCOUNTING_STAFF",
+    "feature": "Logout",
+    "test": "Log out and revisit protected dashboard",
+    "result": "PASS",
+    "milliseconds": 37,
+    "evidence": "{\"logout\":303,\"after\":303,\"location\":\"/login.php\"}"
+  },
+  {
+    "test_id": "SB-198",
+    "role": "REGISTRAR",
+    "feature": "CSRF protection",
+    "test": "Send synthetic approval request with invalid token",
+    "result": "PASS",
+    "milliseconds": 36,
+    "evidence": "{\"status\":303,\"location\":\"/registrar/clearance.php\"}"
+  },
+  {
+    "test_id": "SB-199",
+    "role": "REGISTRAR",
+    "feature": "Logout",
+    "test": "Log out and revisit protected dashboard",
+    "result": "PASS",
+    "milliseconds": 27,
+    "evidence": "{\"logout\":303,\"after\":303,\"location\":\"/login.php\"}"
+  }
+]

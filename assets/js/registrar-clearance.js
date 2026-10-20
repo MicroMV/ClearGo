@@ -8,7 +8,7 @@ function closeRegistrarComplianceModal() {
     if (!registrarComplianceModal) return;
     registrarComplianceModal.classList.remove('open');
     registrarComplianceModal.setAttribute('aria-hidden', 'true');
-    registrarComplianceTrigger?.focus();
+    registrarComplianceTrigger?.focus({ preventScroll: true });
 }
 
 document.querySelectorAll('[data-registrar-compliance]').forEach(function (button) {
@@ -22,7 +22,7 @@ document.querySelectorAll('[data-registrar-compliance]').forEach(function (butto
         }
         registrarComplianceModal.classList.add('open');
         registrarComplianceModal.setAttribute('aria-hidden', 'false');
-        registrarComplianceReason.focus();
+        registrarComplianceReason.focus({ preventScroll: true });
     });
 });
 

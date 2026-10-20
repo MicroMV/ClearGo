@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+if (PHP_SAPI !== 'cli') {
+    http_response_code(403);
+    exit('Forbidden');
+}
+
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../clearance/bulk_clearance.php';
 
@@ -37,6 +42,21 @@ register_shutdown_function(static function () use ($role): void {
     libxml_clear_errors();
     libxml_use_internal_errors($previous);
     $xpath = new DOMXPath($document);
+    $headers = $xpath->query('//table/thead/tr/th[last()]');
+    $remarksHeader = false;
+    foreach ($headers as $header) { if (trim($header->textContent) === 'Remarks') { $remarksHeader = true; } }
+    if (!$remarksHeader || $xpath->query('//dialog[@id="office-remarks-modal"]//form[@class="office-remarks-form"]/textarea[@name="remarks" and @maxlength="1000"]')->length !== 1
+        || $xpath->query('//table//button[@data-office-remarks-open]')->length < 1 || $xpath->query('//table//textarea[@name="remarks"]')->length !== 0) {
+        fwrite(STDERR, $role . " dashboard is missing its Remarks buttons or shared modal.\n");
+        exit(1);
+    }
+    foreach ($xpath->query('//table//button[@data-office-remarks-open]') as $button) {
+        foreach ($xpath->query('ancestor::tr//span[contains(concat(" ",normalize-space(@class)," ")," badge ")]', $button) as $badge) {
+            if (trim($badge->textContent) === 'CLEARED' && !$button->hasAttribute('disabled')) {
+                fwrite(STDERR, $role . " allows editing a cleared student's remarks.\n"); exit(1);
+            }
+        }
+    }
     $forms = $xpath->query('//div[@class="clearance-list-footer"]/form[@class="bulk-clearance-form"]');
     if ($forms->length !== 1 || $xpath->query('.//input[@name="action" and @value="approve_all_ready"]', $forms->item(0))->length !== 1) {
         fwrite(STDERR, $role . " dashboard did not render its bulk approval form.\n");

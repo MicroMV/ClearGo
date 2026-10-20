@@ -2,7 +2,13 @@
 
 declare(strict_types=1);
 
+if (PHP_SAPI !== 'cli') {
+    http_response_code(403);
+    exit('Forbidden');
+}
+
 require_once __DIR__ . '/../student/dashboard_functions.php';
+require_once __DIR__ . '/../config/availability.php';
 
 function dashboardCheck(bool $condition, string $message): void
 {
@@ -60,7 +66,7 @@ $labelStart = strpos($source, 'function studentStatusLabel');
 eval(substr($source, $labelStart, $viewStart - $labelStart));
 $view = str_replace("require __DIR__ . '/dashboard_view.php';", 'require ' . var_export(realpath(__DIR__ . '/../student/dashboard_view.php'), true) . ';', substr($source, $viewStart));
 
-function renderDashboardFixture(string $view, array|false $period, array $availablePeriods, string $pendingStation = 'DEAN', bool $selectStation = false, string $requirementStatus = 'NOT_STARTED'): string
+function renderDashboardFixture(string $view, array|false $period, array $availablePeriods, string $pendingStation = 'DEAN', bool $selectStation = false, string $requirementStatus = 'NOT_STARTED', string $overallStatus = 'IN_PROGRESS'): string
 {
     $isEnrolled = $period !== false && (int) $period['is_enrolled'] === 1;
     $isHistoricalRecord = studentDashboardIsHistory($period);
@@ -69,14 +75,14 @@ function renderDashboardFixture(string $view, array|false $period, array $availa
     $student = ['id' => 10,'first_name' => 'Test','last_name' => 'Student','student_number' => 'TEST-10',
         'program' => 'BSCS','year_level' => 2,'section' => 'N/A','organization_name' => 'Computer Studies',
         'organization_code' => 'CCS','email' => 'test@thelewiscollege.edu.ph'];
-    $clearance = $period === false ? false : ['id' => 1,'reference_number' => 'FIRST-SEM-RECORD','status' => 'IN_PROGRESS'];
+    $clearance = $period === false ? false : ['id' => 1,'reference_number' => 'FIRST-SEM-RECORD','status' => $overallStatus];
     $stations = [];
     $stationStatuses = [];
     $stationRequirements = [];
     foreach (['DEAN','ORGANIZATION','SASO','FACILITIES','COMLAB','ACCOUNTING','LIBRARY','BOOKSTORE','CLINIC'] as $index => $code) {
         $id = $index + 1;
         $stations[] = ['id' => $id,'code' => $code,'name' => $code,'display_order' => (string) $id,'parent_name' => null];
-        $stationStatuses[$id] = ['status' => $isHistoricalRecord
+        $stationStatuses[$id] = ['office_remarks' => "Bring your original document.\nOffice <script>message</script>", 'status' => $isHistoricalRecord
             ? ($code === 'ORGANIZATION' ? 'APPROVED' : 'PENDING')
             : ($code === $pendingStation ? 'PENDING' : 'APPROVED')];
         $stationRequirements[$id] = [['name' => 'Saved requirement','description' => '',
@@ -100,6 +106,7 @@ function renderDashboardFixture(string $view, array|false $period, array $availa
 }
 
 $html = renderDashboardFixture($view, $firstSemesterOnly[0], $firstSemesterOnly);
+dashboardCheck(str_contains($html, 'student-office-remarks') && str_contains($html, 'Bring your original document.') && str_contains($html, '&lt;script&gt;message&lt;/script&gt;'), 'Historical student modal lost or failed to escape office remarks.');
 dashboardCheck(str_contains($html, 'First Semester A.Y. 2026-2027') && !str_contains($html, 'Second Semester A.Y.'), 'Historical dashboard did not restrict the semester dropdown.');
 dashboardCheck(str_contains($html, 'portal-period-select--static') && !str_contains($html, 'data-period-select'), 'A single semester still renders an unnecessary native dropdown.');
 dashboardCheck(str_contains($html, 'FIRST-SEM-RECORD') && str_contains($html, '1 of 9 stations cleared'), 'Historical clearance reference or stored station decision is missing.');
@@ -112,7 +119,8 @@ dashboardCheck(str_contains($html, 'data-profile-picture-form'), 'Historical vie
 dashboardCheck(!str_contains($html, '/student/attendance_scanner.php'), 'Historical dashboard exposes the attendance scanner.');
 
 $activeHtml = renderDashboardFixture($view, $bothSemesters[0], $bothSemesters);
-dashboardCheck(str_contains($activeHtml, '/student/evaluation_action.php') && str_contains($activeHtml, '/student/attendance_scanner.php'), 'Active enrolled students lost their available submission controls.');
+dashboardCheck(!str_contains($activeHtml, '/student/evaluation_action.php') && !str_contains($activeHtml, 'evaluation_proofs') && str_contains($activeHtml, 'No upload is needed.'), 'Student dashboard still exposes evaluation screenshot submission.');
+dashboardCheck(str_contains($activeHtml, '/student/attendance_scanner.php'), 'Active enrolled students lost their attendance controls.');
 dashboardCheck(str_contains($activeHtml, 'data-attendance-scanner-modal')
     && str_contains($activeHtml, 'data-open-attendance-scanner')
     && str_contains($activeHtml, 'allow="camera"'),
@@ -140,4 +148,10 @@ dashboardCheck(str_contains($verifiedBookstoreHtml, 'No further receipt submissi
 $emptyHtml = renderDashboardFixture($view, false, []);
 dashboardCheck(str_contains($emptyHtml, 'No semester record is available.') && !str_contains($emptyHtml, 'name="period"'), 'Empty history does not render a usable dashboard.');
 
-echo "Student dashboard history tests passed.\n";
+$staleCompletedHtml = renderDashboardFixture($view, $bothSemesters[0], $bothSemesters, 'BOOKSTORE', false, 'NOT_STARTED', 'COMPLETED');
+dashboardCheck(!str_contains($staleCompletedHtml, 'All set. All cleared.') && !str_contains($staleCompletedHtml, 'Every office has approved your clearance.'), 'An unresolved office still displays a completed clearance.');
+dashboardCheck(str_contains($staleCompletedHtml, 'In progress'), 'The progress footer still trusts an inconsistent COMPLETED flag.');
+$completedHtml = renderDashboardFixture($view, $bothSemesters[0], $bothSemesters, 'NONE', false, 'VERIFIED', 'COMPLETED');
+dashboardCheck(str_contains($completedHtml, 'All set. All cleared.'), 'A fully signed clearance no longer displays completion.');
+
+echo "Student dashboard history and completion consistency tests passed.\n";

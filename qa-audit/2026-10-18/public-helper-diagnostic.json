@@ -1,0 +1,7 @@
+{
+    "helper_status": 200,
+    "helper_body": "COMLAB_STAFF dashboard bulk button rendered successfully.\n",
+    "helper_sets_session": true,
+    "after_status": 303,
+    "after_headers": "HTTP\/1.1 303 See Other\r\nHost: 127.0.0.1:8829\r\nDate: Sun, 18 Oct 2026 03:44:21 GMT\r\nConnection: close\r\nX-Powered-By: PHP\/8.2.12\r\nSet-Cookie: clear_go_session=[redacted]; path=\/; HttpOnly; SameSite=Lax\r\nExpires: Thu, 19 Nov 1981 08:52:00 GMT\r\nCache-Control: no-store, no-cache, must-revalidate\r\nPragma: no-cache\r\nLocation: \/login.php\r\nContent-type: text\/html; charset=UTF-8\r\n\r\n"
+}

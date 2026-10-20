@@ -121,7 +121,7 @@ function readStudentXlsx(string $path): array
 }
 
 /** @param array<int,string> $sharedStrings @return array<int,array<int,string>> */
-function parseStudentWorksheet(string $worksheetXml, array $sharedStrings): array
+function parseStudentWorksheet(string $worksheetXml, array $sharedStrings, bool $preserveWhitespace = false): array
 {
     $sheetXml = loadImportXml($worksheetXml, 'worksheet');
     $rows = [];
@@ -143,7 +143,7 @@ function parseStudentWorksheet(string $worksheetXml, array $sharedStrings): arra
                     $value = $sharedStrings[(int) $value] ?? '';
                 }
             }
-            $row[$index] = normalizeImportText($value);
+            $row[$index] = $preserveWhitespace ? $value : normalizeImportText($value);
         }
         if ($row !== []) {
             $maxIndex = max(array_keys($row));
@@ -195,7 +195,7 @@ function readZipEntries(string $path, array $exactNames, string $prefix): array
             if ($header['method'] === 0) {
                 $content = $compressed;
             } elseif ($header['method'] === 8) {
-                $content = gzinflate($compressed);
+                $content = gzinflate($compressed, STUDENT_IMPORT_MAX_XML_SIZE);
             } else {
                 throw new RuntimeException('The XLSX uses an unsupported compression method.');
             }
@@ -295,21 +295,48 @@ function locateStudentImportHeader(array $rows): array
     throw new RuntimeException('The worksheet must contain these headers: Student No., Full Name, Course, Year Level, and Gsuite Address.');
 }
 
-/** @return array{0:string,1:string} */
+/** @return array{0:string,1:string,2:string} First, last, middle; only explicit comma-separated parts establish a middle name. */
 function splitStudentName(string $name): array
 {
     $name = normalizeImportText($name);
     if (str_contains($name, ',')) {
-        $parts = array_values(array_filter(array_map('trim', explode(',', $name)), static fn(string $part): bool => $part !== ''));
-        $lastName = (string) array_shift($parts);
-        return [implode(' ', $parts), $lastName];
+        $parts = array_map('trim', explode(',', $name, 3));
+        return [$parts[1] ?? '', $parts[0], $parts[2] ?? ''];
     }
     $parts = preg_split('/\s+/u', $name) ?: [];
     if (count($parts) <= 1) {
-        return [$name, ''];
+        return [$name, '', ''];
     }
     $lastName = (string) array_pop($parts);
-    return [implode(' ', $parts), $lastName];
+    return [implode(' ', $parts), $lastName, ''];
+}
+
+/** @return array{0:string,1:string,2:string} */
+function registrarStudentNameInput(array $input): array
+{
+    if (array_key_exists('first_name', $input) || array_key_exists('last_name', $input)) {
+        $names = [];
+        foreach (['first_name', 'last_name', 'middle_name'] as $field) {
+            if (isset($input[$field]) && !is_string($input[$field])) {
+                throw new RuntimeException('Enter valid student name fields.');
+            }
+            $names[] = normalizeImportText($input[$field] ?? '');
+        }
+    } else {
+        if (!is_string($input['full_name'] ?? null)) {
+            throw new RuntimeException('Enter the student first and last names.');
+        }
+        $names = splitStudentName($input['full_name']);
+    }
+    if ($names[0] === '' || $names[1] === '') {
+        throw new RuntimeException('Enter the student first and last names.');
+    }
+    foreach ($names as $name) {
+        if (mb_strlen($name) > 100) {
+            throw new RuntimeException('Each student name field must be 100 characters or fewer.');
+        }
+    }
+    return $names;
 }
 
 function parseStudentYearLevel(string $value): int
@@ -393,7 +420,7 @@ function createStudentImportTemplateXlsx(string $periodTitle = 'ACADEMIC YEAR 20
     $headers = ['#', 'Student No.', 'Full Name', 'Course', 'Year Level', 'Gsuite Address'];
     $example = ['1', 'C-2026-0889', 'Gogolin, Ella Victoria, Dawis', 'ACT - AppDev', 'First Year', 'ellavictoriagogolin@thelewiscollege.edu.ph'];
     $rows = '';
-    $templateRows = [1 => [$periodTitle], 2 => ['Search by name or ID using the Full Name or Student No. header filter Search box, or Ctrl+F. Replace the example with student records.'], 3 => $headers, 4 => $example];
+    $templateRows = [1 => [$periodTitle], 2 => ['Enter Full Name as Last, First, Middle (keep both commas when there is no middle name). Use the header filters or Ctrl+F to find a student. Replace the example with student records.'], 3 => $headers, 4 => $example];
     foreach ($templateRows as $rowNumber => $values) {
         $cells = '';
         foreach ($values as $column => $value) {
@@ -463,7 +490,7 @@ function validateStudentImport(PDO $database, array $rawRows): array
 
     $studentsByNumber = [];
     $studentStatement = $database->query(
-        'SELECT s.id, s.user_id, s.student_number, u.email
+        'SELECT s.id, s.user_id, s.student_number, s.first_name, s.middle_name, u.email
          FROM students s INNER JOIN users u ON u.id = s.user_id'
     );
     foreach ($studentStatement->fetchAll() as $student) {
@@ -484,10 +511,17 @@ function validateStudentImport(PDO $database, array $rawRows): array
             continue;
         }
 
-        [$firstName, $lastName] = splitStudentName($values['student_name']);
+        [$firstName, $lastName, $middleName] = splitStudentName($values['student_name']);
         $yearLevel = parseStudentYearLevel($values['year_level']);
         $organization = inferStudentOrganization($values['course_program'], $organizations, $knownCourses);
         $existing = $studentsByNumber[normalizedImportKey($values['student_id'])] ?? null;
+        if ($existing !== null && substr_count($values['student_name'], ',') < 2) {
+            // Old two-part rosters do not supply a middle-name change. Preserve a known value.
+            $middleName = (string) $existing['middle_name'];
+            if ($middleName !== '' && normalizedImportKey($firstName) === normalizedImportKey($existing['first_name'] . ' ' . $middleName)) {
+                $firstName = $existing['first_name'];
+            }
+        }
         $errors = [];
         $warnings = [];
         if ($values['student_id'] === '') {
@@ -495,6 +529,12 @@ function validateStudentImport(PDO $database, array $rawRows): array
         }
         if ($values['student_name'] === '') {
             $errors[] = 'Missing student name.';
+        }
+        if ($firstName === '' || $lastName === '') {
+            $errors[] = 'First and last names are required.';
+        }
+        if (mb_strlen($firstName) > 100 || mb_strlen($lastName) > 100 || mb_strlen($middleName) > 100) {
+            $errors[] = 'Each student name field must be 100 characters or fewer.';
         }
         if (
             !filter_var($values['school_email'], FILTER_VALIDATE_EMAIL)
@@ -524,6 +564,7 @@ function validateStudentImport(PDO $database, array $rawRows): array
             'student_id' => $values['student_id'],
             'student_name' => $values['student_name'],
             'first_name' => $firstName,
+            'middle_name' => $middleName,
             'last_name' => $lastName,
             'school_email' => strtolower($values['school_email']),
             'course_program' => $values['course_program'],
@@ -609,7 +650,7 @@ function importValidatedStudents(PDO $database, array $preview, ?int $registrarU
             "UPDATE users SET email = :email, role = 'STUDENT', status = 'ACTIVE' WHERE id = :id"
         );
         $updateStudent = $database->prepare(
-            "UPDATE students SET first_name = :first_name, last_name = :last_name, program = :program,
+            "UPDATE students SET first_name = :first_name, middle_name = COALESCE(:middle_name,middle_name), last_name = :last_name, program = :program,
                     year_level = :year_level, organization_id = :organization_id, status = 'ACTIVE'
              WHERE id = :id"
         );
@@ -619,9 +660,9 @@ function importValidatedStudents(PDO $database, array $preview, ?int $registrarU
         );
         $insertStudent = $database->prepare(
             "INSERT INTO students
-                (user_id, student_number, first_name, last_name, program, year_level, section, organization_id, status)
+                (user_id, student_number, first_name, middle_name, last_name, program, year_level, section, organization_id, status)
              VALUES
-                (:user_id, :student_number, :first_name, :last_name, :program, :year_level, :section, :organization_id, 'ACTIVE')"
+                (:user_id, :student_number, :first_name, :middle_name, :last_name, :program, :year_level, :section, :organization_id, 'ACTIVE')"
         );
         $initialPasswordHash = password_hash(CLEAR_GO_INITIAL_PASSWORD, PASSWORD_DEFAULT);
 
@@ -634,6 +675,7 @@ function importValidatedStudents(PDO $database, array $preview, ?int $registrarU
                 $updateUser->execute(['email' => $row['school_email'], 'id' => $row['existing_user_id']]);
                 $updateStudent->execute([
                     'first_name' => $row['first_name'],
+                    'middle_name' => $row['middle_name'] ?? null,
                     'last_name' => $row['last_name'],
                     'program' => $row['course_program'],
                     'year_level' => $row['year_level'],
@@ -651,6 +693,7 @@ function importValidatedStudents(PDO $database, array $preview, ?int $registrarU
                     'user_id' => (int) $database->lastInsertId(),
                     'student_number' => $row['student_id'],
                     'first_name' => $row['first_name'],
+                    'middle_name' => $row['middle_name'] ?? '',
                     'last_name' => $row['last_name'],
                     'program' => $row['course_program'],
                     'year_level' => $row['year_level'],

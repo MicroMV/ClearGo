@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+if (PHP_SAPI !== 'cli') {
+    http_response_code(403);
+    exit('Forbidden');
+}
+
 require_once __DIR__ . '/../registrar/student_import_functions.php';
 
 $failures = [];
@@ -55,12 +60,12 @@ try {
     $database->exec("CREATE TABLE academic_periods (id INTEGER PRIMARY KEY, school_year TEXT, semester TEXT, status TEXT);
         CREATE TABLE organizations (id INTEGER PRIMARY KEY, code TEXT, name TEXT, status TEXT);
         CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT UNIQUE, password_hash TEXT, role TEXT, status TEXT);
-        CREATE TABLE students (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER UNIQUE, student_number TEXT UNIQUE, first_name TEXT, last_name TEXT, program TEXT, year_level INTEGER, section TEXT, organization_id INTEGER, status TEXT);
+        CREATE TABLE students (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER UNIQUE, student_number TEXT UNIQUE, first_name TEXT, middle_name TEXT NOT NULL DEFAULT '', last_name TEXT, program TEXT, year_level INTEGER, section TEXT, organization_id INTEGER, status TEXT);
         CREATE TABLE clearances (id INTEGER PRIMARY KEY, student_id INTEGER);
         INSERT INTO academic_periods VALUES (1, '2026-2027', '1ST', 'ACTIVE');
         INSERT INTO organizations VALUES (1, 'CCS', 'Computer Studies', 'ACTIVE');
         INSERT INTO users VALUES (1, 'old@thelewiscollege.edu.ph', 'hash', 'STUDENT', 'ACTIVE');
-        INSERT INTO students VALUES (1, 1, 'STU-1', 'Old', 'Name', 'Old Program', 1, 'A', 1, 'ACTIVE');
+        INSERT INTO students VALUES (1, 1, 'STU-1', 'Old', '', 'Name', 'Old Program', 1, 'A', 1, 'ACTIVE');
         INSERT INTO clearances VALUES (1, 1);");
 
     $rawRows = [
@@ -81,7 +86,7 @@ try {
     $result = importValidatedStudents($database, $preview);
     importCheck($result === ['added' => 1, 'updated' => 1, 'skipped' => 2, 'errors' => 2, 'removed_from_semester' => 0], 'Import result totals are incorrect.');
     importCheck($database->query("SELECT email FROM users WHERE id = 1")->fetchColumn() === 'updated@thelewiscollege.edu.ph', 'Existing student email was not updated.');
-    importCheck($database->query("SELECT first_name || ' ' || last_name FROM students WHERE id = 1")->fetchColumn() === 'Student Middle Updated', 'Existing full name was not parsed correctly.');
+    importCheck($database->query("SELECT first_name || '|' || middle_name || '|' || last_name FROM students WHERE id = 1")->fetchColumn() === 'Student|Middle|Updated', 'The import must persist first, middle and last names separately.');
     importCheck((int) $database->query('SELECT COUNT(*) FROM clearances WHERE student_id = 1')->fetchColumn() === 1, 'Existing clearance history was changed.');
     importCheck((int) $database->query('SELECT COUNT(*) FROM students')->fetchColumn() === 2, 'The valid new student was not inserted.');
 
@@ -94,7 +99,23 @@ try {
         ['3', 'C-2023-0648', 'Nazareno, Khenzie, Garalde', 'ACT - Networking', 'Third Year', 'khenzie.nazareno@thelewiscollege.edu.ph'],
     ]);
     importCheck($officialLayoutPreview['valid_count'] === 3, 'The official student-record layout was not accepted.');
-    importCheck($officialLayoutPreview['rows'][0]['first_name'] === 'Ella Victoria Dawis' && $officialLayoutPreview['rows'][0]['last_name'] === 'Gogolin', 'Last, first, middle name parsing is incorrect.');
+    importCheck($officialLayoutPreview['rows'][0]['first_name'] === 'Ella Victoria' && $officialLayoutPreview['rows'][0]['middle_name'] === 'Dawis' && $officialLayoutPreview['rows'][0]['last_name'] === 'Gogolin', 'Last, first, middle parsing must preserve compound first names.');
+    importCheck(splitStudentName('Cruz, Mary Jane, De la Rosa') === ['Mary Jane','Cruz','De la Rosa'], 'Compound first and middle names must remain intact.');
+    importCheck(splitStudentName('Cruz, Mary Jane,') === ['Mary Jane','Cruz',''], 'An explicit blank middle name must be supported.');
+    importCheck(splitStudentName('Mary Jane Cruz') === ['Mary Jane','Cruz',''], 'Legacy names must not have a middle name guessed from the final given word.');
+    $legacyRows = [$rawRows[0], [], $rawRows[2], ['1','STU-1','Updated, Student Middle','BSCS','Second Year','updated@thelewiscollege.edu.ph']];
+    $legacyPreview = validateStudentImport($database,$legacyRows);
+    importValidatedStudents($database,$legacyPreview);
+    importCheck($database->query("SELECT first_name || '|' || middle_name FROM students WHERE id=1")->fetchColumn() === 'Student|Middle', 'Reimporting an old two-part name must preserve a separately recorded middle name without duplication.');
+    $legacyRows[3][2] = 'Updated, Student,';
+    importValidatedStudents($database,validateStudentImport($database,$legacyRows));
+    importCheck($database->query('SELECT middle_name FROM students WHERE id=1')->fetchColumn() === '', 'An explicit empty third name part must clear the middle name.');
+    importCheck(registrarStudentNameInput(['first_name'=>'Mary Jane','middle_name'=>'De la Rosa','last_name'=>'Cruz']) === ['Mary Jane','Cruz','De la Rosa'], 'Manual entry must preserve each explicit name field.');
+    foreach ([['first_name'=>['invalid'],'last_name'=>'Cruz'],['first_name'=>'Mary','last_name'=>'Cruz','middle_name'=>['invalid']],['first_name'=>'Mary','last_name'=>''],['first_name'=>'Mary','last_name'=>'Cruz','middle_name'=>str_repeat('M',101)]] as $badNames) {
+        $rejected = false;
+        try { registrarStudentNameInput($badNames); } catch (RuntimeException) { $rejected = true; }
+        importCheck($rejected,'Invalid manual name shapes and lengths must be rejected safely.');
+    }
     importCheck($officialLayoutPreview['rows'][0]['year_level'] === 1 && $officialLayoutPreview['rows'][1]['year_level'] === 2 && $officialLayoutPreview['rows'][2]['year_level'] === 3, 'Written year levels were not converted correctly.');
     importCheck(count(array_filter($officialLayoutPreview['rows'], static fn(array $row): bool => $row['organization'] === 'CCS')) === 3, 'ACT courses were not assigned to CCS.');
 

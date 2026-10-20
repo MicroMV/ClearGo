@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+if (PHP_SAPI !== 'cli') {
+    http_response_code(403);
+    exit('Forbidden');
+}
+
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../clearance/clearance_functions.php';
 require_once __DIR__ . '/../clinic/workbook_functions.php';
@@ -51,6 +56,11 @@ try {
     $studentId = (int) $database->lastInsertId();
     $database->prepare("INSERT INTO semester_enrollments (academic_period_id,student_id,status) VALUES (:period_id,:student_id,'ENROLLED')")->execute(['period_id' => $periodId, 'student_id' => $studentId]);
     $clearanceId = (int) startStudentClearance($database, $userId)['clearance']['id'];
+    // This fixture tests Clinic import after the preceding offices have cleared the student.
+    $database->prepare("UPDATE clearance_stations SET status=CASE
+        WHEN station_id IN (SELECT id FROM stations WHERE code IN ('DEAN','ORGANIZATION','SASO')) THEN 'APPROVED'
+        WHEN station_id IN (SELECT id FROM stations WHERE code='CLINIC') THEN 'PENDING' ELSE status END
+        WHERE clearance_id=:id")->execute(['id' => $clearanceId]);
 
     $result = importClinicWorkbook($database, $clinicStaffId, [
         ['student_number' => $studentNumber, 'status' => 'CLEARED', 'remarks' => 'Complete medical record.'],
@@ -65,6 +75,9 @@ try {
     $clinicStatus = $database->prepare("SELECT record.status FROM clearance_stations record INNER JOIN stations station ON station.id=record.station_id AND station.code='CLINIC' WHERE record.clearance_id=:clearance_id");
     $clinicStatus->execute(['clearance_id' => $clearanceId]);
     clinicCheck($clinicStatus->fetchColumn() === 'APPROVED', 'Clinic import did not approve Clinic clearance.');
+    $officeRemarks = $database->prepare("SELECT record.office_remarks FROM clearance_stations record INNER JOIN stations station ON station.id=record.station_id AND station.code='CLINIC' WHERE record.clearance_id=:clearance_id");
+    $officeRemarks->execute(['clearance_id' => $clearanceId]);
+    clinicCheck($officeRemarks->fetchColumn() === 'Complete medical record.', 'Clinic approval erased the student-facing office remarks.');
     echo "Clinic three-sheet workbook test passed.\n";
 } finally {
     if (is_string($temporaryFile) && file_exists($temporaryFile)) {

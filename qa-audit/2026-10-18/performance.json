@@ -1,0 +1,32 @@
+[
+  {
+    "requests": 1,
+    "concurrency": 1,
+    "wall_ms": 48,
+    "median_ms": 47.73,
+    "p95_ms": 47.73,
+    "max_ms": 47.73,
+    "all_http_200": true,
+    "scope": "Synthetic roster, one staff account, local single-process PHP server; request batch is not a count of simultaneously active students."
+  },
+  {
+    "requests": 30,
+    "concurrency": 4,
+    "wall_ms": 967,
+    "median_ms": 120.14,
+    "p95_ms": 178.88,
+    "max_ms": 179.2,
+    "all_http_200": true,
+    "scope": "Synthetic roster, one staff account, local single-process PHP server; request batch is not a count of simultaneously active students."
+  },
+  {
+    "requests": 100,
+    "concurrency": 8,
+    "wall_ms": 3676,
+    "median_ms": 267.71,
+    "p95_ms": 453.35,
+    "max_ms": 474.02,
+    "all_http_200": true,
+    "scope": "Synthetic roster, one staff account, local single-process PHP server; request batch is not a count of simultaneously active students."
+  }
+]

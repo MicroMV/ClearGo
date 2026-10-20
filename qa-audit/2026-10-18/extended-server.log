@@ -1,0 +1,703 @@
+[Sun Oct 18 11:45:27 2026] PHP 8.2.12 Development Server (http://127.0.0.1:8829) started
+[Sun Oct 18 11:45:27 2026] 127.0.0.1:2518 Accepted
+[Sun Oct 18 11:45:27 2026] 127.0.0.1:2518 [200]: GET /login.php
+[Sun Oct 18 11:45:27 2026] 127.0.0.1:2518 Closing
+[Sun Oct 18 11:45:27 2026] 127.0.0.1:2519 Accepted
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2519 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2519 Closing
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2521 Accepted
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2521 [200]: GET /login.php
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2521 Closing
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2522 Accepted
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2522 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2522 Closing
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2524 Accepted
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2524 [403]: POST /registrar/student_action.php
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2524 Closing
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2526 Accepted
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2526 [200]: GET /login.php
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2526 Closing
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2527 Accepted
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2527 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2527 Closing
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2529 Accepted
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2529 [200]: GET /dean/dashboard.php?search=QA-NONEXISTENT-934234
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2529 Closing
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2531 Accepted
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2531 [200]: GET /dean/dashboard.php?search=%27%20OR%201%3D1%20--%20%3Cscript%3Eqa%3C%2Fscript%3E%20%26%20%25%20_
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2531 Closing
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2533 Accepted
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2533 [200]: GET /dean/dashboard.php?page=9999
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2533 Closing
+[Sun Oct 18 11:45:28 2026] 127.0.0.1:2535 Accepted
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2535 [200]: GET /dean/dashboard.php?page=-1
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2535 Closing
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2537 Accepted
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2537 [200]: GET /dean/dashboard.php?export=xlsx
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2537 Closing
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2539 Accepted
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2539 [200]: GET /login.php
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2539 Closing
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2540 Accepted
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2540 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2540 Closing
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2542 Accepted
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2542 [200]: GET /organization/dashboard.php?search=QA-NONEXISTENT-934234
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2542 Closing
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2544 Accepted
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2544 [200]: GET /organization/dashboard.php?search=%27%20OR%201%3D1%20--%20%3Cscript%3Eqa%3C%2Fscript%3E%20%26%20%25%20_
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2544 Closing
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2546 Accepted
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2546 [200]: GET /organization/dashboard.php?page=9999
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2546 Closing
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2548 Accepted
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2548 [200]: GET /organization/dashboard.php?page=-1
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2548 Closing
+[Sun Oct 18 11:45:29 2026] 127.0.0.1:2550 Accepted
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2550 [200]: GET /organization/dashboard.php?export=xlsx
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2550 Closing
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2552 Accepted
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2552 [200]: GET /login.php
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2552 Closing
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2553 Accepted
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2553 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2553 Closing
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2555 Accepted
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2555 [200]: GET /library/dashboard.php?search=QA-NONEXISTENT-934234
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2555 Closing
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2557 Accepted
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2557 [200]: GET /library/dashboard.php?search=%27%20OR%201%3D1%20--%20%3Cscript%3Eqa%3C%2Fscript%3E%20%26%20%25%20_
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2557 Closing
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2559 Accepted
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2559 [200]: GET /library/dashboard.php?page=9999
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2559 Closing
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2561 Accepted
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2561 [200]: GET /library/dashboard.php?page=-1
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2561 Closing
+[Sun Oct 18 11:45:30 2026] 127.0.0.1:2563 Accepted
+[Sun Oct 18 11:45:31 2026] 127.0.0.1:2563 [200]: GET /library/dashboard.php?export=xlsx
+[Sun Oct 18 11:45:31 2026] 127.0.0.1:2563 Closing
+[Sun Oct 18 11:45:31 2026] 127.0.0.1:2565 Accepted
+[Sun Oct 18 11:45:31 2026] 127.0.0.1:2565 [200]: GET /login.php
+[Sun Oct 18 11:45:31 2026] 127.0.0.1:2565 Closing
+[Sun Oct 18 11:45:31 2026] 127.0.0.1:2566 Accepted
+[Sun Oct 18 11:45:31 2026] 127.0.0.1:2566 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:45:31 2026] 127.0.0.1:2566 Closing
+[Sun Oct 18 11:45:31 2026] 127.0.0.1:2568 Accepted
+[Sun Oct 18 11:45:31 2026] 127.0.0.1:2568 [200]: GET /bookstore/dashboard.php?search=QA-NONEXISTENT-934234
+[Sun Oct 18 11:45:31 2026] 127.0.0.1:2568 Closing
+[Sun Oct 18 11:45:31 2026] 127.0.0.1:2570 Accepted
+[Sun Oct 18 11:45:31 2026] 127.0.0.1:2570 [200]: GET /bookstore/dashboard.php?search=%27%20OR%201%3D1%20--%20%3Cscript%3Eqa%3C%2Fscript%3E%20%26%20%25%20_
+[Sun Oct 18 11:45:31 2026] 127.0.0.1:2570 Closing
+[Sun Oct 18 11:45:31 2026] 127.0.0.1:2572 Accepted
+[Sun Oct 18 11:45:31 2026] 127.0.0.1:2572 [200]: GET /bookstore/dashboard.php?page=9999
+[Sun Oct 18 11:45:31 2026] 127.0.0.1:2572 Closing
+[Sun Oct 18 11:45:31 2026] 127.0.0.1:2574 Accepted
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2574 [200]: GET /bookstore/dashboard.php?page=-1
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2574 Closing
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2576 Accepted
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2576 [200]: GET /bookstore/dashboard.php?export=xlsx
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2576 Closing
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2578 Accepted
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2578 [200]: GET /login.php
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2578 Closing
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2579 Accepted
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2579 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2579 Closing
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2581 Accepted
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2581 [200]: GET /clinic/dashboard.php?search=QA-NONEXISTENT-934234
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2581 Closing
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2583 Accepted
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2583 [200]: GET /clinic/dashboard.php?search=%27%20OR%201%3D1%20--%20%3Cscript%3Eqa%3C%2Fscript%3E%20%26%20%25%20_
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2583 Closing
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2585 Accepted
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2585 [200]: GET /clinic/dashboard.php?page=9999
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2585 Closing
+[Sun Oct 18 11:45:32 2026] 127.0.0.1:2587 Accepted
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2587 [200]: GET /clinic/dashboard.php?page=-1
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2587 Closing
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2589 Accepted
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2589 [200]: GET /clinic/dashboard.php?export=xlsx
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2589 Closing
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2591 Accepted
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2591 [200]: GET /login.php
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2591 Closing
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2592 Accepted
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2592 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2592 Closing
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2594 Accepted
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2594 [200]: GET /facilities/dashboard.php?search=QA-NONEXISTENT-934234
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2594 Closing
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2596 Accepted
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2596 [200]: GET /facilities/dashboard.php?search=%27%20OR%201%3D1%20--%20%3Cscript%3Eqa%3C%2Fscript%3E%20%26%20%25%20_
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2596 Closing
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2598 Accepted
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2598 [200]: GET /facilities/dashboard.php?page=9999
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2598 Closing
+[Sun Oct 18 11:45:33 2026] 127.0.0.1:2600 Accepted
+[Sun Oct 18 11:45:34 2026] 127.0.0.1:2600 [200]: GET /facilities/dashboard.php?page=-1
+[Sun Oct 18 11:45:34 2026] 127.0.0.1:2600 Closing
+[Sun Oct 18 11:45:34 2026] 127.0.0.1:2602 Accepted
+[Sun Oct 18 11:45:34 2026] 127.0.0.1:2602 [200]: GET /facilities/dashboard.php?export=xlsx
+[Sun Oct 18 11:45:34 2026] 127.0.0.1:2602 Closing
+[Sun Oct 18 11:45:34 2026] 127.0.0.1:2604 Accepted
+[Sun Oct 18 11:45:34 2026] 127.0.0.1:2604 [200]: GET /login.php
+[Sun Oct 18 11:45:34 2026] 127.0.0.1:2604 Closing
+[Sun Oct 18 11:45:34 2026] 127.0.0.1:2605 Accepted
+[Sun Oct 18 11:45:34 2026] 127.0.0.1:2605 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:45:34 2026] 127.0.0.1:2605 Closing
+[Sun Oct 18 11:45:34 2026] 127.0.0.1:2607 Accepted
+[Sun Oct 18 11:45:34 2026] 127.0.0.1:2607 [200]: GET /comlab/dashboard.php?search=QA-NONEXISTENT-934234
+[Sun Oct 18 11:45:34 2026] 127.0.0.1:2607 Closing
+[Sun Oct 18 11:45:34 2026] 127.0.0.1:2609 Accepted
+[Sun Oct 18 11:45:35 2026] 127.0.0.1:2609 [200]: GET /comlab/dashboard.php?search=%27%20OR%201%3D1%20--%20%3Cscript%3Eqa%3C%2Fscript%3E%20%26%20%25%20_
+[Sun Oct 18 11:45:35 2026] 127.0.0.1:2609 Closing
+[Sun Oct 18 11:45:35 2026] 127.0.0.1:2611 Accepted
+[Sun Oct 18 11:45:35 2026] 127.0.0.1:2611 [200]: GET /comlab/dashboard.php?page=9999
+[Sun Oct 18 11:45:35 2026] 127.0.0.1:2611 Closing
+[Sun Oct 18 11:45:35 2026] 127.0.0.1:2613 Accepted
+[Sun Oct 18 11:45:35 2026] 127.0.0.1:2613 [200]: GET /comlab/dashboard.php?page=-1
+[Sun Oct 18 11:45:35 2026] 127.0.0.1:2613 Closing
+[Sun Oct 18 11:45:35 2026] 127.0.0.1:2615 Accepted
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2615 [200]: GET /comlab/dashboard.php?export=xlsx
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2615 Closing
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2617 Accepted
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2617 [200]: GET /login.php
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2617 Closing
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2618 Accepted
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2618 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2618 Closing
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2620 Accepted
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2620 [200]: GET /accounting/dashboard.php?search=QA-NONEXISTENT-934234
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2620 Closing
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2622 Accepted
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2622 [200]: GET /accounting/dashboard.php?search=%27%20OR%201%3D1%20--%20%3Cscript%3Eqa%3C%2Fscript%3E%20%26%20%25%20_
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2622 Closing
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2625 Accepted
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2625 [200]: GET /accounting/dashboard.php?page=9999
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2625 Closing
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2627 Accepted
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2627 [200]: GET /accounting/dashboard.php?page=-1
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2627 Closing
+[Sun Oct 18 11:45:36 2026] 127.0.0.1:2629 Accepted
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2629 [200]: GET /accounting/dashboard.php?export=xlsx
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2629 Closing
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2631 Accepted
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2631 [200]: GET /login.php
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2631 Closing
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2632 Accepted
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2632 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2632 Closing
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2634 Accepted
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2634 [200]: GET /saso/dashboard.php?search=QA-NONEXISTENT-934234
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2634 Closing
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2636 Accepted
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2636 [200]: GET /saso/dashboard.php?search=%27%20OR%201%3D1%20--%20%3Cscript%3Eqa%3C%2Fscript%3E%20%26%20%25%20_
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2636 Closing
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2638 Accepted
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2638 [200]: GET /saso/dashboard.php?page=9999
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2638 Closing
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2640 Accepted
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2640 [200]: GET /saso/dashboard.php?page=-1
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2640 Closing
+[Sun Oct 18 11:45:37 2026] 127.0.0.1:2643 Accepted
+[Sun Oct 18 11:45:38 2026] 127.0.0.1:2643 [200]: GET /saso/dashboard.php?export=xlsx
+[Sun Oct 18 11:45:38 2026] 127.0.0.1:2643 Closing
+[Sun Oct 18 11:45:38 2026] 127.0.0.1:2645 Accepted
+[Sun Oct 18 11:45:38 2026] 127.0.0.1:2645 [200]: GET /login.php
+[Sun Oct 18 11:45:38 2026] 127.0.0.1:2645 Closing
+[Sun Oct 18 11:45:38 2026] 127.0.0.1:2646 Accepted
+[Sun Oct 18 11:45:38 2026] 127.0.0.1:2646 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:45:38 2026] 127.0.0.1:2646 Closing
+[Sun Oct 18 11:45:38 2026] 127.0.0.1:2648 Accepted
+[Sun Oct 18 11:45:38 2026] 127.0.0.1:2648 [200]: GET /student-council/dashboard.php?search=QA-NONEXISTENT-934234
+[Sun Oct 18 11:45:38 2026] 127.0.0.1:2648 Closing
+[Sun Oct 18 11:45:38 2026] 127.0.0.1:2650 Accepted
+[Sun Oct 18 11:45:38 2026] 127.0.0.1:2650 [200]: GET /student-council/dashboard.php?search=%27%20OR%201%3D1%20--%20%3Cscript%3Eqa%3C%2Fscript%3E%20%26%20%25%20_
+[Sun Oct 18 11:45:38 2026] 127.0.0.1:2650 Closing
+[Sun Oct 18 11:45:38 2026] 127.0.0.1:2652 Accepted
+[Sun Oct 18 11:45:38 2026] 127.0.0.1:2652 [200]: GET /student-council/dashboard.php?page=9999
+[Sun Oct 18 11:45:38 2026] 127.0.0.1:2652 Closing
+[Sun Oct 18 11:45:38 2026] 127.0.0.1:2654 Accepted
+[Sun Oct 18 11:45:39 2026] 127.0.0.1:2654 [200]: GET /student-council/dashboard.php?page=-1
+[Sun Oct 18 11:45:39 2026] 127.0.0.1:2654 Closing
+[Sun Oct 18 11:45:39 2026] 127.0.0.1:2656 Accepted
+[Sun Oct 18 11:45:39 2026] 127.0.0.1:2656 [200]: GET /student-council/dashboard.php?export=xlsx
+[Sun Oct 18 11:45:39 2026] 127.0.0.1:2656 Closing
+[Sun Oct 18 11:45:39 2026] 127.0.0.1:2660 Accepted
+[Sun Oct 18 11:45:39 2026] 127.0.0.1:2660 [200]: GET /registrar/clearance.php?search=QA-NONEXISTENT-934234
+[Sun Oct 18 11:45:39 2026] 127.0.0.1:2660 Closing
+[Sun Oct 18 11:45:39 2026] 127.0.0.1:2662 Accepted
+[Sun Oct 18 11:45:39 2026] 127.0.0.1:2662 [200]: GET /registrar/clearance.php?search=%27%20OR%201%3D1%20--%20%3Cscript%3Eqa%3C%2Fscript%3E%20%26%20%25%20_
+[Sun Oct 18 11:45:39 2026] 127.0.0.1:2662 Closing
+[Sun Oct 18 11:45:39 2026] 127.0.0.1:2665 Accepted
+[Sun Oct 18 11:45:40 2026] 127.0.0.1:2665 [200]: GET /registrar/clearance.php?page=9999
+[Sun Oct 18 11:45:40 2026] 127.0.0.1:2665 Closing
+[Sun Oct 18 11:45:40 2026] 127.0.0.1:2668 Accepted
+[Sun Oct 18 11:45:40 2026] 127.0.0.1:2668 [200]: GET /registrar/clearance.php?page=-1
+[Sun Oct 18 11:45:40 2026] 127.0.0.1:2668 Closing
+[Sun Oct 18 11:45:40 2026] 127.0.0.1:2671 Accepted
+[Sun Oct 18 11:45:40 2026] 127.0.0.1:2671 [200]: GET /registrar/clearance.php?export=xlsx
+[Sun Oct 18 11:45:40 2026] 127.0.0.1:2671 Closing
+[Sun Oct 18 11:45:40 2026] 127.0.0.1:2676 Accepted
+[Sun Oct 18 11:45:40 2026] Student password change failed: The current password is incorrect.
+[Sun Oct 18 11:45:40 2026] 127.0.0.1:2676 [303]: POST /student/password_action.php
+[Sun Oct 18 11:45:40 2026] 127.0.0.1:2676 Closing
+[Sun Oct 18 11:45:40 2026] 127.0.0.1:2679 Accepted
+[Sun Oct 18 11:45:40 2026] 127.0.0.1:2679 [200]: GET /login.php
+[Sun Oct 18 11:45:40 2026] 127.0.0.1:2679 Closing
+[Sun Oct 18 11:45:40 2026] 127.0.0.1:2680 Accepted
+[Sun Oct 18 11:45:40 2026] 127.0.0.1:2680 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:45:40 2026] 127.0.0.1:2680 Closing
+[Sun Oct 18 11:45:40 2026] 127.0.0.1:2683 Accepted
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:2683 [200]: GET /student/dashboard.php
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:2683 Closing
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4561 Accepted
+[Sun Oct 18 11:45:41 2026] Student password change failed: The new password confirmation does not match.
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4561 [303]: POST /student/password_action.php
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4561 Closing
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4563 Accepted
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4563 [200]: GET /login.php
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4563 Closing
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4564 Accepted
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4564 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4564 Closing
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4566 Accepted
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4566 [200]: GET /student/dashboard.php
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4566 Closing
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4568 Accepted
+[Sun Oct 18 11:45:41 2026] Student password change failed: The new password must contain at least 8 characters.
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4568 [303]: POST /student/password_action.php
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4568 Closing
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4570 Accepted
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4570 [200]: GET /login.php
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4570 Closing
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4571 Accepted
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4571 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4571 Closing
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4573 Accepted
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4573 [200]: GET /student/dashboard.php
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4573 Closing
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4575 Accepted
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4575 [200]: GET /login.php
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4575 Closing
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4576 Accepted
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4576 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4576 Closing
+[Sun Oct 18 11:45:41 2026] 127.0.0.1:4578 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4578 [303]: POST /student/password_action.php
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4578 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4580 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4580 [200]: GET /student/dashboard.php
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4580 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4582 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4582 [303]: POST /registrar/student_action.php
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4582 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4584 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4584 [303]: GET /student/dashboard.php
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4584 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4586 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4586 [303]: POST /registrar/student_action.php
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4586 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4588 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4588 [200]: GET /login.php
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4588 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4589 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4589 [303]: POST /auth/login_process.php
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4589 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4591 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4591 [403]: GET /dean/evaluation_image.php?id=1
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4591 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4593 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4593 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4593 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4595 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4596 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4597 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4598 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4595 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4595 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4596 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4596 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4597 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4597 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4598 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4598 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4600 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4602 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4600 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4600 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4604 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4602 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4602 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4606 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4604 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4604 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4608 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4606 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4606 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4610 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4608 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4608 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4612 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4610 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4610 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4614 Accepted
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4612 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4612 Closing
+[Sun Oct 18 11:45:42 2026] 127.0.0.1:4616 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4614 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4614 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4618 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4616 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4616 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4620 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4618 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4618 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4622 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4620 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4620 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4624 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4622 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4622 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4626 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4624 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4624 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4628 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4626 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4626 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4630 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4628 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4628 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4632 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4630 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4630 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4634 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4632 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4632 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4636 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4634 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4634 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4638 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4636 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4636 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4640 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4638 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4638 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4642 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4640 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4640 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4644 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4642 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4642 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4646 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4644 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4644 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4648 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4646 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4646 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4650 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4648 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4648 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4650 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4650 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4655 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4656 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4657 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4658 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4659 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4660 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4661 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4662 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4655 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4655 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4656 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4656 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4657 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4657 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4658 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4658 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4659 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4659 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4660 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4660 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4661 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4661 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4662 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4662 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4664 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4666 Accepted
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4664 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4664 Closing
+[Sun Oct 18 11:45:43 2026] 127.0.0.1:4668 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4666 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4666 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4670 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4668 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4668 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4672 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4670 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4670 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4674 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4672 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4672 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4676 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4674 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4674 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4678 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4676 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4676 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4680 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4678 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4678 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4682 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4680 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4680 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4684 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4682 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4682 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4686 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4684 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4684 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4688 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4686 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4686 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4690 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4688 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4688 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4692 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4690 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4690 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4694 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4692 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4692 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4696 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4694 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4694 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4698 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4696 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4696 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4700 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4698 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4698 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4702 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4700 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4700 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4704 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4702 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4702 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4706 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4704 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4704 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4708 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4706 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4706 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4710 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4708 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4708 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4712 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4710 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4710 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4714 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4712 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4712 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4716 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4714 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4714 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4718 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4716 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4716 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4720 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4718 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4718 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4722 Accepted
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4720 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4720 Closing
+[Sun Oct 18 11:45:44 2026] 127.0.0.1:4724 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4722 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4722 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4726 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4724 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4724 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4728 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4726 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4726 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4730 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4728 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4728 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4732 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4730 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4730 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4734 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4732 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4732 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4736 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4734 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4734 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4738 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4736 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4736 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4740 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4738 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4738 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4742 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4740 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4740 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4744 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4742 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4742 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4746 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4744 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4744 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4749 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4746 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4746 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4751 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4749 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4749 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4753 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4751 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4751 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4755 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4753 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4753 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4757 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4755 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4755 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4759 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4757 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4757 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4761 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4759 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4759 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4763 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4761 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4761 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4765 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4763 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4763 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4767 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4765 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4765 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4769 Accepted
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4767 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4767 Closing
+[Sun Oct 18 11:45:45 2026] 127.0.0.1:4771 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4769 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4769 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4773 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4771 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4771 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4775 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4773 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4773 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4777 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4775 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4775 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4779 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4777 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4777 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4781 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4779 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4779 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4783 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4781 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4781 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4785 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4783 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4783 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4787 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4785 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4785 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4789 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4787 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4787 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4791 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4789 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4789 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4793 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4791 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4791 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4795 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4793 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4793 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4797 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4795 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4795 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4799 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4797 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4797 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4801 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4799 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4799 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4803 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4801 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4801 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4805 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4803 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4803 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4807 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4805 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4805 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4809 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4807 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4807 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4811 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4809 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4809 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4813 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4811 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4811 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4815 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4813 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4813 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4817 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4815 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4815 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4819 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4817 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4817 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4821 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4819 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4819 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4823 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4821 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4821 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4825 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4823 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4823 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4827 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4825 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4825 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4829 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4827 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4827 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4831 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4829 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4829 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4833 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4831 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4831 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4835 Accepted
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4833 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4833 Closing
+[Sun Oct 18 11:45:46 2026] 127.0.0.1:4837 Accepted
+[Sun Oct 18 11:45:47 2026] 127.0.0.1:4835 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:47 2026] 127.0.0.1:4835 Closing
+[Sun Oct 18 11:45:47 2026] 127.0.0.1:4839 Accepted
+[Sun Oct 18 11:45:47 2026] 127.0.0.1:4837 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:47 2026] 127.0.0.1:4837 Closing
+[Sun Oct 18 11:45:47 2026] 127.0.0.1:4841 Accepted
+[Sun Oct 18 11:45:47 2026] 127.0.0.1:4839 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:47 2026] 127.0.0.1:4839 Closing
+[Sun Oct 18 11:45:47 2026] 127.0.0.1:4843 Accepted
+[Sun Oct 18 11:45:47 2026] 127.0.0.1:4841 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:47 2026] 127.0.0.1:4841 Closing
+[Sun Oct 18 11:45:47 2026] 127.0.0.1:4845 Accepted
+[Sun Oct 18 11:45:47 2026] 127.0.0.1:4843 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:47 2026] 127.0.0.1:4843 Closing
+[Sun Oct 18 11:45:47 2026] 127.0.0.1:4847 Accepted
+[Sun Oct 18 11:45:47 2026] 127.0.0.1:4845 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:47 2026] 127.0.0.1:4845 Closing
+[Sun Oct 18 11:45:47 2026] 127.0.0.1:4847 [200]: GET /registrar/students.php?search=QA
+[Sun Oct 18 11:45:47 2026] 127.0.0.1:4847 Closing

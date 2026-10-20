@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+
+<head><link rel="stylesheet" href="/assets/css/connection-status.css?v=1792294403"><link rel="preload" as="image" href="/assets/the-lewis-college-logo.png"><script defer src="/assets/js/connection-status.js?v=1792294403" data-connection-status data-logo-url="/assets/the-lewis-college-logo.png" data-status-url="/auth/connection_status.php" data-worker-url="/connection-worker.js"></script>    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>ClearGo Attendance Scanner</title>
+    <link rel="stylesheet" href="/assets/css/attendance-scanner.css?v=1792294402">
+</head>
+
+<body class="scanner-page">
+    <main>
+        <section class="panel">
+            <h1>ClearGo Attendance Scanner</h1>
+            <p class="muted">Point your camera at the event QR code. Only ClearGo attendance QR codes are accepted.</p>
+            <div id="camera" aria-label="Camera preview"></div>
+            <p id="status" class="notice">Starting camera…</p>
+            <div class="scanner-actions"><button id="retry" type="button" hidden>Enable camera and retry</button> <a href="/student/dashboard.php#attendance">Back to dashboard</a></div>
+            <form id="scan-form" method="post" action="/student/attendance_scanner_action.php" hidden>
+                <input type="hidden" name="csrf_token" value="d44ab4b098b46cda86ab2802efaa00b74d0f1a0b10f0361054d6b292ebf9f171"><input id="token" type="hidden" name="token">
+            </form>
+        </section>
+    </main>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="/assets/js/attendance-scanner.js?v=1792294403"></script>
+</body>
+
+</html>

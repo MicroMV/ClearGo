@@ -67,7 +67,7 @@
             url.searchParams.delete('edit');
             window.history.replaceState(window.history.state, '', url);
         }
-        if (opener) opener.focus();
+        if (opener) opener.focus({ preventScroll: true });
     });
 
     if (modal.dataset.initialEdit === 'true') {

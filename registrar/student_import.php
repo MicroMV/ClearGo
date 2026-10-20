@@ -33,7 +33,7 @@ $sidebar = registrarDashboardSidebar($user, 'import', $logoutForm);
 <!doctype html>
 <html lang="en">
 
-<head>
+<head><?= connectionStatusAssets() ?>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Student Data Import | ClearGo</title>
@@ -80,7 +80,7 @@ $sidebar = registrarDashboardSidebar($user, 'import', $logoutForm);
                         </label>
                         <div class="import-upload-actions"><a class="button-link secondary" href="<?= escapeHtml(applicationUrl('/registrar/student_import_template.php')) ?>">Excel Template</a><button type="submit">Upload and Preview</button></div>
                     </form>
-                    <p class="hint">Accepted: .xlsx or .csv, up to 5 MB and 5,000 student rows. Columns: #, Student No., Full Name, Course, Year Level, Gsuite Address. The importer recognizes a title such as “ACADEMIC YEAR 2026-2027 1ST SEMESTER” above the headers.</p>
+                    <p class="hint">Accepted: .xlsx or .csv, up to 5 MB and 5,000 student rows. Columns: #, Student No., Full Name, Course, Year Level, Gsuite Address. Enter Full Name as Last, First, Middle; keep both commas if there is no middle name. The importer recognizes a title such as “ACADEMIC YEAR 2026-2027 1ST SEMESTER” above the headers.</p>
                 </section>
                 <?php if (is_array($preview)): ?>
                     <section class="panel" id="import-preview">

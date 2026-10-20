@@ -1,0 +1,607 @@
+# Complete verification checklist
+
+Audit date: 2026-10-18 (Asia/Manila). PASS applies only to the test written in its row. Broad suite results do not certify every branch or every source control. Failed cases may describe the same defect; bug counts are separate.
+
+| Test ID | Role | Page/Feature | Test performed | Result | Evidence |
+|---|---|---|---|---|---|
+| TC-001 | All | PHP syntax | Parse 141 files without executing them | PASS | All files parsed successfully. |
+| TC-002 | All | JavaScript syntax | Parse 17 files without executing them | PASS | All files parsed successfully. |
+| TC-003 | Various | bookstore_event_workbook_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | Bookstore active/closed event export test passed. Evidence: mysql-bookstore_event_workbook_test.php.log; original live-data suite was not run against school records. |
+| TC-004 | Various | bookstore_workbook_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | Bookstore three-sheet workbook test passed. Evidence: mysql-bookstore_workbook_test.php.log; original live-data suite was not run against school records. |
+| TC-005 | Various | bookstore_workflow_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | Bookstore obligation workflow test passed. Evidence: mysql-bookstore_workflow_test.php.log; original live-data suite was not run against school records. |
+| TC-006 | Various | bulk_clearance_test.php | Run existing suite with in-memory fixtures, source rendering, or temporary workbook files | PASS | Bulk clearance test passed for all 11 approving offices. CCS minimum batch, final 1-4 students, roster scope and server rejection checks passed. |
+| TC-007 | Various | bulk_dashboard_render_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | COMLAB_STAFF dashboard bulk button rendered successfully. Evidence: mysql-bulk_dashboard_render_test.php.log; original live-data suite was not run against school records. |
+| TC-008 | Various | cbe_dean_workflow_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | CBE YBC-to-Dean workflow checks passed. Evidence: mysql-cbe_dean_workflow_test.php.log; original live-data suite was not run against school records. |
+| TC-009 | Various | cbe_fourth_year_single_approval_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | CBE fourth-year single approval test passed. Evidence: mysql-cbe_fourth_year_single_approval_test.php.log; original live-data suite was not run against school records. |
+| TC-010 | Various | clearance_report_workbook_test.php | Run existing suite with in-memory fixtures, source rendering, or temporary workbook files | PASS | Clearance report workbook test passed. |
+| TC-011 | Various | clinic_workbook_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | Clinic three-sheet workbook test passed. Evidence: mysql-clinic_workbook_test.php.log; original live-data suite was not run against school records. |
+| TC-012 | Various | comlab_violations_modal_test.php | Run existing suite with in-memory fixtures, source rendering, or temporary workbook files | PASS | Comlab violation modal checks passed. |
+| TC-013 | Various | dashboard_summary_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | Dashboard summary consistency test passed. Evidence: mysql-dashboard_summary_test.php.log; original live-data suite was not run against school records. |
+| TC-014 | Various | facilities_items_modal_test.php | Run existing suite with in-memory fixtures, source rendering, or temporary workbook files | PASS | Facilities borrowing modal checks passed. |
+| TC-015 | Various | facilities_return_query_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | Facilities return query checks passed. Evidence: mysql-facilities_return_query_test.php.log; original live-data suite was not run against school records. |
+| TC-016 | Various | library_workbook_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | Library three-sheet workbook test passed. Evidence: mysql-library_workbook_test.php.log; original live-data suite was not run against school records. |
+| TC-017 | Various | notification_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | Notification deduplication test passed. Evidence: mysql-notification_test.php.log; original live-data suite was not run against school records. |
+| TC-018 | Various | office_remarks_action_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | Office remarks POST save check passed; all database changes rolled back. Evidence: mysql-office_remarks_action_test.php.log; original live-data suite was not run against school records. |
+| TC-019 | Various | office_remarks_report_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | DEAN Excel export contains saved remarks in its final column; changes rolled back. Evidence: mysql-office_remarks_report_test.php.log; original live-data suite was not run against school records. |
+| TC-020 | Various | office_remarks_test.php | Run existing suite with in-memory fixtures, source rendering, or temporary workbook files | PASS | Office remarks save, removal, ownership, semester protection, notifications and pending workbook imports passed for all 11 offices. Multiline remarks, final template columns and older workbook compatibility passed. |
+| TC-021 | Various | office_workbook_design_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | All four office workbook designs and readbacks passed. Evidence: mysql-office_workbook_design_test.php.log; original live-data suite was not run against school records. |
+| TC-022 | Various | phase1_clearance_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | Phase 1 clearance checks passed. Evidence: mysql-phase1_clearance_test.php.log; original live-data suite was not run against school records. |
+| TC-023 | Various | phase2_dean_clearance_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | Phase 2 Dean clearance checks passed. Evidence: mysql-phase2_dean_clearance_test.php.log; original live-data suite was not run against school records. |
+| TC-024 | Various | phase3_office_workflow_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | Phase 3 office workflow checks passed. Evidence: mysql-phase3_office_workflow_test.php.log; original live-data suite was not run against school records. |
+| TC-025 | Various | profile_picture_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | Profile upload, replacement, ownership and audit-context checks passed for all 12 account roles. Evidence: mysql-profile_picture_test.php.log; original live-data suite was not run against school records. |
+| TC-026 | Various | qr_attendance_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | QR attendance test passed. Evidence: mysql-qr_attendance_test.php.log; original live-data suite was not run against school records. |
+| TC-027 | Various | readiness_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | Office Ready and Undo Ready checks passed. Evidence: mysql-readiness_test.php.log; original live-data suite was not run against school records. |
+| TC-028 | Various | semester_notifications_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | Semester notification rollover, archive selection, unread isolation, ownership and HTTP checks passed. Evidence: mysql-semester_notifications_test.php.log; original live-data suite was not run against school records. |
+| TC-029 | Various | staff_navigation_test.php | Run existing suite with in-memory fixtures, source rendering, or temporary workbook files | PASS | All 11 office return paths preserve filters and pagination; unrelated paths and invalid context are ignored. |
+| TC-030 | Various | student_dashboard_history_test.php | Run existing suite with in-memory fixtures, source rendering, or temporary workbook files | PASS | Student dashboard history tests passed. |
+| TC-031 | Various | student_import_mysql_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | MySQL student import test passed. Evidence: mysql-student_import_mysql_test.php.log; original live-data suite was not run against school records. |
+| TC-032 | Various | student_import_preview_test.php | Execute existing suite in a reset, disposable MySQL fixture | PASS | Import preview pagination passed: 2,319 rows, page limits, row numbers and full-file confirmation preserved. Evidence: mysql-student_import_preview_test.php.log; original live-data suite was not run against school records. |
+| TC-033 | Various | student_import_scale_test.php | Run existing suite with in-memory fixtures, source rendering, or temporary workbook files | PASS | Student import scale test passed: 2,500 students in 0.21 seconds. |
+| TC-034 | Various | student_import_test.php | Run existing suite with in-memory fixtures, source rendering, or temporary workbook files | PASS | Student import tests passed. |
+| TC-035 | Public | Login page | Unauthenticated login page renders | PASS | HTTP 200; form fields present=true |
+| TC-036 | All | Live database availability | Ask the real server to execute SELECT 1 | PASS | {"status":200,"db":null,"body":"{\"available\":true}"} |
+| TC-037 | accounting | accounting/assessment_image.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-038 | accounting | accounting/dashboard.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-039 | accounting | accounting/submissions.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-040 | accounting | accounting/submission_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-041 | bookstore | bookstore/dashboard.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-042 | bookstore | bookstore/fees.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-043 | bookstore | bookstore/fee_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-044 | bookstore | bookstore/receipt_image.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-045 | bookstore | bookstore/submissions.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-046 | bookstore | bookstore/submission_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-047 | bookstore | bookstore/workbook_import.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-048 | bookstore | bookstore/workbook_template.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-049 | clinic | clinic/dashboard.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-050 | clinic | clinic/schedules.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-051 | clinic | clinic/schedule_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-052 | clinic | clinic/workbook_import.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-053 | clinic | clinic/workbook_template.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-054 | comlab | comlab/dashboard.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-055 | comlab | comlab/violations.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-056 | dean | dean/action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-057 | dean | dean/dashboard.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-058 | dean | dean/evaluation_image.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-059 | dean | dean/submitted_requirements.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-060 | dean | dean/submitted_requirement_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-061 | facilities | facilities/borrowed-items.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-062 | facilities | facilities/dashboard.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-063 | library | library/card_image.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-064 | library | library/dashboard.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-065 | library | library/submissions.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-066 | library | library/submission_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-067 | library | library/workbook_import.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-068 | library | library/workbook_template.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-069 | organization | organization/action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-070 | organization | organization/attendance.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-071 | organization | organization/dashboard.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-072 | organization | organization/event_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-073 | organization | organization/event_qr.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-074 | registrar | registrar/audit_logs.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-075 | registrar | registrar/clearance.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-076 | registrar | registrar/dashboard.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-077 | registrar | registrar/semester_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-078 | registrar | registrar/staff_accounts.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-079 | registrar | registrar/staff_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-080 | registrar | registrar/students.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-081 | registrar | registrar/student_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-082 | registrar | registrar/student_import.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-083 | registrar | registrar/student_import_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-084 | registrar | registrar/student_import_template.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-085 | saso | saso/dashboard.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-086 | student | student/accounting_receipt_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-087 | student | student/action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-088 | student | student/attendance_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-089 | student | student/attendance_checkin.php | Open protected route without a login cookie | PASS | 303 to student/dashboard.php, then 303 to login.php; no protected content disclosed. Initial direct-redirect expectation was too strict. See attendance-redirect-evidence.json. |
+| TC-090 | student | student/attendance_scanner.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-091 | student | student/attendance_scanner_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-092 | student | student/bookstore_receipt_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-093 | student | student/dashboard.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-094 | student | student/evaluation_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-095 | student | student/library_card_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-096 | student | student/medical_schedule_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-097 | student | student/password.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-098 | student | student/password_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-099 | student-council | student-council/attendance.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-100 | student-council | student-council/dashboard.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-101 | student-council | student-council/event_action.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-102 | student-council | student-council/event_qr.php | Open protected route without a login cookie | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-103 | Public | Login validation | Missing CSRF token | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-104 | Public | Login validation | Invalid CSRF token | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-105 | Public | Login validation | Empty required fields | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-106 | Public | Login validation | Foreign email domain | PASS | {"status":303,"location":"/ClearGo/login.php","raw_error":false} |
+| TC-107 | Public | Login validation | Array CSRF input | FAIL | {"status":200,"location":null,"raw_error":true} |
+| TC-108 | Public | Sensitive route exposure | HEAD /config/ | PASS | HTTP 403; no private file body was requested. |
+| TC-109 | Public | Sensitive route exposure | HEAD /database/ | PASS | HTTP 403; no private file body was requested. |
+| TC-110 | Public | Sensitive route exposure | HEAD /storage/ | FAIL | HTTP 200; no private file body was requested. |
+| TC-111 | Public | Sensitive route exposure | HEAD /storage/private/ | PASS | HTTP 403; no private file body was requested. |
+| TC-112 | Public | Sensitive route exposure | HEAD /storage/sessions/ | PASS | HTTP 403; no private file body was requested. |
+| TC-113 | Public | Sensitive route exposure | HEAD /.git/config | FAIL | HTTP 200; no private file body was requested. |
+| TC-114 | Public | Sensitive route exposure | HEAD /.tmp/ | FAIL | HTTP 200; no private file body was requested. |
+| TC-115 | Public | Sensitive route exposure | HEAD /tests/ | FAIL | HTTP 200; no private file body was requested. |
+| TC-116 | Public | Test runner exposure | Invoke the harmless navigation-only regression through HTTP | FAIL | HTTP 200; All 11 office return paths preserve filters and pagination; unrelated paths and invalid context are ignored.  |
+| TC-117 | All | PWA install metadata | Discover a web app manifest and link | NOT IMPLEMENTED | Manifest files discovered: 0. Service worker presence alone does not establish installability. |
+| SB-001 | STUDENT | Authentication | Sign in through real login form using synthetic credentials | PASS | {"status":303,"location":"/student/dashboard.php","error":""} |
+| SB-002 | STUDENT | /student/dashboard.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-003 | STUDENT | /student/password.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-004 | STUDENT | /student/attendance_scanner.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-005 | DEAN | Authentication | Sign in through real login form using synthetic credentials | PASS | {"status":303,"location":"/dean/dashboard.php","error":""} |
+| SB-006 | DEAN | /dean/dashboard.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-007 | DEAN | /dean/submitted_requirements.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-008 | ORG_STAFF | Authentication | Sign in through real login form using synthetic credentials | PASS | {"status":303,"location":"/organization/dashboard.php","error":""} |
+| SB-009 | ORG_STAFF | /organization/dashboard.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-010 | ORG_STAFF | /organization/attendance.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-011 | ORG_STAFF | /organization/event_qr.php | Load authorized page with synthetic account | PASS | {"status":303,"location":"/organization/attendance.php","raw_error":false} |
+| SB-012 | SASO_STAFF | Authentication | Sign in through real login form using synthetic credentials | PASS | {"status":303,"location":"/saso/dashboard.php","error":""} |
+| SB-013 | SASO_STAFF | /saso/dashboard.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-014 | STUDENT_COUNCIL_STAFF | Authentication | Sign in through real login form using synthetic credentials | PASS | {"status":303,"location":"/student-council/dashboard.php","error":""} |
+| SB-015 | STUDENT_COUNCIL_STAFF | /student-council/dashboard.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-016 | STUDENT_COUNCIL_STAFF | /student-council/attendance.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-017 | STUDENT_COUNCIL_STAFF | /student-council/event_qr.php | Load authorized page with synthetic account | PASS | {"status":303,"location":"/student-council/attendance.php","raw_error":false} |
+| SB-018 | LIBRARY_STAFF | Authentication | Sign in through real login form using synthetic credentials | PASS | {"status":303,"location":"/library/dashboard.php","error":""} |
+| SB-019 | LIBRARY_STAFF | /library/dashboard.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-020 | LIBRARY_STAFF | /library/submissions.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-021 | BOOKSTORE_STAFF | Authentication | Sign in through real login form using synthetic credentials | PASS | {"status":303,"location":"/bookstore/dashboard.php","error":""} |
+| SB-022 | BOOKSTORE_STAFF | /bookstore/dashboard.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-023 | BOOKSTORE_STAFF | /bookstore/fees.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-024 | BOOKSTORE_STAFF | /bookstore/submissions.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-025 | CLINIC_STAFF | Authentication | Sign in through real login form using synthetic credentials | PASS | {"status":303,"location":"/clinic/dashboard.php","error":""} |
+| SB-026 | CLINIC_STAFF | /clinic/dashboard.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-027 | CLINIC_STAFF | /clinic/schedules.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-028 | FACILITIES_STAFF | Authentication | Sign in through real login form using synthetic credentials | PASS | {"status":303,"location":"/facilities/dashboard.php","error":""} |
+| SB-029 | FACILITIES_STAFF | /facilities/dashboard.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-030 | FACILITIES_STAFF | /facilities/borrowed-items.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-031 | COMLAB_STAFF | Authentication | Sign in through real login form using synthetic credentials | PASS | {"status":303,"location":"/comlab/dashboard.php","error":""} |
+| SB-032 | COMLAB_STAFF | /comlab/dashboard.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-033 | COMLAB_STAFF | /comlab/violations.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-034 | ACCOUNTING_STAFF | Authentication | Sign in through real login form using synthetic credentials | PASS | {"status":303,"location":"/accounting/dashboard.php","error":""} |
+| SB-035 | ACCOUNTING_STAFF | /accounting/dashboard.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-036 | ACCOUNTING_STAFF | /accounting/submissions.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-037 | REGISTRAR | Authentication | Sign in through real login form using synthetic credentials | PASS | {"status":303,"location":"/registrar/dashboard.php","error":""} |
+| SB-038 | REGISTRAR | /registrar/dashboard.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-039 | REGISTRAR | /registrar/students.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-040 | REGISTRAR | /registrar/staff_accounts.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-041 | REGISTRAR | /registrar/clearance.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-042 | REGISTRAR | /registrar/student_import.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-043 | REGISTRAR | /registrar/audit_logs.php | Load authorized page with synthetic account | PASS | {"status":200,"location":null,"raw_error":false} |
+| SB-044 | STUDENT | Role separation | Open DEAN dashboard | PASS | {"status":403,"target":"DEAN"} |
+| SB-045 | STUDENT | Role separation | Open ORG_STAFF dashboard | PASS | {"status":403,"target":"ORG_STAFF"} |
+| SB-046 | STUDENT | Role separation | Open SASO_STAFF dashboard | PASS | {"status":403,"target":"SASO_STAFF"} |
+| SB-047 | STUDENT | Role separation | Open STUDENT_COUNCIL_STAFF dashboard | PASS | {"status":403,"target":"STUDENT_COUNCIL_STAFF"} |
+| SB-048 | STUDENT | Role separation | Open LIBRARY_STAFF dashboard | PASS | {"status":403,"target":"LIBRARY_STAFF"} |
+| SB-049 | STUDENT | Role separation | Open BOOKSTORE_STAFF dashboard | PASS | {"status":403,"target":"BOOKSTORE_STAFF"} |
+| SB-050 | STUDENT | Role separation | Open CLINIC_STAFF dashboard | PASS | {"status":403,"target":"CLINIC_STAFF"} |
+| SB-051 | STUDENT | Role separation | Open FACILITIES_STAFF dashboard | PASS | {"status":403,"target":"FACILITIES_STAFF"} |
+| SB-052 | STUDENT | Role separation | Open COMLAB_STAFF dashboard | PASS | {"status":403,"target":"COMLAB_STAFF"} |
+| SB-053 | STUDENT | Role separation | Open ACCOUNTING_STAFF dashboard | PASS | {"status":403,"target":"ACCOUNTING_STAFF"} |
+| SB-054 | STUDENT | Role separation | Open REGISTRAR dashboard | PASS | {"status":403,"target":"REGISTRAR"} |
+| SB-055 | DEAN | Role separation | Open STUDENT dashboard | PASS | {"status":403,"target":"STUDENT"} |
+| SB-056 | DEAN | Role separation | Open ORG_STAFF dashboard | PASS | {"status":403,"target":"ORG_STAFF"} |
+| SB-057 | DEAN | Role separation | Open SASO_STAFF dashboard | PASS | {"status":403,"target":"SASO_STAFF"} |
+| SB-058 | DEAN | Role separation | Open STUDENT_COUNCIL_STAFF dashboard | PASS | {"status":403,"target":"STUDENT_COUNCIL_STAFF"} |
+| SB-059 | DEAN | Role separation | Open LIBRARY_STAFF dashboard | PASS | {"status":403,"target":"LIBRARY_STAFF"} |
+| SB-060 | DEAN | Role separation | Open BOOKSTORE_STAFF dashboard | PASS | {"status":403,"target":"BOOKSTORE_STAFF"} |
+| SB-061 | DEAN | Role separation | Open CLINIC_STAFF dashboard | PASS | {"status":403,"target":"CLINIC_STAFF"} |
+| SB-062 | DEAN | Role separation | Open FACILITIES_STAFF dashboard | PASS | {"status":403,"target":"FACILITIES_STAFF"} |
+| SB-063 | DEAN | Role separation | Open COMLAB_STAFF dashboard | PASS | {"status":403,"target":"COMLAB_STAFF"} |
+| SB-064 | DEAN | Role separation | Open ACCOUNTING_STAFF dashboard | PASS | {"status":403,"target":"ACCOUNTING_STAFF"} |
+| SB-065 | DEAN | Role separation | Open REGISTRAR dashboard | PASS | {"status":403,"target":"REGISTRAR"} |
+| SB-066 | ORG_STAFF | Role separation | Open STUDENT dashboard | PASS | {"status":403,"target":"STUDENT"} |
+| SB-067 | ORG_STAFF | Role separation | Open DEAN dashboard | PASS | {"status":403,"target":"DEAN"} |
+| SB-068 | ORG_STAFF | Role separation | Open SASO_STAFF dashboard | PASS | {"status":403,"target":"SASO_STAFF"} |
+| SB-069 | ORG_STAFF | Role separation | Open STUDENT_COUNCIL_STAFF dashboard | PASS | {"status":403,"target":"STUDENT_COUNCIL_STAFF"} |
+| SB-070 | ORG_STAFF | Role separation | Open LIBRARY_STAFF dashboard | PASS | {"status":403,"target":"LIBRARY_STAFF"} |
+| SB-071 | ORG_STAFF | Role separation | Open BOOKSTORE_STAFF dashboard | PASS | {"status":403,"target":"BOOKSTORE_STAFF"} |
+| SB-072 | ORG_STAFF | Role separation | Open CLINIC_STAFF dashboard | PASS | {"status":403,"target":"CLINIC_STAFF"} |
+| SB-073 | ORG_STAFF | Role separation | Open FACILITIES_STAFF dashboard | PASS | {"status":403,"target":"FACILITIES_STAFF"} |
+| SB-074 | ORG_STAFF | Role separation | Open COMLAB_STAFF dashboard | PASS | {"status":403,"target":"COMLAB_STAFF"} |
+| SB-075 | ORG_STAFF | Role separation | Open ACCOUNTING_STAFF dashboard | PASS | {"status":403,"target":"ACCOUNTING_STAFF"} |
+| SB-076 | ORG_STAFF | Role separation | Open REGISTRAR dashboard | PASS | {"status":403,"target":"REGISTRAR"} |
+| SB-077 | SASO_STAFF | Role separation | Open STUDENT dashboard | PASS | {"status":403,"target":"STUDENT"} |
+| SB-078 | SASO_STAFF | Role separation | Open DEAN dashboard | PASS | {"status":403,"target":"DEAN"} |
+| SB-079 | SASO_STAFF | Role separation | Open ORG_STAFF dashboard | PASS | {"status":403,"target":"ORG_STAFF"} |
+| SB-080 | SASO_STAFF | Role separation | Open STUDENT_COUNCIL_STAFF dashboard | PASS | {"status":403,"target":"STUDENT_COUNCIL_STAFF"} |
+| SB-081 | SASO_STAFF | Role separation | Open LIBRARY_STAFF dashboard | PASS | {"status":403,"target":"LIBRARY_STAFF"} |
+| SB-082 | SASO_STAFF | Role separation | Open BOOKSTORE_STAFF dashboard | PASS | {"status":403,"target":"BOOKSTORE_STAFF"} |
+| SB-083 | SASO_STAFF | Role separation | Open CLINIC_STAFF dashboard | PASS | {"status":403,"target":"CLINIC_STAFF"} |
+| SB-084 | SASO_STAFF | Role separation | Open FACILITIES_STAFF dashboard | PASS | {"status":403,"target":"FACILITIES_STAFF"} |
+| SB-085 | SASO_STAFF | Role separation | Open COMLAB_STAFF dashboard | PASS | {"status":403,"target":"COMLAB_STAFF"} |
+| SB-086 | SASO_STAFF | Role separation | Open ACCOUNTING_STAFF dashboard | PASS | {"status":403,"target":"ACCOUNTING_STAFF"} |
+| SB-087 | SASO_STAFF | Role separation | Open REGISTRAR dashboard | PASS | {"status":403,"target":"REGISTRAR"} |
+| SB-088 | STUDENT_COUNCIL_STAFF | Role separation | Open STUDENT dashboard | PASS | {"status":403,"target":"STUDENT"} |
+| SB-089 | STUDENT_COUNCIL_STAFF | Role separation | Open DEAN dashboard | PASS | {"status":403,"target":"DEAN"} |
+| SB-090 | STUDENT_COUNCIL_STAFF | Role separation | Open ORG_STAFF dashboard | PASS | {"status":403,"target":"ORG_STAFF"} |
+| SB-091 | STUDENT_COUNCIL_STAFF | Role separation | Open SASO_STAFF dashboard | PASS | {"status":403,"target":"SASO_STAFF"} |
+| SB-092 | STUDENT_COUNCIL_STAFF | Role separation | Open LIBRARY_STAFF dashboard | PASS | {"status":403,"target":"LIBRARY_STAFF"} |
+| SB-093 | STUDENT_COUNCIL_STAFF | Role separation | Open BOOKSTORE_STAFF dashboard | PASS | {"status":403,"target":"BOOKSTORE_STAFF"} |
+| SB-094 | STUDENT_COUNCIL_STAFF | Role separation | Open CLINIC_STAFF dashboard | PASS | {"status":403,"target":"CLINIC_STAFF"} |
+| SB-095 | STUDENT_COUNCIL_STAFF | Role separation | Open FACILITIES_STAFF dashboard | PASS | {"status":403,"target":"FACILITIES_STAFF"} |
+| SB-096 | STUDENT_COUNCIL_STAFF | Role separation | Open COMLAB_STAFF dashboard | PASS | {"status":403,"target":"COMLAB_STAFF"} |
+| SB-097 | STUDENT_COUNCIL_STAFF | Role separation | Open ACCOUNTING_STAFF dashboard | PASS | {"status":403,"target":"ACCOUNTING_STAFF"} |
+| SB-098 | STUDENT_COUNCIL_STAFF | Role separation | Open REGISTRAR dashboard | PASS | {"status":403,"target":"REGISTRAR"} |
+| SB-099 | LIBRARY_STAFF | Role separation | Open STUDENT dashboard | PASS | {"status":403,"target":"STUDENT"} |
+| SB-100 | LIBRARY_STAFF | Role separation | Open DEAN dashboard | PASS | {"status":403,"target":"DEAN"} |
+| SB-101 | LIBRARY_STAFF | Role separation | Open ORG_STAFF dashboard | PASS | {"status":403,"target":"ORG_STAFF"} |
+| SB-102 | LIBRARY_STAFF | Role separation | Open SASO_STAFF dashboard | PASS | {"status":403,"target":"SASO_STAFF"} |
+| SB-103 | LIBRARY_STAFF | Role separation | Open STUDENT_COUNCIL_STAFF dashboard | PASS | {"status":403,"target":"STUDENT_COUNCIL_STAFF"} |
+| SB-104 | LIBRARY_STAFF | Role separation | Open BOOKSTORE_STAFF dashboard | PASS | {"status":403,"target":"BOOKSTORE_STAFF"} |
+| SB-105 | LIBRARY_STAFF | Role separation | Open CLINIC_STAFF dashboard | PASS | {"status":403,"target":"CLINIC_STAFF"} |
+| SB-106 | LIBRARY_STAFF | Role separation | Open FACILITIES_STAFF dashboard | PASS | {"status":403,"target":"FACILITIES_STAFF"} |
+| SB-107 | LIBRARY_STAFF | Role separation | Open COMLAB_STAFF dashboard | PASS | {"status":403,"target":"COMLAB_STAFF"} |
+| SB-108 | LIBRARY_STAFF | Role separation | Open ACCOUNTING_STAFF dashboard | PASS | {"status":403,"target":"ACCOUNTING_STAFF"} |
+| SB-109 | LIBRARY_STAFF | Role separation | Open REGISTRAR dashboard | PASS | {"status":403,"target":"REGISTRAR"} |
+| SB-110 | BOOKSTORE_STAFF | Role separation | Open STUDENT dashboard | PASS | {"status":403,"target":"STUDENT"} |
+| SB-111 | BOOKSTORE_STAFF | Role separation | Open DEAN dashboard | PASS | {"status":403,"target":"DEAN"} |
+| SB-112 | BOOKSTORE_STAFF | Role separation | Open ORG_STAFF dashboard | PASS | {"status":403,"target":"ORG_STAFF"} |
+| SB-113 | BOOKSTORE_STAFF | Role separation | Open SASO_STAFF dashboard | PASS | {"status":403,"target":"SASO_STAFF"} |
+| SB-114 | BOOKSTORE_STAFF | Role separation | Open STUDENT_COUNCIL_STAFF dashboard | PASS | {"status":403,"target":"STUDENT_COUNCIL_STAFF"} |
+| SB-115 | BOOKSTORE_STAFF | Role separation | Open LIBRARY_STAFF dashboard | PASS | {"status":403,"target":"LIBRARY_STAFF"} |
+| SB-116 | BOOKSTORE_STAFF | Role separation | Open CLINIC_STAFF dashboard | PASS | {"status":403,"target":"CLINIC_STAFF"} |
+| SB-117 | BOOKSTORE_STAFF | Role separation | Open FACILITIES_STAFF dashboard | PASS | {"status":403,"target":"FACILITIES_STAFF"} |
+| SB-118 | BOOKSTORE_STAFF | Role separation | Open COMLAB_STAFF dashboard | PASS | {"status":403,"target":"COMLAB_STAFF"} |
+| SB-119 | BOOKSTORE_STAFF | Role separation | Open ACCOUNTING_STAFF dashboard | PASS | {"status":403,"target":"ACCOUNTING_STAFF"} |
+| SB-120 | BOOKSTORE_STAFF | Role separation | Open REGISTRAR dashboard | PASS | {"status":403,"target":"REGISTRAR"} |
+| SB-121 | CLINIC_STAFF | Role separation | Open STUDENT dashboard | PASS | {"status":403,"target":"STUDENT"} |
+| SB-122 | CLINIC_STAFF | Role separation | Open DEAN dashboard | PASS | {"status":403,"target":"DEAN"} |
+| SB-123 | CLINIC_STAFF | Role separation | Open ORG_STAFF dashboard | PASS | {"status":403,"target":"ORG_STAFF"} |
+| SB-124 | CLINIC_STAFF | Role separation | Open SASO_STAFF dashboard | PASS | {"status":403,"target":"SASO_STAFF"} |
+| SB-125 | CLINIC_STAFF | Role separation | Open STUDENT_COUNCIL_STAFF dashboard | PASS | {"status":403,"target":"STUDENT_COUNCIL_STAFF"} |
+| SB-126 | CLINIC_STAFF | Role separation | Open LIBRARY_STAFF dashboard | PASS | {"status":403,"target":"LIBRARY_STAFF"} |
+| SB-127 | CLINIC_STAFF | Role separation | Open BOOKSTORE_STAFF dashboard | PASS | {"status":403,"target":"BOOKSTORE_STAFF"} |
+| SB-128 | CLINIC_STAFF | Role separation | Open FACILITIES_STAFF dashboard | PASS | {"status":403,"target":"FACILITIES_STAFF"} |
+| SB-129 | CLINIC_STAFF | Role separation | Open COMLAB_STAFF dashboard | PASS | {"status":403,"target":"COMLAB_STAFF"} |
+| SB-130 | CLINIC_STAFF | Role separation | Open ACCOUNTING_STAFF dashboard | PASS | {"status":403,"target":"ACCOUNTING_STAFF"} |
+| SB-131 | CLINIC_STAFF | Role separation | Open REGISTRAR dashboard | PASS | {"status":403,"target":"REGISTRAR"} |
+| SB-132 | FACILITIES_STAFF | Role separation | Open STUDENT dashboard | PASS | {"status":403,"target":"STUDENT"} |
+| SB-133 | FACILITIES_STAFF | Role separation | Open DEAN dashboard | PASS | {"status":403,"target":"DEAN"} |
+| SB-134 | FACILITIES_STAFF | Role separation | Open ORG_STAFF dashboard | PASS | {"status":403,"target":"ORG_STAFF"} |
+| SB-135 | FACILITIES_STAFF | Role separation | Open SASO_STAFF dashboard | PASS | {"status":403,"target":"SASO_STAFF"} |
+| SB-136 | FACILITIES_STAFF | Role separation | Open STUDENT_COUNCIL_STAFF dashboard | PASS | {"status":403,"target":"STUDENT_COUNCIL_STAFF"} |
+| SB-137 | FACILITIES_STAFF | Role separation | Open LIBRARY_STAFF dashboard | PASS | {"status":403,"target":"LIBRARY_STAFF"} |
+| SB-138 | FACILITIES_STAFF | Role separation | Open BOOKSTORE_STAFF dashboard | PASS | {"status":403,"target":"BOOKSTORE_STAFF"} |
+| SB-139 | FACILITIES_STAFF | Role separation | Open CLINIC_STAFF dashboard | PASS | {"status":403,"target":"CLINIC_STAFF"} |
+| SB-140 | FACILITIES_STAFF | Role separation | Open COMLAB_STAFF dashboard | PASS | {"status":403,"target":"COMLAB_STAFF"} |
+| SB-141 | FACILITIES_STAFF | Role separation | Open ACCOUNTING_STAFF dashboard | PASS | {"status":403,"target":"ACCOUNTING_STAFF"} |
+| SB-142 | FACILITIES_STAFF | Role separation | Open REGISTRAR dashboard | PASS | {"status":403,"target":"REGISTRAR"} |
+| SB-143 | COMLAB_STAFF | Role separation | Open STUDENT dashboard | PASS | {"status":403,"target":"STUDENT"} |
+| SB-144 | COMLAB_STAFF | Role separation | Open DEAN dashboard | PASS | {"status":403,"target":"DEAN"} |
+| SB-145 | COMLAB_STAFF | Role separation | Open ORG_STAFF dashboard | PASS | {"status":403,"target":"ORG_STAFF"} |
+| SB-146 | COMLAB_STAFF | Role separation | Open SASO_STAFF dashboard | PASS | {"status":403,"target":"SASO_STAFF"} |
+| SB-147 | COMLAB_STAFF | Role separation | Open STUDENT_COUNCIL_STAFF dashboard | PASS | {"status":403,"target":"STUDENT_COUNCIL_STAFF"} |
+| SB-148 | COMLAB_STAFF | Role separation | Open LIBRARY_STAFF dashboard | PASS | {"status":403,"target":"LIBRARY_STAFF"} |
+| SB-149 | COMLAB_STAFF | Role separation | Open BOOKSTORE_STAFF dashboard | PASS | {"status":403,"target":"BOOKSTORE_STAFF"} |
+| SB-150 | COMLAB_STAFF | Role separation | Open CLINIC_STAFF dashboard | PASS | {"status":403,"target":"CLINIC_STAFF"} |
+| SB-151 | COMLAB_STAFF | Role separation | Open FACILITIES_STAFF dashboard | PASS | {"status":403,"target":"FACILITIES_STAFF"} |
+| SB-152 | COMLAB_STAFF | Role separation | Open ACCOUNTING_STAFF dashboard | PASS | {"status":403,"target":"ACCOUNTING_STAFF"} |
+| SB-153 | COMLAB_STAFF | Role separation | Open REGISTRAR dashboard | PASS | {"status":403,"target":"REGISTRAR"} |
+| SB-154 | ACCOUNTING_STAFF | Role separation | Open STUDENT dashboard | PASS | {"status":403,"target":"STUDENT"} |
+| SB-155 | ACCOUNTING_STAFF | Role separation | Open DEAN dashboard | PASS | {"status":403,"target":"DEAN"} |
+| SB-156 | ACCOUNTING_STAFF | Role separation | Open ORG_STAFF dashboard | PASS | {"status":403,"target":"ORG_STAFF"} |
+| SB-157 | ACCOUNTING_STAFF | Role separation | Open SASO_STAFF dashboard | PASS | {"status":403,"target":"SASO_STAFF"} |
+| SB-158 | ACCOUNTING_STAFF | Role separation | Open STUDENT_COUNCIL_STAFF dashboard | PASS | {"status":403,"target":"STUDENT_COUNCIL_STAFF"} |
+| SB-159 | ACCOUNTING_STAFF | Role separation | Open LIBRARY_STAFF dashboard | PASS | {"status":403,"target":"LIBRARY_STAFF"} |
+| SB-160 | ACCOUNTING_STAFF | Role separation | Open BOOKSTORE_STAFF dashboard | PASS | {"status":403,"target":"BOOKSTORE_STAFF"} |
+| SB-161 | ACCOUNTING_STAFF | Role separation | Open CLINIC_STAFF dashboard | PASS | {"status":403,"target":"CLINIC_STAFF"} |
+| SB-162 | ACCOUNTING_STAFF | Role separation | Open FACILITIES_STAFF dashboard | PASS | {"status":403,"target":"FACILITIES_STAFF"} |
+| SB-163 | ACCOUNTING_STAFF | Role separation | Open COMLAB_STAFF dashboard | PASS | {"status":403,"target":"COMLAB_STAFF"} |
+| SB-164 | ACCOUNTING_STAFF | Role separation | Open REGISTRAR dashboard | PASS | {"status":403,"target":"REGISTRAR"} |
+| SB-165 | REGISTRAR | Role separation | Open STUDENT dashboard | PASS | {"status":403,"target":"STUDENT"} |
+| SB-166 | REGISTRAR | Role separation | Open DEAN dashboard | PASS | {"status":403,"target":"DEAN"} |
+| SB-167 | REGISTRAR | Role separation | Open ORG_STAFF dashboard | PASS | {"status":403,"target":"ORG_STAFF"} |
+| SB-168 | REGISTRAR | Role separation | Open SASO_STAFF dashboard | PASS | {"status":403,"target":"SASO_STAFF"} |
+| SB-169 | REGISTRAR | Role separation | Open STUDENT_COUNCIL_STAFF dashboard | PASS | {"status":403,"target":"STUDENT_COUNCIL_STAFF"} |
+| SB-170 | REGISTRAR | Role separation | Open LIBRARY_STAFF dashboard | PASS | {"status":403,"target":"LIBRARY_STAFF"} |
+| SB-171 | REGISTRAR | Role separation | Open BOOKSTORE_STAFF dashboard | PASS | {"status":403,"target":"BOOKSTORE_STAFF"} |
+| SB-172 | REGISTRAR | Role separation | Open CLINIC_STAFF dashboard | PASS | {"status":403,"target":"CLINIC_STAFF"} |
+| SB-173 | REGISTRAR | Role separation | Open FACILITIES_STAFF dashboard | PASS | {"status":403,"target":"FACILITIES_STAFF"} |
+| SB-174 | REGISTRAR | Role separation | Open COMLAB_STAFF dashboard | PASS | {"status":403,"target":"COMLAB_STAFF"} |
+| SB-175 | REGISTRAR | Role separation | Open ACCOUNTING_STAFF dashboard | PASS | {"status":403,"target":"ACCOUNTING_STAFF"} |
+| SB-176 | STUDENT | CSRF protection | Send synthetic approval request with invalid token | PASS | {"status":303,"location":"/student/dashboard.php"} |
+| SB-177 | STUDENT | Logout | Log out and revisit protected dashboard | PASS | {"logout":303,"after":303,"location":"/login.php"} |
+| SB-178 | DEAN | CSRF protection | Send synthetic approval request with invalid token | PASS | {"status":303,"location":"/dean/dashboard.php"} |
+| SB-179 | DEAN | Logout | Log out and revisit protected dashboard | PASS | {"logout":303,"after":303,"location":"/login.php"} |
+| SB-180 | ORG_STAFF | CSRF protection | Send synthetic approval request with invalid token | PASS | {"status":303,"location":"/organization/dashboard.php"} |
+| SB-181 | ORG_STAFF | Logout | Log out and revisit protected dashboard | PASS | {"logout":303,"after":303,"location":"/login.php"} |
+| SB-182 | SASO_STAFF | CSRF protection | Send synthetic approval request with invalid token | PASS | {"status":303,"location":"/saso/dashboard.php"} |
+| SB-183 | SASO_STAFF | Logout | Log out and revisit protected dashboard | PASS | {"logout":303,"after":303,"location":"/login.php"} |
+| SB-184 | STUDENT_COUNCIL_STAFF | CSRF protection | Send synthetic approval request with invalid token | PASS | {"status":303,"location":"/student-council/dashboard.php"} |
+| SB-185 | STUDENT_COUNCIL_STAFF | Logout | Log out and revisit protected dashboard | PASS | {"logout":303,"after":303,"location":"/login.php"} |
+| SB-186 | LIBRARY_STAFF | CSRF protection | Send synthetic approval request with invalid token | PASS | {"status":303,"location":"/library/dashboard.php"} |
+| SB-187 | LIBRARY_STAFF | Logout | Log out and revisit protected dashboard | PASS | {"logout":303,"after":303,"location":"/login.php"} |
+| SB-188 | BOOKSTORE_STAFF | CSRF protection | Send synthetic approval request with invalid token | PASS | {"status":303,"location":"/bookstore/dashboard.php"} |
+| SB-189 | BOOKSTORE_STAFF | Logout | Log out and revisit protected dashboard | PASS | {"logout":303,"after":303,"location":"/login.php"} |
+| SB-190 | CLINIC_STAFF | CSRF protection | Send synthetic approval request with invalid token | PASS | {"status":303,"location":"/clinic/dashboard.php"} |
+| SB-191 | CLINIC_STAFF | Logout | Log out and revisit protected dashboard | PASS | {"logout":303,"after":303,"location":"/login.php"} |
+| SB-192 | FACILITIES_STAFF | CSRF protection | Send synthetic approval request with invalid token | PASS | {"status":303,"location":"/facilities/dashboard.php"} |
+| SB-193 | FACILITIES_STAFF | Logout | Log out and revisit protected dashboard | PASS | {"logout":303,"after":303,"location":"/login.php"} |
+| SB-194 | COMLAB_STAFF | CSRF protection | Send synthetic approval request with invalid token | PASS | {"status":303,"location":"/comlab/dashboard.php"} |
+| SB-195 | COMLAB_STAFF | Logout | Log out and revisit protected dashboard | PASS | {"logout":303,"after":303,"location":"/login.php"} |
+| SB-196 | ACCOUNTING_STAFF | CSRF protection | Send synthetic approval request with invalid token | PASS | {"status":303,"location":"/accounting/dashboard.php"} |
+| SB-197 | ACCOUNTING_STAFF | Logout | Log out and revisit protected dashboard | PASS | {"logout":303,"after":303,"location":"/login.php"} |
+| SB-198 | REGISTRAR | CSRF protection | Send synthetic approval request with invalid token | PASS | {"status":303,"location":"/registrar/clearance.php"} |
+| SB-199 | REGISTRAR | Logout | Log out and revisit protected dashboard | PASS | {"logout":303,"after":303,"location":"/login.php"} |
+| UI-001 | Student | Navigation 1440px | Switch to overview | PASS | {"actual":false,"expected":false} |
+| UI-002 | Student | Layout 1440px | overview has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-003 | Student | Navigation 1440px | Switch to clearance | PASS | {"actual":false,"expected":false} |
+| UI-004 | Student | Layout 1440px | clearance has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-005 | Student | Navigation 1440px | Switch to attendance | PASS | {"actual":false,"expected":false} |
+| UI-006 | Student | Layout 1440px | attendance has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-007 | Student | Navigation 1440px | Switch to account | PASS | {"actual":false,"expected":false} |
+| UI-008 | Student | Layout 1440px | account has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-009 | Student | Navigation 1440px | Mobile menu matches viewport | PASS | {"actual":false,"expected":false} |
+| UI-010 | Student | Filter 1440px | Cleared filter excludes other statuses | PASS | {"actual":true,"expected":true} |
+| UI-011 | Student | Filter 1440px | To-do filter shows one actionable office | PASS | {"actual":1,"expected":1} |
+| UI-012 | Student | Requirements modal 1440px | Open modal | PASS | {"actual":false,"expected":false} |
+| UI-013 | Student | Requirements modal 1440px | Background navigation is inert | PASS | {"actual":true,"expected":true} |
+| UI-014 | Student | Requirements modal 1440px | Escape closes modal | PASS | {"actual":true,"expected":true} |
+| UI-015 | Student | Requirements modal 1440px | Focus returns to its opener | PASS | {"actual":true,"expected":true} |
+| UI-016 | Student | attendance dialog 1440px | Dialog opens | PASS | {"actual":false,"expected":false} |
+| UI-017 | Student | attendance dialog 1440px | Background content is inert | PASS | {"actual":true,"expected":true} |
+| UI-018 | Student | attendance dialog 1440px | Escape closes dialog | PASS | {"actual":true,"expected":true} |
+| UI-019 | Student | account dialog 1440px | Dialog opens | PASS | {"actual":false,"expected":false} |
+| UI-020 | Student | account dialog 1440px | Background content is inert | PASS | {"actual":true,"expected":true} |
+| UI-021 | Student | account dialog 1440px | Escape closes dialog | PASS | {"actual":true,"expected":true} |
+| UI-022 | Student | Navigation 1024px | Switch to overview | PASS | {"actual":false,"expected":false} |
+| UI-023 | Student | Layout 1024px | overview has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-024 | Student | Navigation 1024px | Switch to clearance | PASS | {"actual":false,"expected":false} |
+| UI-025 | Student | Layout 1024px | clearance has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-026 | Student | Navigation 1024px | Switch to attendance | PASS | {"actual":false,"expected":false} |
+| UI-027 | Student | Layout 1024px | attendance has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-028 | Student | Navigation 1024px | Switch to account | PASS | {"actual":false,"expected":false} |
+| UI-029 | Student | Layout 1024px | account has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-030 | Student | Navigation 1024px | Mobile menu matches viewport | PASS | {"actual":false,"expected":false} |
+| UI-031 | Student | Filter 1024px | Cleared filter excludes other statuses | PASS | {"actual":true,"expected":true} |
+| UI-032 | Student | Filter 1024px | To-do filter shows one actionable office | PASS | {"actual":1,"expected":1} |
+| UI-033 | Student | Requirements modal 1024px | Open modal | PASS | {"actual":false,"expected":false} |
+| UI-034 | Student | Requirements modal 1024px | Background navigation is inert | PASS | {"actual":true,"expected":true} |
+| UI-035 | Student | Requirements modal 1024px | Escape closes modal | PASS | {"actual":true,"expected":true} |
+| UI-036 | Student | Requirements modal 1024px | Focus returns to its opener | PASS | {"actual":true,"expected":true} |
+| UI-037 | Student | attendance dialog 1024px | Dialog opens | PASS | {"actual":false,"expected":false} |
+| UI-038 | Student | attendance dialog 1024px | Background content is inert | PASS | {"actual":true,"expected":true} |
+| UI-039 | Student | attendance dialog 1024px | Escape closes dialog | PASS | {"actual":true,"expected":true} |
+| UI-040 | Student | account dialog 1024px | Dialog opens | PASS | {"actual":false,"expected":false} |
+| UI-041 | Student | account dialog 1024px | Background content is inert | PASS | {"actual":true,"expected":true} |
+| UI-042 | Student | account dialog 1024px | Escape closes dialog | PASS | {"actual":true,"expected":true} |
+| UI-043 | Student | Navigation 768px | Switch to overview | PASS | {"actual":false,"expected":false} |
+| UI-044 | Student | Layout 768px | overview has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-045 | Student | Navigation 768px | Switch to clearance | PASS | {"actual":false,"expected":false} |
+| UI-046 | Student | Layout 768px | clearance has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-047 | Student | Navigation 768px | Switch to attendance | PASS | {"actual":false,"expected":false} |
+| UI-048 | Student | Layout 768px | attendance has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-049 | Student | Navigation 768px | Switch to account | PASS | {"actual":false,"expected":false} |
+| UI-050 | Student | Layout 768px | account has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-051 | Student | Navigation 768px | Mobile menu matches viewport | PASS | {"actual":false,"expected":false} |
+| UI-052 | Student | Filter 768px | Cleared filter excludes other statuses | PASS | {"actual":true,"expected":true} |
+| UI-053 | Student | Filter 768px | To-do filter shows one actionable office | PASS | {"actual":1,"expected":1} |
+| UI-054 | Student | Requirements modal 768px | Open modal | PASS | {"actual":false,"expected":false} |
+| UI-055 | Student | Requirements modal 768px | Background navigation is inert | PASS | {"actual":true,"expected":true} |
+| UI-056 | Student | Requirements modal 768px | Escape closes modal | PASS | {"actual":true,"expected":true} |
+| UI-057 | Student | Requirements modal 768px | Focus returns to its opener | PASS | {"actual":true,"expected":true} |
+| UI-058 | Student | attendance dialog 768px | Dialog opens | PASS | {"actual":false,"expected":false} |
+| UI-059 | Student | attendance dialog 768px | Background content is inert | PASS | {"actual":true,"expected":true} |
+| UI-060 | Student | attendance dialog 768px | Escape closes dialog | PASS | {"actual":true,"expected":true} |
+| UI-061 | Student | account dialog 768px | Dialog opens | PASS | {"actual":false,"expected":false} |
+| UI-062 | Student | account dialog 768px | Background content is inert | PASS | {"actual":true,"expected":true} |
+| UI-063 | Student | account dialog 768px | Escape closes dialog | PASS | {"actual":true,"expected":true} |
+| UI-064 | Student | Navigation 390px | Switch to overview | PASS | {"actual":false,"expected":false} |
+| UI-065 | Student | Layout 390px | overview has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-066 | Student | Navigation 390px | Switch to clearance | PASS | {"actual":false,"expected":false} |
+| UI-067 | Student | Layout 390px | clearance has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-068 | Student | Navigation 390px | Switch to attendance | PASS | {"actual":false,"expected":false} |
+| UI-069 | Student | Layout 390px | attendance has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-070 | Student | Navigation 390px | Switch to account | PASS | {"actual":false,"expected":false} |
+| UI-071 | Student | Layout 390px | account has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-072 | Student | Navigation 390px | Mobile menu matches viewport | PASS | {"actual":true,"expected":true} |
+| UI-073 | Student | Filter 390px | Cleared filter excludes other statuses | PASS | {"actual":true,"expected":true} |
+| UI-074 | Student | Filter 390px | To-do filter shows one actionable office | PASS | {"actual":1,"expected":1} |
+| UI-075 | Student | Requirements modal 390px | Open modal | PASS | {"actual":false,"expected":false} |
+| UI-076 | Student | Requirements modal 390px | Background navigation is inert | PASS | {"actual":true,"expected":true} |
+| UI-077 | Student | Requirements modal 390px | Escape closes modal | PASS | {"actual":true,"expected":true} |
+| UI-078 | Student | Requirements modal 390px | Focus returns to its opener | PASS | {"actual":true,"expected":true} |
+| UI-079 | Student | attendance dialog 390px | Dialog opens | PASS | {"actual":false,"expected":false} |
+| UI-080 | Student | attendance dialog 390px | Background content is inert | PASS | {"actual":true,"expected":true} |
+| UI-081 | Student | attendance dialog 390px | Escape closes dialog | PASS | {"actual":true,"expected":true} |
+| UI-082 | Student | account dialog 390px | Dialog opens | PASS | {"actual":false,"expected":false} |
+| UI-083 | Student | account dialog 390px | Background content is inert | PASS | {"actual":true,"expected":true} |
+| UI-084 | Student | account dialog 390px | Escape closes dialog | PASS | {"actual":true,"expected":true} |
+| UI-085 | Student | Navigation 320px | Switch to overview | PASS | {"actual":false,"expected":false} |
+| UI-086 | Student | Layout 320px | overview has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-087 | Student | Navigation 320px | Switch to clearance | PASS | {"actual":false,"expected":false} |
+| UI-088 | Student | Layout 320px | clearance has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-089 | Student | Navigation 320px | Switch to attendance | PASS | {"actual":false,"expected":false} |
+| UI-090 | Student | Layout 320px | attendance has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-091 | Student | Navigation 320px | Switch to account | PASS | {"actual":false,"expected":false} |
+| UI-092 | Student | Layout 320px | account has no horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-093 | Student | Navigation 320px | Mobile menu matches viewport | PASS | {"actual":true,"expected":true} |
+| UI-094 | Student | Filter 320px | Cleared filter excludes other statuses | PASS | {"actual":true,"expected":true} |
+| UI-095 | Student | Filter 320px | To-do filter shows one actionable office | PASS | {"actual":1,"expected":1} |
+| UI-096 | Student | Requirements modal 320px | Open modal | PASS | {"actual":false,"expected":false} |
+| UI-097 | Student | Requirements modal 320px | Background navigation is inert | PASS | {"actual":true,"expected":true} |
+| UI-098 | Student | Requirements modal 320px | Escape closes modal | PASS | {"actual":true,"expected":true} |
+| UI-099 | Student | Requirements modal 320px | Focus returns to its opener | PASS | {"actual":true,"expected":true} |
+| UI-100 | Student | attendance dialog 320px | Dialog opens | PASS | {"actual":false,"expected":false} |
+| UI-101 | Student | attendance dialog 320px | Background content is inert | PASS | {"actual":true,"expected":true} |
+| UI-102 | Student | attendance dialog 320px | Escape closes dialog | PASS | {"actual":true,"expected":true} |
+| UI-103 | Student | account dialog 320px | Dialog opens | PASS | {"actual":false,"expected":false} |
+| UI-104 | Student | account dialog 320px | Background content is inert | PASS | {"actual":true,"expected":true} |
+| UI-105 | Student | account dialog 320px | Escape closes dialog | PASS | {"actual":true,"expected":true} |
+| UI-106 | Student | history dashboard | No horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-107 | Student | Semester archive | No clearance mutation forms | PASS | {"actual":0,"expected":0} |
+| UI-108 | Student | empty dashboard | No horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-109 | Student | complete dashboard | No horizontal overflow | PASS | {"actual":true,"expected":true} |
+| UI-110 | Student | Completion message | All-cleared confirmation visible | PASS | {"actual":"You're good to go!","expected":"You're good to go!"} |
+| UI-111 | Student | DEAN preview 1440px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-112 | DEAN | Dashboard 1440px | Check document overflow on synthetic authorized page | PASS | {"width":1440,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-113 | Student | ORG_STAFF preview 1440px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-114 | ORG_STAFF | Dashboard 1440px | Check document overflow on synthetic authorized page | PASS | {"width":1440,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-115 | Student | SASO_STAFF preview 1440px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-116 | SASO_STAFF | Dashboard 1440px | Check document overflow on synthetic authorized page | PASS | {"width":1440,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-117 | Student | STUDENT_COUNCIL_STAFF preview 1440px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-118 | STUDENT_COUNCIL_STAFF | Dashboard 1440px | Check document overflow on synthetic authorized page | PASS | {"width":1440,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-119 | Student | LIBRARY_STAFF preview 1440px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-120 | LIBRARY_STAFF | Dashboard 1440px | Check document overflow on synthetic authorized page | PASS | {"width":1440,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-121 | Student | BOOKSTORE_STAFF preview 1440px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-122 | BOOKSTORE_STAFF | Dashboard 1440px | Check document overflow on synthetic authorized page | PASS | {"width":1440,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-123 | Student | CLINIC_STAFF preview 1440px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-124 | CLINIC_STAFF | Dashboard 1440px | Check document overflow on synthetic authorized page | PASS | {"width":1440,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-125 | Student | FACILITIES_STAFF preview 1440px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-126 | FACILITIES_STAFF | Dashboard 1440px | Check document overflow on synthetic authorized page | PASS | {"width":1440,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-127 | Student | COMLAB_STAFF preview 1440px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-128 | COMLAB_STAFF | Dashboard 1440px | Check document overflow on synthetic authorized page | PASS | {"width":1440,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-129 | Student | ACCOUNTING_STAFF preview 1440px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-130 | ACCOUNTING_STAFF | Dashboard 1440px | Check document overflow on synthetic authorized page | PASS | {"width":1440,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-131 | Student | REGISTRAR preview 1440px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-132 | REGISTRAR | Dashboard 1440px | Check document overflow on synthetic authorized page | PASS | {"width":1440,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-133 | Student | DEAN preview 390px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-134 | DEAN | Dashboard 390px | Check document overflow on synthetic authorized page | PASS | {"width":390,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-135 | Student | ORG_STAFF preview 390px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-136 | ORG_STAFF | Dashboard 390px | Check document overflow on synthetic authorized page | PASS | {"width":390,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-137 | Student | SASO_STAFF preview 390px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-138 | SASO_STAFF | Dashboard 390px | Check document overflow on synthetic authorized page | PASS | {"width":390,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-139 | Student | STUDENT_COUNCIL_STAFF preview 390px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-140 | STUDENT_COUNCIL_STAFF | Dashboard 390px | Check document overflow on synthetic authorized page | PASS | {"width":390,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-141 | Student | LIBRARY_STAFF preview 390px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-142 | LIBRARY_STAFF | Dashboard 390px | Check document overflow on synthetic authorized page | PASS | {"width":390,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-143 | Student | BOOKSTORE_STAFF preview 390px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-144 | BOOKSTORE_STAFF | Dashboard 390px | Check document overflow on synthetic authorized page | PASS | {"width":390,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-145 | Student | CLINIC_STAFF preview 390px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-146 | CLINIC_STAFF | Dashboard 390px | Check document overflow on synthetic authorized page | PASS | {"width":390,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-147 | Student | FACILITIES_STAFF preview 390px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-148 | FACILITIES_STAFF | Dashboard 390px | Check document overflow on synthetic authorized page | PASS | {"width":390,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-149 | Student | COMLAB_STAFF preview 390px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-150 | COMLAB_STAFF | Dashboard 390px | Check document overflow on synthetic authorized page | PASS | {"width":390,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-151 | Student | ACCOUNTING_STAFF preview 390px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-152 | ACCOUNTING_STAFF | Dashboard 390px | Check document overflow on synthetic authorized page | PASS | {"width":390,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-153 | Student | REGISTRAR preview 390px | Availability overlay is absent | PASS | {"actual":true,"expected":true} |
+| UI-154 | REGISTRAR | Dashboard 390px | Check document overflow on synthetic authorized page | PASS | {"width":390,"overflow":true,"scope":"Static response from the real isolated HTTP dashboard; no mutation controls clicked."} |
+| UI-155 | All | PWA caching | Cache contains only the public fallback and logo | PASS | ["/errors/offline.html","/assets/the-lewis-college-logo.png"] |
+| UI-156 | Student | PWA outage fallback | Cached error page renders without internet advice | PASS | {"actual":true,"expected":true} |
+| UI-157 | Student | PWA outage fallback | Application-base placeholder is resolved | PASS | {"actual":true,"expected":true} |
+| UI-158 | Student | PWA reconnect | Retry reloads the requested student page | PASS | {"actual":true,"expected":true} |
+| UI-159 | All | Browser runtime | Observe uncaught JavaScript exceptions | PASS | [] |
+| EX-001 | Student | Authorization | Student cannot call a Registrar mutation handler | PASS | {"status":403} |
+| EX-002 | DEAN | Search and pagination | Empty search | PASS | {"status":200,"raw_error":false} |
+| EX-003 | DEAN | Search and pagination | Special characters | PASS | {"status":200,"raw_error":false} |
+| EX-004 | DEAN | Search and pagination | High page number | PASS | {"status":200,"raw_error":false} |
+| EX-005 | DEAN | Search and pagination | Negative page number | PASS | {"status":200,"raw_error":false} |
+| EX-006 | DEAN | Report download | Export actual authorized XLSX report | PASS | {"status":200,"type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","bytes":18272,"zip_signature":"PK"} |
+| EX-007 | ORG_STAFF | Search and pagination | Empty search | PASS | {"status":200,"raw_error":false} |
+| EX-008 | ORG_STAFF | Search and pagination | Special characters | PASS | {"status":200,"raw_error":false} |
+| EX-009 | ORG_STAFF | Search and pagination | High page number | PASS | {"status":200,"raw_error":false} |
+| EX-010 | ORG_STAFF | Search and pagination | Negative page number | PASS | {"status":200,"raw_error":false} |
+| EX-011 | ORG_STAFF | Report download | Export actual authorized XLSX report | PASS | {"status":200,"type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","bytes":18334,"zip_signature":"PK"} |
+| EX-012 | LIBRARY_STAFF | Search and pagination | Empty search | PASS | {"status":200,"raw_error":false} |
+| EX-013 | LIBRARY_STAFF | Search and pagination | Special characters | PASS | {"status":200,"raw_error":false} |
+| EX-014 | LIBRARY_STAFF | Search and pagination | High page number | PASS | {"status":200,"raw_error":false} |
+| EX-015 | LIBRARY_STAFF | Search and pagination | Negative page number | PASS | {"status":200,"raw_error":false} |
+| EX-016 | LIBRARY_STAFF | Report download | Export actual authorized XLSX report | PASS | {"status":200,"type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","bytes":28620,"zip_signature":"PK"} |
+| EX-017 | BOOKSTORE_STAFF | Search and pagination | Empty search | PASS | {"status":200,"raw_error":false} |
+| EX-018 | BOOKSTORE_STAFF | Search and pagination | Special characters | PASS | {"status":200,"raw_error":false} |
+| EX-019 | BOOKSTORE_STAFF | Search and pagination | High page number | PASS | {"status":200,"raw_error":false} |
+| EX-020 | BOOKSTORE_STAFF | Search and pagination | Negative page number | PASS | {"status":200,"raw_error":false} |
+| EX-021 | BOOKSTORE_STAFF | Report download | Export actual authorized XLSX report | PASS | {"status":200,"type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","bytes":29035,"zip_signature":"PK"} |
+| EX-022 | CLINIC_STAFF | Search and pagination | Empty search | PASS | {"status":200,"raw_error":false} |
+| EX-023 | CLINIC_STAFF | Search and pagination | Special characters | PASS | {"status":200,"raw_error":false} |
+| EX-024 | CLINIC_STAFF | Search and pagination | High page number | PASS | {"status":200,"raw_error":false} |
+| EX-025 | CLINIC_STAFF | Search and pagination | Negative page number | PASS | {"status":200,"raw_error":false} |
+| EX-026 | CLINIC_STAFF | Report download | Export actual authorized XLSX report | PASS | {"status":200,"type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","bytes":28659,"zip_signature":"PK"} |
+| EX-027 | FACILITIES_STAFF | Search and pagination | Empty search | PASS | {"status":200,"raw_error":false} |
+| EX-028 | FACILITIES_STAFF | Search and pagination | Special characters | PASS | {"status":200,"raw_error":false} |
+| EX-029 | FACILITIES_STAFF | Search and pagination | High page number | PASS | {"status":200,"raw_error":false} |
+| EX-030 | FACILITIES_STAFF | Search and pagination | Negative page number | PASS | {"status":200,"raw_error":false} |
+| EX-031 | FACILITIES_STAFF | Report download | Export actual authorized XLSX report | PASS | {"status":200,"type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","bytes":28869,"zip_signature":"PK"} |
+| EX-032 | COMLAB_STAFF | Search and pagination | Empty search | PASS | {"status":200,"raw_error":false} |
+| EX-033 | COMLAB_STAFF | Search and pagination | Special characters | PASS | {"status":200,"raw_error":false} |
+| EX-034 | COMLAB_STAFF | Search and pagination | High page number | PASS | {"status":200,"raw_error":false} |
+| EX-035 | COMLAB_STAFF | Search and pagination | Negative page number | PASS | {"status":200,"raw_error":false} |
+| EX-036 | COMLAB_STAFF | Report download | Export actual authorized XLSX report | PASS | {"status":200,"type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","bytes":29160,"zip_signature":"PK"} |
+| EX-037 | ACCOUNTING_STAFF | Search and pagination | Empty search | PASS | {"status":200,"raw_error":false} |
+| EX-038 | ACCOUNTING_STAFF | Search and pagination | Special characters | PASS | {"status":200,"raw_error":false} |
+| EX-039 | ACCOUNTING_STAFF | Search and pagination | High page number | PASS | {"status":200,"raw_error":false} |
+| EX-040 | ACCOUNTING_STAFF | Search and pagination | Negative page number | PASS | {"status":200,"raw_error":false} |
+| EX-041 | ACCOUNTING_STAFF | Report download | Export actual authorized XLSX report | PASS | {"status":200,"type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","bytes":29551,"zip_signature":"PK"} |
+| EX-042 | SASO_STAFF | Search and pagination | Empty search | PASS | {"status":200,"raw_error":false} |
+| EX-043 | SASO_STAFF | Search and pagination | Special characters | PASS | {"status":200,"raw_error":false} |
+| EX-044 | SASO_STAFF | Search and pagination | High page number | PASS | {"status":200,"raw_error":false} |
+| EX-045 | SASO_STAFF | Search and pagination | Negative page number | PASS | {"status":200,"raw_error":false} |
+| EX-046 | SASO_STAFF | Report download | Export actual authorized XLSX report | PASS | {"status":200,"type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","bytes":30305,"zip_signature":"PK"} |
+| EX-047 | STUDENT_COUNCIL_STAFF | Search and pagination | Empty search | PASS | {"status":200,"raw_error":false} |
+| EX-048 | STUDENT_COUNCIL_STAFF | Search and pagination | Special characters | PASS | {"status":200,"raw_error":false} |
+| EX-049 | STUDENT_COUNCIL_STAFF | Search and pagination | High page number | PASS | {"status":200,"raw_error":false} |
+| EX-050 | STUDENT_COUNCIL_STAFF | Search and pagination | Negative page number | PASS | {"status":200,"raw_error":false} |
+| EX-051 | STUDENT_COUNCIL_STAFF | Report download | Export actual authorized XLSX report | PASS | {"status":200,"type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","bytes":29016,"zip_signature":"PK"} |
+| EX-052 | REGISTRAR | Search and pagination | Empty search | PASS | {"status":200,"raw_error":false} |
+| EX-053 | REGISTRAR | Search and pagination | Special characters | PASS | {"status":200,"raw_error":false} |
+| EX-054 | REGISTRAR | Search and pagination | High page number | PASS | {"status":200,"raw_error":false} |
+| EX-055 | REGISTRAR | Search and pagination | Negative page number | PASS | {"status":200,"raw_error":false} |
+| EX-056 | REGISTRAR | Report download | Export actual authorized XLSX report | PASS | {"status":200,"type":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","bytes":30276,"zip_signature":"PK"} |
+| EX-057 | Student | Password validation | Wrong current password | PASS | {"post_status":303,"old_password_still_works":true} |
+| EX-058 | Student | Password validation | Mismatched confirmation | PASS | {"post_status":303,"old_password_still_works":true} |
+| EX-059 | Student | Password validation | Short password | PASS | {"post_status":303,"old_password_still_works":true} |
+| EX-060 | Student | Password-change session behavior | Check whether a second logged-in session survives a password change | NOT TESTED | {"observed_second_session_status":200,"policy":"No documented session-revocation requirement. This observed behavior is a security recommendation, not a failed requirement."} |
+| EX-061 | Student / Registrar | Disabled account | Disable synthetic student and reuse an existing session | PASS | {"toggle_status":303,"existing_session_status":303,"location":"/login.php"} |
+| EX-062 | Library staff | Confidential image authorization | Library staff cannot fetch a Dean evaluation image | PASS | {"status":403} |
+| EX-063 | Registrar | Measured request batches | 1 requests at concurrency 1 | PASS | {"requests":1,"concurrency":1,"wall_ms":48,"median_ms":47.73,"p95_ms":47.73,"max_ms":47.73,"all_http_200":true,"scope":"Synthetic roster, one staff account, local single-process PHP server; request batch is not a count of simultaneously active students."} |
+| EX-064 | Registrar | Measured request batches | 30 requests at concurrency 4 | PASS | {"requests":30,"concurrency":4,"wall_ms":967,"median_ms":120.14,"p95_ms":178.88,"max_ms":179.2,"all_http_200":true,"scope":"Synthetic roster, one staff account, local single-process PHP server; request batch is not a count of simultaneously active students."} |
+| EX-065 | Registrar | Measured request batches | 100 requests at concurrency 8 | PASS | {"requests":100,"concurrency":8,"wall_ms":3676,"median_ms":267.71,"p95_ms":453.35,"max_ms":474.02,"all_http_200":true,"scope":"Synthetic roster, one staff account, local single-process PHP server; request batch is not a count of simultaneously active students."} |
+| EX-066 | All | Concurrent-user performance | 500 simultaneously active students | NOT TESTED | {"reason":"Single-process local PHP test server is not representative of school deployment; no large live-system load was attempted."} |
+| EX-067 | All | Concurrent-user performance | 1000 simultaneously active students | NOT TESTED | {"reason":"Single-process local PHP test server is not representative of school deployment; no large live-system load was attempted."} |
+| SC-001 | CBE Organization / Dean | Registrar-generated workflow | Organization is pending first and the student can begin the intended flow | FAIL | {"saved_statuses":{"ORGANIZATION":"LOCKED","DEAN":"PENDING","SASO":"LOCKED","STUDENT_COUNCIL":"LOCKED","LIBRARY":"LOCKED","BOOKSTORE":"LOCKED","CLINIC":"LOCKED","FACILITIES":"LOCKED","ACCOUNTING":"LOCKED","REGISTRAR":"LOCKED","COMLAB":"LOCKED"},"organization_attempt":"Dean clearance must be approved before Organization clearance.","dean_attempt":"CBE Organization/YBC approval is required before Dean clearance."} |
+| SC-002 | CCS Student | First pending office | Organization precedes Dean according to the supplied specification | FAIL | {"saved_statuses":{"ORGANIZATION":"LOCKED","DEAN":"PENDING","SASO":"LOCKED","STUDENT_COUNCIL":"LOCKED","LIBRARY":"LOCKED","BOOKSTORE":"LOCKED","CLINIC":"LOCKED","FACILITIES":"LOCKED","ACCOUNTING":"LOCKED","REGISTRAR":"LOCKED","COMLAB":"LOCKED"},"note":"Current migrations and code intentionally use Dean first for CCS/CTE; this is a specification conflict."} |
+| SC-003 | CCS Dean | Evaluation prerequisite | An unverified evaluation cannot become verified just by approving the student | FAIL | {"proof_submissions_before":0,"dean_status_after":"APPROVED","exception":""} |
+| SC-004 | Dean / Student | Signing not yet open | A PREPARING semester rejects clearance signing | FAIL | {"period":"PREPARING","dean_status_after":"APPROVED","exception":""} |
+| SC-005 | Library | Borrowed books | An outstanding borrowed book prevents Library approval | FAIL | {"borrowed_book_status":"BORROWED","eligibility":{"eligible":true,"details":["Library card: VERIFIED"],"exception":null},"library_status_after":"APPROVED","exception":""} |
+| SC-006 | SASO | Disciplinary violations | An open SASO violation prevents SASO approval | FAIL | {"open_violation":true,"saso_status_after":"APPROVED","exception":"","scope":"Configured violations table; no SASO case-management UI is currently implemented."} |
+| SC-007 | Unauthenticated visitor | Public regression helper | A visitor cannot acquire a staff session by opening a test script | PASS | {"test_helper_status":200,"protected_dashboard_after":303,"staff_page_returned":false,"real_records_accessed":false} |
+| SC-008 | Unauthenticated visitor | Public mutating regression | Anonymous access to an integration test cannot change office readiness notes | FAIL | {"http_status":200,"before_notes":"QA preserve existing office notes on all offices","changed_rows":[{"code":"STUDENT_COUNCIL","status":"NOT_READY","notes":null}],"helper_output":"Office Ready and Undo Ready checks passed.\n"} |
+| SC-009 | Bookstore / Student / Registrar | Revocation after completion | A reopened unpaid office cannot leave overall clearance marked COMPLETED | FAIL | {"http_status":303,"overall":{"status":"COMPLETED","completed_at":"2026-10-18 11:44:21"},"bookstore_status":"RETURNED"} |
+| SC-010 | Registrar | Duplicate staff account message | A duplicate account produces a friendly validation error without database details | FAIL | {"post_status":303,"page_status":200,"technical_database_text_visible":true} |
+| SC-011 | Student | Uploads before signing opens | A PREPARING semester rejects evaluation uploads | FAIL | {"period":"PREPARING","http_status":303,"stored_submission":{"id":1,"status":"SUBMITTED"}} |
+| SC-012 | Dean / Student | Evaluation confidentiality | Dean receives only a verification result and cannot retrieve confidential screenshots | FAIL | {"dean_image_status":200,"returned_png_signature":true,"synthetic_image_only":true} |
+| SC-013 | Student | Evaluation resubmission storage | Replacing a proof removes the superseded stored image | FAIL | {"old_image_still_on_disk":true,"old_database_reference_count":0} |
+| SC-014 | Student | Evaluation authenticity | An unrelated valid image is not automatically marked VERIFIED | PASS | {"submission_status":"SUBMITTED","note":"Manual review is implemented. Genuine completion, tampering and identity verification remain untested."} |
+| SC-015 | Dean | Closed semester | Closed signing prevents approval | PASS | {"denied":true,"saved_status":"PENDING"} |
+| SC-016 | All | Data integrity | No duplicate student/semester clearance records after repeated initializers | PASS | {"duplicate_pairs":0} |
+| SC-017 | Registrar | Final approval gate | Registrar cannot complete a clearance with unsigned offices | PASS | {"denied":true,"saved_statuses":{"ORGANIZATION":"LOCKED","DEAN":"PENDING","SASO":"LOCKED","STUDENT_COUNCIL":"LOCKED","LIBRARY":"LOCKED","BOOKSTORE":"LOCKED","CLINIC":"LOCKED","FACILITIES":"LOCKED","ACCOUNTING":"LOCKED","REGISTRAR":"PENDING","COMLAB":"LOCKED"}} |
+| JY-001 | Student | Start journey | Eligible synthetic student signs in and sees current dashboard | PASS | {"http_status":200,"fixture":"Synthetic prerequisites verified; no real evaluation completion claimed."} |
+| JY-002 | DEAN | DEAN approval | Submit actual office form; inspect saved approver/timestamp; refresh student dashboard | PASS | {"post_status":303,"saved":{"status":"APPROVED","approved_by":900001,"approved_at":"2026-10-18 11:51:12"},"student_refresh":200,"approved_count_before":0} |
+| JY-003 | ORG_STAFF | ORGANIZATION approval | Submit actual office form; inspect saved approver/timestamp; refresh student dashboard | PASS | {"post_status":303,"saved":{"status":"APPROVED","approved_by":900002,"approved_at":"2026-10-18 11:51:12"},"student_refresh":200,"approved_count_before":1} |
+| JY-004 | STUDENT_COUNCIL_STAFF | STUDENT_COUNCIL approval | Submit actual office form; inspect saved approver/timestamp; refresh student dashboard | PASS | {"post_status":303,"saved":{"status":"APPROVED","approved_by":900004,"approved_at":"2026-10-18 11:51:13"},"student_refresh":200,"approved_count_before":2} |
+| JY-005 | LIBRARY_STAFF | LIBRARY approval | Submit actual office form; inspect saved approver/timestamp; refresh student dashboard | PASS | {"post_status":303,"saved":{"status":"APPROVED","approved_by":900005,"approved_at":"2026-10-18 11:51:13"},"student_refresh":200,"approved_count_before":3} |
+| JY-006 | BOOKSTORE_STAFF | BOOKSTORE approval | Submit actual office form; inspect saved approver/timestamp; refresh student dashboard | PASS | {"post_status":303,"saved":{"status":"APPROVED","approved_by":900006,"approved_at":"2026-10-18 11:51:14"},"student_refresh":200,"approved_count_before":4} |
+| JY-007 | CLINIC_STAFF | CLINIC approval | Submit actual office form; inspect saved approver/timestamp; refresh student dashboard | PASS | {"post_status":303,"saved":{"status":"APPROVED","approved_by":900007,"approved_at":"2026-10-18 11:51:14"},"student_refresh":200,"approved_count_before":5} |
+| JY-008 | SASO_STAFF | SASO approval | Submit actual office form; inspect saved approver/timestamp; refresh student dashboard | PASS | {"post_status":303,"saved":{"status":"APPROVED","approved_by":900003,"approved_at":"2026-10-18 11:51:14"},"student_refresh":200,"approved_count_before":6} |
+| JY-009 | FACILITIES_STAFF | FACILITIES approval | Submit actual office form; inspect saved approver/timestamp; refresh student dashboard | PASS | {"post_status":303,"saved":{"status":"APPROVED","approved_by":900008,"approved_at":"2026-10-18 11:51:15"},"student_refresh":200,"approved_count_before":7} |
+| JY-010 | COMLAB_STAFF | COMLAB approval | Submit actual office form; inspect saved approver/timestamp; refresh student dashboard | PASS | {"post_status":303,"saved":{"status":"APPROVED","approved_by":900009,"approved_at":"2026-10-18 11:51:15"},"student_refresh":200,"approved_count_before":8} |
+| JY-011 | ACCOUNTING_STAFF | ACCOUNTING approval | Submit actual office form; inspect saved approver/timestamp; refresh student dashboard | PASS | {"post_status":303,"saved":{"status":"APPROVED","approved_by":900010,"approved_at":"2026-10-18 11:51:16"},"student_refresh":200,"approved_count_before":9} |
+| JY-012 | REGISTRAR | REGISTRAR approval | Submit actual office form; inspect saved approver/timestamp; refresh student dashboard | PASS | {"post_status":303,"saved":{"status":"APPROVED","approved_by":900000,"approved_at":"2026-10-18 11:51:16"},"student_refresh":200,"approved_count_before":10} |
+| JY-013 | Student / Registrar | Final completion | All eleven office rows and overall status agree; confirmation appears | PASS | {"saved":{"status":"COMPLETED","completed_at":"2026-10-18 11:51:16","unsigned_count":0},"student_confirmation":true} |
+| JY-014 | Student | Persistence | Log out, log in again, and confirm final clearance persists | PASS | {"logout_status":303,"relogin_page_status":200,"completion_visible":true} |
+| JY-015 | Organization | Empty bulk selection | Zero selected students is rejected with a clear message and no saved decisions change | PASS | {"http_status":303,"approved_count_before":5,"approved_count_after":5,"validation_message_visible":true} |
+| CC-001 | Library / Clinic / SASO | Concurrent approvals | Two independent PHP processes approve separate SASO child offices at the same instant; inspect saved child and parent states | PASS | {"workers":[{"station":"LIBRARY","approved":true},{"station":"CLINIC","approved":true}],"saved":{"CLINIC":"APPROVED","LIBRARY":"APPROVED","SASO":"PENDING"}} |
+| CC-002 | Library / Clinic / SASO | Concurrent approvals | Two independent PHP processes approve separate SASO child offices at the same instant; inspect saved child and parent states | PASS | {"workers":[{"station":"LIBRARY","approved":true},{"station":"CLINIC","approved":true}],"saved":{"CLINIC":"APPROVED","LIBRARY":"APPROVED","SASO":"PENDING"}} |
+| CC-003 | Library / Clinic / SASO | Concurrent approvals | Two independent PHP processes approve separate SASO child offices at the same instant; inspect saved child and parent states | PASS | {"workers":[{"station":"LIBRARY","approved":true},{"station":"CLINIC","approved":true}],"saved":{"CLINIC":"APPROVED","LIBRARY":"APPROVED","SASO":"PENDING"}} |
+| CC-004 | Library / Clinic / SASO | Concurrent approvals | Two independent PHP processes approve separate SASO child offices at the same instant; inspect saved child and parent states | PASS | {"workers":[{"station":"LIBRARY","approved":true},{"station":"CLINIC","approved":true}],"saved":{"CLINIC":"APPROVED","LIBRARY":"APPROVED","SASO":"PENDING"}} |
+| CC-005 | Library / Clinic / SASO | Concurrent approvals | Two independent PHP processes approve separate SASO child offices at the same instant; inspect saved child and parent states | PASS | {"workers":[{"station":"LIBRARY","approved":true},{"station":"CLINIC","approved":true}],"saved":{"CLINIC":"APPROVED","LIBRARY":"APPROVED","SASO":"PENDING"}} |
+| LIMIT-001 | Student | Official valid evaluation evidence | Official valid evaluation evidence | NOT TESTED | No authorized institutional ground-truth screenshot or completion record was supplied. A generated PNG tests upload mechanics only. |
+| LIMIT-002 | Student | Evaluation false positives / false negatives | Evaluation false positives / false negatives | NOT TESTED | There is no labelled authenticity dataset or authoritative evaluation-provider connection. The implemented route uses manual review. |
+| LIMIT-003 | Student | Tampered, cropped, blurry, reused and other-student evidence | Tampered, cropped, blurry, reused and other-student evidence | NOT TESTED | Trustworthiness/identity decisions require controlled ground-truth samples and an agreed reviewer policy. Original evidence was not fabricated or sent to an outside service. |
+| LIMIT-004 | Student | Different teacher/year/block and inconsistent-date evidence | Different teacher/year/block and inconsistent-date evidence | NOT TESTED | No accepted evidence specification or authoritative identity/date source was available. |
+| LIMIT-005 | Student | Physical Android camera and real event presence | Physical Android camera and real event presence | NOT TESTED | Desktop Edge viewport emulation does not test a real phone camera, browser permission prompt, or physical attendance. QR token behavior was tested separately. |
+| LIMIT-006 | Student | Native device file picker and camera capture | Native device file picker and camera capture | NOT TESTED | Multipart validators and uploads were executed, but physical-device capture and native picker behavior were not. |
+| LIMIT-007 | All | Installed PWA on physical devices | Installed PWA on physical devices | NOT IMPLEMENTED | No manifest is implemented, and no real-device install session was performed. |
+| LIMIT-008 | All | Upgrade from every previously installed service worker | Upgrade from every previously installed service worker | NOT TESTED | Fresh registration, cached fallback and reconnect passed; migration from all old installed clients was not simulated. |
+| LIMIT-009 | All | Long idle session expiration | Long idle session expiration | NOT TESTED | No school-defined idle-timeout policy was supplied; a long-duration timeout trial was not performed. Logout and disabled-account invalidation were tested. |
+| LIMIT-010 | All | Interrupted upload and power-loss recovery | Interrupted upload and power-loss recovery | NOT TESTED | The host database had recently recovered. No forced process kill or disk/power failure was applied to the live environment; synthetic transaction/validation tests do not prove every crash boundary. |
+| LIMIT-011 | All | Every concurrent update permutation | Every concurrent update permutation | NOT TESTED | Five two-process Library/Clinic races passed. Simultaneous revocations, uploads and semester changes across all roles remain untested. |
+| LIMIT-012 | All | Full school-size concurrent students | Full school-size concurrent students | NOT TESTED | The measured 30/100 request batches used one synthetic staff account and a local server; they are not 30/100 distinct active-student measurements. |
+| LIMIT-013 | All | Measured comparison with the school paper process | Measured comparison with the school paper process | NOT TESTED | No observed paper-clearance baseline, travel survey, staff-time study, or real-user pilot was provided. |
+| LIMIT-014 | Administrator | Separate Administrator role | Separate Administrator role | NOT IMPLEMENTED | Migration 005 deliberately removes ADMIN. Registrar implements account and semester management. A separate administrator is outside the current implementation. |
+| LIMIT-015 | Office staff | Approve All Except Selected | Approve All Except Selected | NOT IMPLEMENTED | No exclusion-selection workflow was discovered in the current source. Ready-roster batch approval exists; treat exclusions as an optional new feature unless separately specified. |
+| LIMIT-016 | Public | Password visibility control | Password visibility control | NOT IMPLEMENTED | No login password-visibility toggle was discovered; this is an optional usability enhancement, not an observed broken button. |
+| AUD-001 | All | Audit preservation | Compare original application hashes with the start-of-audit baseline | PASS | 185 original application/configuration source files checked; changed files: [] |
+| AUD-002 | Public | Audit evidence protection | HEAD the synthetic fixture metadata through original Apache | PASS | HTTP 403 for /ClearGo/qa-audit/2026-10-18/sandbox-fixture.json; the audit directory has its own Require all denied rule. |
+
+## Per-component source inventory
+
+The separate [coverage-matrix.csv](coverage-matrix.csv) records all 1125 discovered source occurrences, including exact source locations. Those inventory rows remain NOT TESTED for independent per-item/branch coverage unless a row is explicitly linked to a runtime test. They are not added to the verification-case total because they overlap the tests above. [controls.csv](controls.csv), [functions.csv](functions.csv), [actions.csv](actions.csv), and [routes.csv](routes.csv) are the complete discovery lists.

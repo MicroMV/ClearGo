@@ -43,7 +43,7 @@
         <div class="actions"><button type="button" class="secondary" onclick="closeComlabViolationModal()">Close</button></div>
     </div>
 </div>
-<script src="<?= escapeHtml(applicationUrl('/assets/js/comlab-dashboard.js')) ?>"></script>
+<script src="<?= escapeHtml(applicationUrl('/assets/js/comlab-dashboard.js')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/js/comlab-dashboard.js') ?>"></script>
 <?php if ($selected !== null): ?>
 <script>openComlabViolationModal(<?= (int) $selected['clearance_id'] ?>);</script>
 <?php endif; ?>

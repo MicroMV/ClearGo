@@ -15,7 +15,7 @@ const READINESS_ROLE_STATIONS = [
     'ACCOUNTING_STAFF' => 'ACCOUNTING',
 ];
 
-function officeReadiness(PDO $database, string $stationCode): array
+function officeReadiness(PDO $database, string $stationCode, bool $lock = false): array
 {
     $statement = $database->prepare(
         "SELECT period.id AS academic_period_id,period.school_year,period.semester,period.clearance_status,
@@ -25,7 +25,7 @@ function officeReadiness(PDO $database, string $stationCode): array
          INNER JOIN stations station ON station.code=:station_code AND station.status='ACTIVE'
          INNER JOIN office_period_readiness readiness ON readiness.academic_period_id=period.id AND readiness.station_id=station.id
          LEFT JOIN users user ON user.id=readiness.ready_by
-         WHERE period.status='ACTIVE' LIMIT 1"
+         WHERE period.status='ACTIVE' LIMIT 1" . ($lock ? ' FOR UPDATE' : '')
     );
     $statement->execute(['station_code' => $stationCode]);
     $row = $statement->fetch();
@@ -42,7 +42,7 @@ function markOfficeReady(PDO $database, int $userId, string $stationCode, string
     }
     $database->beginTransaction();
     try {
-        $context = officeReadiness($database, $stationCode);
+        $context = officeReadiness($database, $stationCode, true);
         if ($context['clearance_status'] !== 'PREPARING') {
             throw new RuntimeException('Office readiness can only be confirmed before clearance opens.');
         }
@@ -72,7 +72,7 @@ function markOfficeNotReady(PDO $database, int $userId, string $stationCode): vo
 {
     $database->beginTransaction();
     try {
-        $context = officeReadiness($database, $stationCode);
+        $context = officeReadiness($database, $stationCode, true);
         if ($context['clearance_status'] !== 'PREPARING') {
             throw new RuntimeException('Ready status cannot be changed after clearance opens.');
         }

@@ -1,0 +1,104 @@
+[
+  {
+    "file": "assets/js/accounting-submissions.js",
+    "status": 0,
+    "ms": 154,
+    "output": ""
+  },
+  {
+    "file": "assets/js/attendance-scanner.js",
+    "status": 0,
+    "ms": 140,
+    "output": ""
+  },
+  {
+    "file": "assets/js/bookstore-receipts.js",
+    "status": 0,
+    "ms": 160,
+    "output": ""
+  },
+  {
+    "file": "assets/js/comlab-dashboard.js",
+    "status": 0,
+    "ms": 168,
+    "output": ""
+  },
+  {
+    "file": "assets/js/connection-status.js",
+    "status": 0,
+    "ms": 168,
+    "output": ""
+  },
+  {
+    "file": "assets/js/library-card-camera.js",
+    "status": 0,
+    "ms": 151,
+    "output": ""
+  },
+  {
+    "file": "assets/js/library-card-submissions.js",
+    "status": 0,
+    "ms": 160,
+    "output": ""
+  },
+  {
+    "file": "assets/js/login.js",
+    "status": 0,
+    "ms": 383,
+    "output": ""
+  },
+  {
+    "file": "assets/js/office-dashboard.js",
+    "status": 0,
+    "ms": 308,
+    "output": ""
+  },
+  {
+    "file": "assets/js/profile-picture.js",
+    "status": 0,
+    "ms": 122,
+    "output": ""
+  },
+  {
+    "file": "assets/js/qrcode.js",
+    "status": 0,
+    "ms": 129,
+    "output": ""
+  },
+  {
+    "file": "assets/js/registrar-clearance.js",
+    "status": 0,
+    "ms": 305,
+    "output": ""
+  },
+  {
+    "file": "assets/js/registrar-student-import.js",
+    "status": 0,
+    "ms": 135,
+    "output": ""
+  },
+  {
+    "file": "assets/js/registrar-students.js",
+    "status": 0,
+    "ms": 173,
+    "output": ""
+  },
+  {
+    "file": "assets/js/staff-dashboard.js",
+    "status": 0,
+    "ms": 145,
+    "output": ""
+  },
+  {
+    "file": "assets/js/student-dashboard.js",
+    "status": 0,
+    "ms": 261,
+    "output": ""
+  },
+  {
+    "file": "connection-worker.js",
+    "status": 0,
+    "ms": 206,
+    "output": ""
+  }
+]

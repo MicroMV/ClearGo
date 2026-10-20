@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../auth/auth_check.php';
+require_once __DIR__ . '/../auth/signature_functions.php';
+require_once __DIR__ . '/dean_evaluation_policy.php';
 
 function activeStudentForUser(PDO $database, int $userId, bool $lock = false): array
 {
@@ -229,15 +231,13 @@ function approveDeanClearance(PDO $database, int $deanUserId, int $clearanceId, 
                     students.id AS student_id, students.user_id AS student_user_id,
                     students.student_number, students.organization_id, students.year_level,
                     clearance_stations.id AS clearance_station_id,
-                    clearance_stations.status AS dean_status,
-                    evaluation_verifications.status AS evaluation_status
+                    clearance_stations.status AS dean_status
              FROM clearances
              INNER JOIN academic_periods ON academic_periods.id=clearances.academic_period_id AND academic_periods.status='ACTIVE'
              INNER JOIN students ON students.id = clearances.student_id
              INNER JOIN stations ON stations.code = 'DEAN'
              INNER JOIN clearance_stations ON clearance_stations.clearance_id = clearances.id
                 AND clearance_stations.station_id = stations.id
-             LEFT JOIN evaluation_verifications ON evaluation_verifications.clearance_id = clearances.id
              WHERE clearances.id = :clearance_id
              LIMIT 1
              FOR UPDATE"
@@ -279,6 +279,9 @@ function approveDeanClearance(PDO $database, int $deanUserId, int $clearanceId, 
                 throw new RuntimeException('CBE Organization/YBC approval is required before Dean clearance.');
             }
         }
+        if ($dean['organization_code'] === 'CCS') {
+            requireCcsEvaluationCompletion($database, $clearanceId);
+        }
         if ($readyOnly) {
             $blocking = $database->prepare(
                 "SELECT COUNT(*) FROM requirement_records record
@@ -294,22 +297,6 @@ function approveDeanClearance(PDO $database, int $deanUserId, int $clearanceId, 
             if ((int) $blocking->fetchColumn() > 0) {
                 throw new RuntimeException('This student still has incomplete Dean requirements.');
             }
-        }
-        if ($dean['organization_code'] === 'CCS') {
-            $verifyEvaluation = $database->prepare(
-                "UPDATE requirement_records record
-                 INNER JOIN requirements requirement ON requirement.id=record.requirement_id
-                 SET record.status='VERIFIED',record.verified_by=:user_id,
-                     record.verified_at=NOW(),record.remarks='Confirmed by the CCS Dean during approval.'
-                 WHERE record.clearance_station_id=:station_id
-                   AND requirement.requirement_code IN
-                       ('CCS_FACULTY_EVALUATION','CCS_FOURTH_YEAR_FACULTY_EVALUATION')
-                   AND record.status NOT IN ('VERIFIED','RESOLVED')"
-            );
-            $verifyEvaluation->execute([
-                'user_id' => $deanUserId,
-                'station_id' => $clearance['clearance_station_id'],
-            ]);
         }
         if ($dean['organization_code'] === 'CBE') {
             $verifyOjt = $database->prepare(
@@ -447,6 +434,7 @@ function approveDeanClearance(PDO $database, int $deanUserId, int $clearanceId, 
             'old_status' => $clearance['dean_status'],
         ]);
 
+        syncClearanceSignatureSnapshots($database, $clearanceId);
         $database->commit();
         return true;
     } catch (Throwable $exception) {

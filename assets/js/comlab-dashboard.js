@@ -7,12 +7,12 @@ function openComlabViolationModal(clearanceId) {
     document.getElementById('comlab-violation-content').replaceChildren(template.content.cloneNode(true));
     comlabModal.classList.add('open');
     comlabModal.setAttribute('aria-hidden', 'false');
-    comlabModal.querySelector('.modal').focus();
+    comlabModal.querySelector('.modal').focus({ preventScroll: true });
 }
 function closeComlabViolationModal() {
     comlabModal.classList.remove('open');
     comlabModal.setAttribute('aria-hidden', 'true');
-    comlabTrigger?.focus();
+    comlabTrigger?.focus({ preventScroll: true });
 }
 comlabModal?.addEventListener('click', event => {
     if (event.target === comlabModal) closeComlabViolationModal();

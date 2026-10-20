@@ -36,6 +36,23 @@ function semesterReadiness(PDO $database, int $periodId): array
     return $statement->fetchAll();
 }
 
+/** Initialize each college's first office without replacing existing station decisions. */
+function initializeSemesterClearanceStations(PDO $database, int $periodId): void
+{
+    $stationRecords = $database->prepare(
+        "INSERT IGNORE INTO clearance_stations (clearance_id,station_id,status)
+         SELECT clearance.id,station.id,
+                CASE WHEN station.code=CASE WHEN organization.code='CBE' THEN 'ORGANIZATION' ELSE 'DEAN' END
+                     THEN 'PENDING' ELSE 'LOCKED' END
+         FROM clearances clearance
+         INNER JOIN students student ON student.id=clearance.student_id
+         INNER JOIN organizations organization ON organization.id=student.organization_id
+         CROSS JOIN stations station
+         WHERE clearance.academic_period_id=:period_id AND station.status='ACTIVE'"
+    );
+    $stationRecords->execute(['period_id' => $periodId]);
+}
+
 function prepareSemesterClearanceRecords(PDO $database, int $periodId): void
 {
     $clearances = $database->prepare(
@@ -49,8 +66,7 @@ function prepareSemesterClearanceRecords(PDO $database, int $periodId): void
          ON DUPLICATE KEY UPDATE clearances.id=clearances.id"
     );
     $clearances->execute(['period_id' => $periodId, 'period_reference' => $periodId, 'enrollment_period' => $periodId]);
-    $stationRecords = $database->prepare("INSERT IGNORE INTO clearance_stations (clearance_id,station_id,status) SELECT clearance.id,station.id,CASE WHEN station.code='DEAN' THEN 'PENDING' ELSE 'LOCKED' END FROM clearances clearance CROSS JOIN stations station WHERE clearance.academic_period_id=:period_id AND station.status='ACTIVE'");
-    $stationRecords->execute(['period_id' => $periodId]);
+    initializeSemesterClearanceStations($database, $periodId);
     $requirements = $database->prepare(
         "INSERT IGNORE INTO requirement_records (clearance_station_id,requirement_id,status)
          SELECT clearance_station.id,requirement.id,'NOT_STARTED'
@@ -93,7 +109,7 @@ function prepareSemesterClearanceRecords(PDO $database, int $periodId): void
     $togas->execute(['period_id' => $periodId]);
 }
 
-function createRegistrarSemester(PDO $database, int $registrarUserId, string $schoolYear, string $semester): int
+function createRegistrarSemester(PDO $database, ?int $registrarUserId, string $schoolYear, string $semester): int
 {
     $schoolYear = trim($schoolYear);
     $semester = strtoupper(trim($semester));
@@ -120,7 +136,7 @@ function createRegistrarSemester(PDO $database, int $registrarUserId, string $sc
         $readiness->execute(['period_id' => $periodId]);
         $registrarStation = $database->query("SELECT id FROM stations WHERE code='REGISTRAR' LIMIT 1")->fetchColumn();
         $audit = $database->prepare("INSERT INTO audit_logs (user_id,action,station_id,description,new_status) VALUES (:user_id,'SEMESTER_CREATED',:station_id,:description,'PREPARING')");
-        $audit->execute(['user_id' => $registrarUserId, 'station_id' => $registrarStation, 'description' => 'Registrar created ' . $semester . ' Semester A.Y. ' . $schoolYear . '.']);
+        $audit->execute(['user_id' => $registrarUserId, 'station_id' => $registrarStation, 'description' => ($registrarUserId === null ? 'Standalone local debug created ' : 'Registrar created ') . $semester . ' Semester A.Y. ' . $schoolYear . '.']);
         notifyActiveRoles(
             $database,
             ['DEAN','ORG_STAFF','SASO_STAFF','STUDENT_COUNCIL_STAFF','LIBRARY_STAFF','BOOKSTORE_STAFF','CLINIC_STAFF','FACILITIES_STAFF','COMLAB_STAFF','ACCOUNTING_STAFF'],
@@ -138,7 +154,7 @@ function createRegistrarSemester(PDO $database, int $registrarUserId, string $sc
     }
 }
 
-function openRegistrarClearance(PDO $database, int $registrarUserId): int
+function openRegistrarClearance(PDO $database, ?int $registrarUserId): int
 {
     $database->beginTransaction();
     try {
@@ -175,8 +191,7 @@ function openRegistrarClearance(PDO $database, int $registrarUserId): int
         );
         $clearances->execute(['period_id' => $period['id'], 'period_reference' => $period['id'], 'enrollment_period' => $period['id']]);
 
-        $stationRecords = $database->prepare("INSERT IGNORE INTO clearance_stations (clearance_id,station_id,status) SELECT clearance.id,station.id,CASE WHEN station.code='DEAN' THEN 'PENDING' ELSE 'LOCKED' END FROM clearances clearance CROSS JOIN stations station WHERE clearance.academic_period_id=:period_id AND station.status='ACTIVE'");
-        $stationRecords->execute(['period_id' => $period['id']]);
+        initializeSemesterClearanceStations($database, (int) $period['id']);
         $requirements = $database->prepare(
             "INSERT IGNORE INTO requirement_records (clearance_station_id,requirement_id,status)
              SELECT clearance_station.id,requirement.id,'NOT_STARTED'
@@ -219,17 +234,17 @@ function openRegistrarClearance(PDO $database, int $registrarUserId): int
         $togas->execute(['period_id' => $period['id']]);
         $studentNotices = $database->prepare("INSERT INTO notifications (user_id,academic_period_id,title,message) SELECT student.user_id,enrollment.academic_period_id,'Semester clearance is open',:message FROM semester_enrollments enrollment INNER JOIN students student ON student.id=enrollment.student_id WHERE enrollment.academic_period_id=:period_id AND enrollment.status='ENROLLED'");
         $studentNotices->execute(['message' => semesterLabel($period) . ' clearance is now available.', 'period_id' => $period['id']]);
-        notifyActiveRoles($database, ['DEAN'], 'Clearance opened - Dean action needed', semesterLabel($period) . ' is open. Enrolled students are ready for Dean review.', (int) $period['id']);
+        notifyActiveRoles($database, ['DEAN','ORG_STAFF'], 'Semester clearance opened', semesterLabel($period) . ' is open. Review the students currently pending at your assigned office.', (int) $period['id']);
         notifyActiveRoles(
             $database,
-            ['ORG_STAFF','SASO_STAFF','STUDENT_COUNCIL_STAFF','LIBRARY_STAFF','BOOKSTORE_STAFF','CLINIC_STAFF','FACILITIES_STAFF','COMLAB_STAFF','ACCOUNTING_STAFF'],
+            ['SASO_STAFF','STUDENT_COUNCIL_STAFF','LIBRARY_STAFF','BOOKSTORE_STAFF','CLINIC_STAFF','FACILITIES_STAFF','COMLAB_STAFF','ACCOUNTING_STAFF'],
             'Semester clearance opened',
             semesterLabel($period) . ' is open. You will be notified as each student reaches your office for action.',
             (int) $period['id']
         );
         $registrarStation = $database->query("SELECT id FROM stations WHERE code='REGISTRAR' LIMIT 1")->fetchColumn();
         $audit = $database->prepare("INSERT INTO audit_logs (user_id,action,station_id,description,old_status,new_status) VALUES (:user_id,'SEMESTER_CLEARANCE_OPENED',:station_id,:description,'PREPARING','OPEN')");
-        $audit->execute(['user_id' => $registrarUserId, 'station_id' => $registrarStation, 'description' => 'Registrar opened ' . semesterLabel($period) . ' clearance for ' . $enrollmentCount . ' enrolled students.']);
+        $audit->execute(['user_id' => $registrarUserId, 'station_id' => $registrarStation, 'description' => ($registrarUserId === null ? 'Standalone local debug opened ' : 'Registrar opened ') . semesterLabel($period) . ' clearance for ' . $enrollmentCount . ' enrolled students.']);
         $database->commit();
         return $enrollmentCount;
     } catch (Throwable $exception) {

@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../auth/auth_check.php';
+require_once __DIR__ . '/../auth/signature_functions.php';
+require_once __DIR__ . '/../library/clearance_policy.php';
 
 const OFFICE_ROLE_CONFIG = [
     'STUDENT_COUNCIL_STAFF' => ['code' => 'STUDENT_COUNCIL', 'title' => 'Student Council Clearance', 'path' => '/student-council/dashboard.php'],
@@ -37,7 +39,7 @@ function officeStation(PDO $database, string $code): array
 
 function studentCouncilAttendanceEligibilitySql(string $studentAlias, string $periodAlias): string
 {
-    return "NOT EXISTS (SELECT 1 FROM events council_event INNER JOIN stations council_station ON council_station.id=council_event.station_id AND council_station.code='STUDENT_COUNCIL' LEFT JOIN event_attendance council_attendance ON council_attendance.event_id=council_event.id AND council_attendance.student_id={$studentAlias}.id AND council_attendance.status='PRESENT' WHERE council_event.academic_period_id={$periodAlias}.id AND council_event.is_required=1 AND council_event.status='ACTIVE' AND council_attendance.id IS NULL)";
+    return "NOT EXISTS (SELECT 1 FROM events council_event INNER JOIN stations council_station ON council_station.id=council_event.station_id AND council_station.code='STUDENT_COUNCIL' LEFT JOIN event_attendance council_attendance ON council_attendance.event_id=council_event.id AND council_attendance.student_id={$studentAlias}.id AND (council_attendance.status='PRESENT' OR council_attendance.sanction_verified_at IS NOT NULL) WHERE council_event.academic_period_id={$periodAlias}.id AND council_event.is_required=1 AND council_event.status='ACTIVE' AND council_attendance.id IS NULL)";
 }
 
 function bookstoreEligibilitySql(string $studentAlias, string $periodAlias): string
@@ -45,6 +47,7 @@ function bookstoreEligibilitySql(string $studentAlias, string $periodAlias): str
     return "NOT EXISTS (SELECT 1 FROM bookstore_obligations obligation WHERE obligation.student_id={$studentAlias}.id AND obligation.academic_period_id={$periodAlias}.id AND obligation.status='UNPAID') AND NOT EXISTS (SELECT 1 FROM student_bookstore_fees student_fee INNER JOIN bookstore_fees fee ON fee.id=student_fee.fee_id AND fee.academic_period_id={$periodAlias}.id AND fee.status='ACTIVE' AND fee.is_required=1 WHERE student_fee.student_id={$studentAlias}.id AND student_fee.status<>'PAID')";
 }
 
+// SASO consolidates office signatures. Disciplinary cases are outside its requirements.
 function sasoEligibilitySql(string $clearanceAlias, string $studentAlias): string
 {
     return "EXISTS (SELECT 1 FROM clearance_stations organization_record INNER JOIN stations organization_station ON organization_station.id=organization_record.station_id AND organization_station.code='ORGANIZATION' WHERE organization_record.clearance_id={$clearanceAlias}.id AND organization_record.status='APPROVED') AND EXISTS (SELECT 1 FROM stations child INNER JOIN stations parent ON parent.id=child.parent_station_id AND parent.code='SASO' WHERE child.status='ACTIVE') AND NOT EXISTS (SELECT 1 FROM stations child INNER JOIN stations parent ON parent.id=child.parent_station_id AND parent.code='SASO' INNER JOIN clearance_stations child_record ON child_record.station_id=child.id AND child_record.clearance_id={$clearanceAlias}.id WHERE child.status='ACTIVE' AND child_record.status<>'APPROVED')";
@@ -65,6 +68,9 @@ function officeListEligibilitySql(string $stationCode): string
         default => '0=1',
     };
     $exception = "EXISTS (SELECT 1 FROM clearance_exceptions exception_record WHERE exception_record.clearance_station_id=cs.id AND exception_record.status='APPROVED' AND (exception_record.expires_at IS NULL OR exception_record.expires_at>=NOW()))";
+    if ($stationCode === 'LIBRARY') {
+        return "(({$requirement}) OR ({$exception})) AND (" . libraryBooksReturnedSql('student') . ')';
+    }
     return $stationCode === 'REGISTRAR' ? "({$requirement})" : "(({$requirement}) OR ({$exception}))";
 }
 
@@ -198,7 +204,7 @@ function officeRows(PDO $database, string $stationCode, string $search = '', int
     $statement = $database->prepare(
         "SELECT c.id AS clearance_id, c.status AS overall_status, c.academic_period_id,
                 period.clearance_status,
-                cs.id AS clearance_station_id, cs.status AS station_status, cs.returned_reason,
+                cs.id AS clearance_station_id, cs.status AS station_status, cs.returned_reason, cs.office_remarks,
                 student.id AS student_id, student.user_id AS student_user_id,
                 student.student_number, student.first_name, student.last_name,
                 student.program, student.year_level, student.section,
@@ -257,21 +263,27 @@ function officeEligibility(PDO $database, string $stationCode, array $row): arra
     $clearanceId = (int) $row['clearance_id'];
     $clearanceStationId = (int) $row['clearance_station_id'];
     $details = [];
+    $outstandingBooks = [];
     $eligible = false;
 
     if ($stationCode === 'STUDENT_COUNCIL') {
         countQuery($database, "SELECT COUNT(*) FROM requirement_records rr INNER JOIN requirements r ON r.id=rr.requirement_id WHERE rr.clearance_station_id=:id AND r.status='ACTIVE'", ['id' => $clearanceStationId]);
         countQuery($database, "SELECT COUNT(*) FROM requirement_records rr INNER JOIN requirements r ON r.id=rr.requirement_id WHERE rr.clearance_station_id=:id AND r.status='ACTIVE' AND rr.status IN ('VERIFIED','RESOLVED')", ['id' => $clearanceStationId]);
         $requiredEvents = countQuery($database, "SELECT COUNT(*) FROM events event INNER JOIN stations station ON station.id=event.station_id AND station.code='STUDENT_COUNCIL' WHERE event.academic_period_id=:period_id AND event.is_required=1 AND event.status='ACTIVE'", ['period_id' => $periodId]);
-        $attendedEvents = countQuery($database, "SELECT COUNT(*) FROM events event INNER JOIN stations station ON station.id=event.station_id AND station.code='STUDENT_COUNCIL' INNER JOIN event_attendance attendance ON attendance.event_id=event.id AND attendance.student_id=:student_id AND attendance.status='PRESENT' WHERE event.academic_period_id=:period_id AND event.is_required=1 AND event.status='ACTIVE'", ['student_id' => $studentId, 'period_id' => $periodId]);
-        $details[] = "Institutional activities attended: {$attendedEvents}/{$requiredEvents}";
+        $attendedEvents = countQuery($database, "SELECT COUNT(*) FROM events event INNER JOIN stations station ON station.id=event.station_id AND station.code='STUDENT_COUNCIL' INNER JOIN event_attendance attendance ON attendance.event_id=event.id AND attendance.student_id=:student_id AND (attendance.status='PRESENT' OR attendance.sanction_verified_at IS NOT NULL) WHERE event.academic_period_id=:period_id AND event.is_required=1 AND event.status='ACTIVE'", ['student_id' => $studentId, 'period_id' => $periodId]);
+        $details[] = "Institutional activities satisfied (attendance or verified sanction): {$attendedEvents}/{$requiredEvents}";
         $eligible = $attendedEvents === $requiredEvents;
     } elseif ($stationCode === 'LIBRARY') {
         $card = $database->prepare('SELECT status FROM library_cards WHERE student_id=:student_id LIMIT 1');
         $card->execute(['student_id' => $studentId]);
         $cardStatus = $card->fetchColumn() ?: 'PENDING';
+        $outstandingBooks = libraryOutstandingBooks($database, $studentId);
+        if ($outstandingBooks !== []) {
+            $details[] = 'Unreturned books: ' . count($outstandingBooks);
+            foreach ($outstandingBooks as $book) { $details[] = 'Return book: ' . $book['book_title']; }
+        }
         $details[] = 'Library card: ' . str_replace('_', ' ', (string) $cardStatus);
-        $eligible = $cardStatus === 'VERIFIED';
+        $eligible = $cardStatus === 'VERIFIED' && $outstandingBooks === [];
     } elseif ($stationCode === 'BOOKSTORE') {
         $open = countQuery($database, "SELECT COUNT(*) FROM bookstore_obligations WHERE student_id=:student_id AND academic_period_id=:period_id AND status='UNPAID'", ['student_id' => $studentId, 'period_id' => $periodId]);
         $unconfirmedFees = countQuery($database, "SELECT COUNT(*) FROM student_bookstore_fees student_fee INNER JOIN bookstore_fees fee ON fee.id=student_fee.fee_id AND fee.academic_period_id=:period_id AND fee.status='ACTIVE' AND fee.is_required=1 WHERE student_fee.student_id=:student_id AND student_fee.status<>'PAID'", ['student_id' => $studentId, 'period_id' => $periodId]);
@@ -354,10 +366,10 @@ function officeEligibility(PDO $database, string $stationCode, array $row): arra
     $activeException = $exception->fetch();
     if ($activeException !== false && $stationCode !== 'REGISTRAR') {
         $details[] = 'Approved temporary exception: ' . $activeException['reason'];
-        $eligible = true;
+        if ($stationCode !== 'LIBRARY' || $outstandingBooks === []) { $eligible = true; }
     }
 
-    return ['eligible' => $eligible, 'details' => $details, 'exception' => $activeException ?: null];
+    return ['eligible' => $eligible, 'details' => $details, 'exception' => $activeException ?: null, 'outstanding_books' => $outstandingBooks];
 }
 
 function ensureOfficeSourceRecords(PDO $database, int $studentId, int $periodId): void
@@ -376,7 +388,7 @@ function ensureOfficeSourceRecords(PDO $database, int $studentId, int $periodId)
 
 function officeClearanceContext(PDO $database, string $stationCode, int $clearanceId, bool $lock = false): array
 {
-    $sql = "SELECT c.id AS clearance_id, c.academic_period_id, period.clearance_status,
+    $sql = "SELECT c.id AS clearance_id, c.academic_period_id, c.status AS overall_status, period.clearance_status,
                    student.id AS student_id,
                    student.user_id AS student_user_id, student.student_number,
                    CONCAT(student.first_name,' ',student.last_name) AS student_name,
@@ -399,6 +411,9 @@ function officeClearanceContext(PDO $database, string $stationCode, int $clearan
 
 function notifyAndAuditOffice(PDO $database, array $context, int $staffUserId, string $action, string $description, string $oldStatus, string $newStatus): void
 {
+    if ($newStatus === 'APPROVED') {
+        syncClearanceSignatureSnapshots($database, (int) $context['clearance_id']);
+    }
     if (($context['clearance_status'] ?? null) === 'OPEN') {
         createNotification($database, (int) $context['student_user_id'], $context['station_name'] . ' clearance updated', $description, (int) $context['academic_period_id']);
     }
@@ -437,6 +452,10 @@ function unlockAfterOfficeApproval(PDO $database, string $stationCode, int $clea
         $codes = ['REGISTRAR'];
         $roles = ['REGISTRAR'];
     } elseif ($stationCode === 'REGISTRAR') {
+        $unsigned = countQuery($database, "SELECT COUNT(*) FROM clearance_stations record INNER JOIN stations station ON station.id=record.station_id AND station.status='ACTIVE' WHERE record.clearance_id=:clearance_id AND record.status<>'APPROVED'", ['clearance_id' => $clearanceId]);
+        if ($unsigned > 0) {
+            throw new RuntimeException('Every office must approve before clearance can be completed.');
+        }
         $complete = $database->prepare("UPDATE clearances SET status='COMPLETED',completed_at=NOW() WHERE id=:clearance_id");
         $complete->execute(['clearance_id' => $clearanceId]);
     }
@@ -477,6 +496,9 @@ function approveOfficeClearance(PDO $database, string $stationCode, int $clearan
         }
         if ($context['station_status'] === 'LOCKED') {
             throw new RuntimeException('The required preceding offices have not cleared this student yet.');
+        }
+        if ($stationCode === 'LIBRARY') {
+            requireLibraryBooksReturned($database, (int) $context['student_id']);
         }
         $row = $context + ['academic_period_id' => $context['academic_period_id']];
         $eligibility = officeEligibility($database, $stationCode, $row);
@@ -641,6 +663,29 @@ function clearClinicClearance(PDO $database, int $clearanceId, int $staffUserId,
     }
 }
 
+function returnLibraryBook(PDO $database, int $clearanceId, int $bookId, int $staffUserId): void
+{
+    $database->beginTransaction();
+    try {
+        $context = officeClearanceContext($database, 'LIBRARY', $clearanceId, true);
+        if (!in_array($context['clearance_status'], ['PREPARING', 'OPEN'], true)) {
+            throw new RuntimeException('Book returns are not available for this semester.');
+        }
+        $books = libraryOutstandingBooks($database, (int) $context['student_id'], true);
+        $bookTitle = null;
+        foreach ($books as $book) { if ((int) $book['id'] === $bookId) { $bookTitle = $book['book_title']; break; } }
+        if ($bookTitle === null) { throw new RuntimeException('That book is already returned or does not belong to this student.'); }
+        $update = $database->prepare("UPDATE borrowed_books SET status='RETURNED',returned_at=CURDATE(),returned_verified_by=:user_id WHERE id=:id AND student_id=:student_id AND status='BORROWED'");
+        $update->execute(['user_id' => $staffUserId, 'id' => $bookId, 'student_id' => $context['student_id']]);
+        if ($update->rowCount() !== 1) { throw new RuntimeException('The book return could not be recorded.'); }
+        notifyAndAuditOffice($database, $context, $staffUserId, 'LIBRARY_BOOK_RETURNED', 'The Library confirmed return of: ' . $bookTitle . '.', $context['station_status'], $context['station_status']);
+        $database->commit();
+    } catch (Throwable $exception) {
+        if ($database->inTransaction()) { $database->rollBack(); }
+        throw $exception;
+    }
+}
+
 function clearLibraryClearance(PDO $database, int $clearanceId, int $staffUserId): bool
 {
     $database->beginTransaction();
@@ -652,6 +697,7 @@ function clearLibraryClearance(PDO $database, int $clearanceId, int $staffUserId
         if ($context['station_status'] === 'LOCKED') {
             throw new RuntimeException('The required preceding offices have not cleared this student yet.');
         }
+        requireLibraryBooksReturned($database, (int) $context['student_id']);
         $card = $database->prepare(
             "INSERT INTO library_cards (student_id,status,verified_by,verified_at)
              VALUES (:student_id,'VERIFIED',:user_id,NOW())
@@ -698,7 +744,7 @@ function clearBookstoreClearance(PDO $database, int $clearanceId, int $staffUser
             throw new RuntimeException('Enter the payment receipt or reference for the pending Bookstore obligation.');
         }
         if ($unpaid > 0) {
-            $settle = $database->prepare("UPDATE bookstore_obligations SET status='CLEARED',payment_reference=:reference,remarks=CASE WHEN :remarks='' THEN remarks ELSE :remarks END,cleared_by=:user_id,cleared_at=NOW() WHERE student_id=:student_id AND academic_period_id=:period_id AND status='UNPAID'");
+            $settle = $database->prepare("UPDATE bookstore_obligations SET status='CLEARED',payment_reference=:reference,remarks=COALESCE(NULLIF(:remarks,''),remarks),cleared_by=:user_id,cleared_at=NOW() WHERE student_id=:student_id AND academic_period_id=:period_id AND status='UNPAID'");
             $settle->execute(['reference' => trim($paymentReference), 'remarks' => trim($remarks), 'user_id' => $staffUserId, 'student_id' => $context['student_id'], 'period_id' => $context['academic_period_id']]);
         }
         if ($context['station_status'] === 'APPROVED') {

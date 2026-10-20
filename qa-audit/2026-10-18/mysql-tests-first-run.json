@@ -1,0 +1,209 @@
+[
+  {
+    "test_id": "MY-001",
+    "role": "Various",
+    "feature": "bookstore_event_workbook_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 260,
+    "evidence": "Bookstore active/closed event export test passed."
+  },
+  {
+    "test_id": "MY-002",
+    "role": "Various",
+    "feature": "bookstore_workbook_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 190,
+    "evidence": "Bookstore three-sheet workbook test passed."
+  },
+  {
+    "test_id": "MY-003",
+    "role": "Various",
+    "feature": "bookstore_workflow_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 167,
+    "evidence": "Bookstore obligation workflow test passed."
+  },
+  {
+    "test_id": "MY-004",
+    "role": "Various",
+    "feature": "bulk_dashboard_render_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 228,
+    "evidence": "COMLAB_STAFF dashboard bulk button rendered successfully."
+  },
+  {
+    "test_id": "MY-005",
+    "role": "Various",
+    "feature": "cbe_dean_workflow_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 487,
+    "evidence": "CBE YBC-to-Dean workflow checks passed."
+  },
+  {
+    "test_id": "MY-006",
+    "role": "Various",
+    "feature": "cbe_fourth_year_single_approval_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 421,
+    "evidence": "CBE fourth-year single approval test passed."
+  },
+  {
+    "test_id": "MY-007",
+    "role": "Various",
+    "feature": "clinic_workbook_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 536,
+    "evidence": "Clinic three-sheet workbook test passed."
+  },
+  {
+    "test_id": "MY-008",
+    "role": "Various",
+    "feature": "dashboard_summary_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 974,
+    "evidence": "Dashboard summary consistency test passed."
+  },
+  {
+    "test_id": "MY-009",
+    "role": "Various",
+    "feature": "facilities_return_query_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 196,
+    "evidence": "Facilities return query checks passed."
+  },
+  {
+    "test_id": "MY-010",
+    "role": "Various",
+    "feature": "library_workbook_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 147,
+    "evidence": "Library three-sheet workbook test passed."
+  },
+  {
+    "test_id": "MY-011",
+    "role": "Various",
+    "feature": "notification_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 278,
+    "evidence": "Notification deduplication test passed."
+  },
+  {
+    "test_id": "MY-012",
+    "role": "Various",
+    "feature": "office_remarks_action_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 170,
+    "evidence": "Office remarks POST save check passed; all database changes rolled back."
+  },
+  {
+    "test_id": "MY-013",
+    "role": "Various",
+    "feature": "office_remarks_report_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 1574,
+    "evidence": "DEAN Excel export contains saved remarks in its final column; changes rolled back."
+  },
+  {
+    "test_id": "MY-014",
+    "role": "Various",
+    "feature": "office_workbook_design_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 372,
+    "evidence": "All four office workbook designs and readbacks passed."
+  },
+  {
+    "test_id": "MY-015",
+    "role": "Various",
+    "feature": "phase1_clearance_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 445,
+    "evidence": "Phase 1 clearance checks passed."
+  },
+  {
+    "test_id": "MY-016",
+    "role": "Various",
+    "feature": "phase2_dean_clearance_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 1932,
+    "evidence": "Phase 2 Dean clearance checks passed."
+  },
+  {
+    "test_id": "MY-017",
+    "role": "Various",
+    "feature": "phase3_office_workflow_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 977,
+    "evidence": "Phase 3 office workflow checks passed."
+  },
+  {
+    "test_id": "MY-018",
+    "role": "Various",
+    "feature": "profile_picture_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "FAIL",
+    "milliseconds": 3574,
+    "evidence": "PHP Fatal error:  Uncaught RuntimeException: Profile files are publicly accessible. in C:\\xamppl\\htdocs\\ClearGo\\qa-audit\\2026-10-18\\sandbox-app\\tests\\profile_picture_test.php:18\nStack trace:\n#0 C:\\xamppl\\htdocs\\ClearGo\\qa-audit\\2026-10-18\\sandbox-app\\tests\\profile_picture_test.php(138): profileCheck(false, 'Profile files a...')\n#1 {main}\n  thrown in C:\\xamppl\\htdocs\\ClearGo\\qa-audit\\2026-10-18\\sandbox-app\\tests\\profile_picture_test.php on line 18\n\nFatal error: Uncaught RuntimeException: Profile files are publicly accessible. in C:\\xamppl\\htdocs\\ClearGo\\qa-audit\\2026-10-18\\sandbox-app\\tests\\profile_picture_test.php:18\nStack trace:\n#0 C:\\xamppl\\htdocs\\ClearGo\\qa-audit\\2026-10-18\\sandbox-app\\tests\\profile_picture_test.php(138): profileCheck(false, 'Profile files a...')\n#1 {main}\n  thrown in C:\\xamppl\\htdocs\\ClearGo\\qa-audit\\2026-10-18\\sandbox-app\\tests\\profile_picture_test.php on line 18"
+  },
+  {
+    "test_id": "MY-019",
+    "role": "Various",
+    "feature": "qr_attendance_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 245,
+    "evidence": "QR attendance test passed."
+  },
+  {
+    "test_id": "MY-020",
+    "role": "Various",
+    "feature": "readiness_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 183,
+    "evidence": "Office Ready and Undo Ready checks passed."
+  },
+  {
+    "test_id": "MY-021",
+    "role": "Various",
+    "feature": "semester_notifications_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 794,
+    "evidence": "Semester notification rollover, archive selection, unread isolation, ownership and HTTP checks passed."
+  },
+  {
+    "test_id": "MY-022",
+    "role": "Various",
+    "feature": "student_import_mysql_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "FAIL",
+    "milliseconds": 408,
+    "evidence": "MySQL student import test failed:\n- The workbook academic year/semester does not match the active academic period."
+  },
+  {
+    "test_id": "MY-023",
+    "role": "Various",
+    "feature": "student_import_preview_test.php",
+    "test": "Run existing suite against a reset synthetic MySQL database; copied HTTP tests target the isolated server",
+    "result": "PASS",
+    "milliseconds": 357,
+    "evidence": "Import preview pagination passed: 2,319 rows, page limits, row numbers and full-file confirmation preserved."
+  }
+]

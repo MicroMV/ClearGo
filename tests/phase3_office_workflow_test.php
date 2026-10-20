@@ -2,6 +2,11 @@
 
 declare(strict_types=1);
 
+if (PHP_SAPI !== 'cli') {
+    http_response_code(403);
+    exit('Forbidden');
+}
+
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../clearance/clearance_functions.php';
 require_once __DIR__ . '/../clearance/office_workflow.php';
@@ -96,6 +101,7 @@ try {
 
     $verifyDean = $database->prepare("UPDATE requirement_records rr INNER JOIN clearance_stations cs ON cs.id=rr.clearance_station_id INNER JOIN requirements r ON r.id=rr.requirement_id SET rr.status='VERIFIED',rr.verified_at=NOW() WHERE cs.clearance_id=:clearance_id AND r.requirement_code='CCS_FACULTY_EVALUATION'");
     $verifyDean->execute(['clearance_id' => $clearanceId]);
+    $database->prepare("INSERT INTO ccs_evaluation_completions(clearance_id,status,recorded_by,recorded_at) VALUES (?,'COMPLETED',?,NOW())")->execute([$clearanceId, $staffByRole['DEAN']]);
     approveDeanClearance($database, $staffByRole['DEAN'], $clearanceId);
 
     $orgStationId = (int) $database->query("SELECT id FROM stations WHERE code='ORGANIZATION'")->fetchColumn();

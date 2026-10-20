@@ -20,7 +20,7 @@ function organizationEvents(PDO $database, int $organizationId, int $periodId): 
 {
     $statement = $database->prepare(
         "SELECT event.id,event.name,event.description,event.event_date,event.start_time,event.end_time,
-                event.is_required,event.status,event.check_in_opens_at,event.check_in_closes_at,
+                event.is_required,event.status,event.check_in_opens_at,event.check_in_closes_at,event.attendance_finalized_at,
                 CASE WHEN event.check_in_token_hash IS NOT NULL AND event.check_in_opens_at<=NOW()
                      AND event.check_in_closes_at>=NOW() THEN 1 ELSE 0 END AS qr_is_open,
                 COUNT(CASE WHEN attendance.status='PRESENT' THEN 1 END) AS present_count,
@@ -40,7 +40,7 @@ function organizationEvents(PDO $database, int $organizationId, int $periodId): 
     return $statement->fetchAll();
 }
 
-function organizationEvent(PDO $database, int $organizationId, int $periodId, int $eventId): array|false
+function organizationEvent(PDO $database, int $organizationId, int $periodId, int $eventId, bool $lock = false): array|false
 {
     $statement = $database->prepare(
         "SELECT event.*,organization.name AS organization_name,organization.code AS organization_code,
@@ -50,7 +50,7 @@ function organizationEvent(PDO $database, int $organizationId, int $periodId, in
          INNER JOIN academic_periods period ON period.id=event.academic_period_id
          INNER JOIN stations station ON station.id=event.station_id AND station.code='ORGANIZATION'
          WHERE event.id=:event_id AND event.organization_id=:organization_id
-           AND event.academic_period_id=:period_id LIMIT 1"
+           AND event.academic_period_id=:period_id LIMIT 1" . ($lock ? ' FOR UPDATE' : '')
     );
     $statement->execute([
         'event_id' => $eventId,
@@ -163,8 +163,8 @@ function openEventQr(PDO $database, int $userId, int $organizationId, int $event
 
     $update = $database->prepare(
         "UPDATE events SET check_in_token_hash=:token_hash,check_in_opens_at=NOW(),
-                check_in_closes_at=DATE_ADD(NOW(),INTERVAL :minutes MINUTE)
-         WHERE id=:event_id AND organization_id=:organization_id AND academic_period_id=:period_id"
+                check_in_closes_at=LEAST(DATE_ADD(NOW(),INTERVAL :minutes MINUTE),COALESCE(TIMESTAMP(event_date,end_time),'9999-12-31 23:59:59'))
+         WHERE id=:event_id AND organization_id=:organization_id AND academic_period_id=:period_id AND attendance_finalized_at IS NULL AND (end_time IS NULL OR TIMESTAMP(event_date,end_time)>NOW())"
     );
     $update->bindValue(':token_hash', $tokenHash);
     $update->bindValue(':minutes', $minutes, PDO::PARAM_INT);
@@ -217,11 +217,12 @@ function deleteOrganizationEvent(PDO $database, int $userId, int $organizationId
     $period = activeEventPeriod($database);
     $database->beginTransaction();
     try {
-        $event = organizationEvent($database, $organizationId, (int) $period['id'], $eventId);
+        $event = organizationEvent($database, $organizationId, (int) $period['id'], $eventId, true);
         if ($event === false) {
             throw new RuntimeException('The selected event is unavailable.');
         }
         $removeAttendance = $database->prepare('DELETE FROM event_attendance WHERE event_id=:event_id');
+        if ($event['attendance_finalized_at'] !== null) { throw new RuntimeException('Events with finalized attendance and sanctions cannot be deleted.'); }
         $removeAttendance->execute(['event_id' => $eventId]);
         $removeEvent = $database->prepare('DELETE FROM events WHERE id=:event_id AND organization_id=:organization_id AND academic_period_id=:period_id');
         $removeEvent->execute(['event_id' => $eventId, 'organization_id' => $organizationId, 'period_id' => $period['id']]);
@@ -259,7 +260,8 @@ function qrAttendanceContext(PDO $database, string $token, int $userId, bool $lo
             AND enrollment.student_id=student.id AND enrollment.status='ENROLLED'
          LEFT JOIN event_attendance attendance ON attendance.event_id=event.id AND attendance.student_id=student.id
          WHERE event.check_in_token_hash=:token_hash AND event.status='ACTIVE'
-           AND event.check_in_opens_at<=NOW() AND event.check_in_closes_at>=NOW()
+           AND event.attendance_finalized_at IS NULL
+           AND event.check_in_opens_at<=NOW() AND event.check_in_closes_at>NOW()
          LIMIT 1" . ($lock ? ' FOR UPDATE' : '')
     );
     $statement->execute(['user_id' => $userId, 'token_hash' => hash('sha256', $token)]);

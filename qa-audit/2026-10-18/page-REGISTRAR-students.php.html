@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+
+<head><link rel="stylesheet" href="/assets/css/connection-status.css?v=1792294403"><link rel="preload" as="image" href="/assets/the-lewis-college-logo.png"><script defer src="/assets/js/connection-status.js?v=1792294403" data-connection-status data-logo-url="/assets/the-lewis-college-logo.png" data-status-url="/auth/connection_status.php" data-worker-url="/connection-worker.js"></script>    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Student Accounts | ClearGo</title>
+    <link rel="stylesheet" href="/assets/css/registrar-students.css?v=1792294403">
+    <link rel="stylesheet" href="/assets/css/staff-dashboard.css?v=1792294403">
+</head>
+
+<body class="staff-dashboard">
+    <div class="staff-shell"><aside class="staff-sidebar" id="staff-sidebar" aria-label="Office navigation"><button class="sidebar-close" type="button" data-sidebar-close aria-label="Close navigation">&#10005;</button><div class="sidebar-brand"><img src="/assets/the-lewis-college-logo.png" alt="The Lewis College logo"><div class="sidebar-brand-copy"><span>The Lewis College</span><strong>ClearGo</strong></div></div><div class="sidebar-office"><p class="sidebar-kicker">Staff workspace</p><p class="sidebar-office-name">Registrar Administration</p></div><nav class="staff-nav"><a href="/registrar/dashboard.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg></span><span>Dashboard</span></a><a href="/registrar/student_import.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v3h16v-3"/></svg></span><span>Import Enrollment</span></a><a href="/registrar/students.php" class="active" aria-current="page"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1.5a4.5 4.5 0 0 0-4.5-4.5h-3A4.5 4.5 0 0 0 4 18.5V20M10 10a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM17 11a3 3 0 0 0 0-6M20 20v-1a4 4 0 0 0-3-3.87"/></svg></span><span>Student Accounts</span></a><a href="/registrar/staff_accounts.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M3 21v-2a6 6 0 0 1 12 0v2M17 8h4M19 6v4M17 16h4"/></svg></span><span>Staff Accounts</span></a><a href="/registrar/clearance.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v4H7zM5 5H3v16h18V5h-2M8 13l3 3 5-6"/></svg></span><span>Clearance Review</span></a><a href="/registrar/audit_logs.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4zM8 9h8M8 13h8M8 17h5"/></svg></span><span>Audit Logs</span></a><a href="/auth/profile.php"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg></span><span>My Profile</span></a></nav><div class="sidebar-footer"><div class="sidebar-user"><span class="sidebar-avatar">Q</span><span class="sidebar-user-copy"><strong>qa.registrar@thelewiscollege.edu.ph</strong><span>Authorized staff</span></span></div><form class="logout-form" method="post" action="/logout.php">
+    <input type="hidden" name="csrf_token" value="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e">
+    <button type="submit">Log out</button>
+</form></div></aside><button class="sidebar-overlay" type="button" data-sidebar-close aria-label="Close navigation"></button><div class="staff-workspace">
+            <header class="staff-topbar"><button class="mobile-nav-toggle" type="button" data-sidebar-open aria-controls="staff-sidebar" aria-expanded="false" aria-label="Open navigation">&#9776;</button>
+                <div class="topbar-title">
+                    <h1>Student Accounts</h1>
+                    <p>Manage student records and current-semester enrollment.</p>
+                </div>
+                <div class="topbar-actions">
+                    <div class="notification-center" data-notification-endpoint="/auth/notifications.php" data-csrf-token="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e" data-latest-notification-id="0"><button class="notification-toggle" type="button" aria-label="View alerts and notifications" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button><div class="notification-menu" hidden><div class="notification-heading"><strong>Alerts &amp; notifications</strong><span>0 total</span></div><ul><li class="notification-empty">No alerts or notifications yet.</li></ul></div></div>                </div>
+            </header>
+            <main class="staff-main">
+                                <section class="panel">
+                    <div class="section-heading">
+                        <div>
+                            <h2>Create one student account</h2>
+                            <p class="muted">Add and enroll an individual student in the active semester.</p>
+                        </div>
+                    </div>
+                    <p class="muted">Initial password: <strong>thelewiscollege</strong>. Students can change it after signing in.</p>
+                    <form class="grid" method="post" action="/registrar/student_action.php"><input type="hidden" name="csrf_token" value="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e"><input name="student_number" required placeholder="Student No."><input name="full_name" required placeholder="Last, First, Middle"><input type="email" name="email" pattern=".+@thelewiscollege\.edu\.ph" required placeholder="Gsuite Address"><input name="program" required placeholder="Course"><select name="year_level"><option value="1">Year 1</option><option value="2">Year 2</option><option value="3">Year 3</option><option value="4">Year 4</option><option value="5">Year 5</option><option value="6">Year 6</option></select><select name="organization_id"><option value="2">CBE - College of Business Education</option><option value="1">CCS - College of Computer Studies</option><option value="3">CTE - College of Teacher Education</option></select><button name="action" value="create">Create and Enroll</button></form>
+                </section>
+                <section class="panel">
+                    <div class="section-heading">
+                        <div>
+                            <h2>Student directory</h2>
+                            <p class="muted">Find accounts, review enrollment, and manage existing records.</p>
+                        </div>
+                    </div>
+                    <form class="inline filters" method="get">
+                        <input name="search" value="" placeholder="Search student number, name, email">
+                        <select name="organization">
+                            <option value="0">All colleges</option><option value="2" >CBE</option><option value="1" >CCS</option><option value="3" >CTE</option>                        </select>
+                        <select name="program">
+                            <option value="">All courses</option><option value="BSCS" >BSCS</option>                        </select>
+                        <select name="year_level">
+                            <option value="0">All year levels</option><option value="2" >Year 2</option>                        </select>
+                        <select name="enrollment">
+                            <option value="ENROLLED" selected>Current roster</option>
+                            <option value="REMOVED" >Not enrolled this semester</option>
+                            <option value="ALL" >All student accounts</option>
+                        </select>
+                        <select name="account_status">
+                            <option value="ALL" selected>All accounts</option>
+                            <option value="ACTIVE" >Active</option>
+                            <option value="INACTIVE" >Inactive</option>
+                        </select>
+                        <button type="submit">Apply Filters</button>
+                        <a class="clear-filter" href="/registrar/students.php">Clear filters</a>
+                    </form>
+                    <p class="muted">First Semester A.Y. 2098-2099; enrollment changes are open. Page 1 of 1 · 1 student(s).</p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Student Name</th>
+                                    <th>Account</th>
+                                    <th>Course</th>
+                                    <th>Year / College</th>
+                                    <th>Semester</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                                                <tr>
+                                        <td><strong>QA-AUDIT-001</strong></td>
+                                        <td>Synthetic Student, QA</td>
+                                        <td>qa.student@thelewiscollege.edu.ph<br><span class="badge active">ACTIVE</span></td>
+                                        <td>BSCS</td>
+                                        <td>Year 2 - CCS</td>
+                                        <td><span class="badge enrolled">ENROLLED</span></td>
+                                        <td>
+                                            <div class="student-row-actions"><a class="student-edit-button" href="?search=&amp;organization=0&amp;program=&amp;year_level=0&amp;enrollment=ENROLLED&amp;account_status=ALL&amp;page=1&amp;edit=3337" data-student-edit data-student-record="{&quot;student_id&quot;:3337,&quot;student_number&quot;:&quot;QA-AUDIT-001&quot;,&quot;full_name&quot;:&quot;Synthetic Student, QA&quot;,&quot;email&quot;:&quot;qa.student@thelewiscollege.edu.ph&quot;,&quot;program&quot;:&quot;BSCS&quot;,&quot;year_level&quot;:2,&quot;organization_id&quot;:1}" aria-haspopup="dialog" aria-controls="student-edit-modal">Edit</a>
+                                                <form class="student-action-form" method="post" action="/registrar/student_action.php">
+                                                    <input type="hidden" name="csrf_token" value="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e">
+                                                    <input type="hidden" name="student_id" value="3337">
+                                                                                                            <button name="action" value="remove_enrollment" title="Unenroll this semester" data-confirm="Are you sure you want to unenroll Synthetic Student, QA (QA-AUDIT-001) from this semester? They will no longer be able to process clearance for this semester.">Unenroll</button>
+                                                                                                        <button class="danger" name="action" value="toggle_account" title="Disable account" data-confirm="Are you sure you want to disable the account for Synthetic Student, QA (QA-AUDIT-001)? They will no longer be able to sign in.">Disable</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr></tbody>
+                        </table>
+                    </div>                </section>
+            </main>
+        </div>
+    </div>
+    <dialog id="student-edit-modal" class="student-edit-modal" aria-labelledby="student-edit-title" aria-describedby="student-edit-description" data-initial-edit="false">
+        <div class="student-edit-heading">
+            <div>
+                <h2 id="student-edit-title">Edit student</h2>
+                <p class="muted" id="student-edit-description">Update this student's existing account details.</p>
+            </div>
+            <button type="button" class="student-edit-close" data-close-student-edit aria-label="Close student editor">&times;</button>
+        </div>
+        <form method="post" action="/registrar/student_action.php" data-student-edit-form>
+            <input type="hidden" name="csrf_token" value="2d775a11dcc019a81ee0215cffd9cbc30f8cb0703477af488de732dfb947f67e">
+            <input type="hidden" name="student_id" value="0">
+            <div class="student-edit-fields">
+                <label>Student number<input name="student_number" required autofocus value=""></label>
+                <label>Full name<input name="full_name" required value=""></label>
+                <label>School email<input type="email" name="email" pattern=".+@thelewiscollege\.edu\.ph" required value=""></label>
+                <label>Course<input name="program" required value=""></label>
+                <label>Year level<input type="number" min="1" max="6" name="year_level" required value="1"></label>
+                <label>College<select name="organization_id" required><option value="2" >CBE - College of Business Education</option><option value="1" >CCS - College of Computer Studies</option><option value="3" >CTE - College of Teacher Education</option></select></label>
+            </div>
+            <div class="student-edit-footer">
+                <div class="student-edit-save-actions">
+                    <button type="button" class="secondary" data-close-student-edit>Cancel</button>
+                    <button name="action" value="update">Save Changes</button>
+                </div>
+                <button class="student-edit-reset" name="action" value="reset_password" formnovalidate>Reset Password to thelewiscollege</button>
+            </div>
+        </form>
+    </dialog>
+    <script src="/assets/js/staff-dashboard.js?v=1792294403"></script>
+    <script src="/assets/js/registrar-students.js?v=1792294403"></script>
+</body>
+
+</html>

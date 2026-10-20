@@ -6,6 +6,7 @@ require_once __DIR__ . '/../auth/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/office_workflow.php';
 require_once __DIR__ . '/bulk_clearance.php';
+require_once __DIR__ . '/../bookstore/obligation_functions.php';
 
 $user = requireLogin();
 try {
@@ -49,7 +50,8 @@ try {
     $context = officeClearanceContext($database, $config['code'], $clearanceId);
     $canRecordComlabViolation = $config['code'] === 'COMLAB' && in_array($action, ['add_comlab_incident', 'resolve_comlab_incident'], true);
     $canManageFacilitiesItems = $config['code'] === 'FACILITIES' && in_array($action, ['add_facilities_item', 'return_facilities_item'], true);
-    if ($context['station_status'] === 'LOCKED' && !$canRecordComlabViolation && !$canManageFacilitiesItems) {
+    $canRecordLibraryReturn = $config['code'] === 'LIBRARY' && $action === 'return_library_book';
+    if ($context['station_status'] === 'LOCKED' && !$canRecordComlabViolation && !$canManageFacilitiesItems && !$canRecordLibraryReturn) {
         throw new RuntimeException('The required preceding offices have not cleared this student yet.');
     }
     $studentId = (int) $context['student_id'];
@@ -69,6 +71,9 @@ try {
         }
         $cleared = clearClinicClearance($database, $clearanceId, $user['id'], $remarks ?: 'Cleared directly by the Clinic.');
         setFlashMessage($cleared ? 'Clinic clearance approved for ' . $context['student_name'] . '.' : 'This student is already cleared by the Clinic.');
+    } elseif ($action === 'return_library_book' && $config['code'] === 'LIBRARY') {
+        returnLibraryBook($database, $clearanceId, positivePostId('book_id'), (int) $user['id']);
+        setFlashMessage('Book return recorded.');
     } elseif ($action === 'library_clear' && $config['code'] === 'LIBRARY') {
         $cleared = clearLibraryClearance($database, $clearanceId, $user['id']);
         setFlashMessage($cleared ? 'Library clearance completed for ' . $context['student_name'] . '.' : 'This student is already cleared by the Library.');
@@ -111,15 +116,7 @@ try {
         if (mb_strlen($remarks) > 1000) {
             throw new RuntimeException('Remarks cannot exceed 1,000 characters.');
         }
-        $statement = $database->prepare("INSERT INTO bookstore_obligations (student_id,academic_period_id,description,amount,status,remarks,recorded_by) VALUES (:student_id,:period_id,:description,:amount,'UNPAID',:remarks,:user_id)");
-        $statement->execute(['student_id' => $studentId, 'period_id' => $periodId, 'description' => $description, 'amount' => $amount, 'remarks' => $remarks ?: null, 'user_id' => $user['id']]);
-        $newStatus = $context['station_status'];
-        if ($context['station_status'] === 'APPROVED') {
-            $newStatus = 'RETURNED';
-            $reopen = $database->prepare("UPDATE clearance_stations SET status='RETURNED',approved_by=NULL,approved_at=NULL,returned_by=:user_id,returned_at=NOW(),returned_reason=:reason WHERE id=:id");
-            $reopen->execute(['user_id' => $user['id'], 'reason' => 'Bookstore obligation: ' . $description, 'id' => $context['clearance_station_id']]);
-        }
-        notifyAndAuditOffice($database, $context, $user['id'], 'BOOKSTORE_OBLIGATION_ADDED', 'Bookstore recorded a pending obligation: ' . $description . '.', $context['station_status'], $newStatus);
+        addBookstoreObligation($database, $clearanceId, (int) $user['id'], $description, (float) $amount, $remarks);
         setFlashMessage('Bookstore obligation recorded.');
     } elseif ($action === 'clear_bookstore_obligation' && $config['code'] === 'BOOKSTORE') {
         $obligationId = positivePostId('obligation_id');

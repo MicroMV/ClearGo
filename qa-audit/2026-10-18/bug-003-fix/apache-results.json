@@ -1,0 +1,192 @@
+[
+    {
+        "path": "/tests/",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/README.md",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/.htaccess",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/bookstore_event_workbook_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/bookstore_ready_lock_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/bookstore_workbook_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/bookstore_workflow_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/bulk_clearance_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/bulk_dashboard_render_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/cbe_dean_workflow_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/cbe_fourth_year_single_approval_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/clearance_report_workbook_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/clinic_workbook_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/comlab_violations_modal_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/dashboard_summary_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/facilities_items_modal_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/facilities_return_query_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/http_test_access_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/library_workbook_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/notification_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/office_remarks_action_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/office_remarks_report_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/office_remarks_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/office_workbook_design_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/phase1_clearance_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/phase2_dean_clearance_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/phase3_office_workflow_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/profile_picture_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/qr_attendance_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/readiness_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/registrar_cbe_initial_order_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/semester_notifications_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/staff_navigation_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/student_dashboard_history_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/student_import_mysql_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/student_import_preview_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/student_import_scale_test.php",
+        "method": "HEAD",
+        "status": 403
+    },
+    {
+        "path": "/tests/student_import_test.php",
+        "method": "HEAD",
+        "status": 403
+    }
+]

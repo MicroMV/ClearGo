@@ -11,7 +11,8 @@ $profilePictureInitials = $studentInitials;
 $shortName = explode(' ', trim($student['first_name']))[0];
 $stationTotal = count($stations);
 $progressPercent = $stationTotal === 0 ? 0 : (int) round($approved / $stationTotal * 100);
-$isComplete = $clearance !== false && ($clearance['status'] === 'COMPLETED' || ($stationTotal > 0 && $approved === $stationTotal));
+$isComplete = $clearance !== false && $stationTotal > 0 && $approved === $stationTotal;
+$overallDisplayStatus = $clearance === false ? '' : (!$isComplete && $clearance['status'] === 'COMPLETED' ? 'IN_PROGRESS' : $clearance['status']);
 $nextStation = null;
 $reviewCount = 0;
 $actionCount = 0;
@@ -53,7 +54,7 @@ $dashboardNavigation = ['overview' => ['home', 'Home'], 'clearance' => ['clearan
 ?>
 <!doctype html>
 <html lang="en">
-<head>
+<head><?= connectionStatusAssets() ?>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#0b2545">
@@ -62,6 +63,7 @@ $dashboardNavigation = ['overview' => ['home', 'Home'], 'clearance' => ['clearan
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/student-dashboard.css')) ?>">
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/library-card-camera.css')) ?>">
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/student-portal.css')) ?>?v=<?= escapeHtml($portalStylesVersion) ?>">
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/sanctions.css')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/css/sanctions.css') ?>">
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/profile-picture.css')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/css/profile-picture.css') ?>">
 </head>
 <body class="student-dashboard student-portal" data-initial-view="<?= escapeHtml($initialDashboardView) ?>" data-initial-modal="<?= $selectedStation !== null ? 'requirements-modal-' . (int) $selectedStation['id'] : '' ?>">
@@ -113,7 +115,7 @@ $dashboardNavigation = ['overview' => ['home', 'Home'], 'clearance' => ['clearan
                         <div><h2><?= $isComplete ? 'All set. All cleared.' : ($isHistoricalRecord ? 'Your semester, saved.' : ($clearance === false ? 'A fresh start.' : 'One step closer.')) ?></h2><p><?= $clearance === false ? 'Your clearance will appear here when it opens.' : ($isComplete ? 'Every office has approved your clearance.' : ($isHistoricalRecord ? 'Your clearance progress for this semester.' : 'A little progress goes a long way.')) ?></p><div class="portal-count"><strong><?= $approved ?></strong><span>/ <?= $stationTotal ?> offices cleared</span></div><span class="sr-only"><?= $approved ?> of <?= $stationTotal ?> stations cleared</span></div>
                         <div class="portal-progress-ring" style="--progress: <?= $progressPercent ?>" role="progressbar" aria-label="Clearance progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="<?= $progressPercent ?>"><span><strong><?= $progressPercent ?><small>%</small></strong><em>complete</em></span></div>
                     </div>
-                    <div class="portal-progress-footer"><span><?= studentDashboardIcon($isComplete ? 'check' : 'clearance') ?><?= $clearance === false ? 'Not open yet' : escapeHtml(studentDashboardFriendlyStatus($clearance['status'])) ?></span><a href="#clearance" data-dashboard-link="clearance">View clearance <?= studentDashboardIcon('arrow') ?></a></div>
+                    <div class="portal-progress-footer"><span><?= studentDashboardIcon($isComplete ? 'check' : 'clearance') ?><?= $clearance === false ? 'Not open yet' : escapeHtml(studentDashboardFriendlyStatus($overallDisplayStatus)) ?></span><a href="#clearance" data-dashboard-link="clearance">View clearance <?= studentDashboardIcon('arrow') ?></a></div>
                 </section>
                 <section class="portal-next-card <?= $isComplete ? 'is-complete' : '' ?>">
                     <span class="portal-card-eyebrow"><?= $isHistoricalRecord ? 'LOOKING BACK' : ($isComplete ? 'NICE WORK' : 'YOUR NEXT STEP') ?></span>
@@ -145,7 +147,7 @@ $dashboardNavigation = ['overview' => ['home', 'Home'], 'clearance' => ['clearan
         </section>
 
         <section class="portal-view" id="clearance" data-dashboard-view="clearance" aria-labelledby="clearance-title" tabindex="-1" <?= $initialDashboardView !== 'clearance' ? 'hidden' : '' ?>>
-            <div class="portal-section-title"><div><span class="portal-card-eyebrow"><?= $isHistoricalRecord ? 'SEMESTER ARCHIVE' : 'YOUR CLEARANCE JOURNEY' ?></span><h2 id="clearance-title">Clearance offices</h2><p>Tap an office to see its requirements.</p></div><?php if ($clearance !== false): ?><span class="portal-summary-pill"><?= studentDashboardIcon('check') ?><?= $approved ?> / <?= $stationTotal ?> cleared</span><?php endif; ?></div>
+            <div class="portal-section-title"><div><span class="portal-card-eyebrow"><?= $isHistoricalRecord ? 'SEMESTER ARCHIVE' : 'YOUR CLEARANCE JOURNEY' ?></span><h2 id="clearance-title">Clearance offices</h2><p>Tap an office to see its requirements.</p></div><?php if ($clearance !== false): ?><div class="portal-clearance-heading-actions"><?php if ($canSubmit): ?><a class="portal-pdf-download" href="<?= escapeHtml(applicationUrl('/student/clearance_preview.php?period=' . (int) $period['id'])) ?>" data-open-clearance-preview aria-haspopup="dialog" aria-controls="clearance-preview-dialog"><?= studentDashboardIcon('clearance') ?>Preview clearance</a><a class="portal-pdf-download portal-pdf-download--secondary" href="<?= escapeHtml(applicationUrl('/student/clearance_pdf.php?period=' . (int) $period['id'])) ?>"><?= studentDashboardIcon('download') ?>Download PDF</a><?php endif; ?><span class="portal-summary-pill"><?= studentDashboardIcon('check') ?><?= $approved ?> / <?= $stationTotal ?> cleared</span></div><?php endif; ?></div>
             <?php if ($clearance === false): ?>
                 <div class="portal-empty-state"><?= studentDashboardIcon('clearance') ?><h3><?= $period === false ? 'No semester record is available.' : ($isHistoricalRecord ? 'No saved clearance for this semester.' : 'Clearance is getting ready.') ?></h3><p><?= $period === false ? 'Contact the Registrar if your enrollment is missing.' : ($isHistoricalRecord ? 'Your account and other semester records remain available.' : 'Your offices will appear after the Registrar opens clearance.') ?></p></div>
             <?php else: ?>
@@ -173,8 +175,9 @@ $dashboardNavigation = ['overview' => ['home', 'Home'], 'clearance' => ['clearan
             <?php if ($isEnrolled && !$isHistoricalRecord): ?><div class="portal-scanner-card"><span class="portal-scanner-icon"><?= studentDashboardIcon('scan') ?></span><div><h3>At an event?</h3><p>Scan your officer's QR code to check in.</p></div><a class="portal-action-button" href="<?= escapeHtml(applicationUrl('/student/attendance_scanner.php')) ?>" data-open-attendance-scanner><?= studentDashboardIcon('scan') ?>Open scanner</a></div><?php endif; ?>
             <?php if ($organizationEvents === []): ?><div class="portal-empty-state"><?= studentDashboardIcon('calendar') ?><h3>No events listed yet</h3><p>Required organization events will appear here.</p></div><?php else: ?><ul class="portal-event-list"><?php foreach ($organizationEvents as $event): ?>
                 <?php $eventTime = strtotime($event['event_date']); ?>
-                <li class="portal-event-card"><time class="portal-event-date" datetime="<?= escapeHtml($event['event_date']) ?>"><span><?= escapeHtml(date('M', $eventTime)) ?></span><strong><?= escapeHtml(date('d', $eventTime)) ?></strong></time><div><h3><?= escapeHtml($event['name']) ?></h3><p><?= escapeHtml(date('l', $eventTime)) ?><?= !empty($event['start_time']) ? ' · ' . escapeHtml(date('g:i A', strtotime($event['start_time']))) : '' ?></p></div><span class="portal-event-status <?= $event['attendance_status'] === 'PRESENT' ? 'is-present' : '' ?>"><?= studentDashboardIcon($event['attendance_status'] === 'PRESENT' ? 'check' : 'clock') ?><?= $event['attendance_status'] === 'PRESENT' ? 'Attended' : 'Not recorded' ?></span></li>
+                <li class="portal-event-card"><time class="portal-event-date" datetime="<?= escapeHtml($event['event_date']) ?>"><span><?= escapeHtml(date('M', $eventTime)) ?></span><strong><?= escapeHtml(date('d', $eventTime)) ?></strong></time><div><h3><?= escapeHtml($event['name']) ?></h3><p><?= escapeHtml(date('l', $eventTime)) ?><?= !empty($event['start_time']) ? ' · ' . escapeHtml(date('g:i A', strtotime($event['start_time']))) : '' ?> &middot; <?= ($event['owner_code']??'ORGANIZATION')==='STUDENT_COUNCIL'?'Student Council':'Organization' ?></p></div><span class="portal-event-status <?= $event['attendance_status'] === 'PRESENT' || !empty($event['sanction_verified_at']) ? 'is-present' : '' ?>"><?= studentDashboardIcon($event['attendance_status'] === 'PRESENT' || !empty($event['sanction_verified_at']) ? 'check' : 'clock') ?><?= $event['attendance_status'] === 'PRESENT' ? 'Attended' : (!empty($event['sanction_verified_at']) ? 'Sanction completed' : ($event['attendance_status']==='ABSENT'?'Absent':'Not recorded')) ?></span></li>
             <?php endforeach; ?></ul><?php endif; ?>
+            <?php require __DIR__ . '/sanction_cards.php'; ?>
         </section>
 
         <section class="portal-view" id="account" data-dashboard-view="account" aria-labelledby="account-title" tabindex="-1" hidden>
@@ -182,7 +185,7 @@ $dashboardNavigation = ['overview' => ['home', 'Home'], 'clearance' => ['clearan
             <div class="portal-account-layout">
                 <section class="portal-account-card">
                     <div class="portal-account-banner"><span class="portal-profile-avatar"><?php if ($profilePictureUrl !== ''): ?><img src="<?= escapeHtml($profilePictureUrl) ?>" alt="Your profile picture"><?php else: ?><?= escapeHtml($studentInitials) ?><?php endif; ?></span><span class="portal-student-label">STUDENT</span></div>
-                    <div class="portal-account-info"><h3><?= escapeHtml($student['first_name'] . ' ' . $student['last_name']) ?></h3><p><?= escapeHtml($student['student_number']) ?></p><dl><div><dt>Program</dt><dd><?= escapeHtml($student['program']) ?></dd></div><div><dt>Year & section</dt><dd>Year <?= (int) $student['year_level'] ?><?php $section = trim((string) ($student['section'] ?? '')); ?><?= $section === '' || strtoupper($section) === 'N/A' ? '' : ' · ' . escapeHtml($section) ?></dd></div><div><dt>College</dt><dd><?= escapeHtml($student['organization_name']) ?></dd></div><div><dt>School email</dt><dd><?= escapeHtml($student['email']) ?></dd></div></dl></div>
+                    <div class="portal-account-info"><h3><?= escapeHtml(trim($student['first_name'] . ' ' . ($student['middle_name'] ?? '')) . ' ' . $student['last_name']) ?></h3><p><?= escapeHtml($student['student_number']) ?></p><dl><div><dt>Program</dt><dd><?= escapeHtml($student['program']) ?></dd></div><div><dt>Year & section</dt><dd>Year <?= (int) $student['year_level'] ?><?php $section = trim((string) ($student['section'] ?? '')); ?><?= $section === '' || strtoupper($section) === 'N/A' ? '' : ' · ' . escapeHtml($section) ?></dd></div><div><dt>College</dt><dd><?= escapeHtml($student['organization_name']) ?></dd></div><div><dt>School email</dt><dd><?= escapeHtml($student['email']) ?></dd></div></dl></div>
                 </section>
                 <section class="portal-account-settings">
                     <h3>Account settings</h3>

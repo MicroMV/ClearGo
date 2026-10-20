@@ -25,8 +25,7 @@ function deanRemainingClearanceCount(PDO $database, int $organizationId): int
 
 function deanMinimumBulkCount(PDO $database, array $assignment): int
 {
-    return $assignment['organization_code'] === 'CCS'
-        && deanRemainingClearanceCount($database, (int) $assignment['organization_id']) >= 5 ? 5 : 1;
+    return 1;
 }
 
 /** Return the complete ready roster, independently of search and pagination. */
@@ -59,6 +58,7 @@ function bulkReadyClearanceIds(PDO $database, string $stationCode, ?int $organiz
             INNER JOIN stations prior_station ON prior_station.id=prior_record.station_id AND prior_station.code='ORGANIZATION'
             WHERE prior_record.clearance_id=c.id AND prior_record.status='APPROVED'
         ))";
+        $eligible .= ' AND (' . ccsEvaluationCompletionEligibilitySql('c') . ')';
     } elseif ($stationCode === 'ORGANIZATION') {
         $eligible = "(organization.code='CBE' OR EXISTS (
             SELECT 1 FROM clearance_stations dean_record
@@ -68,7 +68,7 @@ function bulkReadyClearanceIds(PDO $database, string $stationCode, ?int $organiz
             SELECT 1 FROM events event
             INNER JOIN stations event_station ON event_station.id=event.station_id AND event_station.code='ORGANIZATION'
             LEFT JOIN event_attendance attendance ON attendance.event_id=event.id
-                AND attendance.student_id=student.id AND attendance.status='PRESENT'
+                AND attendance.student_id=student.id AND (attendance.status='PRESENT' OR attendance.sanction_verified_at IS NOT NULL)
             WHERE event.organization_id=student.organization_id AND event.academic_period_id=period.id
               AND event.is_required=1 AND event.status='ACTIVE' AND attendance.id IS NULL
         )";
@@ -138,9 +138,6 @@ function approveAllReadyClearances(PDO $database, array $user, string $group = '
     }
 
     $ids = bulkReadyClearanceIds($database, $stationCode, $organizationId, $group, $audience, $department);
-    if ($ids !== [] && $stationCode === 'DEAN' && count($ids) < deanMinimumBulkCount($database, $assignment)) {
-        throw new RuntimeException('CCS Dean bulk clearance requires at least 5 ready students while 5 or more students remain uncleared.');
-    }
     $result = ['approved' => 0, 'skipped' => 0];
     foreach ($ids as $clearanceId) {
         try {

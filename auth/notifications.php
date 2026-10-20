@@ -43,6 +43,11 @@ try {
     }
 
     notifyExpiredAttendanceWindows($database, (int) $user['id']);
+    if (in_array($user['role'], ['STUDENT','ORG_STAFF','STUDENT_COUNCIL_STAFF'], true)) {
+        require_once __DIR__ . '/../clearance/sanction_functions.php';
+        $activePeriodId = $database->query("SELECT id FROM academic_periods WHERE status='ACTIVE' LIMIT 1")->fetchColumn();
+        if ($activePeriodId !== false) { syncExpiredEventSanctions($database, (int) $activePeriodId); }
+    }
     $notifications = dashboardNotificationPreview($database, (int) $user['id'], $periodId);
     echo json_encode([
         'academic_period_id' => $periodId,

@@ -85,9 +85,6 @@ try {
         }
         setFlashMessage('Dean requirement verified.');
     } else {
-        if (deanMinimumBulkCount($database, $dean) > 1) {
-            throw new RuntimeException('Use bulk clearance for at least 5 ready students. Individual clearance is available when fewer than 5 CCS students remain uncleared.');
-        }
         $approved = approveDeanClearance($database, $user['id'], (int) $clearanceId);
         setFlashMessage($approved ? 'Dean clearance approved. Organization is now available.' : 'Dean clearance was already approved.');
     }
