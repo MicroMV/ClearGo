@@ -1,0 +1,126 @@
+{
+  "checks": [
+    {
+      "name": "An unauthenticated visitor cannot open the scanner",
+      "passed": true
+    },
+    {
+      "name": "390px camera denial shows a clear retry action",
+      "passed": true
+    },
+    {
+      "name": "390px embedded scanner fits the screen",
+      "passed": true
+    },
+    {
+      "name": "390px retry works after permission is allowed",
+      "passed": true
+    },
+    {
+      "name": "320px camera denial shows a clear retry action",
+      "passed": true
+    },
+    {
+      "name": "320px embedded scanner fits the screen",
+      "passed": true
+    },
+    {
+      "name": "320px retry works after permission is allowed",
+      "passed": true
+    },
+    {
+      "name": "A non-ClearGo QR does not submit attendance",
+      "passed": true
+    },
+    {
+      "name": "Retry after an invalid QR stops the previous camera stream",
+      "passed": true
+    },
+    {
+      "name": "A device without a camera gets a clear message",
+      "passed": true
+    },
+    {
+      "name": "An insecure browser context gets HTTPS guidance",
+      "passed": true
+    },
+    {
+      "name": "A missing compatibility decoder gets a useful error",
+      "passed": true
+    },
+    {
+      "name": "The native scanner path submits a valid QR immediately",
+      "passed": true
+    },
+    {
+      "name": "A duplicate scan remains a successful confirmation",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "observations": [
+    {
+      "case": "Retry after a non-ClearGo QR",
+      "activeCameraTracks": 1
+    },
+    {
+      "testInterrupted": "Timed out: real generated QR decoding {\"url\":\"http://127.0.0.1:36356/student/attendance_scanner.php?qa_case=fallback&embed=1\",\"status\":\"Camera ready. Scan the event QR code.\",\"decoder\":\"function\",\"streams\":1}",
+      "details": {
+        "args": [
+          {
+            "facingMode": "environment"
+          },
+          {
+            "fps": 10,
+            "qrbox": {
+              "width": 250,
+              "height": 250
+            }
+          }
+        ],
+        "decodeFailure": "QR code parse error, error = D: No MultiFormat Readers were able to detect the code.",
+        "scanning": true,
+        "video": [
+          {
+            "tag": "VIDEO",
+            "rect": {
+              "x": 16,
+              "y": 200,
+              "width": 288,
+              "height": 288,
+              "top": 200,
+              "right": 304,
+              "bottom": 488,
+              "left": 16
+            },
+            "style": "width: 288px; display: block;",
+            "width": 640,
+            "height": 640,
+            "readyState": 4
+          },
+          {
+            "tag": "CANVAS",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0,
+              "left": 0
+            },
+            "style": "width: 250px; height: 250px; display: none;",
+            "width": 250,
+            "height": 250
+          }
+        ],
+        "session": {
+          "active": true,
+          "submitted": false,
+          "leaving": false
+        }
+      }
+    }
+  ]
+}

@@ -50,8 +50,8 @@ try {
     $user->execute(['email' => 'cbe-fourth-' . $token . '@test.invalid', 'password' => password_hash(random_bytes(16), PASSWORD_DEFAULT)]);
     $userId = (int) $database->lastInsertId();
     $student = $database->prepare(
-        "INSERT INTO students (user_id,student_number,first_name,last_name,program,year_level,section,organization_id,status)
-         VALUES (:user_id,:number,'CBE Fourth Year','Test Student','BSBA',4,'TEST',:organization_id,'ACTIVE')"
+        "INSERT INTO students (user_id,student_number,first_name,last_name,program,year_level,organization_id,status)
+         VALUES (:user_id,:number,'CBE Fourth Year','Test Student','BSBA',4,:organization_id,'ACTIVE')"
     );
     $student->execute(['user_id' => $userId, 'number' => 'CBE4-' . strtoupper($token), 'organization_id' => $cbeId]);
     $studentId = (int) $database->lastInsertId();
@@ -95,7 +95,7 @@ try {
         $database->prepare('DELETE FROM notifications WHERE user_id=:user_id')->execute(['user_id' => $userId]);
         $database->prepare('DELETE FROM clearances WHERE student_id=:student_id')->execute(['student_id' => $studentId]);
         $database->prepare('DELETE FROM semester_enrollments WHERE student_id=:student_id')->execute(['student_id' => $studentId]);
-        foreach (['library_cards', 'medical_requirements', 'student_bookstore_fees', 'student_documents'] as $table) {
+        foreach (['library_cards', 'medical_requirements', 'student_bookstore_fees'] as $table) {
             $database->prepare("DELETE FROM {$table} WHERE student_id=:student_id")->execute(['student_id' => $studentId]);
         }
         $database->prepare('DELETE FROM students WHERE id=:student_id')->execute(['student_id' => $studentId]);

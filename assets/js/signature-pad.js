@@ -12,6 +12,7 @@
         var strokes = [];
         var activePointer = null;
         var pointCount = 0;
+        var existingSignature = form.hasAttribute('data-signature-existing');
 
         if (!context || !window.PointerEvent) {
             status.textContent = 'Use a browser that supports drawing to save your signature.';
@@ -37,7 +38,7 @@
         }
 
         function update() {
-            save.disabled = activePointer !== null || distance() < 12;
+            save.disabled = activePointer !== null || (distance() < 12 && !(existingSignature && strokes.length === 0));
             undo.disabled = strokes.length === 0 || activePointer !== null;
             clear.disabled = strokes.length === 0 || activePointer !== null;
             drawing.value = '';
@@ -125,6 +126,10 @@
             status.textContent = 'Signing box cleared.';
         });
         form.addEventListener('submit', function (event) {
+            if (existingSignature && strokes.length === 0 && activePointer === null) {
+                drawing.value = '';
+                return;
+            }
             if (activePointer !== null || distance() < 12) {
                 event.preventDefault();
                 status.textContent = 'Please draw your signature before saving.';

@@ -16,6 +16,24 @@ final class SimplePdf
     private array $commands = [];
     /** @var array<string,array<string,mixed>> */
     private array $images = [];
+    private array $previewCommands = [];
+    private array $previewImages = [];
+    private string $previewStroke = 'rgb(0,0,0)';
+    private string $previewFill = 'rgb(0,0,0)';
+
+    public function __construct(private bool $preview = false) {}
+
+    private static function svgEscape(string $value): string
+    {
+        return htmlspecialchars($value, ENT_QUOTES | ENT_XML1 | ENT_SUBSTITUTE, 'UTF-8');
+    }
+
+    public function previewSvg(): string
+    {
+        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' . self::PAGE_WIDTH . ' ' . self::PAGE_HEIGHT
+            . '" role="img" aria-label="Your clearance paper" style="font-family:Arial,Helvetica,sans-serif"><rect width="100%" height="100%" fill="white"/>'
+            . implode('', $this->previewCommands) . '</svg>';
+    }
 
     public function pageWidth(): float
     {
@@ -30,21 +48,25 @@ final class SimplePdf
     public function setStroke(float $r, float $g, float $b): void
     {
         $this->commands[] = sprintf('%.3F %.3F %.3F RG', $r, $g, $b);
+        $this->previewStroke = sprintf('rgb(%d,%d,%d)',round($r*255),round($g*255),round($b*255));
     }
 
     public function setFill(float $r, float $g, float $b): void
     {
         $this->commands[] = sprintf('%.3F %.3F %.3F rg', $r, $g, $b);
+        $this->previewFill = sprintf('rgb(%d,%d,%d)',round($r*255),round($g*255),round($b*255));
     }
 
     public function line(float $x1, float $y1, float $x2, float $y2, float $width = 0.6): void
     {
         $this->commands[] = sprintf('%.2F w %.2F %.2F m %.2F %.2F l S', $width, $x1, $y1, $x2, $y2);
+        if ($this->preview) { $this->previewCommands[] = sprintf('<line x1="%.2F" y1="%.2F" x2="%.2F" y2="%.2F" stroke="%s" stroke-width="%.2F"/>',$x1,self::PAGE_HEIGHT-$y1,$x2,self::PAGE_HEIGHT-$y2,$this->previewStroke,$width); }
     }
 
     public function rect(float $x, float $y, float $width, float $height, bool $fill = false, float $lineWidth = 0.6): void
     {
         $this->commands[] = sprintf('%.2F w %.2F %.2F %.2F %.2F re %s', $lineWidth, $x, $y, $width, $height, $fill ? 'B' : 'S');
+        if ($this->preview) { $this->previewCommands[] = sprintf('<rect x="%.2F" y="%.2F" width="%.2F" height="%.2F" fill="%s" stroke="%s" stroke-width="%.2F"/>',$x,self::PAGE_HEIGHT-$y-$height,$width,$height,$fill ? $this->previewFill : 'none',$this->previewStroke,$lineWidth); }
     }
 
     public function text(float $x, float $y, string $text, float $size = 9, bool $bold = false, string $align = 'left', float $boxWidth = 0): void
@@ -56,6 +78,10 @@ final class SimplePdf
         }
         $font = $bold ? 'F2' : 'F1';
         $this->commands[] = sprintf('BT /%s %.2F Tf %.2F %.2F Td (%s) Tj ET', $font, $size, $x, $y, self::escapePdfString($encoded));
+        if ($this->preview) {
+            $display = iconv('Windows-1252','UTF-8',$encoded);
+            $this->previewCommands[] = sprintf('<text x="%.2F" y="%.2F" font-size="%.2F" font-weight="%s" fill="%s">%s</text>',$x,self::PAGE_HEIGHT-$y,$size,$bold ? 'bold' : 'normal',$this->previewFill,self::svgEscape($display === false ? '' : $display));
+        }
     }
 
     /** @return list<string> */
@@ -88,6 +114,7 @@ final class SimplePdf
         $this->images[$name] = $mimeType === 'image/jpeg'
             ? self::readJpeg($imageData)
             : self::readPng($imageData);
+        if ($this->preview) { $this->previewImages[$name] = 'data:' . ($mimeType === 'image/jpeg' ? 'image/jpeg' : 'image/png') . ';base64,' . base64_encode($imageData); }
         return $name;
     }
 
@@ -97,6 +124,7 @@ final class SimplePdf
             throw new RuntimeException('The requested PDF image is unavailable.');
         }
         $this->commands[] = sprintf('q %.2F 0 0 %.2F %.2F %.2F cm /%s Do Q', $width, $height, $x, $y, $name);
+        if ($this->preview) { $this->previewCommands[] = sprintf('<image x="%.2F" y="%.2F" width="%.2F" height="%.2F" href="%s"/>',$x,self::PAGE_HEIGHT-$y-$height,$width,$height,$this->previewImages[$name]); }
     }
 
     public function imageFitted(string $name, float $x, float $y, float $width, float $height): void

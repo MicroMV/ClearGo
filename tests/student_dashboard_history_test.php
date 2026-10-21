@@ -73,7 +73,7 @@ function renderDashboardFixture(string $view, array|false $period, array $availa
     $canSubmit = studentDashboardCanSubmit($period);
     $isCbeStudent = false;
     $student = ['id' => 10,'first_name' => 'Test','last_name' => 'Student','student_number' => 'TEST-10',
-        'program' => 'BSCS','year_level' => 2,'section' => 'N/A','organization_name' => 'Computer Studies',
+        'program' => 'BSCS','year_level' => 2,'organization_name' => 'Computer Studies',
         'organization_code' => 'CCS','email' => 'test@thelewiscollege.edu.ph'];
     $clearance = $period === false ? false : ['id' => 1,'reference_number' => 'FIRST-SEM-RECORD','status' => $overallStatus];
     $stations = [];

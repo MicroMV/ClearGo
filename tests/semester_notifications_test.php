@@ -66,7 +66,8 @@ semesterNotificationCheck(dashboardNotificationPreview($memory, 1, 0) === [] && 
 // Verify the actual HTTP endpoint, session ownership, and dashboard wiring with disposable accounts.
 function semesterNotificationRequest(string $path, ?array $account = null, ?array $payload = null): array
 {
-    $curl = curl_init('http://localhost/ClearGo' . $path);
+    if (session_status() === PHP_SESSION_ACTIVE) { session_write_close(); }
+    $curl = curl_init((getenv('CLEAR_GO_TEST_BASE_URL') ?: 'http://localhost/ClearGo') . $path);
     $options = [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 15, CURLOPT_FOLLOWLOCATION => false];
     if ($account !== null) { $options[CURLOPT_COOKIE] = 'clear_go_session=' . $account['session_id']; }
     if ($payload !== null) {
@@ -98,12 +99,15 @@ try {
         $accounts[$role] = ['id' => $id, 'email' => $email, 'role' => $role, 'session_id' => 'semesternotif' . $token . $index, 'csrf_token' => bin2hex(random_bytes(32))];
         $account = $accounts[$role];
         if ($role === 'STUDENT') {
-            $database->prepare("INSERT INTO students (user_id,student_number,first_name,last_name,program,year_level,section,organization_id,status) VALUES (:user,:number,'Semester','Notification','BSCS',1,'TEST',:organization,'ACTIVE')")
+            $database->prepare("INSERT INTO students (user_id,student_number,first_name,last_name,program,year_level,organization_id,status) VALUES (:user,:number,'Semester','Notification','BSCS',1,:organization,'ACTIVE')")
                 ->execute(['user' => $id, 'number' => 'NOTIF-' . strtoupper($token), 'organization' => $organizationId]);
             $studentId = (int) $database->lastInsertId();
             $enrollment = $database->prepare("INSERT INTO semester_enrollments (academic_period_id,student_id,status) VALUES (:period,:student,'ENROLLED')");
             foreach ([$archiveId, $activeId] as $periodId) { $enrollment->execute(['period' => $periodId, 'student' => $studentId]); }
         }
+        if (session_status() === PHP_SESSION_ACTIVE) { session_write_close(); }
+        // The CLI fixture creates a new session file; HTTP strict mode remains enabled.
+        ini_set('session.use_strict_mode', '0');
         session_name('clear_go_session');
         session_save_path(__DIR__ . '/../storage/sessions');
         session_id($account['session_id']);

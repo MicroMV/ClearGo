@@ -1,0 +1,171 @@
+{
+  "base": "http://127.0.0.1:6319/ClearGo/",
+  "observations": {
+    "online": {
+      "url": "http://127.0.0.1:6319/ClearGo/login.php",
+      "secureContext": true,
+      "manifest": "http://127.0.0.1:6319/ClearGo/manifest.webmanifest",
+      "appleIcon": "http://127.0.0.1:6319/ClearGo/assets/icons/apple-touch-icon.png",
+      "theme": "#0b2545",
+      "worker": "http://127.0.0.1:6319/ClearGo/connection-worker.js",
+      "scope": "http://127.0.0.1:6319/ClearGo/",
+      "caches": [
+        {
+          "name": "cleargo-offline-v6",
+          "urls": [
+            "http://127.0.0.1:6319/ClearGo/errors/offline.html",
+            "http://127.0.0.1:6319/ClearGo/assets/the-lewis-college-logo.png"
+          ]
+        }
+      ]
+    },
+    "manifest": {
+      "url": "http://127.0.0.1:6319/ClearGo/manifest.webmanifest",
+      "errors": [],
+      "data": "{\n    \"name\": \"ClearGo | The Lewis College\",\n    \"short_name\": \"ClearGo\",\n    \"description\": \"The Lewis College student clearance portal.\",\n    \"lang\": \"en\",\n    \"start_url\": \"./login.php\",\n    \"scope\": \"./\",\n    \"display\": \"standalone\",\n    \"background_color\": \"#f3f8fd\",\n    \"theme_color\": \"#0b2545\",\n    \"prefer_related_applications\": false,\n    \"icons\": [\n        { \"src\": \"assets/icons/cleargo-192.png\", \"sizes\": \"192x192\", \"type\": \"image/png\", \"purpose\": \"any\" },\n        { \"src\": \"assets/icons/cleargo-512.png\", \"sizes\": \"512x512\", \"type\": \"image/png\", \"purpose\": \"any\" },\n        { \"src\": \"assets/icons/cleargo-maskable-512.png\", \"sizes\": \"512x512\", \"type\": \"image/png\", \"purpose\": \"maskable\" }\n    ]\n}\n",
+      "parsed": {
+        "scope": "http://127.0.0.1:6319/ClearGo/"
+      },
+      "manifest": {
+        "backgroundColor": "rgba(243,248,253,1)",
+        "description": "The Lewis College student clearance portal.",
+        "display": "kStandalone",
+        "icons": [
+          {
+            "url": "http://127.0.0.1:6319/ClearGo/assets/icons/cleargo-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+          },
+          {
+            "url": "http://127.0.0.1:6319/ClearGo/assets/icons/cleargo-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+          },
+          {
+            "url": "http://127.0.0.1:6319/ClearGo/assets/icons/cleargo-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+          }
+        ],
+        "id": "http://127.0.0.1:6319/ClearGo/login.php",
+        "name": "ClearGo | The Lewis College",
+        "orientation": "DEFAULT",
+        "preferRelatedApplications": false,
+        "scope": "http://127.0.0.1:6319/ClearGo/",
+        "startUrl": "http://127.0.0.1:6319/ClearGo/login.php",
+        "themeColor": "rgba(11,37,69,1)"
+      }
+    },
+    "installability": {
+      "installabilityErrors": []
+    },
+    "manifestContentType": "application/manifest+json",
+    "icons": [
+      {
+        "sizes": "192x192",
+        "actual": "192x192"
+      },
+      {
+        "sizes": "512x512",
+        "actual": "512x512"
+      },
+      {
+        "sizes": "512x512",
+        "actual": "512x512"
+      }
+    ],
+    "offlinePost": {
+      "networkFailed": true
+    },
+    "offline": {
+      "title": "Temporarily unavailable | ClearGo",
+      "base": "/ClearGo/",
+      "logo": "/ClearGo/assets/the-lewis-college-logo.png",
+      "heading": "ClearGo is temporarily unavailable",
+      "hasLoginForm": false
+    },
+    "offlineLogo": {
+      "ok": true,
+      "bytes": 401756
+    },
+    "finalUrl": "http://127.0.0.1:6319/ClearGo/login.php"
+  },
+  "checks": [
+    {
+      "name": "Character encoding is declared before the shared head assets",
+      "passed": true
+    },
+    {
+      "name": "Service worker controls the login page",
+      "passed": true
+    },
+    {
+      "name": "Manifest linked in live HTML",
+      "passed": true
+    },
+    {
+      "name": "Browser reports no installation eligibility errors",
+      "passed": true
+    },
+    {
+      "name": "Apache serves manifest with its registered content type",
+      "passed": true
+    },
+    {
+      "name": "Manifest launches the role-aware login within app scope",
+      "passed": true
+    },
+    {
+      "name": "All declared app icons load at their declared dimensions",
+      "passed": true
+    },
+    {
+      "name": "Apple touch icon and theme are linked",
+      "passed": true
+    },
+    {
+      "name": "1280px install card and button fit the screen",
+      "passed": true
+    },
+    {
+      "name": "390px install card and button fit the screen",
+      "passed": true
+    },
+    {
+      "name": "320px install card and button fit the screen",
+      "passed": true
+    },
+    {
+      "name": "Dismissed install prompt is used only once",
+      "passed": true
+    },
+    {
+      "name": "Installed apps hide the install control",
+      "passed": true
+    },
+    {
+      "name": "Service worker scope covers ClearGo",
+      "passed": true
+    },
+    {
+      "name": "Only public offline page and logo are cached",
+      "passed": true
+    },
+    {
+      "name": "Offline POST is rejected instead of queued or replaced with cached success",
+      "passed": true
+    },
+    {
+      "name": "Offline navigation displays the public fallback with resolved paths",
+      "passed": true
+    },
+    {
+      "name": "College logo loads while offline",
+      "passed": true
+    },
+    {
+      "name": "Retry recovers to login without a stale authenticated page",
+      "passed": true
+    }
+  ]
+}

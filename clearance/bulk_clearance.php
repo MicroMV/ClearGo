@@ -77,16 +77,6 @@ function bulkReadyClearanceIds(PDO $database, string $stationCode, ?int $organiz
             throw new RuntimeException('This office does not support bulk clearance.');
         }
         $eligible = officeListEligibilitySql($stationCode);
-        if ($stationCode === 'REGISTRAR') {
-            // Batch approval must use recorded document verification, since there is no individual review.
-            $eligible .= " AND NOT EXISTS (
-                SELECT 1 FROM document_requirements document_requirement
-                LEFT JOIN student_documents document ON document.document_requirement_id=document_requirement.id
-                    AND document.student_id=student.id
-                WHERE document_requirement.academic_period_id=period.id AND document_requirement.status='ACTIVE'
-                    AND document_requirement.is_required=1 AND (document.id IS NULL OR document.status<>'VERIFIED')
-            )";
-        }
         if ($stationCode === 'FACILITIES') {
             if (!in_array($audience, ['ALL', 'GRADUATING', 'NON_GRADUATING'], true)) {
                 throw new RuntimeException('Select a valid Facilities student group.');

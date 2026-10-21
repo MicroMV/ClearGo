@@ -2,11 +2,18 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/pwa.php';
+require_once __DIR__ . '/environment.php';
+
 function connectionStatusAssets(bool $reloadOnRecovery = false): string
 {
     $css = applicationUrl('/assets/css/connection-status.css?v=' . filemtime(__DIR__ . '/../assets/css/connection-status.css'));
     $js = applicationUrl('/assets/js/connection-status.js?v=' . filemtime(__DIR__ . '/../assets/js/connection-status.js'));
-    return '<link rel="stylesheet" href="' . escapeHtml($css) . '">'
+    $logoutCss = applicationUrl('/assets/css/logout-confirmation.css?v=' . filemtime(__DIR__ . '/../assets/css/logout-confirmation.css'));
+    $logoutJs = applicationUrl('/assets/js/logout-confirmation.js?v=' . filemtime(__DIR__ . '/../assets/js/logout-confirmation.js'));
+    return pwaAssets() . '<link rel="stylesheet" href="' . escapeHtml($css) . '">'
+        . '<link rel="stylesheet" href="' . escapeHtml($logoutCss) . '">'
+        . '<script defer src="' . escapeHtml($logoutJs) . '"></script>'
         . '<link rel="preload" as="image" href="' . escapeHtml(clearGoLogoUrl()) . '">'
         . '<script defer src="' . escapeHtml($js) . '" data-connection-status'
         . ' data-logo-url="' . escapeHtml(clearGoLogoUrl()) . '"'

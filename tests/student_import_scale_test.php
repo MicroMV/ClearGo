@@ -15,11 +15,11 @@ $database = new PDO('sqlite::memory:', null, null, [
 ]);
 $database->exec(
     "CREATE TABLE users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT UNIQUE, password_hash TEXT, role TEXT, status TEXT
+        id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT UNIQUE, password_hash TEXT, role TEXT, status TEXT, auth_version INTEGER NOT NULL DEFAULT 1
     );
     CREATE TABLE students (
         id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER UNIQUE, student_number TEXT UNIQUE,
-        first_name TEXT, middle_name TEXT NOT NULL DEFAULT '', last_name TEXT, program TEXT, year_level INTEGER, section TEXT,
+        first_name TEXT, middle_name TEXT NOT NULL DEFAULT '', last_name TEXT, program TEXT, year_level INTEGER,
         organization_id INTEGER, status TEXT
     );"
 );

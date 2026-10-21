@@ -1,0 +1,8 @@
+{
+    "synthetic_only": true,
+    "tables": 43,
+    "compressed_bytes": 18410,
+    "row_and_blob_fingerprints_match": true,
+    "mismatched_tables": [],
+    "private_file_restore_tested": false
+}

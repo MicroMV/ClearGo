@@ -22,7 +22,6 @@ if ($context === false) {
     exit('The clearance PDF is available only while semester clearance is open.');
 }
 
-syncClearanceSignatureSnapshots($database, (int) $context['clearance_id']);
 $stationQuery = $database->prepare(
     "SELECT record.id,record.status,record.office_remarks,
             station.code,station.name,station.sort_order,parent.name AS parent_name,
@@ -57,7 +56,8 @@ if ($stations === []) {
     exit('No clearance offices were found.');
 }
 
-$pdf = new SimplePdf();
+$paperPreview = ($_GET['view'] ?? null) === 'paper';
+$pdf = new SimplePdf($paperPreview);
 $pdf->setStroke(0.10, 0.20, 0.32);
 $pdf->setFill(0.10, 0.20, 0.32);
 // The original seal has transparent lettering that disappears on white paper.
@@ -204,6 +204,14 @@ foreach ($pdf->wrap($privacyNotice, 6.2, 770) as $lineIndex => $line) {
 $pdf->text(35, 13, 'ClearGo | Official record at download. Approved offices are signed; pending offices remain unsigned.', 6.2);
 $pdf->text(600, 13, 'Status: ' . ($context['clearance_status'] === 'COMPLETED' ? 'COMPLETED' : 'IN PROGRESS'), 7.2, true, 'right', 205);
 
+if ($paperPreview) {
+    header('Content-Type: text/html; charset=utf-8');
+    header('Cache-Control: private, no-store, max-age=0');
+    header('X-Content-Type-Options: nosniff');
+    header('X-Frame-Options: SAMEORIGIN');
+    require __DIR__ . '/clearance_paper_view.php';
+    exit;
+}
 $pdfData = $pdf->output();
 $safeStudentNumber = preg_replace('/[^A-Za-z0-9_-]/', '-', (string) $context['student_number']);
 $filename = 'clearance-' . trim((string) $safeStudentNumber, '-') . '-' . preg_replace('/[^A-Za-z0-9_-]/', '-', $context['school_year']) . '.pdf';

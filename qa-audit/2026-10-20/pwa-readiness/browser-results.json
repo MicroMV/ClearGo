@@ -1,0 +1,96 @@
+{
+  "base": "http://127.0.0.1:40921/ClearGo/",
+  "observations": {
+    "online": {
+      "url": "http://127.0.0.1:40921/ClearGo/login.php",
+      "secureContext": true,
+      "manifest": null,
+      "appleIcon": null,
+      "theme": null,
+      "worker": "http://127.0.0.1:40921/ClearGo/connection-worker.js",
+      "scope": "http://127.0.0.1:40921/ClearGo/",
+      "caches": [
+        {
+          "name": "cleargo-offline-v6",
+          "urls": [
+            "http://127.0.0.1:40921/ClearGo/errors/offline.html",
+            "http://127.0.0.1:40921/ClearGo/assets/the-lewis-college-logo.png"
+          ]
+        }
+      ]
+    },
+    "manifest": {
+      "url": "",
+      "errors": [],
+      "data": "",
+      "parsed": {
+        "scope": "http://127.0.0.1:40921/ClearGo/"
+      },
+      "manifest": {
+        "display": "kUndefined",
+        "id": "http://127.0.0.1:40921/ClearGo/login.php",
+        "orientation": "DEFAULT",
+        "preferRelatedApplications": false,
+        "scope": "http://127.0.0.1:40921/ClearGo/",
+        "startUrl": "http://127.0.0.1:40921/ClearGo/login.php"
+      }
+    },
+    "installability": {
+      "installabilityErrors": [
+        {
+          "errorId": "no-manifest",
+          "errorArguments": []
+        }
+      ]
+    },
+    "offlinePost": {
+      "networkFailed": true
+    },
+    "offline": {
+      "title": "Temporarily unavailable | ClearGo",
+      "base": "/ClearGo/",
+      "logo": "/ClearGo/assets/the-lewis-college-logo.png",
+      "heading": "ClearGo is temporarily unavailable",
+      "hasLoginForm": false
+    },
+    "offlineLogo": {
+      "ok": true,
+      "bytes": 401756
+    },
+    "finalUrl": "http://127.0.0.1:40921/ClearGo/login.php"
+  },
+  "checks": [
+    {
+      "name": "Service worker controls the login page",
+      "passed": true
+    },
+    {
+      "name": "Manifest linked in live HTML",
+      "passed": false
+    },
+    {
+      "name": "Service worker scope covers ClearGo",
+      "passed": true
+    },
+    {
+      "name": "Only public offline page and logo are cached",
+      "passed": true
+    },
+    {
+      "name": "Offline POST is rejected instead of queued or replaced with cached success",
+      "passed": true
+    },
+    {
+      "name": "Offline navigation displays the public fallback with resolved paths",
+      "passed": true
+    },
+    {
+      "name": "College logo loads while offline",
+      "passed": true
+    },
+    {
+      "name": "Retry recovers to login without a stale authenticated page",
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "checks": [
+    {
+      "name": "1280px preview fits screen",
+      "passed": true
+    },
+    {
+      "name": "1280px readable paper loaded inline",
+      "passed": true
+    },
+    {
+      "name": "1280px actual signature and logo render",
+      "passed": true
+    },
+    {
+      "name": "1280px separate download action",
+      "passed": true
+    },
+    {
+      "name": "1280px readable preview area",
+      "passed": true
+    },
+    {
+      "name": "1280px logo is visible",
+      "passed": true
+    },
+    {
+      "name": "1280px return link preserves clearance view",
+      "passed": true
+    },
+    {
+      "name": "1280px hidden preview does not load the PDF",
+      "passed": true
+    },
+    {
+      "name": "1280px preview opens without leaving dashboard",
+      "passed": true
+    },
+    {
+      "name": "1280px pending PDF shows loading feedback",
+      "passed": true
+    },
+    {
+      "name": "1280px loaded PDF clears loading feedback",
+      "passed": true
+    },
+    {
+      "name": "1280px dialog fits viewport",
+      "passed": true
+    },
+    {
+      "name": "1280px dialog embeds the zoomable paper",
+      "passed": true
+    },
+    {
+      "name": "1280px dialog has a separate download",
+      "passed": true
+    },
+    {
+      "name": "1280px dashboard scroll is locked",
+      "passed": true
+    },
+    {
+      "name": "1280px close restores focus and unloads PDF",
+      "passed": true
+    },
+    {
+      "name": "1280px Escape inside zoom controls closes the dialog",
+      "passed": true
+    },
+    {
+      "name": "1280px reopening shows loading feedback again",
+      "passed": false
+    }
+  ],
+  "errors": [],
+  "pdfResponses": [
+    200,
+    200,
+    200
+  ]
+}

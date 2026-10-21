@@ -647,7 +647,7 @@ function importValidatedStudents(PDO $database, array $preview, ?int $registrarU
             );
         }
         $updateUser = $database->prepare(
-            "UPDATE users SET email = :email, role = 'STUDENT', status = 'ACTIVE' WHERE id = :id"
+            "UPDATE users SET auth_version=auth_version+CASE WHEN email<>:version_email OR role<>'STUDENT' OR status<>'ACTIVE' THEN 1 ELSE 0 END,email = :email, role = 'STUDENT', status = 'ACTIVE' WHERE id = :id"
         );
         $updateStudent = $database->prepare(
             "UPDATE students SET first_name = :first_name, middle_name = COALESCE(:middle_name,middle_name), last_name = :last_name, program = :program,
@@ -660,9 +660,9 @@ function importValidatedStudents(PDO $database, array $preview, ?int $registrarU
         );
         $insertStudent = $database->prepare(
             "INSERT INTO students
-                (user_id, student_number, first_name, middle_name, last_name, program, year_level, section, organization_id, status)
+                (user_id, student_number, first_name, middle_name, last_name, program, year_level, organization_id, status)
              VALUES
-                (:user_id, :student_number, :first_name, :middle_name, :last_name, :program, :year_level, :section, :organization_id, 'ACTIVE')"
+                (:user_id, :student_number, :first_name, :middle_name, :last_name, :program, :year_level, :organization_id, 'ACTIVE')"
         );
         $initialPasswordHash = password_hash(CLEAR_GO_INITIAL_PASSWORD, PASSWORD_DEFAULT);
 
@@ -672,7 +672,7 @@ function importValidatedStudents(PDO $database, array $preview, ?int $registrarU
                 continue;
             }
             if ($row['action'] === 'UPDATE') {
-                $updateUser->execute(['email' => $row['school_email'], 'id' => $row['existing_user_id']]);
+                $updateUser->execute(['version_email' => $row['school_email'], 'email' => $row['school_email'], 'id' => $row['existing_user_id']]);
                 $updateStudent->execute([
                     'first_name' => $row['first_name'],
                     'middle_name' => $row['middle_name'] ?? null,
@@ -697,7 +697,6 @@ function importValidatedStudents(PDO $database, array $preview, ?int $registrarU
                     'last_name' => $row['last_name'],
                     'program' => $row['course_program'],
                     'year_level' => $row['year_level'],
-                    'section' => 'N/A',
                     'organization_id' => $row['organization_id'],
                 ]);
                 $studentId = (int) $database->lastInsertId();

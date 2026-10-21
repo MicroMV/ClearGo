@@ -46,7 +46,6 @@ try {
         $program = normalizeImportText((string) ($_POST['program'] ?? ''));
         $year = filter_var($_POST['year_level'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 6]]);
         $organizationId = filter_var($_POST['organization_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-        $section = normalizeImportText((string) ($_POST['section'] ?? 'N/A'));
         [$firstName, $lastName, $middleName] = registrarStudentNameInput($_POST);
         if ($number === '' || $firstName === '' || $lastName === '' || !validSchoolEmail($email) || $program === '' || $year === false || $organizationId === false) {
             throw new RuntimeException('Complete all fields with a valid Lewis College GSuite Address.');
@@ -54,8 +53,8 @@ try {
         $database->beginTransaction();
         $insertUser = $database->prepare("INSERT INTO users(email,password_hash,role,status) VALUES(:email,:hash,'STUDENT','ACTIVE')");
         $insertUser->execute(['email' => $email, 'hash' => password_hash(CLEAR_GO_INITIAL_PASSWORD, PASSWORD_DEFAULT)]);
-        $insertStudent = $database->prepare("INSERT INTO students(user_id,student_number,first_name,middle_name,last_name,program,year_level,section,organization_id,status) VALUES(:user_id,:number,:first,:middle,:last,:program,:year,:section,:organization,'ACTIVE')");
-        $insertStudent->execute(['user_id' => (int) $database->lastInsertId(), 'number' => $number, 'first' => $firstName, 'middle' => $middleName, 'last' => $lastName, 'program' => $program, 'year' => $year, 'section' => $section ?: 'N/A', 'organization' => $organizationId]);
+        $insertStudent = $database->prepare("INSERT INTO students(user_id,student_number,first_name,middle_name,last_name,program,year_level,organization_id,status) VALUES(:user_id,:number,:first,:middle,:last,:program,:year,:organization,'ACTIVE')");
+        $insertStudent->execute(['user_id' => (int) $database->lastInsertId(), 'number' => $number, 'first' => $firstName, 'middle' => $middleName, 'last' => $lastName, 'program' => $program, 'year' => $year, 'organization' => $organizationId]);
         $studentId = (int) $database->lastInsertId();
         if ($period['clearance_status'] === 'PREPARING') {
             $enroll = $database->prepare("INSERT INTO semester_enrollments(academic_period_id,student_id,status,enrolled_by) VALUES(:period,:student,'ENROLLED',:user)");
@@ -81,7 +80,6 @@ try {
             $program = normalizeImportText((string) ($_POST['program'] ?? ''));
             $year = filter_var($_POST['year_level'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 6]]);
             $organizationId = filter_var($_POST['organization_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
-            $section = normalizeImportText((string) $student['section']);
             [$firstName, $lastName, $middleName] = registrarStudentNameInput($_POST);
             if (!array_key_exists('first_name', $_POST) && substr_count((string) ($_POST['full_name'] ?? ''), ',') < 2) {
                 $middleName = $student['middle_name'];
@@ -93,15 +91,15 @@ try {
                 throw new RuntimeException('Complete all fields with a valid Lewis College GSuite Address.');
             }
             $database->beginTransaction();
-            $database->prepare('UPDATE users SET email=:email WHERE id=:id')->execute(['email' => $email, 'id' => $student['user_id']]);
-            $database->prepare('UPDATE students SET student_number=:number,first_name=:first,middle_name=:middle,last_name=:last,program=:program,year_level=:year,section=:section,organization_id=:organization WHERE id=:id')->execute(['number' => $number, 'first' => $firstName, 'middle' => $middleName, 'last' => $lastName, 'program' => $program, 'year' => $year, 'section' => $section ?: 'N/A', 'organization' => $organizationId, 'id' => $studentId]);
+            $database->prepare('UPDATE users SET auth_version=auth_version+IF(email<>:version_email,1,0),email=:email WHERE id=:id')->execute(['version_email' => $email, 'email' => $email, 'id' => $student['user_id']]);
+            $database->prepare('UPDATE students SET student_number=:number,first_name=:first,middle_name=:middle,last_name=:last,program=:program,year_level=:year,organization_id=:organization WHERE id=:id')->execute(['number' => $number, 'first' => $firstName, 'middle' => $middleName, 'last' => $lastName, 'program' => $program, 'year' => $year, 'organization' => $organizationId, 'id' => $studentId]);
             auditStudentAccount($database, $user['id'], $stationId, $studentId, 'STUDENT_ACCOUNT_UPDATED', 'Registrar modified the student account.', null, 'UPDATED');
             $database->commit();
             setFlashMessage('Student account updated.');
         } elseif ($action === 'toggle_account') {
             $newStatus = $student['account_status'] === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
             $database->beginTransaction();
-            $database->prepare('UPDATE users SET status=:status WHERE id=:id')->execute(['status' => $newStatus, 'id' => $student['user_id']]);
+            $database->prepare('UPDATE users SET status=:status,auth_version=auth_version+1 WHERE id=:id')->execute(['status' => $newStatus, 'id' => $student['user_id']]);
             $database->prepare('UPDATE students SET status=:status WHERE id=:id')->execute(['status' => $newStatus, 'id' => $studentId]);
             auditStudentAccount($database, $user['id'], $stationId, $studentId, 'STUDENT_ACCOUNT_STATUS_CHANGED', 'Registrar changed the student account status.', $student['account_status'], $newStatus);
             $database->commit();
@@ -120,7 +118,8 @@ try {
             auditStudentAccount($database, $user['id'], $stationId, $studentId, 'SEMESTER_ENROLLMENT_CHANGED', 'Registrar changed current-semester enrollment.', null, $newStatus);
             setFlashMessage('Semester enrollment changed to ' . $newStatus . '.');
         } elseif ($action === 'reset_password') {
-            $database->prepare('UPDATE users SET password_hash=:hash WHERE id=:id')->execute(['hash' => password_hash(CLEAR_GO_INITIAL_PASSWORD, PASSWORD_DEFAULT), 'id' => $student['user_id']]);
+            require_once __DIR__ . '/../auth/security_functions.php';
+            replaceAccountPassword($database, (int) $student['user_id'], password_hash(CLEAR_GO_INITIAL_PASSWORD, PASSWORD_DEFAULT));
             auditStudentAccount($database, $user['id'], $stationId, $studentId, 'STUDENT_PASSWORD_RESET', 'Registrar reset the student password to the institutional initial password.', null, 'RESET');
             setFlashMessage('Student password reset to thelewiscollege.');
         } else {

@@ -1,0 +1,17 @@
+{
+    "name": "ClearGo | The Lewis College",
+    "short_name": "ClearGo",
+    "description": "The Lewis College student clearance portal.",
+    "lang": "en",
+    "start_url": "./login.php",
+    "scope": "./",
+    "display": "standalone",
+    "background_color": "#f3f8fd",
+    "theme_color": "#0b2545",
+    "prefer_related_applications": false,
+    "icons": [
+        { "src": "assets/icons/cleargo-v3-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+        { "src": "assets/icons/cleargo-v3-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+        { "src": "assets/icons/cleargo-maskable-v3-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    ]
+}

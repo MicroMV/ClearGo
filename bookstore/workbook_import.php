@@ -7,7 +7,7 @@ require_once __DIR__ . '/workbook_functions.php';
 $user = requireRole('BOOKSTORE_STAFF');
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCsrfToken($_POST['csrf_token'] ?? null)) {
     setFlashMessage('Unable to process the Bookstore workbook. Please try again.');
-    redirectTo('/bookstore/dashboard.php');
+    redirectTo('/bookstore/excel_import.php');
 }
 try {
     $file = $_FILES['bookstore_workbook'] ?? null;
@@ -33,4 +33,4 @@ try {
     error_log('Bookstore workbook import failed: ' . $exception->getMessage());
     setFlashMessage($exception instanceof RuntimeException ? $exception->getMessage() : 'Unable to import the Bookstore workbook.');
 }
-redirectTo('/bookstore/dashboard.php');
+redirectTo('/bookstore/excel_import.php');

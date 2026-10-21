@@ -15,7 +15,7 @@ $search = trim((string) ($_GET['search'] ?? ''));
 $filter = strtoupper((string) ($_GET['filter'] ?? 'ALL'));
 $courseFilter = trim((string) ($_GET['course'] ?? ''));
 $yearFilter = filter_var($_GET['year_level'] ?? 0, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1, 'max_range' => 6]]) ?: 0;
-$allowedFilters = ['WAITING', 'APPROVED', 'ALL'];
+$allowedFilters = ['WAITING', 'VERIFIED', 'APPROVED', 'ALL'];
 if (!in_array($filter, $allowedFilters, true)) {
     $filter = 'ALL';
 }
@@ -112,7 +112,7 @@ try {
     foreach ($summaryScopeRows as $row) {
         if ($row['dean_status'] === 'APPROVED') {
             $summary['APPROVED']++;
-        } elseif ((int) $row['blocking_count'] === 0) {
+        } elseif ((int) $row['blocking_count'] === 0 && $row['dean_status'] !== 'RETURNED') {
             $summary['VERIFIED']++;
         } else {
             $summary['WAITING']++;
@@ -210,20 +210,24 @@ $message = pullFlashMessage();
 $csrfToken = createCsrfToken();
 $logoutForm = dashboardLogoutForm();
 $pageTitle = $dean['organization_code'] . ' Dean Clearance';
-$sidebar = staffDashboardSidebar($pageTitle, $user, [
+$sidebarItems = [
     ['key' => 'dashboard', 'label' => 'Dashboard', 'url' => '/dean/dashboard.php', 'icon' => 'dashboard'],
-], 'dashboard', $logoutForm);
+];
+if ($dean['organization_code'] === 'CCS') {
+    $sidebarItems[] = ['key' => 'excel-import', 'label' => 'Excel Import', 'url' => '/dean/excel_import.php', 'icon' => 'import'];
+}
+$sidebar = staffDashboardSidebar($pageTitle, $user, $sidebarItems, 'dashboard', $logoutForm);
 ?>
 <!doctype html>
 <html lang="en">
 
-<head><?= connectionStatusAssets() ?>
+<head>
     <meta charset="utf-8">
+    <?= connectionStatusAssets() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= escapeHtml($dean['organization_code']) ?> Dean Clearance | Digital Clearance System</title>
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/dean-dashboard.css')) ?>">
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/css/staff-dashboard.css') ?>">
-    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/dean-completion.css')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/css/dean-completion.css') ?>">
 </head>
 
 <body class="staff-dashboard">
@@ -240,55 +244,33 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
                 </div>
             </header>
             <main class="staff-main">
-                <?php if ($message !== null): ?><p class="message" data-flash-message><?= escapeHtml($message) ?></p><?php endif; ?>
-                <?php if ($readiness['clearance_status'] === 'PREPARING'): ?><section class="panel">
-                        <h2>Semester preparation</h2>
-                        <p>Review requirements and take action now. Approve complete students and leave incomplete requirements pending so students can comply when the Registrar opens clearance.</p><?php if ($readiness['readiness_status'] === 'READY'): ?><p class="message">The Dean office is marked READY.</p>
-                            <form method="post" action="<?= escapeHtml(applicationUrl('/clearance/readiness_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><button type="submit" name="action" value="unready">Undo Ready</button></form><?php else: ?><form method="post" action="<?= escapeHtml(applicationUrl('/clearance/readiness_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><button type="submit" name="action" value="ready">Mark Dean Office Ready</button></form><?php endif; ?>
-                    </section><?php endif; ?>
-                <?php if ($dean['organization_code'] === 'CCS'): ?><section class="panel completion-panel" aria-labelledby="completion-heading">
-                    <div class="section-heading">
-                        <div><h2 id="completion-heading">Requirements completion list</h2><p class="muted">Choose Completed to verify applicable Dean requirements, then import. Year 4: Faculty Evaluation in first semester; Application for Graduation in second semester. Blank cells count as Incomplete.</p></div>
-                    </div>
-                    <?php if (in_array($readiness['clearance_status'], ['PREPARING', 'OPEN'], true)): ?>
-                    <form class="completion-form" method="post" enctype="multipart/form-data" action="<?= escapeHtml(applicationUrl('/dean/completion_workbook_import.php')) ?>">
-                        <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
-                        <input type="hidden" name="period_id" value="<?= (int) $readiness['academic_period_id'] ?>">
-                        <div class="completion-upload">
-                            <div class="completion-upload-heading">
-                                <span class="completion-upload-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 18v-7m-3 3 3-3 3 3"/></svg></span>
-                                <div><label for="completion-workbook">Upload completion workbook</label><p id="completion-upload-help">Choose your completed Excel template (.xlsx, up to 5 MB).</p></div>
-                            </div>
-                            <input id="completion-workbook" type="file" name="completion_workbook" accept=".xlsx" aria-describedby="completion-upload-help" required>
-                        </div>
-                        <div class="completion-footer">
-                            <p class="muted">Keep School Year and Semester unchanged.<br>After import, clear students individually or in bulk.</p>
-                            <div class="completion-actions">
-                                <a class="button-link completion-download" href="<?= escapeHtml(applicationUrl('/dean/completion_workbook_download.php')) ?>"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m-4-4 4 4 4-4M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg>Download Excel template</a>
-                                <button type="submit"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m-4 4 4-4 4 4M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg>Import completion list</button>
-                            </div>
-                        </div>
-                    </form><?php else: ?><p class="muted">Completion imports are closed for this semester.</p><?php endif; ?>
-                </section><?php endif; ?>
-                <?php if ($isCbeDean): ?><section class="panel">
-                        <h2>CBE student groups</h2>
-                        <div class="group-tabs"><a href="?group=NON_GRADUATING&amp;filter=<?= urlencode($filter) ?>" <?= $cbeGroup === 'NON_GRADUATING' ? 'aria-current="page"' : '' ?>>Non-Graduating · <?= $cbeGroupCounts['NON_GRADUATING'] ?></a><a href="?group=FOURTH_YEAR&amp;filter=<?= urlencode($filter) ?>" <?= $cbeGroup === 'FOURTH_YEAR' ? 'aria-current="page"' : '' ?>>Fourth Year · <?= $cbeGroupCounts['FOURTH_YEAR'] ?></a></div>
-                        <p class="muted">All CBE students require Organization/YBC sign-off before the CBE Dean can clear them. Fourth-year Dean approval also confirms the OJT requirement.</p>
-                    </section><?php endif; ?>
                 <section class="panel">
                     <div class="section-heading">
                         <div>
                             <h2>Clearance summary</h2>
                             <p class="muted">Current Dean status for this college.</p>
                         </div>
+                        <a class="button-link summary-export" href="?search=<?= urlencode($search) ?>&amp;course=<?= urlencode($courseFilter) ?>&amp;year_level=<?= $yearFilter ?>&amp;filter=<?= urlencode($filter) ?><?= $isCbeDean ? '&amp;group=' . urlencode($cbeGroup) : '' ?>&amp;export=xlsx">Export Excel report</a>
                     </div>
                     <div class="summary">
-                        <div>Total Students<strong><?= $summary['TOTAL'] ?></strong></div>
-                        <div>For Compliance<strong><?= $summary['WAITING'] ?></strong></div>
-                        <div>Ready to Clear<strong><?= $summary['VERIFIED'] ?></strong></div>
-                        <div>Cleared<strong><?= $summary['APPROVED'] ?></strong></div>
+                        <?php foreach (['ALL' => ['Total Students', $summary['TOTAL']], 'WAITING' => ['For Compliance', $summary['WAITING']], 'VERIFIED' => ['Ready to Clear', $summary['VERIFIED']], 'APPROVED' => ['Cleared', $summary['APPROVED']]] as $summaryFilter => [$summaryLabel, $summaryCount]): ?>
+                            <a class="summary-filter" href="?filter=<?= $summaryFilter ?><?= $isCbeDean ? '&amp;group=' . urlencode($cbeGroup) : '' ?>#student-records" <?= $filter === $summaryFilter ? 'aria-current="true"' : '' ?>><?= escapeHtml($summaryLabel) ?><strong><?= $summaryCount ?></strong></a>
+                        <?php endforeach; ?>
                     </div>
                 </section>
+                <?php if ($message !== null): ?><p class="message" data-flash-message><?= escapeHtml($message) ?></p><?php endif; ?>
+                <?php if ($readiness['clearance_status'] === 'PREPARING'): ?><section class="panel">
+                        <h2>Semester preparation</h2>
+                        <p>Save and select an authorized signature in <a href="<?= escapeHtml(applicationUrl('/auth/profile.php#signature-card-title')) ?>">My Profile</a> before marking Ready. Signatures lock while Ready.</p>
+                        <p>Review requirements and take action now. Approve complete students and leave incomplete requirements pending so students can comply when the Registrar opens clearance.</p><?php if ($readiness['readiness_status'] === 'READY'): ?><p class="message">The Dean office is marked READY.</p>
+                            <form method="post" action="<?= escapeHtml(applicationUrl('/clearance/readiness_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><button type="submit" name="action" value="unready">Undo Ready</button></form><?php else: ?><form method="post" action="<?= escapeHtml(applicationUrl('/clearance/readiness_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><button type="submit" name="action" value="ready">Mark Dean Office Ready</button></form><?php endif; ?>
+                    </section><?php endif; ?>
+                <?php if ($isCbeDean): ?><section class="panel">
+                        <h2>CBE student groups</h2>
+                        <div class="group-tabs"><a href="?group=NON_GRADUATING&amp;filter=<?= urlencode($filter) ?>" <?= $cbeGroup === 'NON_GRADUATING' ? 'aria-current="page"' : '' ?>>Non-Graduating · <?= $cbeGroupCounts['NON_GRADUATING'] ?></a><a href="?group=FOURTH_YEAR&amp;filter=<?= urlencode($filter) ?>" <?= $cbeGroup === 'FOURTH_YEAR' ? 'aria-current="page"' : '' ?>>Fourth Year · <?= $cbeGroupCounts['FOURTH_YEAR'] ?></a></div>
+                        <p class="muted">All CBE students require Organization/YBC sign-off before the CBE Dean can clear them. Fourth-year Dean approval also confirms the OJT requirement.</p>
+                    </section><?php endif; ?>
+                
             <section class="panel">
                 <div class="section-heading">
                     <div>
@@ -305,13 +287,13 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
                     <select name="year_level">
                         <option value="0">All year levels</option><?php foreach ($yearLevels as $year): ?><option value="<?= $year ?>" <?= $yearFilter === $year ? 'selected' : '' ?>>Year <?= $year ?></option><?php endforeach; ?>
                     </select>
-                    <?php $deanFilterLabels = ['WAITING' => 'For Compliance', 'APPROVED' => 'Cleared', 'ALL' => 'All Students']; ?>
+                    <?php $deanFilterLabels = ['WAITING' => 'For Compliance', 'VERIFIED' => 'Ready to Clear', 'APPROVED' => 'Cleared', 'ALL' => 'All Students']; ?>
                     <select name="filter"><?php foreach ($allowedFilters as $option): ?><option value="<?= $option ?>" <?= $filter === $option ? 'selected' : '' ?>><?= escapeHtml($deanFilterLabels[$option]) ?></option><?php endforeach; ?></select>
                     <button type="submit">Search</button><a class="button-link secondary filter-clear" aria-label="Clear filters" href="<?= escapeHtml(applicationUrl('/dean/dashboard.php')) ?>">Clear</a>
-                    <a class="button-link" href="?search=<?= urlencode($search) ?>&amp;course=<?= urlencode($courseFilter) ?>&amp;year_level=<?= $yearFilter ?>&amp;filter=<?= urlencode($filter) ?><?= $isCbeDean ? '&amp;group=' . urlencode($cbeGroup) : '' ?>&amp;export=xlsx">Export Excel report</a>
+                    
                 </form>
             </section>
-            <section class="panel">
+            <section class="panel" id="student-records" tabindex="-1">
                 <div class="section-heading">
                     <div>
                         <h2>Student clearance records</h2>

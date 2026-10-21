@@ -69,12 +69,13 @@ $sidebar = registrarDashboardSidebar($user, 'audit', $logoutForm);
 <!doctype html>
 <html lang="en">
 
-<head><?= connectionStatusAssets() ?>
+<head>
     <meta charset="utf-8">
+    <?= connectionStatusAssets() ?>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Audit Logs | ClearGo</title>
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/registrar-audit-logs.css')) ?>">
-    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>">
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/css/staff-dashboard.css') ?>">
 </head>
 
 <body class="staff-dashboard">

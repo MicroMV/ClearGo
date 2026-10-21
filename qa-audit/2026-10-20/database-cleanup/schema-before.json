@@ -1,0 +1,3851 @@
+{
+    "tables": {
+        "academic_periods": {
+            "count": 2,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "school_year",
+                    "COLUMN_TYPE": "varchar(20)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "semester",
+                    "COLUMN_TYPE": "enum('1ST','2ND','SUMMER')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('ACTIVE','INACTIVE','CLOSED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'INACTIVE'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "clearance_status",
+                    "COLUMN_TYPE": "enum('DRAFT','PREPARING','OPEN','CLOSED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'DRAFT'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "opened_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "opened_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "closed_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "accounting_obligations": {
+            "count": 0,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "student_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "academic_period_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "description",
+                    "COLUMN_TYPE": "varchar(255)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "amount",
+                    "COLUMN_TYPE": "decimal(10,2)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "0.00",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('UNPAID','CLEARED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'UNPAID'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "payment_reference",
+                    "COLUMN_TYPE": "varchar(100)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "remarks",
+                    "COLUMN_TYPE": "text",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "cleared_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "cleared_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "accounting_receipts": {
+            "count": 1,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "student_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "academic_period_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "receipt_code",
+                    "COLUMN_TYPE": "varchar(255)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('ISSUED','SCANNED','APPROVED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'ISSUED'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "issued_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "issued_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "scanned_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "approved_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "approved_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                }
+            ]
+        },
+        "accounting_receipt_verifications": {
+            "count": 0,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "accounting_receipt_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('NOT_SUBMITTED','VERIFIED','REJECTED','ERROR')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'NOT_SUBMITTED'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "verification_method",
+                    "COLUMN_TYPE": "varchar(50)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'OPENAI_VISION'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "model_name",
+                    "COLUMN_TYPE": "varchar(100)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "confidence",
+                    "COLUMN_TYPE": "decimal(5,4)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "attempt_count",
+                    "COLUMN_TYPE": "int(10) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "0",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "last_submitted_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "verified_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "audit_logs": {
+            "count": 8674,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "user_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "action",
+                    "COLUMN_TYPE": "varchar(100)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "station_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "student_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "description",
+                    "COLUMN_TYPE": "text",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "old_status",
+                    "COLUMN_TYPE": "varchar(50)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "new_status",
+                    "COLUMN_TYPE": "varchar(50)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                }
+            ]
+        },
+        "bookstore_fees": {
+            "count": 3,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "academic_period_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "name",
+                    "COLUMN_TYPE": "varchar(200)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "amount",
+                    "COLUMN_TYPE": "decimal(10,2)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "is_required",
+                    "COLUMN_TYPE": "tinyint(1)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "1",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('ACTIVE','INACTIVE')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'ACTIVE'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "bookstore_obligations": {
+            "count": 0,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "student_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "academic_period_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "description",
+                    "COLUMN_TYPE": "varchar(255)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "amount",
+                    "COLUMN_TYPE": "decimal(10,2)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "0.00",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('UNPAID','CLEARED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'UNPAID'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "payment_reference",
+                    "COLUMN_TYPE": "varchar(255)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "remarks",
+                    "COLUMN_TYPE": "varchar(1000)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "recorded_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "cleared_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "cleared_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "bookstore_receipt_submissions": {
+            "count": 1,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "student_fee_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('SUBMITTED','LOST_REPORTED','VERIFIED','RETURNED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "stored_name",
+                    "COLUMN_TYPE": "varchar(255)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "original_name",
+                    "COLUMN_TYPE": "varchar(255)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "mime_type",
+                    "COLUMN_TYPE": "varchar(100)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "submitted_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "reviewed_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "reviewed_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "return_reason",
+                    "COLUMN_TYPE": "varchar(1000)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "borrowed_books": {
+            "count": 0,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "student_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "book_title",
+                    "COLUMN_TYPE": "varchar(255)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "borrowed_at",
+                    "COLUMN_TYPE": "date",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "due_at",
+                    "COLUMN_TYPE": "date",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "returned_at",
+                    "COLUMN_TYPE": "date",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('BORROWED','RETURNED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'BORROWED'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "recorded_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "returned_verified_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "ccs_evaluation_completions": {
+            "count": 439,
+            "columns": [
+                {
+                    "COLUMN_NAME": "clearance_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('COMPLETED','NOT_COMPLETED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "recorded_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "recorded_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                }
+            ]
+        },
+        "clearances": {
+            "count": 4634,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "student_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "academic_period_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "reference_number",
+                    "COLUMN_TYPE": "varchar(50)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('NOT_STARTED','IN_PROGRESS','COMPLETED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'NOT_STARTED'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "started_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "completed_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "clearance_exceptions": {
+            "count": 0,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "clearance_station_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "reason",
+                    "COLUMN_TYPE": "text",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "proof_reference",
+                    "COLUMN_TYPE": "varchar(255)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('REQUESTED','APPROVED','REJECTED','RESOLVED','EXPIRED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'REQUESTED'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "requested_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "decided_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "decided_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "expires_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "clearance_stations": {
+            "count": 50974,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "clearance_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "station_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('LOCKED','PENDING','UNDER_REVIEW','ELIGIBLE','APPROVED','RETURNED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'LOCKED'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "approved_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "approved_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "returned_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "returned_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "returned_reason",
+                    "COLUMN_TYPE": "text",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "office_remarks",
+                    "COLUMN_TYPE": "varchar(1000)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "clearance_station_signatures": {
+            "count": 36,
+            "columns": [
+                {
+                    "COLUMN_NAME": "clearance_station_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "approved_by_user_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "printed_name",
+                    "COLUMN_TYPE": "varchar(150)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "position_title",
+                    "COLUMN_TYPE": "varchar(150)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "image_data",
+                    "COLUMN_TYPE": "mediumblob",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "mime_type",
+                    "COLUMN_TYPE": "enum('image\/jpeg','image\/png')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "image_sha256",
+                    "COLUMN_TYPE": "char(64)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "signed_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                }
+            ]
+        },
+        "clinic_medical_appointments": {
+            "count": 1,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "schedule_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "academic_period_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "student_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('SCHEDULED','CANCELLED','COMPLETED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'SCHEDULED'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "booked_at",
+                    "COLUMN_TYPE": "timestamp",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "timestamp",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "clinic_medical_schedules": {
+            "count": 1,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "academic_period_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "schedule_date",
+                    "COLUMN_TYPE": "date",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "schedule_time",
+                    "COLUMN_TYPE": "time",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "end_time",
+                    "COLUMN_TYPE": "time",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "capacity",
+                    "COLUMN_TYPE": "int(10) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('ACTIVE','CLOSED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'ACTIVE'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "timestamp",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "timestamp",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "document_requirements": {
+            "count": 0,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "academic_period_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "name",
+                    "COLUMN_TYPE": "varchar(200)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "description",
+                    "COLUMN_TYPE": "text",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "is_required",
+                    "COLUMN_TYPE": "tinyint(1)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "1",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('ACTIVE','INACTIVE')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'ACTIVE'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "events": {
+            "count": 5,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "station_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "organization_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "academic_period_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "name",
+                    "COLUMN_TYPE": "varchar(200)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "description",
+                    "COLUMN_TYPE": "text",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "event_date",
+                    "COLUMN_TYPE": "date",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "start_time",
+                    "COLUMN_TYPE": "time",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "end_time",
+                    "COLUMN_TYPE": "time",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "is_required",
+                    "COLUMN_TYPE": "tinyint(1)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "0",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('ACTIVE','INACTIVE','CANCELLED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'ACTIVE'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "check_in_token_hash",
+                    "COLUMN_TYPE": "char(64)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "check_in_opens_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "check_in_closes_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                },
+                {
+                    "COLUMN_NAME": "attendance_finalized_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                }
+            ]
+        },
+        "event_attendance": {
+            "count": 0,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "event_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "student_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('PRESENT','ABSENT','EXCUSED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "check_in_method",
+                    "COLUMN_TYPE": "enum('MANUAL','QR')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'MANUAL'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "recorded_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "recorded_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                },
+                {
+                    "COLUMN_NAME": "sanction_verified_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "sanction_verified_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                }
+            ]
+        },
+        "event_sanctions": {
+            "count": 0,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "event_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "student_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "task",
+                    "COLUMN_TYPE": "text",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "hours",
+                    "COLUMN_TYPE": "decimal(6,2)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "monitor_user_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('PENDING','RESOLVED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'PENDING'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "assigned_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "resolved_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "resolved_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                }
+            ]
+        },
+        "event_sanction_policies": {
+            "count": 1,
+            "columns": [
+                {
+                    "COLUMN_NAME": "event_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "task",
+                    "COLUMN_TYPE": "text",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "hours",
+                    "COLUMN_TYPE": "decimal(6,2)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "monitor_user_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                }
+            ]
+        },
+        "facilities_obligations": {
+            "count": 344,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "student_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "academic_period_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "item_type",
+                    "COLUMN_TYPE": "enum('BORROWED_ITEM','TOGA')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "description",
+                    "COLUMN_TYPE": "varchar(255)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('OUTSTANDING','RETURNED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'OUTSTANDING'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "remarks",
+                    "COLUMN_TYPE": "varchar(1000)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "recorded_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "returned_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "returned_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "library_cards": {
+            "count": 2317,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "student_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('PENDING','VERIFIED','INVALID')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'PENDING'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "verified_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "verified_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "library_card_submissions": {
+            "count": 1,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "library_card_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('SUBMITTED','VERIFIED','RETURNED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'SUBMITTED'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "stored_name",
+                    "COLUMN_TYPE": "varchar(255)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "original_name",
+                    "COLUMN_TYPE": "varchar(255)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "mime_type",
+                    "COLUMN_TYPE": "varchar(100)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "submitted_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "reviewed_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "reviewed_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "return_reason",
+                    "COLUMN_TYPE": "varchar(1000)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "medical_requirements": {
+            "count": 4634,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "student_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "academic_period_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('PENDING','UNDER_REVIEW','VERIFIED','RETURNED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'PENDING'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "remarks",
+                    "COLUMN_TYPE": "text",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "verified_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "verified_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "notifications": {
+            "count": 18814,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "user_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "academic_period_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "title",
+                    "COLUMN_TYPE": "varchar(200)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "message",
+                    "COLUMN_TYPE": "text",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "is_read",
+                    "COLUMN_TYPE": "tinyint(1)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "0",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                }
+            ]
+        },
+        "office_period_readiness": {
+            "count": 20,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "academic_period_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "station_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('NOT_READY','READY')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'NOT_READY'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "ready_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "ready_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "notes",
+                    "COLUMN_TYPE": "varchar(500)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "organizations": {
+            "count": 3,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "name",
+                    "COLUMN_TYPE": "varchar(150)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "code",
+                    "COLUMN_TYPE": "varchar(20)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('ACTIVE','INACTIVE')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'ACTIVE'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "requirements": {
+            "count": 17,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "station_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "requirement_code",
+                    "COLUMN_TYPE": "varchar(80)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "name",
+                    "COLUMN_TYPE": "varchar(150)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "type",
+                    "COLUMN_TYPE": "enum('ATTENDANCE','DOCUMENT','PAYMENT','VIOLATION','VERIFICATION','APPROVAL','LIBRARY_BOOK','FINANCIAL')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "description",
+                    "COLUMN_TYPE": "text",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "applicable_organization_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "minimum_year_level",
+                    "COLUMN_TYPE": "tinyint(3) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "maximum_year_level",
+                    "COLUMN_TYPE": "tinyint(3) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "applicable_semester",
+                    "COLUMN_TYPE": "enum('1ST','2ND','SUMMER')",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "is_required",
+                    "COLUMN_TYPE": "tinyint(1)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "1",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('ACTIVE','INACTIVE')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'ACTIVE'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "requirement_records": {
+            "count": 57674,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "clearance_station_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "requirement_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('NOT_STARTED','SUBMITTED','UNDER_REVIEW','VERIFIED','RETURNED','RESOLVED','NOT_CLEAR')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'NOT_STARTED'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "remarks",
+                    "COLUMN_TYPE": "text",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "verified_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "verified_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "sanction_submissions": {
+            "count": 0,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "student_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "academic_period_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "station_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "organization_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('SUBMITTED','RETURNED','APPROVED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'SUBMITTED'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "before_stored_name",
+                    "COLUMN_TYPE": "varchar(45)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "before_mime",
+                    "COLUMN_TYPE": "varchar(30)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "after_stored_name",
+                    "COLUMN_TYPE": "varchar(45)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "after_mime",
+                    "COLUMN_TYPE": "varchar(30)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "submitted_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "reviewed_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "reviewed_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "review_remarks",
+                    "COLUMN_TYPE": "text",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                }
+            ]
+        },
+        "sanction_submission_items": {
+            "count": 0,
+            "columns": [
+                {
+                    "COLUMN_NAME": "submission_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "sanction_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                }
+            ]
+        },
+        "semester_enrollments": {
+            "count": 4634,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "academic_period_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "student_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('ENROLLED','REMOVED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'ENROLLED'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "enrolled_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "enrolled_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "removed_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "removed_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "staff_assignments": {
+            "count": 6,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "user_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "station_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "organization_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('ACTIVE','INACTIVE')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'ACTIVE'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "staff_saved_signatures": {
+            "count": 6,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "user_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "printed_name",
+                    "COLUMN_TYPE": "varchar(150)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "position_title",
+                    "COLUMN_TYPE": "varchar(150)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "image_data",
+                    "COLUMN_TYPE": "mediumblob",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "mime_type",
+                    "COLUMN_TYPE": "enum('image\/jpeg','image\/png')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "image_sha256",
+                    "COLUMN_TYPE": "char(64)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                }
+            ]
+        },
+        "staff_signatures": {
+            "count": 4,
+            "columns": [
+                {
+                    "COLUMN_NAME": "user_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "saved_signature_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "printed_name",
+                    "COLUMN_TYPE": "varchar(150)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "position_title",
+                    "COLUMN_TYPE": "varchar(150)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "image_data",
+                    "COLUMN_TYPE": "mediumblob",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "mime_type",
+                    "COLUMN_TYPE": "enum('image\/jpeg','image\/png')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "image_sha256",
+                    "COLUMN_TYPE": "char(64)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "staff_signature_recoveries": {
+            "count": 0,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "academic_period_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "user_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "authorized_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "reason",
+                    "COLUMN_TYPE": "varchar(300)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "authorized_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "expires_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "consumed_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                }
+            ]
+        },
+        "stations": {
+            "count": 11,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "parent_station_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "name",
+                    "COLUMN_TYPE": "varchar(100)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "code",
+                    "COLUMN_TYPE": "varchar(50)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "description",
+                    "COLUMN_TYPE": "varchar(255)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "sort_order",
+                    "COLUMN_TYPE": "int(10) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('ACTIVE','INACTIVE')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'ACTIVE'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "students": {
+            "count": 2317,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "user_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "student_number",
+                    "COLUMN_TYPE": "varchar(50)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "first_name",
+                    "COLUMN_TYPE": "varchar(100)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "middle_name",
+                    "COLUMN_TYPE": "varchar(100)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "''",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "last_name",
+                    "COLUMN_TYPE": "varchar(100)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "program",
+                    "COLUMN_TYPE": "varchar(150)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "year_level",
+                    "COLUMN_TYPE": "tinyint(3) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "section",
+                    "COLUMN_TYPE": "varchar(50)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "organization_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('ACTIVE','INACTIVE','GRADUATED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'ACTIVE'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "student_bookstore_fees": {
+            "count": 6951,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "student_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "fee_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('UNPAID','PAID')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'UNPAID'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "paid_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "payment_reference",
+                    "COLUMN_TYPE": "varchar(100)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "remarks",
+                    "COLUMN_TYPE": "text",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "verified_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "verified_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "student_documents": {
+            "count": 0,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "student_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "document_requirement_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "file_path",
+                    "COLUMN_TYPE": "varchar(500)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "original_file_name",
+                    "COLUMN_TYPE": "varchar(255)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "mime_type",
+                    "COLUMN_TYPE": "varchar(100)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "file_size",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('MISSING','SUBMITTED','UNDER_REVIEW','VERIFIED','RETURNED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'MISSING'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "reviewed_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "reviewed_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "return_reason",
+                    "COLUMN_TYPE": "text",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "users": {
+            "count": 2332,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "email",
+                    "COLUMN_TYPE": "varchar(255)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "password_hash",
+                    "COLUMN_TYPE": "varchar(255)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "role",
+                    "COLUMN_TYPE": "enum('STUDENT','ORG_STAFF','DEAN','SASO_STAFF','STUDENT_COUNCIL_STAFF','LIBRARY_STAFF','BOOKSTORE_STAFF','CLINIC_STAFF','FACILITIES_STAFF','COMLAB_STAFF','ACCOUNTING_STAFF','REGISTRAR')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('ACTIVE','INACTIVE')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'ACTIVE'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "last_login_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "user_profile_pictures": {
+            "count": 2,
+            "columns": [
+                {
+                    "COLUMN_NAME": "user_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "stored_name",
+                    "COLUMN_TYPE": "varchar(100)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "mime_type",
+                    "COLUMN_TYPE": "varchar(50)",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        },
+        "violations": {
+            "count": 1,
+            "columns": [
+                {
+                    "COLUMN_NAME": "id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": "auto_increment"
+                },
+                {
+                    "COLUMN_NAME": "student_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "station_id",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "description",
+                    "COLUMN_TYPE": "text",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "proof_reference",
+                    "COLUMN_TYPE": "varchar(255)",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "status",
+                    "COLUMN_TYPE": "enum('OPEN','RESOLVED')",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "'OPEN'",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "recorded_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": null,
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "resolved_by",
+                    "COLUMN_TYPE": "bigint(20) unsigned",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "resolved_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "YES",
+                    "COLUMN_DEFAULT": "NULL",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "created_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": ""
+                },
+                {
+                    "COLUMN_NAME": "updated_at",
+                    "COLUMN_TYPE": "datetime",
+                    "IS_NULLABLE": "NO",
+                    "COLUMN_DEFAULT": "current_timestamp()",
+                    "EXTRA": "on update current_timestamp()"
+                }
+            ]
+        }
+    },
+    "student_sections": [
+        {
+            "category": "N\/A",
+            "count": 2317
+        }
+    ],
+    "foreign_keys": [
+        {
+            "TABLE_NAME": "academic_periods",
+            "COLUMN_NAME": "opened_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "accounting_obligations",
+            "COLUMN_NAME": "cleared_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "accounting_obligations",
+            "COLUMN_NAME": "academic_period_id",
+            "REFERENCED_TABLE_NAME": "academic_periods",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "accounting_obligations",
+            "COLUMN_NAME": "student_id",
+            "REFERENCED_TABLE_NAME": "students",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "accounting_receipts",
+            "COLUMN_NAME": "approved_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "accounting_receipts",
+            "COLUMN_NAME": "issued_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "accounting_receipts",
+            "COLUMN_NAME": "academic_period_id",
+            "REFERENCED_TABLE_NAME": "academic_periods",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "accounting_receipts",
+            "COLUMN_NAME": "student_id",
+            "REFERENCED_TABLE_NAME": "students",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "accounting_receipt_verifications",
+            "COLUMN_NAME": "accounting_receipt_id",
+            "REFERENCED_TABLE_NAME": "accounting_receipts",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "audit_logs",
+            "COLUMN_NAME": "station_id",
+            "REFERENCED_TABLE_NAME": "stations",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "audit_logs",
+            "COLUMN_NAME": "student_id",
+            "REFERENCED_TABLE_NAME": "students",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "audit_logs",
+            "COLUMN_NAME": "user_id",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "bookstore_fees",
+            "COLUMN_NAME": "academic_period_id",
+            "REFERENCED_TABLE_NAME": "academic_periods",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "bookstore_obligations",
+            "COLUMN_NAME": "cleared_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "bookstore_obligations",
+            "COLUMN_NAME": "academic_period_id",
+            "REFERENCED_TABLE_NAME": "academic_periods",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "bookstore_obligations",
+            "COLUMN_NAME": "recorded_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "bookstore_obligations",
+            "COLUMN_NAME": "student_id",
+            "REFERENCED_TABLE_NAME": "students",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "bookstore_receipt_submissions",
+            "COLUMN_NAME": "reviewed_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "bookstore_receipt_submissions",
+            "COLUMN_NAME": "student_fee_id",
+            "REFERENCED_TABLE_NAME": "student_bookstore_fees",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "borrowed_books",
+            "COLUMN_NAME": "recorded_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "borrowed_books",
+            "COLUMN_NAME": "returned_verified_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "borrowed_books",
+            "COLUMN_NAME": "student_id",
+            "REFERENCED_TABLE_NAME": "students",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "ccs_evaluation_completions",
+            "COLUMN_NAME": "clearance_id",
+            "REFERENCED_TABLE_NAME": "clearances",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "ccs_evaluation_completions",
+            "COLUMN_NAME": "recorded_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "clearances",
+            "COLUMN_NAME": "academic_period_id",
+            "REFERENCED_TABLE_NAME": "academic_periods",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "clearances",
+            "COLUMN_NAME": "student_id",
+            "REFERENCED_TABLE_NAME": "students",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "clearance_exceptions",
+            "COLUMN_NAME": "decided_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "clearance_exceptions",
+            "COLUMN_NAME": "requested_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "clearance_exceptions",
+            "COLUMN_NAME": "clearance_station_id",
+            "REFERENCED_TABLE_NAME": "clearance_stations",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "clearance_stations",
+            "COLUMN_NAME": "approved_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "clearance_stations",
+            "COLUMN_NAME": "clearance_id",
+            "REFERENCED_TABLE_NAME": "clearances",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "clearance_stations",
+            "COLUMN_NAME": "returned_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "clearance_stations",
+            "COLUMN_NAME": "station_id",
+            "REFERENCED_TABLE_NAME": "stations",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "clearance_station_signatures",
+            "COLUMN_NAME": "clearance_station_id",
+            "REFERENCED_TABLE_NAME": "clearance_stations",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "clearance_station_signatures",
+            "COLUMN_NAME": "approved_by_user_id",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "clinic_medical_appointments",
+            "COLUMN_NAME": "academic_period_id",
+            "REFERENCED_TABLE_NAME": "academic_periods",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "clinic_medical_appointments",
+            "COLUMN_NAME": "schedule_id",
+            "REFERENCED_TABLE_NAME": "clinic_medical_schedules",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "clinic_medical_appointments",
+            "COLUMN_NAME": "student_id",
+            "REFERENCED_TABLE_NAME": "students",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "clinic_medical_schedules",
+            "COLUMN_NAME": "created_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "clinic_medical_schedules",
+            "COLUMN_NAME": "academic_period_id",
+            "REFERENCED_TABLE_NAME": "academic_periods",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "document_requirements",
+            "COLUMN_NAME": "academic_period_id",
+            "REFERENCED_TABLE_NAME": "academic_periods",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "events",
+            "COLUMN_NAME": "academic_period_id",
+            "REFERENCED_TABLE_NAME": "academic_periods",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "events",
+            "COLUMN_NAME": "created_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "events",
+            "COLUMN_NAME": "organization_id",
+            "REFERENCED_TABLE_NAME": "organizations",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "events",
+            "COLUMN_NAME": "station_id",
+            "REFERENCED_TABLE_NAME": "stations",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "event_attendance",
+            "COLUMN_NAME": "sanction_verified_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "event_attendance",
+            "COLUMN_NAME": "event_id",
+            "REFERENCED_TABLE_NAME": "events",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "event_attendance",
+            "COLUMN_NAME": "recorded_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "event_attendance",
+            "COLUMN_NAME": "student_id",
+            "REFERENCED_TABLE_NAME": "students",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "event_sanctions",
+            "COLUMN_NAME": "event_id",
+            "REFERENCED_TABLE_NAME": "events",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "event_sanctions",
+            "COLUMN_NAME": "student_id",
+            "REFERENCED_TABLE_NAME": "students",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "event_sanctions",
+            "COLUMN_NAME": "monitor_user_id",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "event_sanctions",
+            "COLUMN_NAME": "resolved_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "event_sanction_policies",
+            "COLUMN_NAME": "event_id",
+            "REFERENCED_TABLE_NAME": "events",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "event_sanction_policies",
+            "COLUMN_NAME": "monitor_user_id",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "event_sanction_policies",
+            "COLUMN_NAME": "created_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "facilities_obligations",
+            "COLUMN_NAME": "academic_period_id",
+            "REFERENCED_TABLE_NAME": "academic_periods",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "facilities_obligations",
+            "COLUMN_NAME": "recorded_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "facilities_obligations",
+            "COLUMN_NAME": "returned_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "facilities_obligations",
+            "COLUMN_NAME": "student_id",
+            "REFERENCED_TABLE_NAME": "students",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "library_cards",
+            "COLUMN_NAME": "student_id",
+            "REFERENCED_TABLE_NAME": "students",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "library_cards",
+            "COLUMN_NAME": "verified_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "library_card_submissions",
+            "COLUMN_NAME": "library_card_id",
+            "REFERENCED_TABLE_NAME": "library_cards",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "library_card_submissions",
+            "COLUMN_NAME": "reviewed_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "medical_requirements",
+            "COLUMN_NAME": "academic_period_id",
+            "REFERENCED_TABLE_NAME": "academic_periods",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "medical_requirements",
+            "COLUMN_NAME": "student_id",
+            "REFERENCED_TABLE_NAME": "students",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "medical_requirements",
+            "COLUMN_NAME": "verified_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "notifications",
+            "COLUMN_NAME": "academic_period_id",
+            "REFERENCED_TABLE_NAME": "academic_periods",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "notifications",
+            "COLUMN_NAME": "user_id",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "office_period_readiness",
+            "COLUMN_NAME": "academic_period_id",
+            "REFERENCED_TABLE_NAME": "academic_periods",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "office_period_readiness",
+            "COLUMN_NAME": "ready_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "office_period_readiness",
+            "COLUMN_NAME": "station_id",
+            "REFERENCED_TABLE_NAME": "stations",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "requirements",
+            "COLUMN_NAME": "applicable_organization_id",
+            "REFERENCED_TABLE_NAME": "organizations",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "requirements",
+            "COLUMN_NAME": "station_id",
+            "REFERENCED_TABLE_NAME": "stations",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "requirement_records",
+            "COLUMN_NAME": "clearance_station_id",
+            "REFERENCED_TABLE_NAME": "clearance_stations",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "requirement_records",
+            "COLUMN_NAME": "requirement_id",
+            "REFERENCED_TABLE_NAME": "requirements",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "requirement_records",
+            "COLUMN_NAME": "verified_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "sanction_submissions",
+            "COLUMN_NAME": "student_id",
+            "REFERENCED_TABLE_NAME": "students",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "sanction_submissions",
+            "COLUMN_NAME": "academic_period_id",
+            "REFERENCED_TABLE_NAME": "academic_periods",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "sanction_submissions",
+            "COLUMN_NAME": "station_id",
+            "REFERENCED_TABLE_NAME": "stations",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "sanction_submissions",
+            "COLUMN_NAME": "organization_id",
+            "REFERENCED_TABLE_NAME": "organizations",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "sanction_submissions",
+            "COLUMN_NAME": "reviewed_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "sanction_submission_items",
+            "COLUMN_NAME": "submission_id",
+            "REFERENCED_TABLE_NAME": "sanction_submissions",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "sanction_submission_items",
+            "COLUMN_NAME": "sanction_id",
+            "REFERENCED_TABLE_NAME": "event_sanctions",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "semester_enrollments",
+            "COLUMN_NAME": "enrolled_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "semester_enrollments",
+            "COLUMN_NAME": "academic_period_id",
+            "REFERENCED_TABLE_NAME": "academic_periods",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "semester_enrollments",
+            "COLUMN_NAME": "removed_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "semester_enrollments",
+            "COLUMN_NAME": "student_id",
+            "REFERENCED_TABLE_NAME": "students",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "staff_assignments",
+            "COLUMN_NAME": "organization_id",
+            "REFERENCED_TABLE_NAME": "organizations",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "staff_assignments",
+            "COLUMN_NAME": "station_id",
+            "REFERENCED_TABLE_NAME": "stations",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "staff_assignments",
+            "COLUMN_NAME": "user_id",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "staff_saved_signatures",
+            "COLUMN_NAME": "user_id",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "staff_signatures",
+            "COLUMN_NAME": "saved_signature_id",
+            "REFERENCED_TABLE_NAME": "staff_saved_signatures",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "staff_signatures",
+            "COLUMN_NAME": "user_id",
+            "REFERENCED_TABLE_NAME": "staff_saved_signatures",
+            "REFERENCED_COLUMN_NAME": "user_id"
+        },
+        {
+            "TABLE_NAME": "staff_signatures",
+            "COLUMN_NAME": "user_id",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "staff_signature_recoveries",
+            "COLUMN_NAME": "academic_period_id",
+            "REFERENCED_TABLE_NAME": "academic_periods",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "staff_signature_recoveries",
+            "COLUMN_NAME": "authorized_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "staff_signature_recoveries",
+            "COLUMN_NAME": "user_id",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "stations",
+            "COLUMN_NAME": "parent_station_id",
+            "REFERENCED_TABLE_NAME": "stations",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "students",
+            "COLUMN_NAME": "organization_id",
+            "REFERENCED_TABLE_NAME": "organizations",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "students",
+            "COLUMN_NAME": "user_id",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "student_bookstore_fees",
+            "COLUMN_NAME": "fee_id",
+            "REFERENCED_TABLE_NAME": "bookstore_fees",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "student_bookstore_fees",
+            "COLUMN_NAME": "student_id",
+            "REFERENCED_TABLE_NAME": "students",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "student_bookstore_fees",
+            "COLUMN_NAME": "verified_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "student_documents",
+            "COLUMN_NAME": "document_requirement_id",
+            "REFERENCED_TABLE_NAME": "document_requirements",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "student_documents",
+            "COLUMN_NAME": "reviewed_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "student_documents",
+            "COLUMN_NAME": "student_id",
+            "REFERENCED_TABLE_NAME": "students",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "user_profile_pictures",
+            "COLUMN_NAME": "user_id",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "violations",
+            "COLUMN_NAME": "recorded_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "violations",
+            "COLUMN_NAME": "resolved_by",
+            "REFERENCED_TABLE_NAME": "users",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "violations",
+            "COLUMN_NAME": "station_id",
+            "REFERENCED_TABLE_NAME": "stations",
+            "REFERENCED_COLUMN_NAME": "id"
+        },
+        {
+            "TABLE_NAME": "violations",
+            "COLUMN_NAME": "student_id",
+            "REFERENCED_TABLE_NAME": "students",
+            "REFERENCED_COLUMN_NAME": "id"
+        }
+    ]
+}

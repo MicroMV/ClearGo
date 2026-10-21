@@ -36,7 +36,7 @@ function libraryBookStudent(PDO $database, int $organizationId, int $periodId): 
     $database->prepare("INSERT INTO users(email,password_hash,role,status) VALUES (?,?,'STUDENT','ACTIVE')")->execute([$email, password_hash('Synthetic-Only-2026!', PASSWORD_DEFAULT)]);
     $userId = (int) $database->lastInsertId();
     $number = 'BOOKS-' . $token;
-    $database->prepare("INSERT INTO students(user_id,student_number,first_name,last_name,program,year_level,section,organization_id,status) VALUES (?,?,'Synthetic','Library Test','Test Program',2,'QA',?,'ACTIVE')")->execute([$userId, $number, $organizationId]);
+    $database->prepare("INSERT INTO students(user_id,student_number,first_name,last_name,program,year_level,organization_id,status) VALUES (?,?,'Synthetic','Library Test','Test Program',2,?,'ACTIVE')")->execute([$userId, $number, $organizationId]);
     $studentId = (int) $database->lastInsertId();
     $database->prepare("INSERT INTO semester_enrollments(academic_period_id,student_id,status) VALUES (?,?,'ENROLLED')")->execute([$periodId, $studentId]);
     $started = startStudentClearance($database, $userId); $clearanceId = (int) $started['clearance']['id'];
@@ -58,7 +58,7 @@ function libraryBookHttp(CurlHandle $client, string $path, ?array $post = null):
 
 function libraryBookLogin(string $email): array
 {
-    global $clients;
+    global $clients, $base;
     $handle = curl_init();
     curl_setopt_array($handle, [CURLOPT_COOKIEFILE => '', CURLOPT_FOLLOWLOCATION => false, CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 5]);
     $page = libraryBookHttp($handle, '/login.php');
@@ -66,6 +66,8 @@ function libraryBookLogin(string $email): array
     $client = ['handle' => $handle, 'csrf' => html_entity_decode($match[1])]; $clients[] = $client;
     $response = libraryBookHttp($handle, '/auth/login_process.php', ['csrf_token' => $client['csrf'], 'email' => $email, 'password' => 'Synthetic-Only-2026!']);
     if ($response['status'] !== 303) { throw new RuntimeException('Synthetic login failed.'); }
+    require_once __DIR__ . '/support/http_fixture.php';
+    $client['csrf'] = signedInFixtureCsrf($handle, $base); $clients[array_key_last($clients)] = $client;
     return $client;
 }
 
@@ -80,6 +82,8 @@ try {
     $database->exec('SET FOREIGN_KEY_CHECKS=1');
     $database->prepare("INSERT INTO users(email,password_hash,role,status) VALUES ('library-books-test@thelewiscollege.edu.ph',?,'LIBRARY_STAFF','ACTIVE')")->execute([password_hash('Synthetic-Only-2026!', PASSWORD_DEFAULT)]);
     $staffId = (int) $database->lastInsertId();
+    require_once __DIR__ . '/../auth/signature_functions.php';
+    saveStaffSignature($database, ['id' => $staffId, 'role' => 'LIBRARY_STAFF'], 'Synthetic Library', 'Office signatory', '[[[0.1,0.4],[0.5,0.7]]]');
     $organizationId = (int) $database->query("SELECT id FROM organizations WHERE code='CCS'")->fetchColumn();
     $database->exec("INSERT INTO academic_periods(school_year,semester,status,clearance_status) VALUES ('2098-2099','1ST','ACTIVE','OPEN')");
     $periodId = (int) $database->lastInsertId();
@@ -98,8 +102,6 @@ try {
     libraryBookCheck(!$eligibility['eligible'] && count($eligibility['outstanding_books']) === 2, 'A verified card cannot clear two outstanding books from an earlier date.');
     libraryBookCheck(str_contains(implode(' ', $eligibility['details']), 'Synthetic Library <Book> & QA'), 'Eligibility explains which books remain outstanding.');
     libraryBookCheck(officeEligibility($database, 'LIBRARY', officeClearanceContext($database, 'LIBRARY', $ready['clearance_id']))['eligible'], 'Returned books and another student borrowing do not block eligibility.');
-    $database->prepare("INSERT INTO clearance_exceptions(clearance_station_id,reason,proof_reference,status,requested_by,decided_by,decided_at) VALUES (?,'Synthetic exception','QA','APPROVED',?,?,NOW())")->execute([$context['clearance_station_id'], $staffId, $staffId]);
-    libraryBookCheck(!officeEligibility($database, 'LIBRARY', $context)['eligible'], 'An approved exception cannot waive unreturned books.');
     libraryBookBlocked(fn() => approveOfficeClearance($database, 'LIBRARY', $student['clearance_id'], $staffId), 'Generic individual approval rejects outstanding books.');
     libraryBookBlocked(fn() => approveOfficeClearance($database, 'LIBRARY', $student['clearance_id'], $staffId, null, true), 'Ready-only approval rechecks book returns.');
     libraryBookBlocked(fn() => clearLibraryClearance($database, $student['clearance_id'], $staffId), 'Physical-card direct clearance cannot bypass outstanding books.');

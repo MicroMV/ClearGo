@@ -1,0 +1,10 @@
+{
+    "remaining_test_schemas": [],
+    "school_tables": 47,
+    "new_auth_table_rows": {
+        "auth_rate_limits": 0,
+        "auth_remember_tokens": 0,
+        "student_password_resets": 0,
+        "auth_mail_queue": 0
+    }
+}

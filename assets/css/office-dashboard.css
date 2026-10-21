@@ -406,7 +406,7 @@
         }
 
         .workbook-panel {
-                border-top: 3px solid var(--blue)
+                border-top: 1px solid var(--line)
         }
 
         .workbook-grid {

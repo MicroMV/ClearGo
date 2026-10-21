@@ -58,10 +58,7 @@ try {
     $periodId = (int) $context['academic_period_id'];
     ensureOfficeSourceRecords($database, $studentId, $periodId);
 
-    if ($action === 'manual_accounting_clear' && $config['code'] === 'ACCOUNTING') {
-        manuallyClearAccounting($database, $clearanceId, $user['id']);
-        setFlashMessage('Accounting manually cleared ' . $context['student_name'] . '.');
-    } elseif ($action === 'registrar_clear' && $config['code'] === 'REGISTRAR') {
+    if ($action === 'registrar_clear' && $config['code'] === 'REGISTRAR') {
         finalizeRegistrarClearance($database, $clearanceId, $user['id']);
         setFlashMessage('Registrar completed clearance for ' . $context['student_name'] . '.');
     } elseif ($action === 'clinic_clear' && $config['code'] === 'CLINIC') {
@@ -217,9 +214,20 @@ try {
         if ($description === '' || $amount === false || $amount < 0) {
             throw new RuntimeException('Enter a valid obligation and amount.');
         }
-        $statement = $database->prepare("INSERT INTO accounting_obligations (student_id,academic_period_id,description,amount,status,remarks) VALUES (:student_id,:period_id,:description,:amount,'UNPAID',:remarks)");
-        $statement->execute(['student_id' => $studentId, 'period_id' => $periodId, 'description' => $description, 'amount' => $amount, 'remarks' => trim((string) ($_POST['remarks'] ?? '')) ?: null]);
-        officeMutationNotice($database, $context, $user['id'], 'Accounting recorded a financial obligation: ' . $description . '.');
+        $database->beginTransaction();
+        try {
+            $context = officeClearanceContext($database, 'ACCOUNTING', $clearanceId, true);
+            if ($context['station_status'] === 'APPROVED' || !in_array($context['clearance_status'], ['PREPARING', 'OPEN'], true)) {
+                throw new RuntimeException('Financial obligations cannot be added to an already cleared or closed record.');
+            }
+            $statement = $database->prepare("INSERT INTO accounting_obligations (student_id,academic_period_id,description,amount,status,remarks) VALUES (:student_id,:period_id,:description,:amount,'UNPAID',:remarks)");
+            $statement->execute(['student_id' => $studentId, 'period_id' => $periodId, 'description' => $description, 'amount' => $amount, 'remarks' => trim((string) ($_POST['remarks'] ?? '')) ?: null]);
+            officeMutationNotice($database, $context, $user['id'], 'Accounting recorded a financial obligation: ' . $description . '.');
+            $database->commit();
+        } catch (Throwable $exception) {
+            if ($database->inTransaction()) { $database->rollBack(); }
+            throw $exception;
+        }
         setFlashMessage('Financial obligation added.');
     } elseif ($action === 'register_accounting_receipt' && $config['code'] === 'ACCOUNTING') {
         $receiptCode = strtoupper(trim((string) ($_POST['receipt_code'] ?? '')));
@@ -250,17 +258,6 @@ try {
         }
         officeMutationNotice($database, $context, $user['id'], 'Accounting verified a settled financial obligation.');
         setFlashMessage('Financial obligation cleared.');
-    } elseif ($action === 'approve_exception' && $config['code'] === 'ACCOUNTING') {
-        $reason = trim((string) ($_POST['reason'] ?? ''));
-        $proof = trim((string) ($_POST['proof_reference'] ?? ''));
-        $expires = trim((string) ($_POST['expires_at'] ?? ''));
-        if ($reason === '' || $proof === '') {
-            throw new RuntimeException('Enter the approved reason and proof or promissory-note reference.');
-        }
-        $statement = $database->prepare("INSERT INTO clearance_exceptions (clearance_station_id,reason,proof_reference,status,requested_by,decided_by,decided_at,expires_at) VALUES (:station_id,:reason,:proof,'APPROVED',:user_id,:user_id,NOW(),:expires_at)");
-        $statement->execute(['station_id' => $context['clearance_station_id'], 'reason' => $reason, 'proof' => $proof, 'user_id' => $user['id'], 'expires_at' => $expires !== '' ? $expires . ' 23:59:59' : null]);
-        officeMutationNotice($database, $context, $user['id'], $context['station_name'] . ' approved a temporary exception: ' . $reason);
-        setFlashMessage('Temporary exception approved and audited.');
     } else {
         throw new RuntimeException('That action is not available for this office.');
     }

@@ -33,8 +33,9 @@ $sidebar = registrarDashboardSidebar($user, 'import', $logoutForm);
 <!doctype html>
 <html lang="en">
 
-<head><?= connectionStatusAssets() ?>
+<head>
     <meta charset="utf-8">
+    <?= connectionStatusAssets() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Student Data Import | ClearGo</title>
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/registrar-student-import.css')) ?>?v=<?= escapeHtml($importStylesVersion) ?>">

@@ -1,0 +1,253 @@
+{
+  "checks": [
+    {
+      "name": "1280px student page fits screen",
+      "passed": true
+    },
+    {
+      "name": "1280px separate office submissions",
+      "passed": true
+    },
+    {
+      "name": "1280px each form requires exactly Before and After",
+      "passed": true
+    },
+    {
+      "name": "1280px each form blocks missing photos",
+      "passed": true
+    },
+    {
+      "name": "1280px file controls stay inside cards",
+      "passed": true
+    },
+    {
+      "name": "1280px staff page fits screen",
+      "passed": true
+    },
+    {
+      "name": "1280px both proof photos load",
+      "passed": true
+    },
+    {
+      "name": "1280px work confirmation and correction actions exist",
+      "passed": true
+    },
+    {
+      "name": "1280px submissions sidebar item is selected",
+      "passed": true
+    },
+    {
+      "name": "1280px photo layout fits review card",
+      "passed": true
+    },
+    {
+      "name": "1280px policy setup fits the screen",
+      "passed": true
+    },
+    {
+      "name": "1280px sanction setup is on the submissions page",
+      "passed": true
+    },
+    {
+      "name": "1280px policy requires work, hours and assigned monitor",
+      "passed": true
+    },
+    {
+      "name": "1280px incomplete policy is blocked",
+      "passed": true
+    },
+    {
+      "name": "1280px saved policy has Edit and protected Delete",
+      "passed": true
+    },
+    {
+      "name": "1280px saved policy controls fit screen",
+      "passed": true
+    },
+    {
+      "name": "1280px Edit opens prefilled fields",
+      "passed": true
+    },
+    {
+      "name": "1280px edit policy form fits screen",
+      "passed": true
+    },
+    {
+      "name": "1280px Ready policy has no mutation controls",
+      "passed": true
+    },
+    {
+      "name": "1280px Ready policy fits screen",
+      "passed": true
+    },
+    {
+      "name": "390px student page fits screen",
+      "passed": true
+    },
+    {
+      "name": "390px separate office submissions",
+      "passed": true
+    },
+    {
+      "name": "390px each form requires exactly Before and After",
+      "passed": true
+    },
+    {
+      "name": "390px each form blocks missing photos",
+      "passed": true
+    },
+    {
+      "name": "390px file controls stay inside cards",
+      "passed": true
+    },
+    {
+      "name": "390px staff page fits screen",
+      "passed": true
+    },
+    {
+      "name": "390px both proof photos load",
+      "passed": true
+    },
+    {
+      "name": "390px work confirmation and correction actions exist",
+      "passed": true
+    },
+    {
+      "name": "390px submissions sidebar item is selected",
+      "passed": true
+    },
+    {
+      "name": "390px photo layout fits review card",
+      "passed": true
+    },
+    {
+      "name": "390px policy setup fits the screen",
+      "passed": true
+    },
+    {
+      "name": "390px sanction setup is on the submissions page",
+      "passed": true
+    },
+    {
+      "name": "390px policy requires work, hours and assigned monitor",
+      "passed": true
+    },
+    {
+      "name": "390px incomplete policy is blocked",
+      "passed": true
+    },
+    {
+      "name": "390px saved policy has Edit and protected Delete",
+      "passed": true
+    },
+    {
+      "name": "390px saved policy controls fit screen",
+      "passed": true
+    },
+    {
+      "name": "390px Edit opens prefilled fields",
+      "passed": true
+    },
+    {
+      "name": "390px edit policy form fits screen",
+      "passed": true
+    },
+    {
+      "name": "390px Ready policy has no mutation controls",
+      "passed": true
+    },
+    {
+      "name": "390px Ready policy fits screen",
+      "passed": true
+    },
+    {
+      "name": "320px student page fits screen",
+      "passed": true
+    },
+    {
+      "name": "320px separate office submissions",
+      "passed": true
+    },
+    {
+      "name": "320px each form requires exactly Before and After",
+      "passed": true
+    },
+    {
+      "name": "320px each form blocks missing photos",
+      "passed": true
+    },
+    {
+      "name": "320px file controls stay inside cards",
+      "passed": true
+    },
+    {
+      "name": "320px staff page fits screen",
+      "passed": true
+    },
+    {
+      "name": "320px both proof photos load",
+      "passed": true
+    },
+    {
+      "name": "320px work confirmation and correction actions exist",
+      "passed": true
+    },
+    {
+      "name": "320px submissions sidebar item is selected",
+      "passed": true
+    },
+    {
+      "name": "320px photo layout fits review card",
+      "passed": true
+    },
+    {
+      "name": "320px policy setup fits the screen",
+      "passed": true
+    },
+    {
+      "name": "320px sanction setup is on the submissions page",
+      "passed": true
+    },
+    {
+      "name": "320px policy requires work, hours and assigned monitor",
+      "passed": true
+    },
+    {
+      "name": "320px incomplete policy is blocked",
+      "passed": true
+    },
+    {
+      "name": "320px saved policy has Edit and protected Delete",
+      "passed": true
+    },
+    {
+      "name": "320px saved policy controls fit screen",
+      "passed": true
+    },
+    {
+      "name": "320px Edit opens prefilled fields",
+      "passed": true
+    },
+    {
+      "name": "320px edit policy form fits screen",
+      "passed": true
+    },
+    {
+      "name": "320px Ready policy has no mutation controls",
+      "passed": true
+    },
+    {
+      "name": "320px Ready policy fits screen",
+      "passed": true
+    },
+    {
+      "name": "Returned proof displays feedback and resubmission",
+      "passed": true
+    },
+    {
+      "name": "Pending proof cannot be overwritten through another upload form",
+      "passed": true
+    }
+  ],
+  "errors": []
+}

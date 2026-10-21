@@ -1,0 +1,62 @@
+[
+  {
+    "file": "ccs_completion_workbook_test.php",
+    "status": "PASS",
+    "ms": 44252,
+    "tail": [
+      "PASS: An expired recovery grant cannot unlock setup.",
+      "PASS: Drawing and saving a signature also completes one-time recovery.",
+      "PASS: Recovery authorization and completion are audited separately with the correct actors.",
+      "PASS: A recovery grant from a different semester cannot unlock setup.",
+      "All 244 CCS Excel completion and unrestricted clearing checks passed."
+    ]
+  },
+  {
+    "file": "signature_pad_browser_test.mjs",
+    "status": "PASS",
+    "ms": 8353,
+    "tail": [
+      "All 92 signature drawing browser checks passed."
+    ]
+  },
+  {
+    "file": "clearance_preview_browser_test.mjs",
+    "status": "FAIL",
+    "ms": 6438,
+    "tail": [
+      "Error: 1280px reopening shows loading feedback again {\"focus\":\"<button type=\\\"button\\\" data-close-clearance-preview=\\\"\\\" aria-label=\\\"Close clearance preview\\\" autofocus=\\\"\\\">×</button>\",\"frame\":\"about:blank\"}",
+      "    at check (file:///C:/xamppl/htdocs/ClearGo/.tmp/deployment-audit-2026-10-20/app/tests/clearance_preview_browser_test.mjs:58:140)",
+      "    at async file:///C:/xamppl/htdocs/ClearGo/.tmp/deployment-audit-2026-10-20/app/tests/clearance_preview_browser_test.mjs:119:9",
+      "",
+      "Node.js v22.18.0"
+    ]
+  },
+  {
+    "file": "clearance_live_browser_test.mjs",
+    "status": "PASS",
+    "ms": 2496,
+    "tail": [
+      "All 22 live-clearance browser checks passed."
+    ]
+  },
+  {
+    "file": "attendance_sanctions_browser_test.mjs",
+    "status": "PASS",
+    "ms": 5288,
+    "tail": [
+      "All 62 attendance sanction browser checks passed."
+    ]
+  },
+  {
+    "file": "pwa_browser_test.mjs",
+    "status": "PASS",
+    "ms": 2561,
+    "tail": [
+      "PASS: Offline POST is rejected instead of queued or replaced with cached success",
+      "PASS: Offline navigation displays the public fallback with resolved paths",
+      "PASS: College logo loads while offline",
+      "PASS: Retry recovers to login without a stale authenticated page",
+      "All 19 PWA browser checks passed."
+    ]
+  }
+]

@@ -1,0 +1,356 @@
+{
+    "database": "lewis_clearance",
+    "backup": "storage\/backups\/debug-console\/debug-20261020-222030-470c9ecb1a75dce2.sql.gz",
+    "backup_bytes": 1335167,
+    "section_removed": true,
+    "retired_table_removed": true,
+    "all_retained_data_unchanged": true,
+    "before": {
+        "academic_periods": {
+            "rows": 2,
+            "sha256": "99f8ed03039ceb14719274c91b6bbaa8b4beabcf32df070d29df0788bf76d686"
+        },
+        "accounting_obligations": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "accounting_receipts": {
+            "rows": 1,
+            "sha256": "d4c9e07a5c3067800ce6b6a1b78caf4bc29b6305b64bf089a633c454b65a3681"
+        },
+        "audit_logs": {
+            "rows": 8674,
+            "sha256": "778455f76ef2cc5f20041e303460ecbc35f3ae33c2594794d2d3aa9f03f0ffc8"
+        },
+        "bookstore_fees": {
+            "rows": 3,
+            "sha256": "84976adf50a1feb03cced294a45ea32444dc6ed715bdac4acf65044c36acd66d"
+        },
+        "bookstore_obligations": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "bookstore_receipt_submissions": {
+            "rows": 1,
+            "sha256": "95ac356154cad8d7c42baae8d6153aa59db600b96149d4e7759cfd8b57d78e2d"
+        },
+        "borrowed_books": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "ccs_evaluation_completions": {
+            "rows": 439,
+            "sha256": "f2611ae7bad930acced1b37d194d5e1c77aa993675224eaefbeb0ed9fe42c771"
+        },
+        "clearance_exceptions": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "clearance_station_signatures": {
+            "rows": 36,
+            "sha256": "230bb004e73b837e0f9b911795eaa9fa569030a00a9d7514f1a7d1eb27c133af"
+        },
+        "clearance_stations": {
+            "rows": 50974,
+            "sha256": "ddd14a529598bdb52a4faf6550dbefb1e4b518f6430897247bdd3989bb5f3001"
+        },
+        "clearances": {
+            "rows": 4634,
+            "sha256": "39e0d4f770bde582b602cf9432eee8b20e44b7493103d9640b411be9d7e85d46"
+        },
+        "clinic_medical_appointments": {
+            "rows": 1,
+            "sha256": "132cc35bc1a4bbcdc19be7f9c282ebc77f56b52486c28354b4886ac22488e589"
+        },
+        "clinic_medical_schedules": {
+            "rows": 1,
+            "sha256": "9d1c3d0360888a6cc96190ac093fef06fe663e0d5d6f14e6fb2a312be078ab7f"
+        },
+        "document_requirements": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "event_attendance": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "event_sanction_policies": {
+            "rows": 1,
+            "sha256": "7dc4b35b3819461b282f36ebcd3c49762166b978786c3e15915212d9172703f5"
+        },
+        "event_sanctions": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "events": {
+            "rows": 5,
+            "sha256": "2c6c19ebaacab8dcb5c0705e173b41384fa7b96ad8efa81a55e68587c1ae00c2"
+        },
+        "facilities_obligations": {
+            "rows": 344,
+            "sha256": "0becd1dadd90aa5eabc36050bde71a08ecbbad84f5823c2cdc2a83e6dd8358d1"
+        },
+        "library_card_submissions": {
+            "rows": 1,
+            "sha256": "2f3f9bc592e29797f3a9139c1ad82d9da7c9b40884446ad007c28e3d020cdb8c"
+        },
+        "library_cards": {
+            "rows": 2317,
+            "sha256": "6f2dd51d98f9da43cef6abbb5efd93a968f0fe2f57af6c2f2ad70564a41de0d4"
+        },
+        "medical_requirements": {
+            "rows": 4634,
+            "sha256": "b9dc5f33fa69125b72db4d8b1d1d6bbc21953037818cc59d8df8343ba4dea4a6"
+        },
+        "notifications": {
+            "rows": 18814,
+            "sha256": "8f2c3bcf59069a43b0ab70bfb2ecdcba517006865d8458c425e6080e535ee900"
+        },
+        "office_period_readiness": {
+            "rows": 20,
+            "sha256": "0d1d9dce170715a968f55db0619ebaf9c721cd3e7d2f2fb0ff7bc1aa19b4a2eb"
+        },
+        "organizations": {
+            "rows": 3,
+            "sha256": "0a690cc1711268769bd636b46560fca88d139c7cc6f9052c8793c6e77dd11481"
+        },
+        "requirement_records": {
+            "rows": 57674,
+            "sha256": "b619662b0bbb67b275e3180801bb610c4b0f90055126cc354325def805dbcf67"
+        },
+        "requirements": {
+            "rows": 17,
+            "sha256": "97c5ac5743080881185283f2e53ad705bf2ef7f4a6178465dc54b4d49d0a916a"
+        },
+        "sanction_submission_items": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "sanction_submissions": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "semester_enrollments": {
+            "rows": 4634,
+            "sha256": "60a446f1250bee44ba8f622b26bde9c5694d56ae2b2f1f4d96bb2fd20fba8802"
+        },
+        "staff_assignments": {
+            "rows": 6,
+            "sha256": "c1830d9c57ad7fbeeaa06b4ab73497444ad09c037379ff5e0d9d655974f4afbb"
+        },
+        "staff_saved_signatures": {
+            "rows": 6,
+            "sha256": "9f8aee21f4a86147df0ca762f09a1d0e3f74e8c9dd9857afe4d980c5abf40941"
+        },
+        "staff_signature_recoveries": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "staff_signatures": {
+            "rows": 4,
+            "sha256": "3c8886e88e36cf6bed2396c8b86e5dc998f8f9ad3763312251123c46f6912c0c"
+        },
+        "stations": {
+            "rows": 11,
+            "sha256": "b12bcf675399b487b3fb9a554ab741e067e68d1766778e9bad17ea3a2849b716"
+        },
+        "student_bookstore_fees": {
+            "rows": 6951,
+            "sha256": "fc20ee1407bb7f55c8aeac3389c66fbb5df53d9a8146b5f3a98ea02cbe08353e"
+        },
+        "student_documents": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "students": {
+            "rows": 2317,
+            "sha256": "ab6e107114438b6ed7bc97b12f1120b4bd97d27fde3daba93e53c7b6a93dad01"
+        },
+        "user_profile_pictures": {
+            "rows": 2,
+            "sha256": "6c56f385b2091599d3eb73e4438923c4dad37bde1ce06841dcd5ad00ea6382b4"
+        },
+        "users": {
+            "rows": 2332,
+            "sha256": "c66be05779d7dec7bb5a447949b2695cfe8d66005b3947151462009c233768ba"
+        },
+        "violations": {
+            "rows": 1,
+            "sha256": "c168bd4e32b549d6d7b089378b0f6efa2fbc0dbf74757ecd2a73bd07ba09cb9f"
+        }
+    },
+    "after": {
+        "academic_periods": {
+            "rows": 2,
+            "sha256": "99f8ed03039ceb14719274c91b6bbaa8b4beabcf32df070d29df0788bf76d686"
+        },
+        "accounting_obligations": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "accounting_receipts": {
+            "rows": 1,
+            "sha256": "d4c9e07a5c3067800ce6b6a1b78caf4bc29b6305b64bf089a633c454b65a3681"
+        },
+        "audit_logs": {
+            "rows": 8674,
+            "sha256": "778455f76ef2cc5f20041e303460ecbc35f3ae33c2594794d2d3aa9f03f0ffc8"
+        },
+        "bookstore_fees": {
+            "rows": 3,
+            "sha256": "84976adf50a1feb03cced294a45ea32444dc6ed715bdac4acf65044c36acd66d"
+        },
+        "bookstore_obligations": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "bookstore_receipt_submissions": {
+            "rows": 1,
+            "sha256": "95ac356154cad8d7c42baae8d6153aa59db600b96149d4e7759cfd8b57d78e2d"
+        },
+        "borrowed_books": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "ccs_evaluation_completions": {
+            "rows": 439,
+            "sha256": "f2611ae7bad930acced1b37d194d5e1c77aa993675224eaefbeb0ed9fe42c771"
+        },
+        "clearance_exceptions": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "clearance_station_signatures": {
+            "rows": 36,
+            "sha256": "230bb004e73b837e0f9b911795eaa9fa569030a00a9d7514f1a7d1eb27c133af"
+        },
+        "clearance_stations": {
+            "rows": 50974,
+            "sha256": "ddd14a529598bdb52a4faf6550dbefb1e4b518f6430897247bdd3989bb5f3001"
+        },
+        "clearances": {
+            "rows": 4634,
+            "sha256": "39e0d4f770bde582b602cf9432eee8b20e44b7493103d9640b411be9d7e85d46"
+        },
+        "clinic_medical_appointments": {
+            "rows": 1,
+            "sha256": "132cc35bc1a4bbcdc19be7f9c282ebc77f56b52486c28354b4886ac22488e589"
+        },
+        "clinic_medical_schedules": {
+            "rows": 1,
+            "sha256": "9d1c3d0360888a6cc96190ac093fef06fe663e0d5d6f14e6fb2a312be078ab7f"
+        },
+        "document_requirements": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "event_attendance": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "event_sanction_policies": {
+            "rows": 1,
+            "sha256": "7dc4b35b3819461b282f36ebcd3c49762166b978786c3e15915212d9172703f5"
+        },
+        "event_sanctions": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "events": {
+            "rows": 5,
+            "sha256": "2c6c19ebaacab8dcb5c0705e173b41384fa7b96ad8efa81a55e68587c1ae00c2"
+        },
+        "facilities_obligations": {
+            "rows": 344,
+            "sha256": "0becd1dadd90aa5eabc36050bde71a08ecbbad84f5823c2cdc2a83e6dd8358d1"
+        },
+        "library_card_submissions": {
+            "rows": 1,
+            "sha256": "2f3f9bc592e29797f3a9139c1ad82d9da7c9b40884446ad007c28e3d020cdb8c"
+        },
+        "library_cards": {
+            "rows": 2317,
+            "sha256": "6f2dd51d98f9da43cef6abbb5efd93a968f0fe2f57af6c2f2ad70564a41de0d4"
+        },
+        "medical_requirements": {
+            "rows": 4634,
+            "sha256": "b9dc5f33fa69125b72db4d8b1d1d6bbc21953037818cc59d8df8343ba4dea4a6"
+        },
+        "notifications": {
+            "rows": 18814,
+            "sha256": "8f2c3bcf59069a43b0ab70bfb2ecdcba517006865d8458c425e6080e535ee900"
+        },
+        "office_period_readiness": {
+            "rows": 20,
+            "sha256": "0d1d9dce170715a968f55db0619ebaf9c721cd3e7d2f2fb0ff7bc1aa19b4a2eb"
+        },
+        "organizations": {
+            "rows": 3,
+            "sha256": "0a690cc1711268769bd636b46560fca88d139c7cc6f9052c8793c6e77dd11481"
+        },
+        "requirement_records": {
+            "rows": 57674,
+            "sha256": "b619662b0bbb67b275e3180801bb610c4b0f90055126cc354325def805dbcf67"
+        },
+        "requirements": {
+            "rows": 17,
+            "sha256": "97c5ac5743080881185283f2e53ad705bf2ef7f4a6178465dc54b4d49d0a916a"
+        },
+        "sanction_submission_items": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "sanction_submissions": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "semester_enrollments": {
+            "rows": 4634,
+            "sha256": "60a446f1250bee44ba8f622b26bde9c5694d56ae2b2f1f4d96bb2fd20fba8802"
+        },
+        "staff_assignments": {
+            "rows": 6,
+            "sha256": "c1830d9c57ad7fbeeaa06b4ab73497444ad09c037379ff5e0d9d655974f4afbb"
+        },
+        "staff_saved_signatures": {
+            "rows": 6,
+            "sha256": "9f8aee21f4a86147df0ca762f09a1d0e3f74e8c9dd9857afe4d980c5abf40941"
+        },
+        "staff_signature_recoveries": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "staff_signatures": {
+            "rows": 4,
+            "sha256": "3c8886e88e36cf6bed2396c8b86e5dc998f8f9ad3763312251123c46f6912c0c"
+        },
+        "stations": {
+            "rows": 11,
+            "sha256": "b12bcf675399b487b3fb9a554ab741e067e68d1766778e9bad17ea3a2849b716"
+        },
+        "student_bookstore_fees": {
+            "rows": 6951,
+            "sha256": "fc20ee1407bb7f55c8aeac3389c66fbb5df53d9a8146b5f3a98ea02cbe08353e"
+        },
+        "student_documents": {
+            "rows": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "students": {
+            "rows": 2317,
+            "sha256": "ab6e107114438b6ed7bc97b12f1120b4bd97d27fde3daba93e53c7b6a93dad01"
+        },
+        "user_profile_pictures": {
+            "rows": 2,
+            "sha256": "6c56f385b2091599d3eb73e4438923c4dad37bde1ce06841dcd5ad00ea6382b4"
+        },
+        "users": {
+            "rows": 2332,
+            "sha256": "c66be05779d7dec7bb5a447949b2695cfe8d66005b3947151462009c233768ba"
+        },
+        "violations": {
+            "rows": 1,
+            "sha256": "c168bd4e32b549d6d7b089378b0f6efa2fbc0dbf74757ecd2a73bd07ba09cb9f"
+        }
+    }
+}

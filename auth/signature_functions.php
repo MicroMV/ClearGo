@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/auth_check.php';
+require_once __DIR__ . '/../clearance/readiness_functions.php';
 
 const STAFF_SIGNATURE_MAX_POINTS = 12000;
 const STAFF_SIGNATURE_WIDTH = 900;
@@ -26,6 +27,100 @@ function staffSavedSignatures(PDO $database, int $userId): array
     );
     $query->execute(['user_id' => $userId]);
     return $query->fetchAll();
+}
+
+/** Lock the same semester/readiness rows as Ready to serialize concurrent changes. */
+function staffSignatureManagementState(PDO $database, array $user, bool $lock = false): array
+{
+    $account = $database->prepare("SELECT role FROM users WHERE id=? AND status='ACTIVE' AND role<>'STUDENT'");
+    $account->execute([$user['id']]);
+    $role = $account->fetchColumn();
+    if ($role === false) { throw new RuntimeException('Only active staff can manage office signatures.'); }
+    $period = $database->query("SELECT id,clearance_status FROM academic_periods WHERE status='ACTIVE' LIMIT 1" . ($lock ? ' FOR UPDATE' : ''))->fetch();
+    if ($period === false) { return ['locked' => false, 'reason' => '']; }
+    $stationCode = READINESS_ROLE_STATIONS[$role] ?? null;
+    if ($stationCode !== null) {
+        $query = $database->prepare('SELECT readiness.status FROM office_period_readiness readiness JOIN stations station ON station.id=readiness.station_id WHERE readiness.academic_period_id=? AND station.code=?' . ($lock ? ' FOR UPDATE' : ''));
+        $query->execute([$period['id'], $stationCode]);
+        $locked = $query->fetchColumn() === 'READY';
+    } else {
+        // The Registrar has no office Ready state; its approvals still capture immutable signatures.
+        $locked = false;
+    }
+    return ['locked' => $locked, 'period_id' => (int)$period['id'], 'reason' => $locked ? 'Your office is Ready, so signatures are locked. Undo Ready during semester preparation to manage signatures.' : ''];
+}
+
+function staffSignatureRecovery(PDO $database, int $userId, bool $lock = false): array|false
+{
+    $query = $database->prepare("SELECT recovery.id,recovery.expires_at FROM staff_signature_recoveries recovery
+        JOIN academic_periods period ON period.id=recovery.academic_period_id AND period.status='ACTIVE' AND period.clearance_status IN ('PREPARING','OPEN')
+        WHERE recovery.user_id=? AND recovery.consumed_at IS NULL AND recovery.expires_at>NOW()" . ($lock ? ' FOR UPDATE' : ''));
+    $query->execute([$userId]);
+    return $query->fetch();
+}
+
+function authorizeStaffSignatureRecovery(PDO $database, int $registrarId, int $staffId, string $reason): void
+{
+    $reason = trim($reason);
+    if (mb_strlen($reason) < 5 || mb_strlen($reason) > 300) { throw new RuntimeException('Enter a recovery reason between 5 and 300 characters.'); }
+    $database->beginTransaction();
+    try {
+        $registrar = $database->prepare("SELECT id FROM users WHERE id=? AND role='REGISTRAR' AND status='ACTIVE'");
+        $registrar->execute([$registrarId]);
+        if ($registrar->fetchColumn() === false) { throw new RuntimeException('Only the Registrar can authorize signature recovery.'); }
+        $state = staffSignatureManagementState($database, ['id'=>$staffId], true);
+        if (!$state['locked'] || staffSignature($database,$staffId) !== false) {
+            throw new RuntimeException('Recovery is available only for a Ready office account with no selected signature.');
+        }
+        $period = $database->prepare("SELECT id FROM academic_periods WHERE id=? AND status='ACTIVE' AND clearance_status IN ('PREPARING','OPEN')");
+        $period->execute([$state['period_id']]);
+        if ($period->fetchColumn() === false) { throw new RuntimeException('Signature recovery is unavailable for this semester.'); }
+        $database->prepare("INSERT INTO staff_signature_recoveries(academic_period_id,user_id,authorized_by,reason,expires_at)
+            VALUES (?,?,?,?,DATE_ADD(NOW(),INTERVAL 24 HOUR))
+            ON DUPLICATE KEY UPDATE authorized_by=VALUES(authorized_by),reason=VALUES(reason),authorized_at=NOW(),expires_at=VALUES(expires_at),consumed_at=NULL")
+            ->execute([$state['period_id'],$staffId,$registrarId,$reason]);
+        $database->prepare("INSERT INTO audit_logs(user_id,action,description) VALUES (?,'SIGNATURE_RECOVERY_AUTHORIZED',?)")
+            ->execute([$registrarId,'Authorized one-time signature setup for staff #' . $staffId . ', semester #' . $state['period_id'] . '. Reason: ' . $reason]);
+        createNotification($database,$staffId,'Signature setup authorized','The Registrar authorized one-time signature setup in My Profile for 24 hours. Previous approvals and office readiness remain unchanged.',(int)$state['period_id']);
+        $database->commit();
+    } catch (Throwable $exception) {
+        if ($database->inTransaction()) { $database->rollBack(); }
+        throw $exception;
+    }
+}
+
+/** Recovery permits only establishing a missing selection; editing/deletion keep the normal Ready lock. */
+function assertStaffSignatureSetupAllowed(PDO $database, array $user): void
+{
+    $state = staffSignatureManagementState($database,$user,true);
+    if (!$state['locked']) { return; }
+    if (staffSignature($database,(int)$user['id']) === false && staffSignatureRecovery($database,(int)$user['id'],true) !== false) { return; }
+    throw new RuntimeException('Your office is Ready. If your selected signature is missing, ask the Registrar to authorize one-time signature setup in Staff Accounts.');
+}
+
+function consumeStaffSignatureRecovery(PDO $database, int $userId): void
+{
+    $update = $database->prepare("UPDATE staff_signature_recoveries recovery JOIN academic_periods period ON period.id=recovery.academic_period_id AND period.status='ACTIVE'
+        SET recovery.consumed_at=NOW() WHERE recovery.user_id=? AND recovery.consumed_at IS NULL AND recovery.expires_at>NOW()");
+    $update->execute([$userId]);
+    if ($update->rowCount() > 0) {
+        $database->prepare("INSERT INTO audit_logs(user_id,action,description) VALUES (?,'SIGNATURE_RECOVERY_COMPLETED','Established the missing signature selection. Office readiness and previous approvals were unchanged.')")->execute([$userId]);
+    }
+}
+
+function assertStaffSignatureEditable(PDO $database, array $user): void
+{
+    $state = staffSignatureManagementState($database, $user, true);
+    if ($state['locked']) { throw new RuntimeException($state['reason']); }
+}
+
+function requireStaffSignature(PDO $database, int $userId): void
+{
+    $query = $database->prepare("SELECT signature.user_id FROM staff_signatures signature JOIN users user ON user.id=signature.user_id AND user.status='ACTIVE' AND user.role<>'STUDENT' WHERE signature.user_id=? AND LENGTH(signature.image_data)>0 AND signature.printed_name<>'' AND signature.position_title<>'' FOR UPDATE");
+    $query->execute([$userId]);
+    if ($query->fetchColumn() === false) {
+        throw new RuntimeException('Save and select an authorized signature with a name and position in My Profile before marking Ready or approving clearance.');
+    }
 }
 
 /** Render validated drawing strokes as a standard PNG, without trusting client image data. */
@@ -140,6 +235,7 @@ function saveStaffSignature(PDO $database, array $user, string $printedName, str
 
     $database->beginTransaction();
     try {
+        assertStaffSignatureSetupAllowed($database, $user);
         $account = $database->prepare("SELECT id,role FROM users WHERE id=:id AND status='ACTIVE' AND role<>'STUDENT' FOR UPDATE");
         $account->execute(['id' => $user['id']]);
         if ($account->fetch() === false) {
@@ -162,6 +258,7 @@ function saveStaffSignature(PDO $database, array $user, string $printedName, str
         if (staffSignature($database, (int) $user['id']) === false) {
             activateStaffSignature($database, (int) $user['id'], $savedId);
         }
+        consumeStaffSignatureRecovery($database, (int)$user['id']);
 
         $audit = $database->prepare(
             "INSERT INTO audit_logs (user_id,action,description,new_status)
@@ -185,9 +282,6 @@ function activateStaffSignature(PDO $database, int $userId, int $signatureId): v
     if ($query->fetchColumn() === false) {
         throw new RuntimeException('Choose one of your saved signatures.');
     }
-    // Freeze earlier approvals before changing the selected signatory, even if
-    // the student has never downloaded a PDF for those approvals.
-    preserveStaffSignatureApprovals($database, $userId);
     $activate = $database->prepare(
         'INSERT INTO staff_signatures (user_id,saved_signature_id,printed_name,position_title,image_data,mime_type,image_sha256)
          SELECT user_id,id,printed_name,position_title,image_data,mime_type,image_sha256
@@ -197,20 +291,20 @@ function activateStaffSignature(PDO $database, int $userId, int $signatureId): v
              image_sha256=VALUES(image_sha256),updated_at=NOW()'
     );
     $activate->execute(['id' => $signatureId, 'user_id' => $userId]);
-    // Also supports approvals made before the signature feature was configured.
-    preserveStaffSignatureApprovals($database, $userId);
 }
 
 function selectStaffSignature(PDO $database, array $user, int $signatureId): void
 {
     $database->beginTransaction();
     try {
+        assertStaffSignatureSetupAllowed($database, $user);
         $account = $database->prepare("SELECT id FROM users WHERE id=:id AND status='ACTIVE' AND role<>'STUDENT' FOR UPDATE");
         $account->execute(['id' => $user['id']]);
         if ($account->fetchColumn() === false) {
             throw new RuntimeException('Only active staff can select an office signature.');
         }
         activateStaffSignature($database, (int) $user['id'], $signatureId);
+        consumeStaffSignatureRecovery($database, (int)$user['id']);
         $audit = $database->prepare(
             "INSERT INTO audit_logs (user_id,action,description,new_status)
              VALUES (:user_id,'AUTHORIZED_SIGNATURE_SELECTED',:description,'SELECTED')"
@@ -223,22 +317,61 @@ function selectStaffSignature(PDO $database, array $user, int $signatureId): voi
     }
 }
 
-function preserveStaffSignatureApprovals(PDO $database, int $userId): void
+function updateStaffSignature(PDO $database, array $user, int $signatureId, string $printedName, string $positionTitle, mixed $drawing): void
 {
-    $save = $database->prepare(
-        "INSERT IGNORE INTO clearance_station_signatures
-            (clearance_station_id,approved_by_user_id,printed_name,position_title,image_data,mime_type,image_sha256,signed_at)
-         SELECT record.id,record.approved_by,signature.printed_name,signature.position_title,
-                signature.image_data,signature.mime_type,signature.image_sha256,record.approved_at
-         FROM clearance_stations record
-         INNER JOIN staff_signatures signature ON signature.user_id=record.approved_by
-         WHERE record.status='APPROVED' AND record.approved_by=:user_id AND record.approved_at IS NOT NULL"
-    );
-    $save->execute(['user_id' => $userId]);
+    $printedName = trim(preg_replace('/\s+/u', ' ', $printedName) ?? '');
+    $positionTitle = trim(preg_replace('/\s+/u', ' ', $positionTitle) ?? '');
+    if (mb_strlen($printedName) < 2 || mb_strlen($printedName) > 150 || mb_strlen($positionTitle) < 2 || mb_strlen($positionTitle) > 150) {
+        throw new RuntimeException('Enter a name and position between 2 and 150 characters.');
+    }
+    $image = $drawing === '' ? null : renderStaffSignature($drawing);
+    $database->beginTransaction();
+    try {
+        assertStaffSignatureEditable($database, $user);
+        $owned = $database->prepare('SELECT id FROM staff_saved_signatures WHERE id=? AND user_id=? FOR UPDATE');
+        $owned->execute([$signatureId, $user['id']]);
+        if ($owned->fetchColumn() === false) { throw new RuntimeException('Choose one of your saved signatures.'); }
+        $sql = 'UPDATE staff_saved_signatures SET printed_name=?,position_title=?';
+        $values = [$printedName, $positionTitle];
+        if ($image !== null) {
+            $sql .= ',image_data=?,mime_type=?,image_sha256=?';
+            array_push($values, $image['data'], $image['mime_type'], $image['sha256']);
+        }
+        array_push($values, $signatureId, $user['id']);
+        $database->prepare($sql . ' WHERE id=? AND user_id=?')->execute($values);
+        $selected = staffSignature($database, (int) $user['id']);
+        if ($selected !== false && (int) $selected['saved_signature_id'] === $signatureId) { activateStaffSignature($database, (int) $user['id'], $signatureId); }
+        $database->prepare("INSERT INTO audit_logs(user_id,action,description) VALUES (?,'AUTHORIZED_SIGNATURE_UPDATED',?)")->execute([$user['id'], 'Updated saved signature #' . $signatureId . '. Earlier approvals keep their original signatures.']);
+        $database->commit();
+    } catch (Throwable $exception) {
+        if ($database->inTransaction()) { $database->rollBack(); }
+        throw $exception;
+    }
 }
 
-function syncClearanceSignatureSnapshots(PDO $database, int $clearanceId): void
+function deleteStaffSignature(PDO $database, array $user, int $signatureId): void
 {
+    $database->beginTransaction();
+    try {
+        assertStaffSignatureEditable($database, $user);
+        $owned = $database->prepare('SELECT id FROM staff_saved_signatures WHERE id=? AND user_id=? FOR UPDATE');
+        $owned->execute([$signatureId, $user['id']]);
+        if ($owned->fetchColumn() === false) { throw new RuntimeException('Choose one of your saved signatures.'); }
+        $database->prepare('DELETE FROM staff_signatures WHERE saved_signature_id=? AND user_id=?')->execute([$signatureId, $user['id']]);
+        $database->prepare('DELETE FROM staff_saved_signatures WHERE id=? AND user_id=?')->execute([$signatureId, $user['id']]);
+        $database->prepare("INSERT INTO audit_logs(user_id,action,description) VALUES (?,'AUTHORIZED_SIGNATURE_DELETED',?)")->execute([$user['id'], 'Deleted saved signature #' . $signatureId . '. Earlier approvals keep their original signatures.']);
+        $database->commit();
+    } catch (Throwable $exception) {
+        if ($database->inTransaction()) { $database->rollBack(); }
+        throw $exception;
+    }
+}
+
+/** Called only by an approval transaction, for the office being approved now. */
+function captureClearanceStationSignature(PDO $database, int $clearanceStationId, int $staffUserId): void
+{
+    if (!$database->inTransaction()) { throw new LogicException('Capture a signature inside the approval transaction.'); }
+    requireStaffSignature($database, $staffUserId);
     $sync = $database->prepare(
         "INSERT INTO clearance_station_signatures
             (clearance_station_id,approved_by_user_id,printed_name,position_title,image_data,mime_type,image_sha256,signed_at)
@@ -246,12 +379,16 @@ function syncClearanceSignatureSnapshots(PDO $database, int $clearanceId): void
                 signature.image_data,signature.mime_type,signature.image_sha256,record.approved_at
          FROM clearance_stations record
          INNER JOIN staff_signatures signature ON signature.user_id=record.approved_by
-         LEFT JOIN clearance_station_signatures snapshot ON snapshot.clearance_station_id=record.id
-         WHERE record.clearance_id=:clearance_id AND record.status='APPROVED' AND record.approved_at IS NOT NULL
-           AND (snapshot.clearance_station_id IS NULL OR snapshot.approved_by_user_id<>record.approved_by OR snapshot.signed_at<>record.approved_at)
+         WHERE record.id=:station_id AND record.approved_by=:user_id AND record.status='APPROVED' AND record.approved_at IS NOT NULL
          ON DUPLICATE KEY UPDATE approved_by_user_id=VALUES(approved_by_user_id),printed_name=VALUES(printed_name),
              position_title=VALUES(position_title),image_data=VALUES(image_data),mime_type=VALUES(mime_type),
              image_sha256=VALUES(image_sha256),signed_at=VALUES(signed_at),created_at=NOW()"
     );
-    $sync->execute(['clearance_id' => $clearanceId]);
+    $sync->execute(['station_id' => $clearanceStationId, 'user_id' => $staffUserId]);
+    if ($sync->rowCount() < 1) {
+        // Reapproval within the same second can leave an identical snapshot; MySQL reports zero changed rows.
+        $record = $database->prepare("SELECT id FROM clearance_stations WHERE id=? AND approved_by=? AND status='APPROVED' AND approved_at IS NOT NULL");
+        $record->execute([$clearanceStationId, $staffUserId]);
+        if ($record->fetchColumn() === false) { throw new RuntimeException('The office signature could not be attached to this approval.'); }
+    }
 }

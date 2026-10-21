@@ -1,5 +1,7 @@
 # Temporary local debug console
 
+**Currently disabled:** the root `.htaccess` denies browser access to this directory, and the local enable flag has been removed. No semester, account, student or clearance data was reset. For future local testing, deliberately remove that debug-directory deny rule and recreate the enable flag described below. Continue excluding this directory from deployment packages.
+
 Open `http://localhost/ClearGo/debug/` directly. This is a standalone temporary screen, without a school-account login. It uses its own Strict SameSite session cookie and CSRF tokens. It does not sign into, sign out of or impersonate a Registrar account. Debug actions record a null account ID with a local-debug description in the audit log. No data is reset just by opening the page. Use Ready all offices, then Open clearance, to make student clearance and paper previews available.
 
 The console requires a loopback client address, a localhost/loopback Host, no proxy-forwarding headers and the local `storage/private/debug-console.enabled` file containing `local-debug-only`. Setting `CLEAR_GO_DEBUG=0` disables it as well. The flag is excluded from Git, so a normal checkout does not enable debug access. Disable debug screen removes the flag. To re-enable for local testing, recreate that exact flag file manually. Exclude `debug/` from deployment packages.

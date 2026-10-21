@@ -82,7 +82,9 @@ try {
         $users[$role] = (int) $database->lastInsertId();
     }
     $organizationId = (int) $database->query("SELECT id FROM organizations WHERE code='CCS'")->fetchColumn();
-    $database->prepare("INSERT INTO students(user_id,student_number,first_name,last_name,program,year_level,section,organization_id,status) VALUES (?,'READY-TEST-1','Synthetic','Ready Test','BSCS',2,'QA',?,'ACTIVE')")
+    require_once __DIR__ . '/../auth/signature_functions.php';
+    saveStaffSignature($database, ['id' => $users['BOOKSTORE_STAFF'], 'role' => 'BOOKSTORE_STAFF'], 'Synthetic Bookstore', 'Office signatory', '[[[0.1,0.4],[0.5,0.7]]]');
+    $database->prepare("INSERT INTO students(user_id,student_number,first_name,last_name,program,year_level,organization_id,status) VALUES (?,'READY-TEST-1','Synthetic','Ready Test','BSCS',2,?,'ACTIVE')")
         ->execute([$users['STUDENT'], $organizationId]);
     $studentId = (int) $database->lastInsertId();
     $database->exec("INSERT INTO academic_periods(school_year,semester,status,clearance_status) VALUES ('2098-2099','1ST','ACTIVE','PREPARING')");

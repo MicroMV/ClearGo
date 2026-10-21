@@ -68,7 +68,7 @@ try {
         $users[$name]=(int)$database->lastInsertId();
     }
     $organization=(int)$database->query("SELECT id FROM organizations WHERE code='CCS'")->fetchColumn();
-    $database->prepare("INSERT INTO students(user_id,student_number,first_name,last_name,program,year_level,section,organization_id,status) VALUES (?,'DEBUG-SYNTHETIC','Synthetic','Debug Student','Test Program',1,'TEST',?,'ACTIVE')")->execute([$users['student'],$organization]);
+    $database->prepare("INSERT INTO students(user_id,student_number,first_name,last_name,program,year_level,organization_id,status) VALUES (?,'DEBUG-SYNTHETIC','Synthetic','Debug Student','Test Program',1,?,'ACTIVE')")->execute([$users['student'],$organization]);
     $student=(int)$database->lastInsertId();
     $period=createRegistrarSemester($database,$users['registrar'],'2098-2099','1ST');
     $database->prepare("INSERT INTO semester_enrollments(academic_period_id,student_id,status) VALUES (?,?,'ENROLLED')")->execute([$period,$student]);
@@ -81,6 +81,17 @@ try {
     $database->prepare("INSERT INTO staff_saved_signatures(user_id,printed_name,position_title,image_data,mime_type,image_sha256) VALUES (?,'Synthetic Registrar','Registrar',?,'image/png',?)")->execute([$users['registrar'],$signature['data'],$signature['sha256']]);
     $signatureId=(int)$database->lastInsertId();
     selectStaffSignature($database,['id'=>$users['registrar']],$signatureId);
+    $missingSignatureBlocked=false;
+    try { debugReadyAllOffices($database,$users['registrar'],$period); } catch (RuntimeException $exception) { $missingSignatureBlocked=true; }
+    debugCheck($missingSignatureBlocked,'Debug Ready all also requires an authorized signature for every office.');
+    foreach (READINESS_ROLE_STATIONS as $role=>$code) {
+        if ($role==='LIBRARY_STAFF') { $signerId=$users['library']; }
+        else {
+            $database->prepare("INSERT INTO users(email,password_hash,role,status) VALUES (?,?,?,'ACTIVE')")->execute([strtolower($role) . '-debug-test@thelewiscollege.edu.ph',password_hash('Synthetic-Only-2026!',PASSWORD_DEFAULT),$role]);
+            $signerId=(int)$database->lastInsertId();
+        }
+        saveStaffSignature($database,['id'=>$signerId,'role'=>$role],'Synthetic Office Signer','Office Signatory','[[[0.1,0.5],[0.3,0.3],[0.6,0.5]]]');
+    }
     $socket=stream_socket_server('tcp://127.0.0.1:0',$errorNumber,$errorText);
     $address=stream_socket_get_name($socket,false);fclose($socket);$base='http://' . $address;
     $environment=getenv();$environment['DB_DATABASE']=$temporary;unset($environment['APP_BASE_URL'],$environment['CLEAR_GO_DEBUG']);

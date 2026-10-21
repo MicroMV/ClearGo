@@ -9,7 +9,7 @@ function studentClearanceDocumentContext(PDO $database, int $userId, int $period
         "SELECT clearance.id AS clearance_id,clearance.reference_number,clearance.status AS clearance_status,
                 period.school_year,period.semester,period.clearance_status AS period_clearance_status,
                 student.id AS student_id,student.student_number,student.first_name,student.middle_name,student.last_name,
-                student.program,student.year_level,student.section,
+                student.program,student.year_level,
                 organization.id AS organization_id,organization.code AS organization_code,organization.name AS organization_name
          FROM students student
          INNER JOIN clearances clearance ON clearance.student_id=student.id

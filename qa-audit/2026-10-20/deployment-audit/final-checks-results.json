@@ -1,0 +1,803 @@
+{
+  "source_unchanged": {
+    "files": 237,
+    "changed": []
+  },
+  "syntax": {
+    "files": 154,
+    "failed": []
+  },
+  "table_usage": [
+    {
+      "table": "academic_periods",
+      "reference_files": [
+        "accounting\\submissions.php",
+        "accounting\\submission_action.php",
+        "auth\\auth_check.php",
+        "auth\\notifications.php",
+        "auth\\signature_functions.php",
+        "bookstore\\fees.php",
+        "bookstore\\fee_action.php",
+        "bookstore\\obligation_functions.php",
+        "bookstore\\receipt_image.php",
+        "bookstore\\submissions.php",
+        "bookstore\\submission_action.php",
+        "bookstore\\workbook_functions.php",
+        "clearance\\accounting_receipt_functions.php",
+        "clearance\\bulk_clearance.php",
+        "clearance\\clearance_functions.php",
+        "clearance\\dean_evaluation_policy.php",
+        "clearance\\event_attendance_page.php",
+        "clearance\\office_workflow.php",
+        "clearance\\readiness_functions.php",
+        "clearance\\remarks_functions.php",
+        "clearance\\report_workbook.php",
+        "clearance\\sanction_functions.php",
+        "clearance\\sanction_submissions_page.php",
+        "clinic\\schedules.php",
+        "clinic\\schedule_action.php",
+        "clinic\\workbook_functions.php",
+        "comlab\\violations.php",
+        "dean\\action.php",
+        "dean\\completion_workbook_functions.php",
+        "dean\\dashboard.php",
+        "debug\\action.php",
+        "debug\\functions.php",
+        "debug\\index.php",
+        "facilities\\borrowed-items.php",
+        "library\\card_image.php",
+        "library\\submissions.php",
+        "library\\submission_action.php",
+        "library\\workbook_functions.php",
+        "organization\\clearance_functions.php",
+        "organization\\dashboard.php",
+        "organization\\event_functions.php",
+        "registrar\\dashboard.php",
+        "registrar\\semester_functions.php",
+        "registrar\\student_import_functions.php",
+        "registrar\\student_import_template.php",
+        "student\\bookstore_receipt_action.php",
+        "student\\clearance_document_functions.php",
+        "student\\dashboard_functions.php",
+        "student\\library_card_action.php",
+        "student\\medical_schedule_action.php"
+      ]
+    },
+    {
+      "table": "accounting_obligations",
+      "reference_files": [
+        "accounting\\submissions.php",
+        "clearance\\office_action.php",
+        "clearance\\office_dashboard.php",
+        "clearance\\office_workflow.php",
+        "debug\\functions.php"
+      ]
+    },
+    {
+      "table": "accounting_receipts",
+      "reference_files": [
+        "accounting\\assessment_image.php",
+        "accounting\\submissions.php",
+        "accounting\\submission_action.php",
+        "clearance\\accounting_receipt_functions.php",
+        "clearance\\office_action.php",
+        "clearance\\office_dashboard.php",
+        "clearance\\office_workflow.php",
+        "debug\\functions.php",
+        "student\\dashboard.php"
+      ]
+    },
+    {
+      "table": "audit_logs",
+      "reference_files": [
+        "auth\\auth_check.php",
+        "auth\\profile_picture_functions.php",
+        "auth\\signature_functions.php",
+        "clearance\\accounting_receipt_functions.php",
+        "clearance\\clearance_functions.php",
+        "clearance\\office_workflow.php",
+        "clearance\\readiness_functions.php",
+        "clearance\\remarks_functions.php",
+        "clearance\\sanction_functions.php",
+        "dean\\action.php",
+        "dean\\completion_workbook_functions.php",
+        "debug\\functions.php",
+        "organization\\clearance_functions.php",
+        "organization\\event_functions.php",
+        "registrar\\audit_logs.php",
+        "registrar\\semester_functions.php",
+        "registrar\\staff_action.php",
+        "registrar\\student_action.php",
+        "registrar\\student_import_functions.php",
+        "student\\password_action.php",
+        "student-council\\event_functions.php"
+      ]
+    },
+    {
+      "table": "bookstore_fees",
+      "reference_files": [
+        "bookstore\\fees.php",
+        "bookstore\\obligation_functions.php",
+        "bookstore\\receipt_image.php",
+        "bookstore\\submissions.php",
+        "bookstore\\submission_action.php",
+        "bookstore\\workbook_functions.php",
+        "clearance\\office_workflow.php",
+        "debug\\functions.php",
+        "registrar\\semester_functions.php",
+        "student\\bookstore_receipt_action.php",
+        "student\\dashboard.php"
+      ]
+    },
+    {
+      "table": "bookstore_obligations",
+      "reference_files": [
+        "bookstore\\obligation_functions.php",
+        "bookstore\\workbook_functions.php",
+        "clearance\\office_action.php",
+        "clearance\\office_dashboard.php",
+        "clearance\\office_workflow.php",
+        "debug\\functions.php"
+      ]
+    },
+    {
+      "table": "bookstore_receipt_submissions",
+      "reference_files": [
+        "bookstore\\receipt_image.php",
+        "bookstore\\submissions.php",
+        "bookstore\\submission_action.php",
+        "debug\\functions.php",
+        "student\\bookstore_receipt_action.php",
+        "student\\dashboard.php"
+      ]
+    },
+    {
+      "table": "borrowed_books",
+      "reference_files": [
+        "clearance\\office_workflow.php",
+        "debug\\functions.php",
+        "library\\clearance_policy.php"
+      ]
+    },
+    {
+      "table": "ccs_evaluation_completions",
+      "reference_files": [
+        "clearance\\dean_evaluation_policy.php",
+        "dean\\completion_workbook_functions.php",
+        "dean\\dashboard.php",
+        "debug\\functions.php",
+        "student\\dashboard.php"
+      ]
+    },
+    {
+      "table": "clearances",
+      "reference_files": [
+        "accounting\\submissions.php",
+        "accounting\\submission_action.php",
+        "bookstore\\obligation_functions.php",
+        "bookstore\\workbook_functions.php",
+        "clearance\\accounting_receipt_functions.php",
+        "clearance\\bulk_clearance.php",
+        "clearance\\clearance_functions.php",
+        "clearance\\dean_evaluation_policy.php",
+        "clearance\\office_dashboard.php",
+        "clearance\\office_workflow.php",
+        "clearance\\remarks_functions.php",
+        "clinic\\workbook_functions.php",
+        "comlab\\violations.php",
+        "dean\\action.php",
+        "dean\\completion_workbook_functions.php",
+        "dean\\dashboard.php",
+        "debug\\functions.php",
+        "debug\\index.php",
+        "facilities\\borrowed-items.php",
+        "library\\submission_action.php",
+        "library\\workbook_functions.php",
+        "organization\\clearance_functions.php",
+        "organization\\dashboard.php",
+        "registrar\\semester_functions.php",
+        "student\\bookstore_receipt_action.php",
+        "student\\clearance_document_functions.php",
+        "student\\dashboard.php",
+        "student\\dashboard_functions.php",
+        "student\\library_card_action.php"
+      ]
+    },
+    {
+      "table": "clearance_exceptions",
+      "reference_files": [
+        "clearance\\office_action.php",
+        "clearance\\office_workflow.php",
+        "debug\\functions.php"
+      ]
+    },
+    {
+      "table": "clearance_stations",
+      "reference_files": [
+        "accounting\\submissions.php",
+        "auth\\signature_functions.php",
+        "bookstore\\obligation_functions.php",
+        "bookstore\\workbook_functions.php",
+        "clearance\\accounting_receipt_functions.php",
+        "clearance\\bulk_clearance.php",
+        "clearance\\clearance_functions.php",
+        "clearance\\dean_evaluation_policy.php",
+        "clearance\\office_action.php",
+        "clearance\\office_workflow.php",
+        "clearance\\remarks_functions.php",
+        "clinic\\workbook_functions.php",
+        "comlab\\violations.php",
+        "dean\\action.php",
+        "dean\\completion_workbook_functions.php",
+        "dean\\dashboard.php",
+        "debug\\functions.php",
+        "facilities\\borrowed-items.php",
+        "library\\submission_action.php",
+        "library\\workbook_functions.php",
+        "organization\\clearance_functions.php",
+        "organization\\dashboard.php",
+        "registrar\\semester_functions.php",
+        "student\\bookstore_receipt_action.php",
+        "student\\clearance_pdf.php",
+        "student\\dashboard.php",
+        "student\\library_card_action.php"
+      ]
+    },
+    {
+      "table": "clearance_station_signatures",
+      "reference_files": [
+        "auth\\signature_functions.php",
+        "clearance\\office_workflow.php",
+        "debug\\functions.php",
+        "student\\clearance_pdf.php"
+      ]
+    },
+    {
+      "table": "clinic_medical_appointments",
+      "reference_files": [
+        "clinic\\schedules.php",
+        "debug\\functions.php",
+        "student\\dashboard.php",
+        "student\\medical_schedule_action.php"
+      ]
+    },
+    {
+      "table": "clinic_medical_schedules",
+      "reference_files": [
+        "clinic\\schedules.php",
+        "clinic\\schedule_action.php",
+        "debug\\functions.php",
+        "student\\dashboard.php",
+        "student\\medical_schedule_action.php"
+      ]
+    },
+    {
+      "table": "document_requirements",
+      "reference_files": [
+        "clearance\\bulk_clearance.php",
+        "clearance\\office_dashboard.php",
+        "clearance\\office_workflow.php",
+        "debug\\functions.php",
+        "registrar\\semester_functions.php"
+      ]
+    },
+    {
+      "table": "events",
+      "reference_files": [
+        "auth\\auth_check.php",
+        "bookstore\\fees.php",
+        "bookstore\\workbook_functions.php",
+        "clearance\\bulk_clearance.php",
+        "clearance\\event_attendance_page.php",
+        "clearance\\office_dashboard.php",
+        "clearance\\office_workflow.php",
+        "clearance\\organization_event_management.php",
+        "clearance\\sanction_functions.php",
+        "clearance\\sanction_management.php",
+        "clearance\\sanction_submissions_page.php",
+        "clearance\\sanction_submission_list.php",
+        "debug\\functions.php",
+        "organization\\clearance_functions.php",
+        "organization\\dashboard.php",
+        "organization\\event_functions.php",
+        "organization\\event_qr.php",
+        "student\\dashboard.php",
+        "student\\dashboard_view.php",
+        "student-council\\event_functions.php",
+        "student-council\\event_qr.php"
+      ]
+    },
+    {
+      "table": "event_attendance",
+      "reference_files": [
+        "auth\\auth_check.php",
+        "clearance\\bulk_clearance.php",
+        "clearance\\event_attendance_page.php",
+        "clearance\\office_workflow.php",
+        "clearance\\sanction_functions.php",
+        "debug\\functions.php",
+        "organization\\clearance_functions.php",
+        "organization\\event_functions.php",
+        "student\\dashboard.php",
+        "student-council\\event_functions.php"
+      ]
+    },
+    {
+      "table": "event_sanctions",
+      "reference_files": [
+        "clearance\\sanction_functions.php",
+        "clearance\\sanction_submission_list.php",
+        "debug\\functions.php"
+      ]
+    },
+    {
+      "table": "event_sanction_policies",
+      "reference_files": [
+        "clearance\\sanction_functions.php",
+        "clearance\\sanction_management.php",
+        "debug\\functions.php"
+      ]
+    },
+    {
+      "table": "facilities_obligations",
+      "reference_files": [
+        "clearance\\office_action.php",
+        "clearance\\office_dashboard.php",
+        "clearance\\office_workflow.php",
+        "debug\\functions.php",
+        "facilities\\borrowed-items.php",
+        "registrar\\semester_functions.php",
+        "student\\dashboard.php"
+      ]
+    },
+    {
+      "table": "library_cards",
+      "reference_files": [
+        "clearance\\office_workflow.php",
+        "debug\\functions.php",
+        "library\\card_image.php",
+        "library\\submissions.php",
+        "library\\submission_action.php",
+        "registrar\\semester_functions.php",
+        "student\\dashboard.php",
+        "student\\library_card_action.php"
+      ]
+    },
+    {
+      "table": "library_card_submissions",
+      "reference_files": [
+        "debug\\functions.php",
+        "library\\card_image.php",
+        "library\\submissions.php",
+        "library\\submission_action.php",
+        "student\\dashboard.php",
+        "student\\library_card_action.php"
+      ]
+    },
+    {
+      "table": "medical_requirements",
+      "reference_files": [
+        "clearance\\office_action.php",
+        "clearance\\office_workflow.php",
+        "clinic\\workbook_functions.php",
+        "debug\\functions.php",
+        "registrar\\semester_functions.php",
+        "student\\dashboard.php",
+        "student\\medical_schedule_action.php"
+      ]
+    },
+    {
+      "table": "notifications",
+      "reference_files": [
+        "accounting\\submissions.php",
+        "auth\\auth_check.php",
+        "auth\\notifications.php",
+        "auth\\profile.php",
+        "bookstore\\fees.php",
+        "bookstore\\obligation_functions.php",
+        "bookstore\\submissions.php",
+        "bookstore\\submission_action.php",
+        "clearance\\clearance_functions.php",
+        "clearance\\event_attendance_page.php",
+        "clearance\\office_dashboard.php",
+        "clearance\\readiness_functions.php",
+        "clearance\\sanction_submissions_page.php",
+        "clinic\\schedules.php",
+        "comlab\\violations.php",
+        "dean\\action.php",
+        "dean\\dashboard.php",
+        "debug\\functions.php",
+        "debug\\index.php",
+        "facilities\\borrowed-items.php",
+        "library\\submissions.php",
+        "organization\\clearance_functions.php",
+        "organization\\dashboard.php",
+        "registrar\\audit_logs.php",
+        "registrar\\dashboard.php",
+        "registrar\\semester_functions.php",
+        "registrar\\staff_accounts.php",
+        "registrar\\students.php",
+        "registrar\\student_import.php",
+        "student\\dashboard.php",
+        "student\\dashboard_view.php"
+      ]
+    },
+    {
+      "table": "office_period_readiness",
+      "reference_files": [
+        "auth\\signature_functions.php",
+        "bookstore\\obligation_functions.php",
+        "clearance\\readiness_functions.php",
+        "debug\\functions.php",
+        "registrar\\semester_functions.php",
+        "registrar\\student_action.php",
+        "registrar\\student_import_functions.php"
+      ]
+    },
+    {
+      "table": "organizations",
+      "reference_files": [
+        "bookstore\\submissions.php",
+        "bookstore\\workbook_functions.php",
+        "clearance\\bulk_clearance.php",
+        "clearance\\clearance_functions.php",
+        "clearance\\dean_evaluation_policy.php",
+        "clearance\\event_attendance_page.php",
+        "clearance\\office_dashboard.php",
+        "clearance\\office_workflow.php",
+        "clinic\\schedules.php",
+        "clinic\\workbook_functions.php",
+        "dean\\dashboard.php",
+        "library\\submissions.php",
+        "library\\workbook_functions.php",
+        "organization\\clearance_functions.php",
+        "organization\\event_functions.php",
+        "registrar\\semester_functions.php",
+        "registrar\\staff_accounts.php",
+        "registrar\\students.php",
+        "registrar\\student_import_functions.php",
+        "student\\clearance_document_functions.php",
+        "student\\dashboard.php"
+      ]
+    },
+    {
+      "table": "requirements",
+      "reference_files": [
+        "accounting\\submissions.php",
+        "auth\\profile.php",
+        "bookstore\\obligation_functions.php",
+        "clearance\\accounting_receipt_functions.php",
+        "clearance\\bulk_clearance.php",
+        "clearance\\clearance_functions.php",
+        "clearance\\dean_evaluation_policy.php",
+        "clearance\\facilities_items_modal.php",
+        "clearance\\office_action.php",
+        "clearance\\office_dashboard.php",
+        "clearance\\office_workflow.php",
+        "clearance\\report_workbook.php",
+        "clearance\\sanction_action.php",
+        "clearance\\sanction_management.php",
+        "clinic\\workbook_functions.php",
+        "dean\\action.php",
+        "dean\\completion_workbook_download.php",
+        "dean\\completion_workbook_functions.php",
+        "dean\\completion_workbook_import.php",
+        "dean\\dashboard.php",
+        "debug\\index.php",
+        "organization\\clearance_functions.php",
+        "organization\\dashboard.php",
+        "registrar\\semester_functions.php",
+        "student\\bookstore_receipt_action.php",
+        "student\\dashboard.php",
+        "student\\dashboard_view.php",
+        "student\\library_card_action.php"
+      ]
+    },
+    {
+      "table": "requirement_records",
+      "reference_files": [
+        "clearance\\bulk_clearance.php",
+        "clearance\\clearance_functions.php",
+        "clearance\\dean_evaluation_policy.php",
+        "clearance\\office_action.php",
+        "clearance\\office_dashboard.php",
+        "clearance\\office_workflow.php",
+        "dean\\action.php",
+        "dean\\completion_workbook_functions.php",
+        "dean\\dashboard.php",
+        "debug\\functions.php",
+        "library\\submission_action.php",
+        "organization\\clearance_functions.php",
+        "registrar\\semester_functions.php",
+        "student\\dashboard.php"
+      ]
+    },
+    {
+      "table": "sanction_submissions",
+      "reference_files": [
+        "auth\\profile.php",
+        "clearance\\event_attendance_page.php",
+        "clearance\\office_dashboard.php",
+        "clearance\\sanction_action.php",
+        "clearance\\sanction_functions.php",
+        "clearance\\sanction_image.php",
+        "clearance\\sanction_management.php",
+        "clearance\\sanction_submissions_page.php",
+        "clearance\\sanction_submission_list.php",
+        "debug\\functions.php",
+        "organization\\dashboard.php"
+      ]
+    },
+    {
+      "table": "sanction_submission_items",
+      "reference_files": [
+        "clearance\\sanction_functions.php",
+        "clearance\\sanction_submission_list.php",
+        "debug\\functions.php"
+      ]
+    },
+    {
+      "table": "semester_enrollments",
+      "reference_files": [
+        "bookstore\\obligation_functions.php",
+        "bookstore\\workbook_functions.php",
+        "clearance\\bulk_clearance.php",
+        "clearance\\clearance_functions.php",
+        "clearance\\office_workflow.php",
+        "clearance\\remarks_functions.php",
+        "clearance\\sanction_functions.php",
+        "clinic\\workbook_functions.php",
+        "dean\\completion_workbook_functions.php",
+        "dean\\dashboard.php",
+        "debug\\functions.php",
+        "library\\card_image.php",
+        "library\\submissions.php",
+        "library\\workbook_functions.php",
+        "organization\\clearance_functions.php",
+        "organization\\dashboard.php",
+        "organization\\event_functions.php",
+        "registrar\\dashboard.php",
+        "registrar\\semester_functions.php",
+        "registrar\\students.php",
+        "registrar\\student_action.php",
+        "registrar\\student_import_functions.php",
+        "student\\clearance_document_functions.php",
+        "student\\dashboard_functions.php",
+        "student-council\\event_functions.php"
+      ]
+    },
+    {
+      "table": "staff_assignments",
+      "reference_files": [
+        "clearance\\clearance_functions.php",
+        "clearance\\sanction_functions.php",
+        "organization\\clearance_functions.php",
+        "registrar\\staff_accounts.php",
+        "registrar\\staff_action.php"
+      ]
+    },
+    {
+      "table": "staff_saved_signatures",
+      "reference_files": [
+        "auth\\signature_functions.php",
+        "auth\\signature_image.php",
+        "debug\\functions.php"
+      ]
+    },
+    {
+      "table": "staff_signatures",
+      "reference_files": [
+        "auth\\signature_functions.php",
+        "auth\\signature_image.php",
+        "debug\\functions.php"
+      ]
+    },
+    {
+      "table": "staff_signature_recoveries",
+      "reference_files": [
+        "auth\\signature_functions.php",
+        "debug\\functions.php"
+      ]
+    },
+    {
+      "table": "stations",
+      "reference_files": [
+        "accounting\\submissions.php",
+        "auth\\profile_picture_functions.php",
+        "auth\\signature_functions.php",
+        "bookstore\\obligation_functions.php",
+        "bookstore\\workbook_functions.php",
+        "clearance\\accounting_receipt_functions.php",
+        "clearance\\bulk_clearance.php",
+        "clearance\\clearance_functions.php",
+        "clearance\\dean_evaluation_policy.php",
+        "clearance\\event_attendance_page.php",
+        "clearance\\office_dashboard.php",
+        "clearance\\office_workflow.php",
+        "clearance\\readiness_functions.php",
+        "clearance\\remarks_functions.php",
+        "clearance\\sanction_functions.php",
+        "clinic\\workbook_functions.php",
+        "comlab\\violations.php",
+        "dean\\action.php",
+        "dean\\completion_workbook_functions.php",
+        "dean\\dashboard.php",
+        "debug\\functions.php",
+        "facilities\\borrowed-items.php",
+        "library\\workbook_functions.php",
+        "organization\\clearance_functions.php",
+        "organization\\dashboard.php",
+        "organization\\event_functions.php",
+        "registrar\\audit_logs.php",
+        "registrar\\semester_functions.php",
+        "registrar\\staff_action.php",
+        "registrar\\student_action.php",
+        "registrar\\student_import_functions.php",
+        "student\\bookstore_receipt_action.php",
+        "student\\clearance_pdf.php",
+        "student\\dashboard.php",
+        "student\\dashboard_view.php",
+        "student\\library_card_action.php",
+        "student-council\\event_functions.php"
+      ]
+    },
+    {
+      "table": "students",
+      "reference_files": [
+        "accounting\\submissions.php",
+        "auth\\auth_check.php",
+        "auth\\profile_picture_functions.php",
+        "bookstore\\fees.php",
+        "bookstore\\obligation_functions.php",
+        "bookstore\\submissions.php",
+        "bookstore\\submission_action.php",
+        "bookstore\\workbook_functions.php",
+        "clearance\\accounting_receipt_functions.php",
+        "clearance\\bulk_clearance.php",
+        "clearance\\clearance_functions.php",
+        "clearance\\dean_evaluation_policy.php",
+        "clearance\\event_attendance_page.php",
+        "clearance\\office_dashboard.php",
+        "clearance\\office_workflow.php",
+        "clearance\\organization_event_management.php",
+        "clearance\\remarks_functions.php",
+        "clearance\\sanction_functions.php",
+        "clearance\\sanction_image.php",
+        "clearance\\sanction_management.php",
+        "clearance\\sanction_submissions_page.php",
+        "clearance\\sanction_submission_list.php",
+        "clinic\\schedules.php",
+        "clinic\\workbook_functions.php",
+        "comlab\\violations.php",
+        "dean\\action.php",
+        "dean\\completion_workbook_functions.php",
+        "dean\\completion_workbook_import.php",
+        "dean\\dashboard.php",
+        "debug\\action.php",
+        "debug\\functions.php",
+        "debug\\index.php",
+        "facilities\\borrowed-items.php",
+        "library\\card_image.php",
+        "library\\submissions.php",
+        "library\\submission_action.php",
+        "library\\workbook_functions.php",
+        "login.php",
+        "organization\\action.php",
+        "organization\\clearance_functions.php",
+        "organization\\dashboard.php",
+        "organization\\event_action.php",
+        "organization\\event_functions.php",
+        "organization\\event_qr.php",
+        "registrar\\audit_logs.php",
+        "registrar\\dashboard.php",
+        "registrar\\semester_action.php",
+        "registrar\\semester_functions.php",
+        "registrar\\students.php",
+        "registrar\\student_action.php",
+        "registrar\\student_import.php",
+        "registrar\\student_import_functions.php",
+        "student\\action.php",
+        "student\\attendance_checkin.php",
+        "student\\bookstore_receipt_action.php",
+        "student\\clearance_document_functions.php",
+        "student\\dashboard.php",
+        "student\\library_card_action.php",
+        "student\\medical_schedule_action.php",
+        "student\\password_action.php",
+        "student-council\\event_functions.php",
+        "student-council\\event_qr.php"
+      ]
+    },
+    {
+      "table": "student_bookstore_fees",
+      "reference_files": [
+        "bookstore\\fees.php",
+        "bookstore\\obligation_functions.php",
+        "bookstore\\receipt_image.php",
+        "bookstore\\submissions.php",
+        "bookstore\\submission_action.php",
+        "bookstore\\workbook_functions.php",
+        "clearance\\office_workflow.php",
+        "debug\\functions.php",
+        "registrar\\semester_functions.php",
+        "student\\bookstore_receipt_action.php",
+        "student\\dashboard.php"
+      ]
+    },
+    {
+      "table": "student_documents",
+      "reference_files": [
+        "clearance\\bulk_clearance.php",
+        "clearance\\office_dashboard.php",
+        "clearance\\office_workflow.php",
+        "debug\\functions.php",
+        "registrar\\semester_functions.php"
+      ]
+    },
+    {
+      "table": "users",
+      "reference_files": [
+        "auth\\auth_check.php",
+        "auth\\login_process.php",
+        "auth\\notifications.php",
+        "auth\\profile_picture_functions.php",
+        "auth\\signature_functions.php",
+        "clearance\\clearance_functions.php",
+        "clearance\\readiness_functions.php",
+        "clearance\\sanction_functions.php",
+        "clearance\\sanction_management.php",
+        "clearance\\sanction_submission_list.php",
+        "database-connection-test.php",
+        "debug\\functions.php",
+        "debug\\index.php",
+        "organization\\clearance_functions.php",
+        "organization\\dashboard.php",
+        "registrar\\audit_logs.php",
+        "registrar\\semester_functions.php",
+        "registrar\\staff_accounts.php",
+        "registrar\\staff_action.php",
+        "registrar\\students.php",
+        "registrar\\student_action.php",
+        "registrar\\student_import_functions.php",
+        "student\\dashboard.php",
+        "student\\password_action.php"
+      ]
+    },
+    {
+      "table": "user_profile_pictures",
+      "reference_files": [
+        "auth\\auth_check.php",
+        "auth\\profile_picture_functions.php"
+      ]
+    },
+    {
+      "table": "violations",
+      "reference_files": [
+        "auth\\profile.php",
+        "clearance\\comlab_violations_modal.php",
+        "clearance\\office_action.php",
+        "clearance\\office_dashboard.php",
+        "clearance\\office_workflow.php",
+        "comlab\\violations.php",
+        "debug\\functions.php",
+        "debug\\index.php",
+        "student\\dashboard.php",
+        "student\\dashboard_view.php"
+      ]
+    }
+  ],
+  "public_metadata": [
+    {
+      "route": "/qa-audit/",
+      "status": 200,
+      "directory_listing": true,
+      "links": 6
+    },
+    {
+      "route": "/qa-audit/2026-10-20/",
+      "status": 200,
+      "directory_listing": true,
+      "links": 14
+    }
+  ]
+}

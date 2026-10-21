@@ -67,11 +67,10 @@ function officeListEligibilitySql(string $stationCode): string
         'REGISTRAR' => "NOT EXISTS (SELECT 1 FROM clearance_stations prior_record INNER JOIN stations prior_station ON prior_station.id=prior_record.station_id WHERE prior_record.clearance_id=c.id AND prior_station.code<>'REGISTRAR' AND prior_station.status='ACTIVE' AND prior_record.status<>'APPROVED')",
         default => '0=1',
     };
-    $exception = "EXISTS (SELECT 1 FROM clearance_exceptions exception_record WHERE exception_record.clearance_station_id=cs.id AND exception_record.status='APPROVED' AND (exception_record.expires_at IS NULL OR exception_record.expires_at>=NOW()))";
     if ($stationCode === 'LIBRARY') {
-        return "(({$requirement}) OR ({$exception})) AND (" . libraryBooksReturnedSql('student') . ')';
+        return "({$requirement}) AND (" . libraryBooksReturnedSql('student') . ')';
     }
-    return $stationCode === 'REGISTRAR' ? "({$requirement})" : "(({$requirement}) OR ({$exception}))";
+    return "({$requirement})";
 }
 
 function officeListFilterSql(string $stationCode, string $filter): string
@@ -151,24 +150,11 @@ function officeRowCount(PDO $database, string $stationCode, string $search = '',
     return (int) $statement->fetchColumn();
 }
 
-function officeStatusSummary(PDO $database, string $stationCode): array
+function officeStatusSummary(PDO $database, string $stationCode, string $audience = 'ALL', string $department = 'ALL'): array
 {
-    $eligibilitySql = match ($stationCode) {
-        'STUDENT_COUNCIL' => studentCouncilAttendanceEligibilitySql('student', 'period'),
-        'LIBRARY' => "EXISTS (SELECT 1 FROM library_cards card WHERE card.student_id=student.id AND card.status='VERIFIED')",
-        'BOOKSTORE' => bookstoreEligibilitySql('student', 'period'),
-        'CLINIC' => "EXISTS (SELECT 1 FROM medical_requirements medical WHERE medical.student_id=student.id AND medical.academic_period_id=period.id AND medical.status='VERIFIED')",
-        'SASO' => sasoEligibilitySql('clearance', 'student'),
-        'FACILITIES' => "NOT EXISTS (SELECT 1 FROM facilities_obligations item WHERE item.student_id=student.id AND item.academic_period_id=period.id AND item.status='OUTSTANDING') AND (student.year_level<4 OR period.semester<>'2ND' OR EXISTS (SELECT 1 FROM facilities_obligations toga WHERE toga.student_id=student.id AND toga.academic_period_id=period.id AND toga.item_type='TOGA' AND toga.status='RETURNED'))",
-        'COMLAB' => "NOT EXISTS (SELECT 1 FROM violations incident INNER JOIN stations incident_station ON incident_station.id=incident.station_id AND incident_station.code='COMLAB' WHERE incident.student_id=student.id AND incident.status='OPEN')",
-        'ACCOUNTING' => "EXISTS (SELECT 1 FROM accounting_receipts receipt WHERE receipt.student_id=student.id AND receipt.academic_period_id=period.id AND receipt.status IN ('SCANNED','APPROVED') AND receipt.receipt_code LIKE 'PORTAL-%') AND NOT EXISTS (SELECT 1 FROM accounting_obligations obligation WHERE obligation.student_id=student.id AND obligation.academic_period_id=period.id AND obligation.status='UNPAID')",
-        'REGISTRAR' => "NOT EXISTS (SELECT 1 FROM clearance_stations prior_record INNER JOIN stations prior_station ON prior_station.id=prior_record.station_id WHERE prior_record.clearance_id=clearance.id AND prior_station.code<>'REGISTRAR' AND prior_station.status='ACTIVE' AND prior_record.status<>'APPROVED')",
-        default => '0=1',
-    };
-    $exceptionSql = "EXISTS (SELECT 1 FROM clearance_exceptions exception_record WHERE exception_record.clearance_station_id=cs.id AND exception_record.status='APPROVED' AND (exception_record.expires_at IS NULL OR exception_record.expires_at>=NOW()))";
-    $eligible = $stationCode === 'REGISTRAR'
-        ? "({$eligibilitySql})"
-        : "(({$eligibilitySql}) OR ({$exceptionSql}))";
+    // The cards and their destination lists must classify each student identically.
+    $eligible = officeListEligibilitySql($stationCode);
+    $audienceSql = officeAudienceSql($audience);
     $statement = $database->prepare(
         "SELECT COUNT(*) AS total,
                 SUM(CASE WHEN cs.status='APPROVED' THEN 1 ELSE 0 END) AS approved,
@@ -177,12 +163,14 @@ function officeStatusSummary(PDO $database, string $stationCode): array
                 SUM(CASE WHEN cs.status NOT IN ('APPROVED','RETURNED') AND NOT (cs.status='PENDING' AND {$eligible}) THEN 1 ELSE 0 END) AS pending
          FROM clearance_stations cs
          INNER JOIN stations station ON station.id=cs.station_id AND station.code=:station_code
-         INNER JOIN clearances clearance ON clearance.id=cs.clearance_id
-         INNER JOIN academic_periods period ON period.id=clearance.academic_period_id AND period.status='ACTIVE'
-         INNER JOIN semester_enrollments enrollment ON enrollment.academic_period_id=period.id AND enrollment.student_id=clearance.student_id AND enrollment.status='ENROLLED'
-         INNER JOIN students student ON student.id=clearance.student_id AND student.status='ACTIVE'"
+         INNER JOIN clearances c ON c.id=cs.clearance_id
+         INNER JOIN academic_periods period ON period.id=c.academic_period_id AND period.status='ACTIVE'
+         INNER JOIN semester_enrollments enrollment ON enrollment.academic_period_id=period.id AND enrollment.student_id=c.student_id AND enrollment.status='ENROLLED'
+         INNER JOIN students student ON student.id=c.student_id AND student.status='ACTIVE'
+         INNER JOIN organizations organization ON organization.id=student.organization_id
+         WHERE {$audienceSql} AND organization.code LIKE :department_code"
     );
-    $statement->execute(['station_code' => $stationCode]);
+    $statement->execute(['station_code' => $stationCode, 'department_code' => $department === 'ALL' ? '%' : $department]);
     $row = $statement->fetch() ?: [];
     return [
         'TOTAL' => (int) ($row['total'] ?? 0),
@@ -207,7 +195,7 @@ function officeRows(PDO $database, string $stationCode, string $search = '', int
                 cs.id AS clearance_station_id, cs.status AS station_status, cs.returned_reason, cs.office_remarks,
                 student.id AS student_id, student.user_id AS student_user_id,
                 student.student_number, student.first_name, student.last_name,
-                student.program, student.year_level, student.section,
+                student.program, student.year_level,
                 organization.code AS organization_code, organization.name AS organization_name
          FROM clearance_stations cs
          INNER JOIN stations station ON station.id = cs.station_id AND station.code = :station_code
@@ -361,15 +349,7 @@ function officeEligibility(PDO $database, string $stationCode, array $row): arra
         $eligible = $priorOpen === 0;
     }
 
-    $exception = $database->prepare("SELECT id, reason, proof_reference, expires_at FROM clearance_exceptions WHERE clearance_station_id=:station_id AND status='APPROVED' AND (expires_at IS NULL OR expires_at>=NOW()) ORDER BY id DESC LIMIT 1");
-    $exception->execute(['station_id' => $clearanceStationId]);
-    $activeException = $exception->fetch();
-    if ($activeException !== false && $stationCode !== 'REGISTRAR') {
-        $details[] = 'Approved temporary exception: ' . $activeException['reason'];
-        if ($stationCode !== 'LIBRARY' || $outstandingBooks === []) { $eligible = true; }
-    }
-
-    return ['eligible' => $eligible, 'details' => $details, 'exception' => $activeException ?: null, 'outstanding_books' => $outstandingBooks];
+    return ['eligible' => $eligible, 'details' => $details, 'outstanding_books' => $outstandingBooks];
 }
 
 function ensureOfficeSourceRecords(PDO $database, int $studentId, int $periodId): void
@@ -380,8 +360,6 @@ function ensureOfficeSourceRecords(PDO $database, int $studentId, int $periodId)
     $card->execute(['student_id' => $studentId]);
     $fees = $database->prepare("INSERT IGNORE INTO student_bookstore_fees (student_id,fee_id,status) SELECT :student_id,id,'UNPAID' FROM bookstore_fees WHERE academic_period_id=:period_id AND status='ACTIVE' AND is_required=1");
     $fees->execute(['student_id' => $studentId, 'period_id' => $periodId]);
-    $documents = $database->prepare("INSERT IGNORE INTO student_documents (student_id,document_requirement_id,status) SELECT :student_id,id,'MISSING' FROM document_requirements WHERE academic_period_id=:period_id AND status='ACTIVE' AND is_required=1");
-    $documents->execute(['student_id' => $studentId, 'period_id' => $periodId]);
     $toga = $database->prepare("INSERT IGNORE INTO facilities_obligations (student_id,academic_period_id,item_type,description,status) SELECT student.id,period.id,'TOGA','Graduation toga','OUTSTANDING' FROM students student INNER JOIN academic_periods period ON period.id=:period_id AND period.semester='2ND' WHERE student.id=:student_id AND student.year_level>=4");
     $toga->execute(['student_id' => $studentId, 'period_id' => $periodId]);
 }
@@ -412,7 +390,7 @@ function officeClearanceContext(PDO $database, string $stationCode, int $clearan
 function notifyAndAuditOffice(PDO $database, array $context, int $staffUserId, string $action, string $description, string $oldStatus, string $newStatus): void
 {
     if ($newStatus === 'APPROVED') {
-        syncClearanceSignatureSnapshots($database, (int) $context['clearance_id']);
+        captureClearanceStationSignature($database, (int) $context['clearance_station_id'], $staffUserId);
     }
     if (($context['clearance_status'] ?? null) === 'OPEN') {
         createNotification($database, (int) $context['student_user_id'], $context['station_name'] . ' clearance updated', $description, (int) $context['academic_period_id']);
@@ -500,6 +478,13 @@ function approveOfficeClearance(PDO $database, string $stationCode, int $clearan
         if ($stationCode === 'LIBRARY') {
             requireLibraryBooksReturned($database, (int) $context['student_id']);
         }
+        if ($stationCode === 'ACCOUNTING') {
+            $balances = $database->prepare("SELECT id FROM accounting_obligations WHERE student_id=:student_id AND academic_period_id=:period_id AND status='UNPAID' FOR UPDATE");
+            $balances->execute(['student_id' => $context['student_id'], 'period_id' => $context['academic_period_id']]);
+            if ($balances->fetchColumn() !== false) {
+                throw new RuntimeException('All Accounting balances must be fully paid and recorded as settled before final clearance.');
+            }
+        }
         $row = $context + ['academic_period_id' => $context['academic_period_id']];
         $eligibility = officeEligibility($database, $stationCode, $row);
         if (!$eligibility['eligible']) {
@@ -531,35 +516,6 @@ function approveOfficeClearance(PDO $database, string $stationCode, int $clearan
     }
 }
 
-function manuallyClearAccounting(PDO $database, int $clearanceId, int $staffUserId): void
-{
-    $database->beginTransaction();
-    try {
-        $context = officeClearanceContext($database, 'ACCOUNTING', $clearanceId, true);
-        if (!in_array($context['clearance_status'], ['PREPARING', 'OPEN'], true)) {
-            throw new RuntimeException('Clearance decisions are not available for this semester.');
-        }
-        if ($context['station_status'] !== 'PENDING') {
-            throw new RuntimeException('Manual Accounting clearance is available only when the student is pending at Accounting.');
-        }
-        $reference = 'MANUAL-ACCOUNTING-' . $context['clearance_id'];
-        $settle = $database->prepare("UPDATE accounting_obligations SET status='CLEARED',payment_reference=COALESCE(payment_reference,:reference),cleared_by=:user_id,cleared_at=NOW() WHERE student_id=:student_id AND academic_period_id=:period_id AND status='UNPAID'");
-        $settle->execute(['reference' => $reference, 'user_id' => $staffUserId, 'student_id' => $context['student_id'], 'period_id' => $context['academic_period_id']]);
-        $update = $database->prepare("UPDATE clearance_stations SET status='APPROVED',approved_by=:user_id,approved_at=NOW(),returned_by=NULL,returned_at=NULL,returned_reason=NULL WHERE id=:id");
-        $update->execute(['user_id' => $staffUserId, 'id' => $context['clearance_station_id']]);
-        $requirements = $database->prepare("UPDATE requirement_records SET status='VERIFIED',verified_by=:user_id,verified_at=NOW(),remarks='Manually cleared by Accounting.' WHERE clearance_station_id=:station_id AND status NOT IN ('VERIFIED','RESOLVED')");
-        $requirements->execute(['user_id' => $staffUserId, 'station_id' => $context['clearance_station_id']]);
-        unlockAfterOfficeApproval($database, 'ACCOUNTING', $clearanceId);
-        notifyAndAuditOffice($database, $context, $staffUserId, 'ACCOUNTING_MANUALLY_CLEARED', 'Accounting manually cleared your clearance.', $context['station_status'], 'APPROVED');
-        $database->commit();
-    } catch (Throwable $exception) {
-        if ($database->inTransaction()) {
-            $database->rollBack();
-        }
-        throw $exception;
-    }
-}
-
 function finalizeRegistrarClearance(PDO $database, int $clearanceId, int $staffUserId, bool $readyOnly = false): void
 {
     $database->beginTransaction();
@@ -567,18 +523,6 @@ function finalizeRegistrarClearance(PDO $database, int $clearanceId, int $staffU
         $context = officeClearanceContext($database, 'REGISTRAR', $clearanceId, true);
         if ($readyOnly && $context['station_status'] !== 'PENDING') {
             throw new RuntimeException('This student is no longer ready for bulk clearance.');
-        }
-        if ($readyOnly) {
-            $incompleteDocuments = countQuery($database,
-                "SELECT COUNT(*) FROM document_requirements requirement
-                 LEFT JOIN student_documents document ON document.document_requirement_id=requirement.id AND document.student_id=:student_id
-                 WHERE requirement.academic_period_id=:period_id AND requirement.status='ACTIVE' AND requirement.is_required=1
-                   AND (document.id IS NULL OR document.status<>'VERIFIED')",
-                ['student_id' => $context['student_id'], 'period_id' => $context['academic_period_id']]
-            );
-            if ($incompleteDocuments > 0) {
-                throw new RuntimeException('Verify all required documents before bulk Registrar clearance.');
-            }
         }
         if (!in_array($context['clearance_status'], ['PREPARING', 'OPEN'], true)) {
             throw new RuntimeException('Clearance decisions are not available for this semester.');
@@ -588,24 +532,16 @@ function finalizeRegistrarClearance(PDO $database, int $clearanceId, int $staffU
         }
         $unsignedOffices = countQuery(
             $database,
-            "SELECT COUNT(*) FROM clearance_stations cs INNER JOIN stations station ON station.id=cs.station_id WHERE cs.clearance_id=:clearance_id AND station.code<>'REGISTRAR' AND station.status='ACTIVE' AND cs.status<>'APPROVED'",
+            "SELECT COUNT(*) FROM clearance_stations cs INNER JOIN stations station ON station.id=cs.station_id
+             LEFT JOIN clearance_station_signatures signature ON signature.clearance_station_id=cs.id
+             WHERE cs.clearance_id=:clearance_id AND station.code<>'REGISTRAR' AND station.status='ACTIVE'
+               AND (cs.status<>'APPROVED' OR signature.clearance_station_id IS NULL
+                    OR NOT (signature.approved_by_user_id <=> cs.approved_by) OR NOT (signature.signed_at <=> cs.approved_at))",
             ['clearance_id' => $clearanceId]
         );
         if ($unsignedOffices > 0) {
             throw new RuntimeException('All offices must sign and clear the student before the Registrar can complete the clearance.');
         }
-        $documents = $database->prepare(
-            "UPDATE student_documents document
-             INNER JOIN document_requirements requirement ON requirement.id=document.document_requirement_id
-             SET document.status='VERIFIED',document.reviewed_by=:user_id,document.reviewed_at=NOW(),document.return_reason=NULL
-             WHERE document.student_id=:student_id AND requirement.academic_period_id=:period_id
-               AND requirement.status='ACTIVE' AND requirement.is_required=1"
-        );
-        $documents->execute([
-            'user_id' => $staffUserId,
-            'student_id' => $context['student_id'],
-            'period_id' => $context['academic_period_id'],
-        ]);
         $update = $database->prepare("UPDATE clearance_stations SET status='APPROVED',approved_by=:user_id,approved_at=NOW(),returned_by=NULL,returned_at=NULL,returned_reason=NULL WHERE id=:id");
         $update->execute(['user_id' => $staffUserId, 'id' => $context['clearance_station_id']]);
         $requirements = $database->prepare("UPDATE requirement_records SET status='VERIFIED',verified_by=:user_id,verified_at=NOW(),remarks='Complete documents confirmed by Registrar.' WHERE clearance_station_id=:station_id AND status NOT IN ('VERIFIED','RESOLVED')");

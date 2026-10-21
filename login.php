@@ -10,15 +10,27 @@ if (authenticatedUser() !== null) {
 
 $message = pullFlashMessage();
 $csrfToken = createCsrfToken();
+$showRecovery = ($_GET['recovery'] ?? '') === '1' || isset($recoveryRateLimitMessage);
+$flow = $_SESSION['student_password_recovery'] ?? null;
+if (!is_array($flow) || (int) ($flow['created_at'] ?? 0) < time() - 1200) {
+    unset($_SESSION['student_password_recovery']);
+    $flow = null;
+}
+$stage = is_string($flow['grant'] ?? null) ? 'reset' : (is_string($flow['request_id'] ?? null) ? 'verify' : 'email');
+$recoveryMessage = $showRecovery ? ($recoveryRateLimitMessage ?? $message) : null;
+$action = escapeHtml(applicationUrl('/auth/password_recovery_action.php'));
+header('Cache-Control: no-store, max-age=0');
 ?>
 <!doctype html>
 <html lang="en">
 
-<head><?= connectionStatusAssets() ?>
+<head>
     <meta charset="utf-8">
+    <?= connectionStatusAssets() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ClearGo | The Lewis College</title>
-    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/login.css')) ?>">
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/login.css?v=' . filemtime(__DIR__ . '/assets/css/login.css'))) ?>">
+    <script defer src="<?= escapeHtml(applicationUrl('/assets/js/login.js?v=' . filemtime(__DIR__ . '/assets/js/login.js'))) ?>"></script>
 
 </head>
 
@@ -50,18 +62,23 @@ $csrfToken = createCsrfToken();
                     <input id="email" name="email" type="email" autocomplete="username" placeholder="name@thelewiscollege.edu.ph" pattern=".+@thelewiscollege\.edu\.ph" required>
                     <label for="password">Password</label>
                     <input id="password" name="password" type="password" autocomplete="current-password" required>
+                    <div class="signin-options">
+                        <label class="remember-option" for="remember-me"><input id="remember-me" name="remember_me" type="checkbox" value="1"> <span>Keep me signed in</span></label>
+                        <button class="forgot-password-trigger" type="button" data-open-recovery aria-haspopup="dialog" aria-controls="password-recovery-modal">Forgot password?</button>
+                    </div>
                     <button type="submit">Sign in to ClearGo</button>
                 </form>
                 <p class="form-note">Use your official @thelewiscollege.edu.ph account.</p>
+                <?= pwaInstallControl() ?>
             </div>
         </section>
     </main>
-    <?php if ($message !== null): ?>
+    <?php require __DIR__ . '/auth/password_recovery_view.php'; ?>
+    <?php if ($message !== null && !$showRecovery): ?>
         <aside class="login-toast" role="alert">
             <div><strong>ClearGo</strong><p><?= escapeHtml($message) ?></p></div>
             <button type="button" aria-label="Dismiss notification">&times;</button>
         </aside>
-        <script src="<?= escapeHtml(applicationUrl('/assets/js/login.js')) ?>"></script>
     <?php endif; ?>
 </body>
 

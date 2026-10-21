@@ -16,11 +16,17 @@ function getDatabaseConnection(): PDO
         return $connection;
     }
 
-    $host = getenv('DB_HOST') ?: 'localhost';
-    $port = getenv('DB_PORT') ?: '3306';
-    $database = getenv('DB_DATABASE') ?: 'lewis_clearance';
-    $username = getenv('DB_USERNAME') ?: 'root';
-    $password = getenv('DB_PASSWORD');
+    $host = appSetting('DB_HOST', 'localhost');
+    $port = appSetting('DB_PORT', '3306');
+    $database = appSetting('DB_DATABASE', 'lewis_clearance');
+    $username = appSetting('DB_USERNAME', 'root');
+    $password = appSetting('DB_PASSWORD');
+
+    if (productionEnvironment() && (strtolower($username) === 'root' || $username === '' || $password === '')) {
+        error_log('Production database configuration requires a dedicated user and password.');
+        if (PHP_SAPI !== 'cli') { displayDatabaseUnavailable(); }
+        throw new RuntimeException('Secure database configuration is required.');
+    }
 
     $dsn = sprintf(
         'mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4',
@@ -30,7 +36,7 @@ function getDatabaseConnection(): PDO
     );
 
     try {
-        $connection = new PDO($dsn, $username, $password === false ? '' : $password, [
+        $connection = new PDO($dsn, $username, $password, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_EMULATE_PREPARES => false,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,

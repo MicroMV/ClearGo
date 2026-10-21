@@ -4,6 +4,7 @@
 !/.env.example
 /credentials.json
 /google-credentials.json
+/config/environment.local.php
 **/credentials.local.json
 
 # Generated browser and UI test artifacts
@@ -15,6 +16,10 @@
 # Temporary local debug access and generated database backups
 /storage/private/debug-console.enabled
 /storage/backups/debug-console/
+/storage/backups/profile-retention/
+/storage/private/auth-mail-worker.heartbeat
+/storage/private/auth-mail-worker-*.heartbeat
+/storage/private/profile-maintenance.lock
 
 # Temporary local debug access and generated database backups
 /storage/private/debug-console.enabled

@@ -434,7 +434,7 @@ function approveDeanClearance(PDO $database, int $deanUserId, int $clearanceId, 
             'old_status' => $clearance['dean_status'],
         ]);
 
-        syncClearanceSignatureSnapshots($database, $clearanceId);
+        captureClearanceStationSignature($database, (int) $clearance['clearance_station_id'], $deanUserId);
         $database->commit();
         return true;
     } catch (Throwable $exception) {

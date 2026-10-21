@@ -8,13 +8,13 @@ require_once __DIR__ . '/../registrar/semester_functions.php';
 // Child tables are deleted first. Foreign key enforcement stays enabled.
 const DEBUG_SEMESTER_TABLES = [
     'sanction_submission_items','sanction_submissions','event_sanctions','event_sanction_policies',
-    'accounting_receipt_verifications','bookstore_receipt_submissions','event_attendance',
+    'bookstore_receipt_submissions','event_attendance',
     'clinic_medical_appointments','clearance_station_signatures','ccs_evaluation_completions',
-    'clearance_exceptions','requirement_records','clearance_stations','clearances',
-    'student_bookstore_fees','student_documents','accounting_receipts','bookstore_obligations',
+    'requirement_records','clearance_stations','clearances',
+    'student_bookstore_fees','accounting_receipts','bookstore_obligations',
     'accounting_obligations','facilities_obligations','medical_requirements','semester_enrollments',
-    'office_period_readiness','clinic_medical_schedules','events','bookstore_fees',
-    'document_requirements','academic_periods',
+    'staff_signature_recoveries','office_period_readiness','clinic_medical_schedules','events','bookstore_fees',
+    'academic_periods',
 ];
 const DEBUG_GLOBAL_ACTIVITY_TABLES = ['library_card_submissions','library_cards','borrowed_books','violations'];
 
@@ -97,11 +97,22 @@ function debugReadyAllOffices(PDO $database, ?int $userId, int $expectedPeriodId
         if ((int)$period['id'] !== $expectedPeriodId || $period['clearance_status'] !== 'PREPARING') {
             throw new RuntimeException('Refresh this screen. Ready all offices requires the current semester to be in PREPARING.');
         }
+        require_once __DIR__ . '/../auth/signature_functions.php';
+        $signers = [];
+        foreach (READINESS_ROLE_STATIONS as $role => $stationCode) {
+            $selected = $database->prepare("SELECT user.id FROM users user JOIN staff_signatures signature ON signature.user_id=user.id
+                WHERE user.role=? AND user.status='ACTIVE' AND LENGTH(signature.image_data)>0 ORDER BY user.id LIMIT 1 FOR UPDATE");
+            $selected->execute([$role]);
+            $signer = $selected->fetchColumn();
+            if ($signer === false) { throw new RuntimeException('Save and select an authorized signature for ' . str_replace('_',' ', $stationCode) . ' before using Ready all offices.'); }
+            requireStaffSignature($database, (int) $signer);
+            $signers[$stationCode] = (int) $signer;
+        }
         $query = $database->prepare("INSERT INTO office_period_readiness (academic_period_id,station_id,status,ready_by,ready_at,notes)
             SELECT ?,id,'READY',?,NOW(),'Temporary standalone local debug: all offices marked ready.'
-            FROM stations WHERE status='ACTIVE' AND code<>'REGISTRAR'
+            FROM stations WHERE status='ACTIVE' AND code=?
             ON DUPLICATE KEY UPDATE status='READY',ready_by=VALUES(ready_by),ready_at=NOW(),notes=VALUES(notes)");
-        $query->execute([$expectedPeriodId,$userId]);
+        foreach ($signers as $code => $signer) { $query->execute([$expectedPeriodId,$signer,$code]); }
         debugAudit($database,$userId,'READY_ALL','Standalone local debug screen marked all offices ready for semester #' . $expectedPeriodId . '. No students were cleared.');
         $database->commit();
     } catch (Throwable $exception) {

@@ -46,11 +46,12 @@ $sidebar = staffDashboardSidebar('Bookstore Clearance', $user, [
 ?>
 <!doctype html>
 <html lang="en">
-<head><?= connectionStatusAssets() ?>
+<head>
     <meta charset="utf-8">
+    <?= connectionStatusAssets() ?>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Bookstore Event Fees | ClearGo</title>
-    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>">
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/css/staff-dashboard.css') ?>">
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/bookstore-receipts.css')) ?>">
 </head>
 <body class="staff-dashboard"><div class="staff-shell"><?= $sidebar ?><div class="staff-workspace">

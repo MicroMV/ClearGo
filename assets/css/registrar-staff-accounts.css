@@ -98,3 +98,5 @@
         .table-wrap {
                 overflow: auto
         }
+.signature-recovery-control { margin-top:12px; padding:12px; border:1px solid #dfd3ae; border-radius:8px; background:#fffbf1; }
+.signature-recovery-control p { margin:0 0 8px; max-width:550px; line-height:1.5; font-size:12px; }

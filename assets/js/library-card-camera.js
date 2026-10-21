@@ -1,4 +1,7 @@
+window.initializeLibraryCardCameras = function () {
 document.querySelectorAll('[data-library-card-capture]').forEach(function (form) {
+    if (form.dataset.cameraInitialized) return;
+    form.dataset.cameraInitialized = 'true';
     const video = form.querySelector('video');
     const canvas = form.querySelector('canvas');
     const preview = form.querySelector('.library-card-preview');
@@ -113,3 +116,5 @@ document.querySelectorAll('[data-library-card-capture]').forEach(function (form)
         if (event.key === 'Escape') stopCamera();
     });
 });
+};
+window.initializeLibraryCardCameras();

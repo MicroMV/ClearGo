@@ -19,4 +19,4 @@ try {
     error_log('CCS completion import failed: ' . $exception->getMessage());
     setFlashMessage($exception instanceof RuntimeException ? $exception->getMessage() : 'Unable to import the completion list.');
 }
-redirectTo('/dean/dashboard.php');
+redirectTo('/dean/excel_import.php');

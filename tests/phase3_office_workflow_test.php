@@ -11,6 +11,8 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../clearance/clearance_functions.php';
 require_once __DIR__ . '/../clearance/office_workflow.php';
 require_once __DIR__ . '/../organization/clearance_functions.php';
+require_once __DIR__ . '/../clearance/remarks_functions.php';
+require_once __DIR__ . '/../clearance/bulk_clearance.php';
 
 $database = getDatabaseConnection();
 $failures = [];
@@ -21,7 +23,6 @@ $eventId = null;
 $activePeriodId = null;
 $originalClearanceStatus = null;
 $testFeeId = null;
-$testDocumentRequirementId = null;
 
 function phaseThreeCheck(bool $condition, string $message): void
 {
@@ -66,7 +67,7 @@ try {
         throw new RuntimeException('Missing Dean assigned to the test organization.');
     }
 
-    $student = $database->prepare("INSERT INTO students (user_id,student_number,first_name,last_name,program,year_level,section,organization_id,status) VALUES (:user_id,:number,'Phase Three','Workflow Student','BS Computer Science',1,'TEST',:organization_id,'ACTIVE')");
+    $student = $database->prepare("INSERT INTO students (user_id,student_number,first_name,last_name,program,year_level,organization_id,status) VALUES (:user_id,:number,'Phase Three','Workflow Student','BS Computer Science',1,:organization_id,'ACTIVE')");
     $student->execute(['user_id' => $studentUserId, 'number' => 'PHASE3-' . $token, 'organization_id' => $organizationId]);
     $studentId = (int) $database->lastInsertId();
     $activePeriod = $database->query("SELECT id,clearance_status FROM academic_periods WHERE status='ACTIVE' LIMIT 1")->fetch();
@@ -76,9 +77,6 @@ try {
     $fee = $database->prepare("INSERT INTO bookstore_fees (academic_period_id,name,amount,is_required,status) VALUES (:period_id,:name,0,1,'ACTIVE')");
     $fee->execute(['period_id' => $activePeriodId, 'name' => 'Phase 3 Test Fee ' . $token]);
     $testFeeId = (int) $database->lastInsertId();
-    $documentRequirement = $database->prepare("INSERT INTO document_requirements (academic_period_id,name,description,is_required,status) VALUES (:period_id,:name,'Test only',1,'ACTIVE')");
-    $documentRequirement->execute(['period_id' => $activePeriodId, 'name' => 'Phase 3 Test Document ' . $token]);
-    $testDocumentRequirementId = (int) $database->lastInsertId();
     $enrollment = $database->prepare("INSERT INTO semester_enrollments (academic_period_id,student_id,status) VALUES (:period_id,:student_id,'ENROLLED')");
     $enrollment->execute(['period_id' => $activePeriodId, 'student_id' => $studentId]);
     $started = startStudentClearance($database, $studentUserId);
@@ -188,14 +186,35 @@ try {
     $registrarContext = officeClearanceContext($database, 'REGISTRAR', $clearanceId);
     $registrarEligibility = officeEligibility($database, 'REGISTRAR', $registrarContext);
     phaseThreeCheck($registrarEligibility['eligible'], 'Registrar was not ready after every prior office signed.');
+    $missingSnapshot = $database->query('SELECT signature.* FROM clearance_station_signatures signature JOIN clearance_stations record ON record.id=signature.clearance_station_id JOIN stations station ON station.id=record.station_id WHERE record.clearance_id=' . $clearanceId . " AND station.code='BOOKSTORE'")->fetch();
+    $database->prepare('DELETE FROM clearance_station_signatures WHERE clearance_station_id=?')->execute([$missingSnapshot['clearance_station_id']]);
+    $missingSnapshotBlocked = false;
+    try { finalizeRegistrarClearance($database, $clearanceId, $staffByRole['REGISTRAR']); } catch (RuntimeException $exception) { $missingSnapshotBlocked = true; }
+    phaseThreeCheck($missingSnapshotBlocked && officeClearanceContext($database,'REGISTRAR',$clearanceId)['station_status'] === 'PENDING', 'Registrar completion must reject an approved office with no captured signature.');
+    $database->prepare('INSERT INTO clearance_station_signatures (' . implode(',',array_keys($missingSnapshot)) . ') VALUES (' . implode(',',array_fill(0,count($missingSnapshot),'?')) . ')')->execute(array_values($missingSnapshot));
+
+    $registrar = ['id' => $staffByRole['REGISTRAR'], 'role' => 'REGISTRAR'];
+    $missingDocumentRemarks = 'Missing original document. Present it to the Registrar. ' . $token;
+    phaseThreeCheck(saveOfficeRemarks($database, $registrar, $clearanceId, $missingDocumentRemarks), 'Registrar could not record missing documents in remarks.');
+    returnOfficeClearance($database, 'REGISTRAR', $clearanceId, $staffByRole['REGISTRAR'], $missingDocumentRemarks);
+    phaseThreeCheck(officeClearanceContext($database, 'REGISTRAR', $clearanceId)['station_status'] === 'RETURNED', 'Registrar For Compliance did not hold final clearance.');
+    phaseThreeCheck(!in_array($clearanceId, bulkReadyClearanceIds($database, 'REGISTRAR'), true), 'Bulk clearance included a student marked For Compliance.');
+    $bulkBlocked = false;
+    try { finalizeRegistrarClearance($database, $clearanceId, $staffByRole['REGISTRAR'], true); } catch (RuntimeException $exception) { $bulkBlocked = str_contains($exception->getMessage(), 'no longer ready'); }
+    phaseThreeCheck($bulkBlocked, 'A stale bulk request cleared a student marked For Compliance.');
+    $remarkQuery = $database->prepare('SELECT office_remarks,returned_reason FROM clearance_stations WHERE id=?');
+    $remarkQuery->execute([$registrarContext['clearance_station_id']]);
+    $recordedRemarks = $remarkQuery->fetch();
+    phaseThreeCheck($recordedRemarks['office_remarks'] === $missingDocumentRemarks && $recordedRemarks['returned_reason'] === $missingDocumentRemarks, 'Missing-document instructions were not retained.');
+    phaseThreeCheck(countQuery($database, "SELECT COUNT(*) FROM notifications WHERE user_id=:student_user_id AND message=:message", ['student_user_id' => $studentUserId, 'message' => $missingDocumentRemarks]) > 0, 'Missing-document remarks did not notify the student.');
+    phaseThreeCheck(saveOfficeRemarks($database, $registrar, $clearanceId, 'Original document checked; complete. ' . $token), 'Registrar could not update remarks after the student completed documents.');
     finalizeRegistrarClearance($database, $clearanceId, $staffByRole['REGISTRAR']);
 
-    $unverifiedDocuments = countQuery(
-        $database,
-        "SELECT COUNT(*) FROM student_documents document INNER JOIN document_requirements requirement ON requirement.id=document.document_requirement_id WHERE document.student_id=:student_id AND requirement.academic_period_id=:period_id AND requirement.status='ACTIVE' AND requirement.is_required=1 AND document.status<>'VERIFIED'",
-        ['student_id' => $studentId, 'period_id' => $activePeriodId]
+    $unverifiedRequirements = countQuery($database,
+        "SELECT COUNT(*) FROM requirement_records requirement INNER JOIN clearance_stations record ON record.id=requirement.clearance_station_id INNER JOIN stations station ON station.id=record.station_id AND station.code='REGISTRAR' WHERE record.clearance_id=:clearance_id AND requirement.status NOT IN ('VERIFIED','RESOLVED')",
+        ['clearance_id' => $clearanceId]
     );
-    phaseThreeCheck($unverifiedDocuments === 0, 'Registrar Clear did not confirm all required documents.');
+    phaseThreeCheck($unverifiedRequirements === 0, 'Registrar Clear did not record the manual final review.');
 
     $overall = $database->prepare('SELECT status,completed_at FROM clearances WHERE id=:id');
     $overall->execute(['id' => $clearanceId]);
@@ -223,7 +242,7 @@ try {
         $deleteClearance->execute(['student_id' => $studentId]);
         $deleteEnrollment = $database->prepare('DELETE FROM semester_enrollments WHERE student_id=:student_id');
         $deleteEnrollment->execute(['student_id' => $studentId]);
-        foreach (['library_cards', 'medical_requirements', 'student_bookstore_fees', 'student_documents'] as $table) {
+        foreach (['library_cards', 'medical_requirements', 'student_bookstore_fees'] as $table) {
             $delete = $database->prepare("DELETE FROM {$table} WHERE student_id=:student_id");
             $delete->execute(['student_id' => $studentId]);
         }
@@ -240,9 +259,6 @@ try {
     }
     if ($testFeeId !== null) {
         $database->prepare('DELETE FROM bookstore_fees WHERE id=:id')->execute(['id' => $testFeeId]);
-    }
-    if ($testDocumentRequirementId !== null) {
-        $database->prepare('DELETE FROM document_requirements WHERE id=:id')->execute(['id' => $testDocumentRequirementId]);
     }
 }
 

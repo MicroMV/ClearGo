@@ -42,7 +42,7 @@ function cbeOrderStudent(PDO $database, int $periodId, int $organizationId, int 
     $database->prepare("INSERT INTO users(email,password_hash,role,status) VALUES (?,?,'STUDENT','ACTIVE')")
         ->execute(['cbe-order-' . $token . '@test.invalid', password_hash($token, PASSWORD_DEFAULT)]);
     $userId = (int) $database->lastInsertId();
-    $database->prepare("INSERT INTO students(user_id,student_number,first_name,last_name,program,year_level,section,organization_id,status) VALUES (?,?,'Synthetic','CBE Order Test','Test Program',?,'QA',?,'ACTIVE')")
+    $database->prepare("INSERT INTO students(user_id,student_number,first_name,last_name,program,year_level,organization_id,status) VALUES (?,?,'Synthetic','CBE Order Test','Test Program',?,?,'ACTIVE')")
         ->execute([$userId, 'CBE-ORDER-' . $token, $year, $organizationId]);
     $studentId = (int) $database->lastInsertId();
     $database->prepare("INSERT INTO semester_enrollments(academic_period_id,student_id,status) VALUES (?,?,'ENROLLED')")->execute([$periodId, $studentId]);
@@ -83,6 +83,11 @@ try {
     }
     $database->exec("INSERT INTO academic_periods(school_year,semester,status,clearance_status) VALUES ('2098-2099','1ST','ACTIVE','PREPARING')");
     $periodId = (int) $database->lastInsertId();
+    require_once __DIR__ . '/../auth/signature_functions.php';
+    foreach (['ORG_STAFF', 'DEAN'] as $role) {
+        // The fixture has not marked either office Ready yet.
+        saveStaffSignature($database, ['id' => $users[$role], 'role' => $role], 'Synthetic ' . $role, 'Office signatory', '[[[0.1,0.4],[0.5,0.7]]]');
+    }
     $database->prepare("INSERT INTO office_period_readiness(academic_period_id,station_id,status) SELECT ?,id,'READY' FROM stations WHERE status='ACTIVE' AND code<>'REGISTRAR'")->execute([$periodId]);
     $cbe = cbeOrderStudent($database, $periodId, (int) $organizations['CBE'], 1);
     $fourthYear = cbeOrderStudent($database, $periodId, (int) $organizations['CBE'], 4);

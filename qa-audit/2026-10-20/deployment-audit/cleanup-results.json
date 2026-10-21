@@ -1,0 +1,8 @@
+{
+    "removed_databases": [
+        "cleargo_deploy_audit_68c04a653efe",
+        "cleargo_load_audit_18140500600a"
+    ],
+    "remaining_matching_audit_schemas": [],
+    "school_database_present": true
+}

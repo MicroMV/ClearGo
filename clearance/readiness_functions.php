@@ -49,6 +49,8 @@ function markOfficeReady(PDO $database, int $userId, string $stationCode, string
         if ($context['readiness_status'] === 'READY') {
             throw new RuntimeException('This office is already marked ready.');
         }
+        require_once __DIR__ . '/../auth/signature_functions.php';
+        requireStaffSignature($database, $userId);
         $update = $database->prepare("UPDATE office_period_readiness SET status='READY',ready_by=:user_id,ready_at=NOW(),notes=:notes WHERE id=:id AND status='NOT_READY'");
         $update->execute(['user_id' => $userId, 'notes' => $notes ?: null, 'id' => $context['readiness_id']]);
         if ($update->rowCount() !== 1) {

@@ -1,0 +1,14 @@
+* { box-sizing:border-box; }
+html, body { height:100%; margin:0; }
+body { display:flex; flex-direction:column; background:#e3e8ef; color:#172b42; font-family:"Segoe UI",Arial,sans-serif; }
+.paper-controls { display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:6px; padding:8px; background:#fff; border-bottom:1px solid #d1dce8; }
+.paper-controls button { min-height:44px; min-width:44px; padding:8px 12px; border:1px solid #bbcddd; border-radius:8px; background:#fff; color:#135f9c; font:600 13px "Segoe UI",Arial,sans-serif; cursor:pointer; }
+.paper-controls button[data-paper-zoom="in"], .paper-controls button[data-paper-zoom="out"] { font-size:24px; padding:0; }
+.paper-controls button:disabled { opacity:.45; cursor:default; }
+.paper-controls output { min-width:48px; text-align:center; font-size:13px; font-weight:600; }
+.paper-hint { margin:0; padding:5px 10px; text-align:center; font-size:12px; color:#526b84; }
+.paper-scroll { flex:1; min-height:0; width:100%; overflow:auto; overscroll-behavior:contain; padding:12px; }
+.paper-sheet { width:1123px; margin:0 auto; background:white; box-shadow:0 2px 12px #152b4426; }
+.paper-sheet svg { display:block; width:100%; height:auto; }
+button:focus-visible, .paper-scroll:focus-visible { outline:3px solid #5c9cce; outline-offset:-3px; }
+@media(max-width:360px) { .paper-controls { gap:4px; padding-inline:4px; } .paper-controls button { padding-inline:8px; } }

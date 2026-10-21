@@ -13,8 +13,9 @@ $scannerScriptVersion = (string) (filemtime(__DIR__ . '/../assets/js/attendance-
 <!doctype html>
 <html lang="en">
 
-<head><?= connectionStatusAssets() ?>
+<head>
     <meta charset="utf-8">
+    <?= connectionStatusAssets() ?>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>ClearGo Attendance Scanner</title>
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/attendance-scanner.css')) ?>?v=<?= escapeHtml($scannerStylesVersion) ?>">
@@ -33,7 +34,7 @@ $scannerScriptVersion = (string) (filemtime(__DIR__ . '/../assets/js/attendance-
             </form>
         </section>
     </main>
-    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="<?= escapeHtml(applicationUrl('/assets/vendor/html5-qrcode/html5-qrcode.min.js')) ?>"></script>
     <script src="<?= escapeHtml(applicationUrl('/assets/js/attendance-scanner.js')) ?>?v=<?= escapeHtml($scannerScriptVersion) ?>"></script>
 </body>
 

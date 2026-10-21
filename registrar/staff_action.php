@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../auth/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/student_import_functions.php';
+require_once __DIR__ . '/../auth/signature_functions.php';
 
 $registrar = requireRole('REGISTRAR');
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCsrfToken($_POST['csrf_token'] ?? null)) {
@@ -16,7 +17,13 @@ try {
     $action = (string) ($_POST['action'] ?? '');
     $stationId = (int) $database->query("SELECT id FROM stations WHERE code='REGISTRAR' LIMIT 1")->fetchColumn();
 
-    if ($action === 'create') {
+    if ($action === 'signature_recovery') {
+        $targetId = filter_var($_POST['user_id'] ?? null,FILTER_VALIDATE_INT,['options'=>['min_range'=>1]]);
+        if ($targetId === false) { throw new RuntimeException('Choose a staff account.'); }
+        authorizeStaffSignatureRecovery($database,(int)$registrar['id'],$targetId,is_string($_POST['reason'] ?? null) ? $_POST['reason'] : '');
+        setFlashMessage('One-time signature setup authorized for 24 hours. The staff member can complete it in My Profile.');
+        redirectTo('/registrar/staff_accounts.php');
+    } elseif ($action === 'create') {
         $email = strtolower(trim((string) ($_POST['email'] ?? '')));
         $role = strtoupper((string) ($_POST['role'] ?? ''));
         $allowedRoles = ['ORG_STAFF', 'DEAN', 'SASO_STAFF', 'STUDENT_COUNCIL_STAFF', 'LIBRARY_STAFF', 'BOOKSTORE_STAFF', 'CLINIC_STAFF', 'FACILITIES_STAFF', 'COMLAB_STAFF', 'ACCOUNTING_STAFF', 'REGISTRAR'];
@@ -70,7 +77,7 @@ try {
             if (!filter_var($email, FILTER_VALIDATE_EMAIL) || !str_ends_with($email, '@thelewiscollege.edu.ph')) {
                 throw new RuntimeException('Enter a valid Lewis College GSuite Address.');
             }
-            $database->prepare('UPDATE users SET email=:email WHERE id=:id')->execute(['email' => $email, 'id' => $userId]);
+            $database->prepare('UPDATE users SET auth_version=auth_version+1,email=:email WHERE id=:id')->execute(['email' => $email, 'id' => $userId]);
             $description = 'Registrar changed the GSuite address for ' . $account['role'] . ' from ' . $account['email'] . ' to ' . $email . '.';
             $auditAction = 'STAFF_EMAIL_CHANGED';
             setFlashMessage('Staff GSuite Address updated.');
@@ -79,12 +86,15 @@ try {
             if (strlen($password) < 8) {
                 throw new RuntimeException('The new staff password must contain at least 8 characters.');
             }
-            $database->prepare('UPDATE users SET password_hash=:hash WHERE id=:id')->execute(['hash' => password_hash($password, PASSWORD_DEFAULT), 'id' => $userId]);
+            require_once __DIR__ . '/../auth/security_functions.php';
+            if (strlen($password) > 72 || str_contains($password, "\0")) { throw new RuntimeException('Use a password with 8 to 72 characters.'); }
+            replaceAccountPassword($database, (int) $userId, password_hash($password, PASSWORD_DEFAULT));
             $description = 'Registrar changed the password for ' . $account['role'] . ' account ' . $account['email'] . '.';
             $auditAction = 'STAFF_PASSWORD_CHANGED';
             setFlashMessage('Staff password changed.');
         } elseif ($action === 'reset_default') {
-            $database->prepare('UPDATE users SET password_hash=:hash WHERE id=:id')->execute(['hash' => password_hash(CLEAR_GO_INITIAL_PASSWORD, PASSWORD_DEFAULT), 'id' => $userId]);
+            require_once __DIR__ . '/../auth/security_functions.php';
+            replaceAccountPassword($database, (int) $userId, password_hash(CLEAR_GO_INITIAL_PASSWORD, PASSWORD_DEFAULT));
             $description = 'Registrar reset the password for ' . $account['role'] . ' account ' . $account['email'] . ' to the institutional initial password.';
             $auditAction = 'STAFF_PASSWORD_RESET';
             setFlashMessage('Staff password reset to thelewiscollege.');

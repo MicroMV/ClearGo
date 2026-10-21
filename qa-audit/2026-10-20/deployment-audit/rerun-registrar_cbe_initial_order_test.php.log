@@ -1,0 +1,18 @@
+PASS: Registrar preparation starts CBE at Organization/YBC, including fourth year.
+PASS: Registrar preparation starts CBE at Organization/YBC, including fourth year.
+PASS: CCS retains its existing Dean-first rule.
+PASS: CTE retains its existing Dean-first rule.
+PASS: Dean cannot sign before CBE Organization approval.
+PASS: Real Organization approval unlocks CBE Dean.
+PASS: Repeated preparation preserves existing approvals.
+PASS: Semester opening also starts previously unprepared CBE students at Organization.
+PASS: Semester opening preserves earlier CBE Organization approval.
+PASS: CBE Organization staff receive the semester-opening notice.
+PASS: Opening does not falsely announce Dean-first action for all colleges.
+PASS: Migration repairs an untouched active CBE deadlock.
+PASS: Migration leaves applications with office decisions intact.
+PASS: Migration does not alter a completed clearance.
+PASS: Migration does not alter archived clearances.
+PASS: Migration preserves actual Organization approvals.
+PASS: Migration is safe to repeat.
+All 17 Registrar CBE initialization and repair checks passed.

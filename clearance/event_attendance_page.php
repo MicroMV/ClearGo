@@ -83,7 +83,7 @@ function renderEventAttendancePage(string $role, string $eventSource): void
         $offset = ($page - 1) * $pageSize;
         $attendanceQuery = $database->prepare(
             "SELECT student.student_number,student.first_name,student.last_name,student.program,
-                    student.year_level,student.section,organization.code AS college,
+                    student.year_level,organization.code AS college,
                     attendance.check_in_method,attendance.recorded_at,attendance.status AS attendance_status,attendance.sanction_verified_at
              {$attendanceFrom}
              ORDER BY student.last_name,student.first_name
@@ -121,11 +121,12 @@ function renderEventAttendancePage(string $role, string $eventSource): void
     ?>
 <!doctype html>
 <html lang="en">
-<head><?= connectionStatusAssets() ?>
+<head>
     <meta charset="utf-8">
+    <?= connectionStatusAssets() ?>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title><?= escapeHtml($title) ?> | ClearGo</title>
-    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>">
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/css/staff-dashboard.css') ?>">
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/event-attendance.css')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/css/event-attendance.css') ?>">
 </head>
 <body class="staff-dashboard"><div class="staff-shell"><?= $sidebar ?><div class="staff-workspace">

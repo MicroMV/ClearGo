@@ -1,0 +1,26 @@
+[
+    {
+        "name": "Camera audit native",
+        "student_number": "CAMERA-STUDENT",
+        "status": "PRESENT",
+        "check_in_method": "QR"
+    },
+    {
+        "name": "Camera audit fallback",
+        "student_number": "CAMERA-STUDENT",
+        "status": "PRESENT",
+        "check_in_method": "QR"
+    },
+    {
+        "name": "Camera audit expired",
+        "student_number": "CAMERA-STUDENT",
+        "status": "ABSENT",
+        "check_in_method": "MANUAL"
+    },
+    {
+        "name": "Camera audit Council",
+        "student_number": "CAMERA-OTHER",
+        "status": "PRESENT",
+        "check_in_method": "QR"
+    }
+]

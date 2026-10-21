@@ -67,3 +67,9 @@
 @media (max-width: 680px), (min-width: 821px) and (max-width: 980px) { .staff-profile-page .profile-picture-editor { grid-template-columns: minmax(0, 1fr); gap: 26px; } .profile-card-body { padding: 24px; } .profile-identity-cover { padding-inline: 24px; } }
 @media (max-width: 600px) { .profile-breadcrumb { margin-bottom: 20px; } .profile-page-heading { margin-bottom: 22px; } .staff-profile-page .profile-page-heading h2 { font-size: 26px; } .signature-card { padding: 22px; } .signature-card-heading,.signature-form-footer { align-items: stretch; flex-direction: column; } .signature-fields { grid-template-columns: minmax(0,1fr); } .signature-fields label:last-child { grid-column: auto; } .signature-form-footer button { width: 100%; } }
 @media (max-width: 380px) { .profile-card-body { padding: 20px; } .profile-identity-cover { padding-inline: 20px; gap: 10px; } .profile-active-status { font-size: 9px; padding: 5px 7px; } .profile-picture-form-footer>span { flex-basis: 100%; } }
+.saved-signature-actions { display:flex; align-items:center; gap:16px; margin-top:14px; }
+.saved-signature-actions a { color:var(--primary, #176bb0); font-weight:700; }
+.saved-signature-actions form { margin:0; }
+.saved-signature-actions button { color:#a12424; background:#fff5f5; border:1px solid #efcccc; }
+.signature-edit-preview { display:block; width:100%; max-width:360px; height:100px; object-fit:contain; margin-bottom:16px; }
+.signature-management-note { color:#5d7188; line-height:1.5; margin:0 0 22px; }

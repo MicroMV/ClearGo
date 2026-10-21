@@ -1,0 +1,99 @@
+{
+  "checks": [
+    {
+      "name": "An unauthenticated visitor cannot open the scanner",
+      "passed": true
+    },
+    {
+      "name": "390px camera denial shows a clear retry action",
+      "passed": true
+    },
+    {
+      "name": "390px embedded scanner fits the screen",
+      "passed": true
+    },
+    {
+      "name": "390px retry works after permission is allowed",
+      "passed": true
+    },
+    {
+      "name": "320px camera denial shows a clear retry action",
+      "passed": true
+    },
+    {
+      "name": "320px embedded scanner fits the screen",
+      "passed": true
+    },
+    {
+      "name": "320px retry works after permission is allowed",
+      "passed": true
+    },
+    {
+      "name": "A non-ClearGo QR does not submit attendance",
+      "passed": true
+    },
+    {
+      "name": "Retry after an invalid QR stops the previous camera stream",
+      "passed": true
+    },
+    {
+      "name": "A device without a camera gets a clear message",
+      "passed": true
+    },
+    {
+      "name": "An insecure browser context gets HTTPS guidance",
+      "passed": true
+    },
+    {
+      "name": "A missing compatibility decoder gets a useful error",
+      "passed": true
+    },
+    {
+      "name": "The native scanner path submits a valid QR immediately",
+      "passed": true
+    },
+    {
+      "name": "A duplicate scan remains a successful confirmation",
+      "passed": true
+    },
+    {
+      "name": "The actual compatibility library decodes a generated QR from a simulated camera",
+      "passed": true
+    },
+    {
+      "name": "An expired QR is rejected by the real server",
+      "passed": true
+    },
+    {
+      "name": "Another college cannot use the organization QR",
+      "passed": true
+    },
+    {
+      "name": "The Council QR works for an enrolled student from another college",
+      "passed": true
+    },
+    {
+      "name": "Staff cannot use the student attendance scanner",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "observations": [
+    {
+      "case": "Retry after a non-ClearGo QR",
+      "activeCameraTracks": 1
+    },
+    {
+      "case": "Actual compatibility decoder",
+      "state": {}
+    },
+    {
+      "case": "Council compatibility decoder",
+      "state": {}
+    },
+    {
+      "case": "Staff role gate",
+      "body": "Access denied."
+    }
+  ]
+}

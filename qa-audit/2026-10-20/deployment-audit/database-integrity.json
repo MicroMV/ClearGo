@@ -1,0 +1,517 @@
+{
+  "runtime": {
+    "php": "8.2.12",
+    "database": "10.4.32-MariaDB",
+    "opcache_loaded": false
+  },
+  "settings": {
+    "innodb_buffer_pool_size": "16777216",
+    "max_allowed_packet": "1048576",
+    "max_connections": "151",
+    "slow_query_log": "OFF",
+    "wait_timeout": "28800"
+  },
+  "tables": [
+    {
+      "TABLE_NAME": "academic_periods",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 2,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 32768
+    },
+    {
+      "TABLE_NAME": "accounting_obligations",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 0,
+      "DATA_LENGTH": 32768,
+      "INDEX_LENGTH": 49152
+    },
+    {
+      "TABLE_NAME": "accounting_receipts",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 1,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 81920
+    },
+    {
+      "TABLE_NAME": "audit_logs",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 8698,
+      "DATA_LENGTH": 1589248,
+      "INDEX_LENGTH": 950272
+    },
+    {
+      "TABLE_NAME": "bookstore_fees",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 3,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 16384
+    },
+    {
+      "TABLE_NAME": "bookstore_obligations",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 0,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 65536
+    },
+    {
+      "TABLE_NAME": "bookstore_receipt_submissions",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 1,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 49152
+    },
+    {
+      "TABLE_NAME": "borrowed_books",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 0,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 49152
+    },
+    {
+      "TABLE_NAME": "ccs_evaluation_completions",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 439,
+      "DATA_LENGTH": 49152,
+      "INDEX_LENGTH": 32768
+    },
+    {
+      "TABLE_NAME": "clearances",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 4638,
+      "DATA_LENGTH": 442368,
+      "INDEX_LENGTH": 688128
+    },
+    {
+      "TABLE_NAME": "clearance_exceptions",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 0,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 49152
+    },
+    {
+      "TABLE_NAME": "clearance_stations",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 51152,
+      "DATA_LENGTH": 3686400,
+      "INDEX_LENGTH": 8306688
+    },
+    {
+      "TABLE_NAME": "clearance_station_signatures",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 36,
+      "DATA_LENGTH": 262144,
+      "INDEX_LENGTH": 16384
+    },
+    {
+      "TABLE_NAME": "clinic_medical_appointments",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 1,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 49152
+    },
+    {
+      "TABLE_NAME": "clinic_medical_schedules",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 1,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 32768
+    },
+    {
+      "TABLE_NAME": "document_requirements",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 0,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 16384
+    },
+    {
+      "TABLE_NAME": "events",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 5,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 81920
+    },
+    {
+      "TABLE_NAME": "event_attendance",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 0,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 65536
+    },
+    {
+      "TABLE_NAME": "event_sanctions",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 0,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 65536
+    },
+    {
+      "TABLE_NAME": "event_sanction_policies",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 0,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 32768
+    },
+    {
+      "TABLE_NAME": "facilities_obligations",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 344,
+      "DATA_LENGTH": 65536,
+      "INDEX_LENGTH": 65536
+    },
+    {
+      "TABLE_NAME": "library_cards",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 2317,
+      "DATA_LENGTH": 147456,
+      "INDEX_LENGTH": 147456
+    },
+    {
+      "TABLE_NAME": "library_card_submissions",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 1,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 49152
+    },
+    {
+      "TABLE_NAME": "medical_requirements",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 4634,
+      "DATA_LENGTH": 311296,
+      "INDEX_LENGTH": 458752
+    },
+    {
+      "TABLE_NAME": "notifications",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 17060,
+      "DATA_LENGTH": 3686400,
+      "INDEX_LENGTH": 4407296
+    },
+    {
+      "TABLE_NAME": "office_period_readiness",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 20,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 65536
+    },
+    {
+      "TABLE_NAME": "organizations",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 3,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 16384
+    },
+    {
+      "TABLE_NAME": "requirements",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 17,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 81920
+    },
+    {
+      "TABLE_NAME": "requirement_records",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 55540,
+      "DATA_LENGTH": 4734976,
+      "INDEX_LENGTH": 9437184
+    },
+    {
+      "TABLE_NAME": "sanction_submissions",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 0,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 81920
+    },
+    {
+      "TABLE_NAME": "sanction_submission_items",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 0,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 16384
+    },
+    {
+      "TABLE_NAME": "semester_enrollments",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 4803,
+      "DATA_LENGTH": 376832,
+      "INDEX_LENGTH": 720896
+    },
+    {
+      "TABLE_NAME": "staff_assignments",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 6,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 49152
+    },
+    {
+      "TABLE_NAME": "staff_saved_signatures",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 6,
+      "DATA_LENGTH": 49152,
+      "INDEX_LENGTH": 32768
+    },
+    {
+      "TABLE_NAME": "staff_signatures",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 4,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 16384
+    },
+    {
+      "TABLE_NAME": "staff_signature_recoveries",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 0,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 49152
+    },
+    {
+      "TABLE_NAME": "stations",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 11,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 32768
+    },
+    {
+      "TABLE_NAME": "students",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 2317,
+      "DATA_LENGTH": 294912,
+      "INDEX_LENGTH": 557056
+    },
+    {
+      "TABLE_NAME": "student_bookstore_fees",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 7044,
+      "DATA_LENGTH": 458752,
+      "INDEX_LENGTH": 835584
+    },
+    {
+      "TABLE_NAME": "student_documents",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 0,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 65536
+    },
+    {
+      "TABLE_NAME": "users",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 2313,
+      "DATA_LENGTH": 376832,
+      "INDEX_LENGTH": 229376
+    },
+    {
+      "TABLE_NAME": "user_profile_pictures",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 1,
+      "DATA_LENGTH": 16384,
+      "INDEX_LENGTH": 0
+    },
+    {
+      "TABLE_NAME": "violations",
+      "ENGINE": "InnoDB",
+      "TABLE_ROWS": 1,
+      "DATA_LENGTH": 32768,
+      "INDEX_LENGTH": 65536
+    }
+  ],
+  "foreign_keys": {
+    "academic_periods.fk_academic_periods_opened_by": 0,
+    "accounting_obligations.fk_accounting_cleared_by": 0,
+    "accounting_obligations.fk_accounting_period": 0,
+    "accounting_obligations.fk_accounting_student": 0,
+    "accounting_receipts.fk_accounting_receipt_approved_by": 0,
+    "accounting_receipts.fk_accounting_receipt_issued_by": 0,
+    "accounting_receipts.fk_accounting_receipt_period": 0,
+    "accounting_receipts.fk_accounting_receipt_student": 0,
+    "audit_logs.fk_audit_station": 0,
+    "audit_logs.fk_audit_student": 0,
+    "audit_logs.fk_audit_user": 0,
+    "bookstore_fees.fk_bookstore_fees_period": 0,
+    "bookstore_obligations.fk_bookstore_obligation_cleared_by": 0,
+    "bookstore_obligations.fk_bookstore_obligation_period": 0,
+    "bookstore_obligations.fk_bookstore_obligation_recorded_by": 0,
+    "bookstore_obligations.fk_bookstore_obligation_student": 0,
+    "bookstore_receipt_submissions.fk_bookstore_receipt_reviewer": 0,
+    "bookstore_receipt_submissions.fk_bookstore_receipt_student_fee": 0,
+    "borrowed_books.fk_borrowed_books_recorded_by": 0,
+    "borrowed_books.fk_borrowed_books_returned_verified_by": 0,
+    "borrowed_books.fk_borrowed_books_student": 0,
+    "ccs_evaluation_completions.fk_ccs_evaluation_completion_clearance": 0,
+    "ccs_evaluation_completions.fk_ccs_evaluation_completion_recorder": 0,
+    "clearances.fk_clearances_period": 0,
+    "clearances.fk_clearances_student": 0,
+    "clearance_exceptions.fk_clearance_exceptions_decided_by": 0,
+    "clearance_exceptions.fk_clearance_exceptions_requested_by": 0,
+    "clearance_exceptions.fk_clearance_exceptions_station": 0,
+    "clearance_stations.fk_clearance_stations_approved_by": 0,
+    "clearance_stations.fk_clearance_stations_clearance": 0,
+    "clearance_stations.fk_clearance_stations_returned_by": 0,
+    "clearance_stations.fk_clearance_stations_station": 0,
+    "clearance_station_signatures.fk_clearance_signature_station": 0,
+    "clearance_station_signatures.fk_clearance_signature_user": 0,
+    "clinic_medical_appointments.fk_clinic_appointment_period": 0,
+    "clinic_medical_appointments.fk_clinic_appointment_schedule": 0,
+    "clinic_medical_appointments.fk_clinic_appointment_student": 0,
+    "clinic_medical_schedules.fk_clinic_schedule_creator": 0,
+    "clinic_medical_schedules.fk_clinic_schedule_period": 0,
+    "document_requirements.fk_document_requirements_period": 0,
+    "events.fk_events_academic_period": 0,
+    "events.fk_events_created_by": 0,
+    "events.fk_events_organization": 0,
+    "events.fk_events_station": 0,
+    "event_attendance.fk_attendance_sanction_verifier": 0,
+    "event_attendance.fk_event_attendance_event": 0,
+    "event_attendance.fk_event_attendance_recorded_by": 0,
+    "event_attendance.fk_event_attendance_student": 0,
+    "event_sanctions.event_sanctions_ibfk_1": 0,
+    "event_sanctions.event_sanctions_ibfk_2": 0,
+    "event_sanctions.event_sanctions_ibfk_3": 0,
+    "event_sanctions.event_sanctions_ibfk_4": 0,
+    "event_sanction_policies.event_sanction_policies_ibfk_1": 0,
+    "event_sanction_policies.event_sanction_policies_ibfk_2": 0,
+    "event_sanction_policies.event_sanction_policies_ibfk_3": 0,
+    "facilities_obligations.fk_facilities_period": 0,
+    "facilities_obligations.fk_facilities_recorded_by": 0,
+    "facilities_obligations.fk_facilities_returned_by": 0,
+    "facilities_obligations.fk_facilities_student": 0,
+    "library_cards.fk_library_cards_student": 0,
+    "library_cards.fk_library_cards_verified_by": 0,
+    "library_card_submissions.fk_library_card_submission_card": 0,
+    "library_card_submissions.fk_library_card_submission_reviewer": 0,
+    "medical_requirements.fk_medical_period": 0,
+    "medical_requirements.fk_medical_student": 0,
+    "medical_requirements.fk_medical_verified_by": 0,
+    "notifications.fk_notifications_period": 0,
+    "notifications.fk_notifications_user": 0,
+    "office_period_readiness.fk_office_period_period": 0,
+    "office_period_readiness.fk_office_period_ready_by": 0,
+    "office_period_readiness.fk_office_period_station": 0,
+    "requirements.fk_requirements_organization": 0,
+    "requirements.fk_requirements_station": 0,
+    "requirement_records.fk_requirement_records_clearance_station": 0,
+    "requirement_records.fk_requirement_records_requirement": 0,
+    "requirement_records.fk_requirement_records_verified_by": 0,
+    "sanction_submissions.sanction_submissions_ibfk_1": 0,
+    "sanction_submissions.sanction_submissions_ibfk_2": 0,
+    "sanction_submissions.sanction_submissions_ibfk_3": 0,
+    "sanction_submissions.sanction_submissions_ibfk_4": 0,
+    "sanction_submissions.sanction_submissions_ibfk_5": 0,
+    "sanction_submission_items.sanction_submission_items_ibfk_1": 0,
+    "sanction_submission_items.sanction_submission_items_ibfk_2": 0,
+    "semester_enrollments.fk_semester_enrollment_enrolled_by": 0,
+    "semester_enrollments.fk_semester_enrollment_period": 0,
+    "semester_enrollments.fk_semester_enrollment_removed_by": 0,
+    "semester_enrollments.fk_semester_enrollment_student": 0,
+    "staff_assignments.fk_staff_assignment_organization": 0,
+    "staff_assignments.fk_staff_assignment_station": 0,
+    "staff_assignments.fk_staff_assignment_user": 0,
+    "staff_saved_signatures.fk_saved_signature_user": 0,
+    "staff_signatures.fk_selected_signature_owner": 0,
+    "staff_signatures.fk_staff_signature_user": 0,
+    "staff_signature_recoveries.fk_signature_recovery_period": 0,
+    "staff_signature_recoveries.fk_signature_recovery_registrar": 0,
+    "staff_signature_recoveries.fk_signature_recovery_user": 0,
+    "stations.fk_stations_parent": 0,
+    "students.fk_students_organization": 0,
+    "students.fk_students_user": 0,
+    "student_bookstore_fees.fk_student_bookstore_fees_fee": 0,
+    "student_bookstore_fees.fk_student_bookstore_fees_student": 0,
+    "student_bookstore_fees.fk_student_bookstore_fees_verified_by": 0,
+    "student_documents.fk_student_documents_requirement": 0,
+    "student_documents.fk_student_documents_reviewed_by": 0,
+    "student_documents.fk_student_documents_student": 0,
+    "user_profile_pictures.fk_profile_picture_user": 0,
+    "violations.fk_violations_recorded_by": 0,
+    "violations.fk_violations_resolved_by": 0,
+    "violations.fk_violations_station": 0,
+    "violations.fk_violations_student": 0
+  },
+  "invariants": {
+    "active_periods": 1,
+    "completed_with_unsigned_offices": 0,
+    "approved_without_signature_snapshot": 77,
+    "snapshots_on_nonapproved_offices": 0,
+    "student_accounts_missing_profile": 0,
+    "foreign_station_violation_rows": 0,
+    "multiple_open_semesters": 1,
+    "section_columns_remaining": 0,
+    "retired_tables_remaining": 0
+  },
+  "standby_candidates": {
+    "document_requirements": 0,
+    "student_documents": 0,
+    "accounting_obligations": 0,
+    "clearance_exceptions": 0,
+    "event_sanctions": 0,
+    "sanction_submissions": 0,
+    "staff_signature_recoveries": 0
+  },
+  "unsigned_approval_groups": [
+    {
+      "period_status": "CLOSED",
+      "clearance_status": "CLOSED",
+      "station": "ACCOUNTING",
+      "approval_count": 6
+    },
+    {
+      "period_status": "CLOSED",
+      "clearance_status": "CLOSED",
+      "station": "BOOKSTORE",
+      "approval_count": 9
+    },
+    {
+      "period_status": "CLOSED",
+      "clearance_status": "CLOSED",
+      "station": "CLINIC",
+      "approval_count": 11
+    },
+    {
+      "period_status": "CLOSED",
+      "clearance_status": "CLOSED",
+      "station": "COMLAB",
+      "approval_count": 6
+    },
+    {
+      "period_status": "CLOSED",
+      "clearance_status": "CLOSED",
+      "station": "DEAN",
+      "approval_count": 4
+    },
+    {
+      "period_status": "CLOSED",
+      "clearance_status": "CLOSED",
+      "station": "FACILITIES",
+      "approval_count": 8
+    },
+    {
+      "period_status": "CLOSED",
+      "clearance_status": "CLOSED",
+      "station": "LIBRARY",
+      "approval_count": 11
+    },
+    {
+      "period_status": "CLOSED",
+      "clearance_status": "CLOSED",
+      "station": "ORGANIZATION",
+      "approval_count": 13
+    },
+    {
+      "period_status": "CLOSED",
+      "clearance_status": "CLOSED",
+      "station": "SASO",
+      "approval_count": 9
+    }
+  ],
+  "schema_objects": [
+    {
+      "TABLE_TYPE": "BASE TABLE",
+      "objects": 43
+    }
+  ],
+  "files": {
+    "referenced": 4,
+    "actual": 76,
+    "missing_references": 0,
+    "unreferenced_profile_images": 72
+  }
+}

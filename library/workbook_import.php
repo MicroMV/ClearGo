@@ -9,7 +9,7 @@ require_once __DIR__ . '/workbook_functions.php';
 $user = requireRole('LIBRARY_STAFF');
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCsrfToken($_POST['csrf_token'] ?? null)) {
     setFlashMessage('Unable to process the Library workbook. Please try again.');
-    redirectTo('/library/dashboard.php');
+    redirectTo('/library/excel_import.php');
 }
 try {
     $file = $_FILES['library_workbook'] ?? null;
@@ -36,4 +36,4 @@ try {
     error_log('Library workbook import failed: ' . $exception->getMessage());
     setFlashMessage($exception instanceof RuntimeException ? $exception->getMessage() : 'Unable to import the Library workbook.');
 }
-redirectTo('/library/dashboard.php');
+redirectTo('/library/excel_import.php');

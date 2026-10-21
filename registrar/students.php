@@ -27,7 +27,7 @@ try {
     $period = registrarActivePeriod($database);
     $statement = $database->prepare(
         "SELECT student.id,student.student_number,student.first_name,student.middle_name,student.last_name,student.program,
-                student.year_level,student.section,user.email,user.status AS account_status,
+                student.year_level,user.email,user.status AS account_status,
                 organization.id AS organization_id,organization.code AS organization_code,
                 COALESCE(enrollment.status,'REMOVED') AS enrollment_status
          FROM students student
@@ -110,8 +110,9 @@ $filterQuery = http_build_query([
 <!doctype html>
 <html lang="en">
 
-<head><?= connectionStatusAssets() ?>
+<head>
     <meta charset="utf-8">
+    <?= connectionStatusAssets() ?>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Student Accounts | ClearGo</title>
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/registrar-students.css')) ?>?v=<?= escapeHtml($studentStylesVersion) ?>">

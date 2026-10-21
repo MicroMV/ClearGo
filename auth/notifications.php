@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/auth_check.php';
+require_once __DIR__ . '/security_functions.php';
 require_once __DIR__ . '/../config/database.php';
 
 header('Content-Type: application/json; charset=utf-8');
@@ -15,9 +15,11 @@ if ($user === null) {
 
 try {
     $database = getDatabaseConnection();
-    $account = $database->prepare("SELECT id FROM users WHERE id=:id AND email=:email AND role=:role AND status='ACTIVE'");
+    $account = $database->prepare("SELECT id,auth_version FROM users WHERE id=:id AND email=:email AND role=:role AND status='ACTIVE'");
     $account->execute(['id' => $user['id'], 'email' => $user['email'], 'role' => $user['role']]);
-    if (!$account->fetchColumn()) {
+    $currentAccount = $account->fetch();
+    if ($currentAccount === false || !authSessionVersionMatches($user, $currentAccount)) {
+        unset($_SESSION['authenticated_user']);
         http_response_code(401);
         echo json_encode(['error' => 'Authentication required.']);
         exit;

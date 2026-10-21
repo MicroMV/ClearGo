@@ -47,11 +47,12 @@ $sidebar = staffDashboardSidebar('Accounting Clearance', $user, [
 <!doctype html>
 <html lang="en">
 
-<head><?= connectionStatusAssets() ?>
+<head>
     <meta charset="utf-8">
+    <?= connectionStatusAssets() ?>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Submitted Requirements | Accounting</title>
-    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>">
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/css/staff-dashboard.css') ?>">
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/bookstore-receipts.css')) ?>">
 </head>
 
@@ -69,7 +70,7 @@ $sidebar = staffDashboardSidebar('Accounting Clearance', $user, [
                     <h2>Accounting screenshot submissions</h2>
                     <p class="muted"><?= escapeHtml($period['school_year'] . ' / ' . $period['semester'] . ' Semester') ?></p>
                     <p>Compare the name, school year, semester, charges, payments, and remaining balance with official records. Approve when the payment requirement is satisfied, or reject with instructions for the student.</p>
-                    <nav class="receipt-filters" aria-label="Submission status"><?php foreach (['AWAITING' => 'Awaiting Review', 'APPROVED' => 'Approved', 'REJECTED' => 'Rejected', 'ALL' => 'All'] as $value => $label): ?><a class="<?= $filter === $value ? 'active' : '' ?>" href="?filter=<?= $value ?>"><?= $label ?></a><?php endforeach; ?><a class="filter-clear" aria-label="Clear filters" href="<?= escapeHtml(applicationUrl('/accounting/submissions.php')) ?>">Clear</a></nav>
+                    <nav class="receipt-filters" aria-label="Submission status"><?php foreach (['AWAITING' => 'Awaiting Review', 'APPROVED' => 'Approved', 'REJECTED' => 'Rejected', 'ALL' => 'All'] as $value => $label): ?><a class="<?= $filter === $value ? 'active' : '' ?>" href="?filter=<?= $value ?>"><?= $label ?></a><?php endforeach; ?></nav>
                     <?php if (!$submissions): ?><p class="muted">No submissions in this view.</p><?php else: ?><div class="receipt-card-grid">
                             <?php foreach ($submissions as $submission): ?>
                                 <?php $status = $submission['clearance_status'] === 'APPROVED' ? 'APPROVED' : ($submission['status'] === 'ISSUED' ? 'REJECTED' : 'AWAITING REVIEW'); ?>

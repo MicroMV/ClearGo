@@ -1,0 +1,87 @@
+{
+  "syntax_files": 228,
+  "syntax_failures": [],
+  "http": [
+    {
+      "route": "/",
+      "status": 303,
+      "xFrameOptions": "SAMEORIGIN",
+      "csp": "frame-ancestors 'self'"
+    },
+    {
+      "route": "/login.php",
+      "status": 200,
+      "xFrameOptions": "SAMEORIGIN",
+      "csp": "frame-ancestors 'self'"
+    },
+    {
+      "route": "/forgot_password.php",
+      "status": 200,
+      "xFrameOptions": "SAMEORIGIN",
+      "csp": "frame-ancestors 'self'"
+    },
+    {
+      "route": "/qa-audit/",
+      "status": 403,
+      "xFrameOptions": "SAMEORIGIN",
+      "csp": "frame-ancestors 'self'"
+    },
+    {
+      "route": "/tools/auth_mail_worker.php",
+      "status": 403,
+      "xFrameOptions": "SAMEORIGIN",
+      "csp": "frame-ancestors 'self'"
+    },
+    {
+      "route": "/lib/phpmailer/src/SMTP.php",
+      "status": 403,
+      "xFrameOptions": "SAMEORIGIN",
+      "csp": "frame-ancestors 'self'"
+    },
+    {
+      "route": "/storage/",
+      "status": 403,
+      "xFrameOptions": "SAMEORIGIN",
+      "csp": "frame-ancestors 'self'"
+    },
+    {
+      "route": "/.env",
+      "status": 403,
+      "xFrameOptions": "SAMEORIGIN",
+      "csp": "frame-ancestors 'self'"
+    },
+    {
+      "route": "/credentials.json",
+      "status": 403,
+      "xFrameOptions": "SAMEORIGIN",
+      "csp": "frame-ancestors 'self'"
+    },
+    {
+      "route": "/debug/",
+      "status": 403,
+      "xFrameOptions": "SAMEORIGIN",
+      "csp": "frame-ancestors 'self'"
+    },
+    {
+      "route": "/assets/vendor/html5-qrcode/html5-qrcode.min.js",
+      "status": 200,
+      "xFrameOptions": "SAMEORIGIN",
+      "csp": "frame-ancestors 'self'"
+    }
+  ],
+  "php_suites": {
+    "PASS": 45,
+    "NOT RUN": 1
+  },
+  "database": {
+    "tables": 47,
+    "foreign_keys": 113,
+    "orphan_relationships": 0,
+    "files": {
+      "referenced": 4,
+      "actual": 4,
+      "missing_references": [],
+      "unreferenced_files": []
+    }
+  }
+}

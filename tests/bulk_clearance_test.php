@@ -35,9 +35,6 @@ $database->exec("
     CREATE TABLE violations (student_id INTEGER, station_id INTEGER, status TEXT);
     CREATE TABLE accounting_receipts (student_id INTEGER, academic_period_id INTEGER, status TEXT, receipt_code TEXT);
     CREATE TABLE accounting_obligations (student_id INTEGER, academic_period_id INTEGER, status TEXT);
-    CREATE TABLE clearance_exceptions (clearance_station_id INTEGER, status TEXT, expires_at TEXT);
-    CREATE TABLE document_requirements (id INTEGER PRIMARY KEY, academic_period_id INTEGER, status TEXT, is_required INTEGER);
-    CREATE TABLE student_documents (id INTEGER PRIMARY KEY, student_id INTEGER, document_requirement_id INTEGER, status TEXT);
     INSERT INTO organizations VALUES (1,'CCS'),(2,'CBE');
     INSERT INTO academic_periods VALUES (1,'ACTIVE','OPEN','1ST');
 ");
@@ -93,7 +90,7 @@ foreach ($codes as $code) {
         'FACILITIES' => "INSERT INTO facilities_obligations VALUES (1,1,'OUTSTANDING','BORROWED_ITEM')",
         'COMLAB' => "INSERT INTO violations VALUES (1,{$stationId},'OPEN')",
         'ACCOUNTING' => "INSERT INTO accounting_obligations VALUES (1,1,'UNPAID')",
-        'REGISTRAR' => "INSERT INTO document_requirements VALUES (1,1,'ACTIVE',1); INSERT INTO student_documents (student_id,document_requirement_id,status) SELECT id,1,'VERIFIED' FROM students WHERE id<>1",
+        'REGISTRAR' => "UPDATE clearance_stations SET status='RETURNED' WHERE clearance_id=1 AND station_id=" . $stationIds['ACCOUNTING'],
     };
     $database->exec($blockingSql);
     bulkCheck(bulkReadyClearanceIds($database, $code, $organizationId) === range(2, 35), "{$code} included a student with incomplete requirements.");
@@ -105,11 +102,10 @@ foreach ($codes as $code) {
     $database->rollBack();
 }
 
-// Book returns cannot be waived by a temporary exception or verified card.
+// A verified card cannot waive book returns.
 $database->beginTransaction();
 $database->exec("UPDATE clearance_stations SET status='PENDING' WHERE station_id=" . $stationIds['LIBRARY'] . ";
-    INSERT INTO borrowed_books VALUES (1,'BORROWED'),(2,'RETURNED');
-    INSERT INTO clearance_exceptions VALUES (" . (100 + $stationIds['LIBRARY']) . ",'APPROVED',NULL)");
+    INSERT INTO borrowed_books VALUES (1,'BORROWED'),(2,'RETURNED');");
 bulkCheck(bulkReadyClearanceIds($database, 'LIBRARY') === range(2, 35), 'Library bulk clearance waived an unreturned book or blocked a returned book.');
 $database->rollBack();
 

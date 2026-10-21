@@ -1,10 +1,32 @@
 # Git metadata is private development data, including repositories in subfolders.
 # Keep this file in deployments; Apache must allow FileInfo overrides and mod_rewrite.
 RewriteEngine On
+Options -Indexes
+
+<IfModule mod_mime.c>
+    AddType application/manifest+json .webmanifest
+</IfModule>
+
+# Let browsers check for worker updates without storing an outdated entry script.
+<IfModule mod_headers.c>
+    <Files "connection-worker.js">
+        Header set Cache-Control "no-cache"
+    </Files>
+</IfModule>
 RewriteRule "(^|/)\.git(?:/|$)" - [F,L,NC]
 
 # Scratch scripts and generated previews are never public application resources.
 RewriteRule "(^|/)\.tmp(?:/|$)" - [F,L,NC]
+
+# Reports, CLI maintenance tools, dependencies and developer tests are never web pages.
+RewriteRule "(^|/)(?:qa-audit|tests|tools|lib)(?:/|$)" - [F,L,NC]
+RewriteRule "(^|/)\.env(?:\.[^/]*)?(?:/|$)" - [F,L,NC]
+RewriteRule "(^|/)\.(?!well-known(?:/|$))[^/]+(?:/|$)" - [F,L,NC]
+RewriteRule "(^|/)(?:credentials(?:\.local)?|google-credentials)\.json$" - [F,L,NC]
+RewriteRule "\.(?:md|sql|sql\.gz|bak|log)$" - [F,L,NC]
+
+# Temporary debug tools are disabled, including when a local enable flag exists.
+RewriteRule "^debug(?:/|$)" - [F,L,NC]
 
 # Runtime storage is served only through authorized PHP handlers outside this tree.
 RewriteRule "^storage(?:/|$)" - [F,L,NC]
@@ -15,4 +37,15 @@ RewriteRule "^storage(?:/|$)" - [F,L,NC]
     php_flag display_errors Off
     php_flag display_startup_errors Off
     php_flag log_errors On
+</IfModule>
+
+<IfModule mod_headers.c>
+    Header onsuccess unset X-Frame-Options
+    Header onsuccess unset Content-Security-Policy
+    Header onsuccess unset X-Content-Type-Options
+    Header onsuccess unset Referrer-Policy
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Content-Security-Policy "frame-ancestors 'self'"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "same-origin"
 </IfModule>

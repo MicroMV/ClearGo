@@ -24,6 +24,7 @@ $semester = ['1ST'=>'First Semester','2ND'=>'Second Semester','SUMMER'=>'Summer'
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <?= pwaAssets() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Clearance preview | ClearGo</title>
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/clearance-preview.css')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/css/clearance-preview.css') ?>">
@@ -39,7 +40,7 @@ $semester = ['1ST'=>'First Semester','2ND'=>'Second Semester','SUMMER'=>'Summer'
             <a class="preview-download" href="<?= escapeHtml($pdfUrl) ?>"><?= studentDashboardIcon('download') ?>Download PDF</a>
         </section>
         <p class="preview-help">Approved offices show their saved signatures. Pending offices remain unsigned. Complete the blank fields and personal signature lines after printing.</p>
-        <iframe class="preview-document" title="Your clearance paper" src="<?= escapeHtml($pdfUrl . '&view=inline') ?>"></iframe>
+        <iframe class="preview-document" title="Your clearance paper" src="<?= escapeHtml($pdfUrl . '&view=paper') ?>"></iframe>
         <p class="preview-fallback">If the preview does not appear, <a href="<?= escapeHtml($pdfUrl . '&view=inline') ?>" target="_blank" rel="noopener">open the PDF in a new tab</a> or download it above.</p>
     </main>
 </body>

@@ -1,0 +1,161 @@
+{
+  "security": [
+    {
+      "name": "Existing suite rerun office_workbook_design_test.php",
+      "passed": true,
+      "status": 0,
+      "tail": [
+        "All four office workbook designs and readbacks passed."
+      ]
+    },
+    {
+      "name": "Existing suite rerun phase2_dean_clearance_test.php",
+      "passed": true,
+      "status": 0,
+      "tail": [
+        "Phase 2 Dean clearance checks passed."
+      ]
+    },
+    {
+      "name": "Existing suite rerun profile_picture_test.php",
+      "passed": true,
+      "status": 0,
+      "tail": [
+        "Profile upload, replacement, ownership and audit-context checks passed for all 12 account roles."
+      ]
+    },
+    {
+      "name": "Existing suite rerun semester_notifications_test.php",
+      "passed": false,
+      "status": 255,
+      "tail": [
+        "Stack trace:",
+        "#0 C:\\xamppl\\htdocs\\ClearGo\\.tmp\\deployment-audit-2026-10-20\\app\\tests\\semester_notifications_test.php(115): semesterNotificationCheck(false, 'STUDENT sees ar...')",
+        "#1 {main}",
+        "  thrown in C:\\xamppl\\htdocs\\ClearGo\\.tmp\\deployment-audit-2026-10-20\\app\\tests\\semester_notifications_test.php on line 11"
+      ]
+    },
+    {
+      "name": "Disabled debug route on actual app returns denial",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "Database outage returns controlled 503 JSON",
+      "passed": true,
+      "status": 503,
+      "body": "{\"available\":false,\"error\":\"ClearGo is temporarily unavailable. Please try again in a moment.\"}"
+    },
+    {
+      "name": "Login outage returns controlled unavailable screen",
+      "passed": true,
+      "status": 503
+    }
+  ],
+  "performance": [
+    {
+      "name": "5000-roster-REGISTRAR",
+      "ms": 269.877800000002,
+      "status": 200,
+      "bytes": 79546,
+      "rawError": false
+    },
+    {
+      "name": "5000-roster-DEAN",
+      "ms": 1102.749499999998,
+      "status": 200,
+      "bytes": 55826,
+      "rawError": false
+    },
+    {
+      "name": "5000-roster-ORG_STAFF",
+      "ms": 1145.801199999998,
+      "status": 200,
+      "bytes": 41254,
+      "rawError": false
+    },
+    {
+      "name": "5000-roster-SASO_STAFF",
+      "ms": 477.0711999999985,
+      "status": 200,
+      "bytes": 46952,
+      "rawError": false
+    },
+    {
+      "name": "5000-roster-STUDENT_COUNCIL_STAFF",
+      "ms": 453.0282999999981,
+      "status": 200,
+      "bytes": 47454,
+      "rawError": false
+    },
+    {
+      "name": "5000-roster-LIBRARY_STAFF",
+      "ms": 318.5265999999974,
+      "status": 200,
+      "bytes": 48947,
+      "rawError": false
+    },
+    {
+      "name": "5000-roster-BOOKSTORE_STAFF",
+      "ms": 302.3297999999995,
+      "status": 200,
+      "bytes": 56243,
+      "rawError": false
+    },
+    {
+      "name": "5000-roster-CLINIC_STAFF",
+      "ms": 358.6248999999989,
+      "status": 200,
+      "bytes": 49208,
+      "rawError": false
+    },
+    {
+      "name": "5000-roster-FACILITIES_STAFF",
+      "ms": 528.8202000000019,
+      "status": 200,
+      "bytes": 114666,
+      "rawError": false
+    },
+    {
+      "name": "5000-roster-COMLAB_STAFF",
+      "ms": 469.5504000000001,
+      "status": 200,
+      "bytes": 75644,
+      "rawError": false
+    },
+    {
+      "name": "5000-roster-ACCOUNTING_STAFF",
+      "ms": 395.41460000000006,
+      "status": 200,
+      "bytes": 47552,
+      "rawError": false
+    }
+  ],
+  "errors": [],
+  "publicMetadata": [
+    {
+      "route": "/qa-audit/",
+      "status": 200
+    },
+    {
+      "route": "/qa-audit/2026-10-20/",
+      "status": 200
+    },
+    {
+      "route": "/database/",
+      "status": 403
+    },
+    {
+      "route": "/database/migrations/036_remove_student_section_and_retired_receipt_ai.sql",
+      "status": 403
+    },
+    {
+      "route": "/config/",
+      "status": 403
+    },
+    {
+      "route": "/PWA_SETUP.md",
+      "status": 200
+    }
+  ]
+}

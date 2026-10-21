@@ -59,13 +59,13 @@ try {
     $database = new PDO('sqlite::memory:', null, null, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
     $database->exec("CREATE TABLE academic_periods (id INTEGER PRIMARY KEY, school_year TEXT, semester TEXT, status TEXT);
         CREATE TABLE organizations (id INTEGER PRIMARY KEY, code TEXT, name TEXT, status TEXT);
-        CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT UNIQUE, password_hash TEXT, role TEXT, status TEXT);
-        CREATE TABLE students (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER UNIQUE, student_number TEXT UNIQUE, first_name TEXT, middle_name TEXT NOT NULL DEFAULT '', last_name TEXT, program TEXT, year_level INTEGER, section TEXT, organization_id INTEGER, status TEXT);
+        CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT UNIQUE, password_hash TEXT, role TEXT, status TEXT, auth_version INTEGER NOT NULL DEFAULT 1);
+        CREATE TABLE students (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER UNIQUE, student_number TEXT UNIQUE, first_name TEXT, middle_name TEXT NOT NULL DEFAULT '', last_name TEXT, program TEXT, year_level INTEGER, organization_id INTEGER, status TEXT);
         CREATE TABLE clearances (id INTEGER PRIMARY KEY, student_id INTEGER);
         INSERT INTO academic_periods VALUES (1, '2026-2027', '1ST', 'ACTIVE');
         INSERT INTO organizations VALUES (1, 'CCS', 'Computer Studies', 'ACTIVE');
-        INSERT INTO users VALUES (1, 'old@thelewiscollege.edu.ph', 'hash', 'STUDENT', 'ACTIVE');
-        INSERT INTO students VALUES (1, 1, 'STU-1', 'Old', '', 'Name', 'Old Program', 1, 'A', 1, 'ACTIVE');
+        INSERT INTO users (id,email,password_hash,role,status) VALUES (1, 'old@thelewiscollege.edu.ph', 'hash', 'STUDENT', 'ACTIVE');
+        INSERT INTO students VALUES (1, 1, 'STU-1', 'Old', '', 'Name', 'Old Program', 1, 1, 'ACTIVE');
         INSERT INTO clearances VALUES (1, 1);");
 
     $rawRows = [

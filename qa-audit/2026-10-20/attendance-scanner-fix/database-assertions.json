@@ -1,0 +1,8 @@
+{
+    "disposable_schemas_removed": true,
+    "duplicate_scan_has_one_present_row": true,
+    "expired_code_has_no_present_row": true,
+    "foreign_college_has_no_organization_checkin": true,
+    "diagnostic_real_org_decode_recorded_present": true,
+    "diagnostic_real_council_decode_recorded_present": true
+}

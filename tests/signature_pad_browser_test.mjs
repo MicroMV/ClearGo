@@ -15,7 +15,11 @@ const server = http.createServer((request, response) => {
     const url = new URL(request.url, 'http://localhost');
     if (url.pathname === '/auth/profile.php') {
         response.setHeader('Content-Type', 'text/html; charset=utf-8');
-        response.end(fs.readFileSync(url.searchParams.has('saved') ? path.join(root,'.tmp/ccs-dean-check/profile-signatures.html') : snapshot, 'utf8')
+        const page = url.searchParams.has('edit') ? path.join(root,'.tmp/ccs-dean-check/profile-signature-edit.html')
+            : (url.searchParams.has('locked') ? path.join(root,'.tmp/ccs-dean-check/profile-signature-locked.html')
+            : (url.searchParams.has('recovery') ? path.join(root,'.tmp/ccs-dean-check/profile-signature-recovery.html')
+            : (url.searchParams.has('saved') ? path.join(root,'.tmp/ccs-dean-check/profile-signatures.html') : snapshot)));
+        response.end(fs.readFileSync(page, 'utf8')
             .replace(/<script\b[^>]*data-connection-status[^>]*><\/script>/g, '')
             .replace(/data-notification-endpoint="[^"]*"/g, 'data-notification-endpoint=""'));
         return;
@@ -66,7 +70,7 @@ async function check(name, expression) {
     if (passed !== true) {
         const screenshot = await command('Page.captureScreenshot',{format:'png'});
         fs.writeFileSync(path.join(output,'failure.png'),Buffer.from(screenshot.data,'base64'));
-        const detail = await evaluate("(()=>{const r=document.querySelector('canvas')?.getBoundingClientRect();return {status:document.querySelector('[data-signature-status]')?.textContent,bounds:r?.toJSON(),hit:r?document.elementFromPoint(r.x+30,r.y+60)?.outerHTML.slice(0,200):null}})()");
+        const detail = await evaluate("(()=>{const r=document.querySelector('canvas')?.getBoundingClientRect();return {events:window.testPointerEvents,status:document.querySelector('[data-signature-status]')?.textContent,bounds:r?.toJSON(),hit:r?document.elementFromPoint(r.x+30,r.y+60)?.outerHTML.slice(0,200):null}})()");
         throw Error(name+' '+JSON.stringify(detail));
     }
 }
@@ -101,14 +105,16 @@ try {
         await check(width + 'px profile fits viewport', 'document.documentElement.scrollWidth<=innerWidth');
         await check(width + 'px no signature file upload', "!document.querySelector('[name=signature_image]')");
         await check(width + 'px blank save disabled', "document.querySelector('[data-signature-save]').disabled");
+        await evaluate("window.testPointerEvents=[];['pointerdown','pointermove','pointerup','pointercancel','gotpointercapture','lostpointercapture'].forEach(name=>document.querySelector('canvas').addEventListener(name,event=>testPointerEvents.push({type:event.type,x:event.clientX,y:event.clientY,id:event.pointerId,buttons:event.buttons}),true));");
+        await pause(150); // Let the browser finish scrolling and repaint before starting a stroke.
         const bounds = await evaluate("(()=>{const r=document.querySelector('canvas').getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};})()");
         if (width >= 700) {
             await command('Input.dispatchMouseEvent', {type: 'mousePressed', x: bounds.x + 30, y: bounds.y + 60, button: 'left', buttons: 1, clickCount: 1});
-            for (let step = 1; step <= 8; step++) await command('Input.dispatchMouseEvent', {type: 'mouseMoved', x: bounds.x + 30 + step * 12, y: bounds.y + 60 + Math.sin(step) * 20, buttons: 1});
+            for (let step = 1; step <= 8; step++) { await command('Input.dispatchMouseEvent', {type: 'mouseMoved', x: bounds.x + 30 + step * 12, y: bounds.y + 60 + Math.sin(step) * 20, buttons: 1}); await pause(25); }
             await command('Input.dispatchMouseEvent', {type: 'mouseReleased', x: bounds.x + 126, y: bounds.y + 60, button: 'left', buttons: 0, clickCount: 1});
         } else {
             await command('Input.dispatchTouchEvent', {type: 'touchStart', touchPoints: [{x: bounds.x + 25, y: bounds.y + 50}]});
-            for (let step = 1; step <= 8; step++) await command('Input.dispatchTouchEvent', {type: 'touchMove', touchPoints: [{x: bounds.x + 25 + step * 12, y: bounds.y + 50 + Math.sin(step) * 20}]});
+            for (let step = 1; step <= 8; step++) { await command('Input.dispatchTouchEvent', {type: 'touchMove', touchPoints: [{x: bounds.x + 25 + step * 12, y: bounds.y + 50 + Math.sin(step) * 20}]}); await pause(25); }
             await command('Input.dispatchTouchEvent', {type: 'touchEnd', touchPoints: []});
         }
         await check(width + 'px drawing enables save', "!document.querySelector('[data-signature-save]').disabled");
@@ -140,6 +146,24 @@ try {
         await check(width + 'px use button submits selected ID and CSRF',"signatureChoice.action==='select' && Number(signatureChoice.signature_id)>0 && signatureChoice.csrf_token.length>0 && !('signature_drawing' in signatureChoice)");
         const screenshot = await command('Page.captureScreenshot',{format:'png'});
         fs.writeFileSync(path.join(output,'saved-signatures-' + width + '.png'),Buffer.from(screenshot.data,'base64'));
+    }
+    for (const width of [1280,390,320]) {
+        await command('Emulation.setDeviceMetricsOverride', {width,height:1100,deviceScaleFactor:1,mobile:width<700});
+        await command('Page.navigate',{url:base+'/auth/profile.php?edit=1&width='+width});
+        await until(()=>evaluate("document.readyState==='complete' && document.querySelector('[data-signature-existing]') && !document.querySelector('[data-signature-save]').disabled"));
+        await check(width+'px editor fits viewport','document.documentElement.scrollWidth<=innerWidth');
+        await check(width+'px editor keeps saved identity',"document.querySelector('[name=printed_name]').value==='Dr. Synthetic Dean' && document.querySelector('[name=position_title]').value==='College Dean'");
+        await evaluate("window.editedSignature=null;document.querySelector('[data-signature-form]').addEventListener('submit',event=>{event.preventDefault();window.editedSignature=Object.fromEntries(new FormData(event.target));});document.querySelector('[name=printed_name]').value='Edited Signer';document.querySelector('[data-signature-form]').requestSubmit()");
+        await check(width+'px name edit preserves existing drawing',"editedSignature.action==='update' && Number(editedSignature.signature_id)>0 && editedSignature.printed_name==='Edited Signer' && editedSignature.signature_drawing===''");
+        await command('Page.navigate',{url:base+'/auth/profile.php?locked=1&width='+width});
+        await until(()=>evaluate("document.readyState==='complete' && document.querySelector('.signature-management-note')?.textContent.includes('Ready') && !document.querySelector('[data-signature-form]')"));
+        await check(width+'px Ready profile fits viewport','document.documentElement.scrollWidth<=innerWidth');
+        await check(width+'px Ready hides all signature mutation controls',"!document.querySelector('.signature-card form') && !document.querySelector('.saved-signature-actions') && document.querySelectorAll('[data-saved-signature]').length===2");
+        await command('Page.navigate',{url:base+'/auth/profile.php?recovery=1&width='+width});
+        await until(()=>evaluate("document.readyState==='complete' && document.querySelector('.signature-management-note')?.textContent.includes('one-time') && !!document.querySelector('[data-signature-form]')"));
+        await check(width+'px recovery profile fits viewport','document.documentElement.scrollWidth<=innerWidth');
+        await check(width+'px recovery offers first setup and selection',"!!document.querySelector('[data-signature-form]') && !!document.querySelector('.saved-signature [name=action][value=select]')");
+        await check(width+'px recovery keeps edit and delete locked',"!document.querySelector('.saved-signature-actions') && !document.querySelector('[name=action][value=update]') && !document.querySelector('[name=action][value=delete]')");
     }
     if (errors.length) throw Error('Uncaught browser exceptions: ' + errors.join(', '));
     console.log('All ' + checks.length + ' signature drawing browser checks passed.');

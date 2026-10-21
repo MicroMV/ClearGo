@@ -1,0 +1,2197 @@
+{
+  "security": [
+    {
+      "name": "Protected path /storage/",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "Protected path /storage/private/",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "Protected path /storage/sessions/",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "Protected path /.git/config",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "Protected path /.tmp/",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "Protected path /tests/",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "Protected path /debug/",
+      "passed": false,
+      "status": 500
+    },
+    {
+      "name": "Protected path /config/database.php",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "Protected path /tests/profile_picture_test.php",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "REGISTRAR -> /registrar/dashboard.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /registrar/students.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /registrar/staff_accounts.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /registrar/audit_logs.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /dean/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /organization/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /organization/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /organization/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /saso/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /student-council/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /student-council/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /student-council/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /library/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /library/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /bookstore/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /bookstore/fees.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /bookstore/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /clinic/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /clinic/schedules.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /facilities/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /facilities/borrowed-items.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /comlab/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /comlab/violations.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /accounting/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /accounting/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /student/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /student/attendance_scanner.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "REGISTRAR -> /student/password.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /registrar/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /registrar/students.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /registrar/staff_accounts.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /registrar/audit_logs.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /dean/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /organization/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /organization/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /organization/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /saso/dashboard.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /student-council/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /student-council/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /student-council/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /library/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /library/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /bookstore/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /bookstore/fees.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /bookstore/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /clinic/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /clinic/schedules.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /facilities/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /facilities/borrowed-items.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /comlab/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /comlab/violations.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /accounting/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /accounting/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /student/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /student/attendance_scanner.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "SASO_STAFF -> /student/password.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /registrar/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /registrar/students.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /registrar/staff_accounts.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /registrar/audit_logs.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /dean/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /organization/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /organization/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /organization/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /saso/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /student-council/dashboard.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /student-council/attendance.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /student-council/sanction_submissions.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /library/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /library/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /bookstore/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /bookstore/fees.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /bookstore/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /clinic/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /clinic/schedules.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /facilities/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /facilities/borrowed-items.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /comlab/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /comlab/violations.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /accounting/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /accounting/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /student/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /student/attendance_scanner.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT_COUNCIL_STAFF -> /student/password.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /registrar/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /registrar/students.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /registrar/staff_accounts.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /registrar/audit_logs.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /dean/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /organization/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /organization/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /organization/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /saso/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /student-council/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /student-council/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /student-council/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /library/dashboard.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /library/submissions.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /bookstore/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /bookstore/fees.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /bookstore/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /clinic/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /clinic/schedules.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /facilities/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /facilities/borrowed-items.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /comlab/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /comlab/violations.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /accounting/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /accounting/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /student/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /student/attendance_scanner.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "LIBRARY_STAFF -> /student/password.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /registrar/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /registrar/students.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /registrar/staff_accounts.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /registrar/audit_logs.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /dean/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /organization/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /organization/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /organization/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /saso/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /student-council/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /student-council/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /student-council/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /library/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /library/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /bookstore/dashboard.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /bookstore/fees.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /bookstore/submissions.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /clinic/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /clinic/schedules.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /facilities/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /facilities/borrowed-items.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /comlab/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /comlab/violations.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /accounting/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /accounting/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /student/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /student/attendance_scanner.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "BOOKSTORE_STAFF -> /student/password.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /registrar/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /registrar/students.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /registrar/staff_accounts.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /registrar/audit_logs.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /dean/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /organization/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /organization/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /organization/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /saso/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /student-council/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /student-council/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /student-council/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /library/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /library/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /bookstore/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /bookstore/fees.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /bookstore/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /clinic/dashboard.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /clinic/schedules.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /facilities/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /facilities/borrowed-items.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /comlab/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /comlab/violations.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /accounting/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /accounting/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /student/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /student/attendance_scanner.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "CLINIC_STAFF -> /student/password.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /registrar/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /registrar/students.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /registrar/staff_accounts.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /registrar/audit_logs.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /dean/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /organization/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /organization/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /organization/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /saso/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /student-council/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /student-council/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /student-council/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /library/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /library/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /bookstore/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /bookstore/fees.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /bookstore/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /clinic/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /clinic/schedules.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /facilities/dashboard.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /facilities/borrowed-items.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /comlab/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /comlab/violations.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /accounting/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /accounting/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /student/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /student/attendance_scanner.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "FACILITIES_STAFF -> /student/password.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /registrar/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /registrar/students.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /registrar/staff_accounts.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /registrar/audit_logs.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /dean/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /organization/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /organization/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /organization/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /saso/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /student-council/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /student-council/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /student-council/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /library/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /library/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /bookstore/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /bookstore/fees.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /bookstore/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /clinic/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /clinic/schedules.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /facilities/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /facilities/borrowed-items.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /comlab/dashboard.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /comlab/violations.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /accounting/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /accounting/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /student/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /student/attendance_scanner.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "COMLAB_STAFF -> /student/password.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /registrar/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /registrar/students.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /registrar/staff_accounts.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /registrar/audit_logs.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /dean/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /organization/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /organization/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /organization/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /saso/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /student-council/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /student-council/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /student-council/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /library/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /library/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /bookstore/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /bookstore/fees.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /bookstore/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /clinic/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /clinic/schedules.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /facilities/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /facilities/borrowed-items.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /comlab/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /comlab/violations.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /accounting/dashboard.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /accounting/submissions.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /student/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /student/attendance_scanner.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ACCOUNTING_STAFF -> /student/password.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /registrar/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /registrar/students.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /registrar/staff_accounts.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /registrar/audit_logs.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /dean/dashboard.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /organization/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /organization/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /organization/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /saso/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /student-council/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /student-council/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /student-council/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /library/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /library/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /bookstore/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /bookstore/fees.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /bookstore/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /clinic/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /clinic/schedules.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /facilities/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /facilities/borrowed-items.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /comlab/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /comlab/violations.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /accounting/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /accounting/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /student/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /student/attendance_scanner.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "DEAN -> /student/password.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /registrar/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /registrar/students.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /registrar/staff_accounts.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /registrar/audit_logs.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /dean/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /organization/dashboard.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /organization/attendance.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /organization/sanction_submissions.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /saso/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /student-council/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /student-council/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /student-council/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /library/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /library/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /bookstore/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /bookstore/fees.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /bookstore/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /clinic/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /clinic/schedules.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /facilities/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /facilities/borrowed-items.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /comlab/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /comlab/violations.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /accounting/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /accounting/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /student/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /student/attendance_scanner.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "ORG_STAFF -> /student/password.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /registrar/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /registrar/students.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /registrar/staff_accounts.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /registrar/audit_logs.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /dean/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /organization/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /organization/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /organization/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /saso/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /student-council/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /student-council/attendance.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /student-council/sanction_submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /library/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /library/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /bookstore/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /bookstore/fees.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /bookstore/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /clinic/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /clinic/schedules.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /facilities/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /facilities/borrowed-items.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /comlab/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /comlab/violations.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /accounting/dashboard.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /accounting/submissions.php",
+      "passed": true,
+      "status": 403,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /student/dashboard.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /student/attendance_scanner.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "STUDENT -> /student/password.php",
+      "passed": true,
+      "status": 200,
+      "rawError": false
+    },
+    {
+      "name": "Malformed login rejected [\"email\",\"password\"]",
+      "passed": true,
+      "status": 303
+    },
+    {
+      "name": "Malformed login rejected [\"email[]\",\"password[]\"]",
+      "passed": true,
+      "status": 303
+    },
+    {
+      "name": "Malformed login rejected [\"csrf_token[]\",\"email\",\"password\"]",
+      "passed": true,
+      "status": 303
+    },
+    {
+      "name": "Repeated failed logins are throttled",
+      "passed": false,
+      "attempts": 25,
+      "statuses": [
+        303,
+        303,
+        303,
+        303,
+        303,
+        303,
+        303,
+        303,
+        303,
+        303,
+        303,
+        303,
+        303,
+        303,
+        303,
+        303,
+        303,
+        303,
+        303,
+        303,
+        303,
+        303,
+        303,
+        303,
+        303
+      ]
+    },
+    {
+      "name": "Student page denies cross-origin framing",
+      "passed": false,
+      "xFrameOptions": null,
+      "csp": null
+    }
+  ],
+  "performance": [
+    {
+      "name": "mixed-1",
+      "requests": 20,
+      "seconds": 1.1110638,
+      "rps": 18.000766472636407,
+      "p50_ms": 34.83390000000145,
+      "p95_ms": 395.9945000000007,
+      "max_ms": 395.9945000000007,
+      "errors": 0,
+      "mean_bytes": 11245.9,
+      "concurrency": 1
+    },
+    {
+      "name": "mixed-10",
+      "requests": 20,
+      "seconds": 0.11152000000000044,
+      "rps": 179.34002869440388,
+      "p50_ms": 49.92209999999977,
+      "p95_ms": 94.53869999999733,
+      "max_ms": 94.53869999999733,
+      "errors": 0,
+      "mean_bytes": 11245.9,
+      "concurrency": 10
+    },
+    {
+      "name": "mixed-25",
+      "requests": 50,
+      "seconds": 0.14996029999999883,
+      "rps": 333.4215789112211,
+      "p50_ms": 55.40879999999743,
+      "p95_ms": 111.55810000000201,
+      "max_ms": 133.32819999999992,
+      "errors": 0,
+      "mean_bytes": 11691.16,
+      "concurrency": 25
+    },
+    {
+      "name": "mixed-50",
+      "requests": 100,
+      "seconds": 0.3018068999999996,
+      "rps": 331.33768644785835,
+      "p50_ms": 108.33620000000155,
+      "p95_ms": 246.51610000000073,
+      "max_ms": 264.29349999999977,
+      "errors": 0,
+      "mean_bytes": 11243.78,
+      "concurrency": 50
+    },
+    {
+      "name": "mixed-100",
+      "requests": 200,
+      "seconds": 0.6812517000000007,
+      "rps": 293.57724905493785,
+      "p50_ms": 176.93599999999788,
+      "p95_ms": 646.648799999999,
+      "max_ms": 673.9011000000028,
+      "errors": 0,
+      "mean_bytes": 11244.09,
+      "concurrency": 100
+    },
+    {
+      "name": "5000-user-background-poll-demand",
+      "requests": 3998,
+      "seconds": 8.271724200000001,
+      "rps": 483.33332970651986,
+      "p50_ms": 21.47910000000047,
+      "p95_ms": 54.32340000000113,
+      "max_ms": 504.9249000000018,
+      "errors": 0,
+      "mean_bytes": 39,
+      "target_rps": 500,
+      "offer_seconds": 8,
+      "issued": 3998,
+      "dropped": 0,
+      "max_inflight": 100
+    }
+  ],
+  "errors": []
+}

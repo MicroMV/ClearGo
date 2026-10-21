@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../auth/auth_check.php';
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../auth/signature_functions.php';
 
 $user = requireRole('REGISTRAR');
 try {
@@ -17,6 +18,13 @@ try {
         GROUP BY user.id,user.email,user.role,user.status,user.last_login_at
         ORDER BY user.role,user.email")->fetchAll();
     $organizations = $database->query("SELECT id,code,name FROM organizations WHERE status='ACTIVE' ORDER BY code")->fetchAll();
+    $signatureRecoveries = [];
+    foreach ($staff as $account) {
+        if ($account['status'] === 'ACTIVE' && staffSignature($database,(int)$account['id']) === false
+            && staffSignatureManagementState($database,$account)['locked']) {
+            $signatureRecoveries[(int)$account['id']] = staffSignatureRecovery($database,(int)$account['id']);
+        }
+    }
     $notifications = dashboardNotificationPreview($database, (int) $user['id']);
 } catch (Throwable $exception) {
     error_log('Staff account page failed: ' . $exception->getMessage());
@@ -31,12 +39,13 @@ $sidebar = registrarDashboardSidebar($user, 'staff', $logoutForm);
 <!doctype html>
 <html lang="en">
 
-<head><?= connectionStatusAssets() ?>
+<head>
     <meta charset="utf-8">
+    <?= connectionStatusAssets() ?>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Staff Accounts | ClearGo</title>
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/registrar-staff-accounts.css')) ?>">
-    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>">
+    <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/staff-dashboard.css')) ?>?v=<?= (int) filemtime(__DIR__ . '/../assets/css/staff-dashboard.css') ?>">
 </head>
 
 <body class="staff-dashboard">
@@ -108,6 +117,16 @@ $sidebar = registrarDashboardSidebar($user, 'staff', $logoutForm);
                                                 <button name="action" value="change_password">Change Password</button>
                                                 <button class="secondary" name="action" value="reset_default">Reset to Default</button>
                                             </form>
+                                            <?php if (array_key_exists((int)$account['id'],$signatureRecoveries)): ?>
+                                                <div class="signature-recovery-control"><p><strong>Ready office: selected signature missing.</strong> Authorize one-time setup without changing readiness or earlier approvals.</p>
+                                                <?php if ($signatureRecoveries[(int)$account['id']] !== false): ?><p>Setup is authorized until <?= escapeHtml($signatureRecoveries[(int)$account['id']]['expires_at']) ?>.</p><?php endif; ?>
+                                                <form class="inline" method="post" action="<?= escapeHtml(applicationUrl('/registrar/staff_action.php')) ?>">
+                                                    <input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>">
+                                                    <input type="hidden" name="user_id" value="<?= (int)$account['id'] ?>">
+                                                    <input name="reason" required minlength="5" maxlength="300" placeholder="Reason for recovery" aria-label="Signature recovery reason">
+                                                    <button name="action" value="signature_recovery">Allow signature setup</button>
+                                                </form></div>
+                                            <?php endif; ?>
                                         </td>
                                     </tr><?php endforeach; ?></tbody>
                         </table>

@@ -85,6 +85,7 @@ a {
 }
 
 .scanner-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+#retry[hidden] { display: none; }
 
 .scanner-embedded { background: #fff; }
 .scanner-embedded main { max-width: none; margin: 0; padding: 0; }
@@ -101,4 +102,13 @@ a {
     #camera,
     #camera video,
     #camera img { min-height: 48dvh; }
+}
+
+/* The compatibility decoder maps its scan box against the video's natural aspect ratio. */
+#camera.scanner-camera--compatibility,
+#camera.scanner-camera--compatibility video {
+    min-height: 0;
+    max-height: none;
+    height: auto;
+    object-fit: contain;
 }

@@ -1,0 +1,13 @@
+{
+    "migration": "037",
+    "private_backup": "debug-20261020-230423-db399f9e6cf868f4.sql.gz",
+    "existing_tables_preserved": 43,
+    "changed_existing_row_counts": [],
+    "new_tables": [
+        "auth_rate_limits",
+        "student_password_resets",
+        "auth_remember_tokens",
+        "auth_mail_queue"
+    ],
+    "idempotent_schema_test_passed": true
+}

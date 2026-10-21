@@ -1,0 +1,14 @@
+{
+  "security": [
+    {
+      "name": "Existing suite rerun semester_notifications_test.php",
+      "passed": true,
+      "status": 0,
+      "tail": [
+        "Semester notification rollover, archive selection, unread isolation, ownership and HTTP checks passed."
+      ]
+    }
+  ],
+  "performance": [],
+  "errors": []
+}

@@ -159,8 +159,9 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
 <!doctype html>
 <html lang="en">
 
-<head><?= connectionStatusAssets() ?>
+<head>
     <meta charset="utf-8">
+    <?= connectionStatusAssets() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Organization Clearance | Digital Clearance System</title>
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/organization-dashboard.css')) ?>">
@@ -181,27 +182,28 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
                 </div>
             </header>
             <main class="staff-main">
-                <?php if ($message !== null): ?><p class="message" data-flash-message><?= escapeHtml($message) ?></p><?php endif; ?>
-                <?php if ($readiness['clearance_status'] === 'PREPARING'): ?><section class="panel">
-                        <h2>Semester preparation</h2>
-                        <p>Review attendance and take action now. Approve complete students or return incomplete records before confirming readiness.</p><?php if ($readiness['readiness_status'] === 'READY'): ?><p class="message">Organization clearance is marked READY.</p>
-                            <form method="post" action="<?= escapeHtml(applicationUrl('/clearance/readiness_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><button type="submit" name="action" value="unready">Undo Ready</button></form><?php else: ?><form method="post" action="<?= escapeHtml(applicationUrl('/clearance/readiness_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><button type="submit" name="action" value="ready">Mark Organization Ready</button></form><?php endif; ?>
-                    </section><?php endif; ?>
-<section class="panel">
+                <section class="panel">
                     <div class="section-heading">
                         <div>
                             <h2>Clearance summary</h2>
                             <p class="muted">Current organization status across active students.</p>
                         </div>
+                        <a class="button-link summary-export" href="?search=<?= urlencode($search) ?>&amp;course=<?= urlencode($courseFilter) ?>&amp;year_level=<?= $yearFilter ?>&amp;filter=<?= urlencode($filter) ?>&amp;export=xlsx">Export Excel report</a>
                     </div>
                     <div class="summary">
-                        <div>Total Students<strong><?= $summary['TOTAL'] ?></strong></div>
-                        <div>Eligible<strong><?= $summary['ELIGIBLE'] ?></strong></div>
-                        <div>Pending<strong><?= $summary['PENDING'] ?></strong></div>
-                        <div>Cleared<strong><?= $summary['APPROVED'] ?></strong></div>
-                        <div>Returned<strong><?= $summary['RETURNED'] ?></strong></div>
+                        <?php foreach (['ALL' => ['Total Students', $summary['TOTAL']], 'ELIGIBLE' => ['Eligible', $summary['ELIGIBLE']], 'PENDING' => ['Pending', $summary['PENDING']], 'APPROVED' => ['Cleared', $summary['APPROVED']], 'RETURNED' => ['Returned', $summary['RETURNED']]] as $summaryFilter => [$summaryLabel, $summaryCount]): ?>
+                            <a class="summary-filter" href="?filter=<?= $summaryFilter ?>#student-records" <?= $filter === $summaryFilter ? 'aria-current="true"' : '' ?>><?= escapeHtml($summaryLabel) ?><strong><?= $summaryCount ?></strong></a>
+                        <?php endforeach; ?>
                     </div>
                 </section>
+                <?php if ($message !== null): ?><p class="message" data-flash-message><?= escapeHtml($message) ?></p><?php endif; ?>
+                <?php if ($readiness['clearance_status'] === 'PREPARING'): ?><section class="panel">
+                    <h2>Semester preparation</h2>
+                    <p>Save and select an authorized signature in <a href="<?= escapeHtml(applicationUrl('/auth/profile.php#signature-card-title')) ?>">My Profile</a> before marking Ready. Signatures lock while Ready.</p>
+                        <p>Review attendance and take action now. Approve complete students or return incomplete records before confirming readiness.</p><?php if ($readiness['readiness_status'] === 'READY'): ?><p class="message">Organization clearance is marked READY.</p>
+                            <form method="post" action="<?= escapeHtml(applicationUrl('/clearance/readiness_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><button type="submit" name="action" value="unready">Undo Ready</button></form><?php else: ?><form method="post" action="<?= escapeHtml(applicationUrl('/clearance/readiness_action.php')) ?>"><input type="hidden" name="csrf_token" value="<?= escapeHtml($csrfToken) ?>"><button type="submit" name="action" value="ready">Mark Organization Ready</button></form><?php endif; ?>
+                    </section><?php endif; ?>
+
                 <?php $organizationFilterLabels = ['ALL' => 'All Students', 'ELIGIBLE' => 'Ready to Clear', 'PENDING' => 'Pending', 'APPROVED' => 'Cleared', 'RETURNED' => 'Returned']; ?>
                 <section class="panel">
                     <div class="section-heading">
@@ -214,9 +216,9 @@ $sidebar = staffDashboardSidebar($pageTitle, $user, [
                             <option value="">All courses</option><?php foreach ($courses as $course): ?><option value="<?= escapeHtml($course) ?>" <?= $courseFilter === $course ? 'selected' : '' ?>><?= escapeHtml($course) ?></option><?php endforeach; ?>
                         </select><select name="year_level" aria-label="Filter by year level">
                             <option value="0">All year levels</option><?php foreach ($yearLevels as $year): ?><option value="<?= $year ?>" <?= $yearFilter === $year ? 'selected' : '' ?>>Year <?= $year ?></option><?php endforeach; ?>
-                        </select><select name="filter" aria-label="Filter by clearance status"><?php foreach ($allowedFilters as $option): ?><option value="<?= $option ?>" <?= $filter === $option ? 'selected' : '' ?>><?= escapeHtml($organizationFilterLabels[$option]) ?></option><?php endforeach; ?></select><button type="submit">Search</button><a class="button-link secondary filter-clear" aria-label="Clear filters" href="<?= escapeHtml(applicationUrl('/organization/dashboard.php')) ?>">Clear</a><a class="button-link" href="?search=<?= urlencode($search) ?>&amp;course=<?= urlencode($courseFilter) ?>&amp;year_level=<?= $yearFilter ?>&amp;filter=<?= urlencode($filter) ?>&amp;export=xlsx">Export Excel report</a></form>
+                        </select><select name="filter" aria-label="Filter by clearance status"><?php foreach ($allowedFilters as $option): ?><option value="<?= $option ?>" <?= $filter === $option ? 'selected' : '' ?>><?= escapeHtml($organizationFilterLabels[$option]) ?></option><?php endforeach; ?></select><button type="submit">Search</button><a class="button-link secondary filter-clear" aria-label="Clear filters" href="<?= escapeHtml(applicationUrl('/organization/dashboard.php')) ?>">Clear</a></form>
                 </section>
-                <section class="panel">
+                <section class="panel" id="student-records" tabindex="-1">
                     <div class="section-heading">
                         <div>
                             <h2>Student clearance records</h2>

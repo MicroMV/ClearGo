@@ -24,7 +24,8 @@ function sanctionLogin(array $user):array{
  global $clients;$h=curl_init();curl_setopt_array($h,[CURLOPT_COOKIEFILE=>'',CURLOPT_RETURNTRANSFER=>true,CURLOPT_TIMEOUT=>20]);$client=['handle'=>$h];$clients[]=$client;
  $page=sanctionHttp($client,'/login.php');if(!preg_match('/name="csrf_token" value="([^"]+)"/',$page['body'],$m))throw new RuntimeException('Missing login token.');
  $client['csrf']=html_entity_decode($m[1]);$result=sanctionHttp($client,'/auth/login_process.php',['csrf_token'=>$client['csrf'],'email'=>$user['email'],'password'=>'Sanction-Test-2026!']);
- if($result['status']!==303)throw new RuntimeException('Synthetic login failed.');return $client;
+ if($result['status']!==303)throw new RuntimeException('Synthetic login failed.');
+ require_once __DIR__.'/support/http_fixture.php';global $base;$client['csrf']=signedInFixtureCsrf($h,$base);$clients[array_key_last($clients)]=$client;return $client;
 }
 function sanctionUser(PDO $db,string $role,string $name):array{
  $email=$name.'@thelewiscollege.edu.ph';$db->prepare("INSERT INTO users(email,password_hash,role,status) VALUES(?,?,?,'ACTIVE')")->execute([$email,password_hash('Sanction-Test-2026!',PASSWORD_DEFAULT),$role]);return ['id'=>(int)$db->lastInsertId(),'role'=>$role,'email'=>$email];
@@ -38,10 +39,11 @@ try{
  $db->exec("INSERT INTO academic_periods(school_year,semester,status,clearance_status) VALUES('2098-2099','1ST','ACTIVE','PREPARING')");$period=(int)$db->lastInsertId();
  $db->exec("INSERT INTO office_period_readiness(academic_period_id,station_id,status) SELECT $period,id,'NOT_READY' FROM stations WHERE status='ACTIVE'");
  $org=sanctionUser($db,'ORG_STAFF','sanction-org');$otherOrg=sanctionUser($db,'ORG_STAFF','sanction-other-org');$council=sanctionUser($db,'STUDENT_COUNCIL_STAFF','sanction-council');$dean=sanctionUser($db,'DEAN','sanction-dean');
+ foreach ([$org,$otherOrg,$council,$dean] as $signer) saveStaffSignature($db,$signer,'Synthetic Signer','Office Signatory',json_encode([[[0.1,0.4],[0.3,0.6],[0.5,0.3]]]));
  foreach([[$org,$orgs['CCS']],[$otherOrg,$orgs['CBE']]] as [$staff,$organization])$db->prepare("INSERT INTO staff_assignments(user_id,station_id,organization_id,status) VALUES(?,?,?,'ACTIVE')")->execute([$staff['id'],$stations['ORGANIZATION'],$organization]);
  $db->prepare("INSERT INTO staff_assignments(user_id,station_id,organization_id,status) VALUES(?,?,?,'ACTIVE')")->execute([$dean['id'],$stations['DEAN'],$orgs['CCS']]);
  $students=[];
- foreach(['present','absent','other'] as $name){$user=sanctionUser($db,'STUDENT','sanction-'.$name);$organization=$name==='other'?$orgs['CBE']:$orgs['CCS'];$db->prepare("INSERT INTO students(user_id,student_number,first_name,last_name,program,year_level,section,organization_id,status) VALUES(?,?,?,'Student','BSCS',1,'QA',?,'ACTIVE')")->execute([$user['id'],'SANCTION-'.$name,ucfirst($name),$organization]);$user['student_id']=(int)$db->lastInsertId();$db->prepare("INSERT INTO semester_enrollments(academic_period_id,student_id,status) VALUES(?,?,'ENROLLED')")->execute([$period,$user['student_id']]);$students[$name]=$user;}
+ foreach(['present','absent','other'] as $name){$user=sanctionUser($db,'STUDENT','sanction-'.$name);$organization=$name==='other'?$orgs['CBE']:$orgs['CCS'];$db->prepare("INSERT INTO students(user_id,student_number,first_name,last_name,program,year_level,organization_id,status) VALUES(?,?,?,'Student','BSCS',1,?,'ACTIVE')")->execute([$user['id'],'SANCTION-'.$name,ucfirst($name),$organization]);$user['student_id']=(int)$db->lastInsertId();$db->prepare("INSERT INTO semester_enrollments(academic_period_id,student_id,status) VALUES(?,?,'ENROLLED')")->execute([$period,$user['student_id']]);$students[$name]=$user;}
  $absent=$students['absent'];
  $event1=createOrganizationEvent($db,$org['id'],(int)$orgs['CCS'],'Classroom activity one','',date('Y-m-d'),null,null);
  $event2=createOrganizationEvent($db,$org['id'],(int)$orgs['CCS'],'Classroom activity two','',date('Y-m-d'),null,null);

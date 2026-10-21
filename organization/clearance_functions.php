@@ -222,7 +222,7 @@ function approveOrganizationStudent(PDO $database, int $staffUserId, int $organi
         $startClearance = $database->prepare("UPDATE clearances SET status = 'IN_PROGRESS', started_at = COALESCE(started_at, NOW()) WHERE id = :clearance_id AND status = 'NOT_STARTED'");
         $startClearance->execute(['clearance_id' => $student['clearance_id']]);
         require_once __DIR__ . '/../auth/signature_functions.php';
-        syncClearanceSignatureSnapshots($database, (int) $student['clearance_id']);
+        captureClearanceStationSignature($database, (int) $student['clearance_station_id'], $staffUserId);
         $database->commit();
         return 'approved';
     } catch (Throwable $exception) {

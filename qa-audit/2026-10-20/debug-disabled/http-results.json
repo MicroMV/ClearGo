@@ -1,0 +1,137 @@
+{
+  "flagPresent": false,
+  "checks": [
+    {
+      "route": "debug/",
+      "method": "GET",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "route": "debug/",
+      "method": "POST",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "route": "debug/index.php",
+      "method": "GET",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "route": "debug/index.php",
+      "method": "POST",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "route": "debug/action.php",
+      "method": "GET",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "route": "debug/action.php",
+      "method": "POST",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "route": "debug/backup.php",
+      "method": "GET",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "route": "debug/backup.php",
+      "method": "POST",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "route": "debug/access.php",
+      "method": "GET",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "route": "debug/access.php",
+      "method": "POST",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "route": "debug/functions.php",
+      "method": "GET",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "route": "debug/functions.php",
+      "method": "POST",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "route": "debug/README.md",
+      "method": "GET",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "route": "debug/README.md",
+      "method": "POST",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "route": "DeBuG/index.php",
+      "method": "GET",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "route": "DeBuG/index.php",
+      "method": "POST",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "route": "%64ebug/index.php",
+      "method": "GET",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "route": "%64ebug/index.php",
+      "method": "POST",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "route": "login.php",
+      "method": "GET",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "route": "manifest.webmanifest",
+      "method": "GET",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "route": "connection-worker.js",
+      "method": "GET",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "route": "assets/js/pwa.js",
+      "method": "GET",
+      "status": 200,
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+[
+    {
+        "name": "Migration removes the section column.",
+        "passed": true
+    },
+    {
+        "name": "Migration removes the retired receipt AI table.",
+        "passed": true
+    },
+    {
+        "name": "All remaining student fields and timestamps are preserved.",
+        "passed": true
+    },
+    {
+        "name": "Existing accounts survive migration.",
+        "passed": true
+    },
+    {
+        "name": "Synthetic section-registrar@thelewiscollege.edu.ph signs in.",
+        "passed": true
+    },
+    {
+        "name": "Registrar roster loads without the section column.",
+        "passed": true
+    },
+    {
+        "name": "Registrar student creation redirects normally.",
+        "passed": true
+    },
+    {
+        "name": "Registrar creates a profile without a section placeholder.",
+        "passed": true
+    },
+    {
+        "name": "Registrar updates a profile while ignoring legacy section input.",
+        "passed": true
+    },
+    {
+        "name": "Synthetic section-student@thelewiscollege.edu.ph signs in.",
+        "passed": true
+    },
+    {
+        "name": "Student account displays year level without a section field.",
+        "passed": true
+    },
+    {
+        "name": "Clearance preview loads without a section column.",
+        "passed": true
+    },
+    {
+        "name": "Clearance PDF generates without a section column.",
+        "passed": true
+    },
+    {
+        "name": "MySQL student import adds and updates profiles without section.",
+        "passed": true
+    }
+]

@@ -6,6 +6,10 @@ if (PHP_SAPI !== 'cli') {
     ini_set('display_errors', '0');
     ini_set('display_startup_errors', '0');
     ini_set('log_errors', '1');
+    header('X-Frame-Options: SAMEORIGIN');
+    header("Content-Security-Policy: frame-ancestors 'self'");
+    header('X-Content-Type-Options: nosniff');
+    header('Referrer-Policy: same-origin');
 }
 
 require_once __DIR__ . '/../config/availability.php';
@@ -264,6 +268,14 @@ function authenticatedUser(): ?array
         || !is_string($user['role'])
         || !in_array($user['role'], APPLICATION_ROLES, true)
     ) {
+        if (isset($_COOKIE['clear_go_remember'])) {
+            require_once __DIR__ . '/security_functions.php';
+            try { return restoreRememberedAccount(); }
+            catch (Throwable $error) {
+                error_log('Saved sign-in validation failed (' . get_class($error) . ').');
+                setRememberCookie(null);
+            }
+        }
         return null;
     }
 
@@ -282,7 +294,7 @@ function requireLogin(): array
     try {
         $database = getDatabaseConnection();
         $statement = $database->prepare(
-            "SELECT user.id,user.email,user.role,user.status,
+            "SELECT user.id,user.email,user.role,user.status,user.auth_version,
                     picture.stored_name AS profile_picture,picture.mime_type AS profile_picture_mime
              FROM users user
              LEFT JOIN user_profile_pictures picture ON picture.user_id=user.id
@@ -301,7 +313,9 @@ function requireLogin(): array
         exit('Unable to verify your account right now. Please try again later.');
     }
 
-    if ($currentAccount === false || $currentAccount['status'] !== 'ACTIVE') {
+    require_once __DIR__ . '/security_functions.php';
+    if ($currentAccount === false || $currentAccount['status'] !== 'ACTIVE' || !authSessionVersionMatches($user, $currentAccount)) {
+        revokeCurrentRememberToken($database);
         unset($_SESSION['authenticated_user'], $_SESSION['csrf_token']);
         session_regenerate_id(true);
         setFlashMessage('Your previous session is no longer active. Please sign in again.');
@@ -343,7 +357,7 @@ function dashboardLogoutForm(): string
     $logoutUrl = escapeHtml(applicationUrl('/logout.php'));
 
     return <<<HTML
-<form class="logout-form" method="post" action="{$logoutUrl}">
+<form class="logout-form" method="post" action="{$logoutUrl}" data-confirm-logout>
     <input type="hidden" name="csrf_token" value="{$csrfToken}">
     <button type="submit">Log out</button>
 </form>
@@ -574,6 +588,17 @@ function dashboardNotificationBell(array $notifications): string
  */
 function staffDashboardSidebar(string $officeName, array $user, array $items, string $activeKey, string $logoutForm): string
 {
+    $workbookPath = match ($user['role'] ?? '') {
+        'LIBRARY_STAFF' => '/library/excel_import.php',
+        'BOOKSTORE_STAFF' => '/bookstore/excel_import.php',
+        'CLINIC_STAFF' => '/clinic/excel_import.php',
+        default => null,
+    };
+    if ($workbookPath !== null && !in_array('excel-import', array_column($items, 'key'), true)) {
+        array_splice($items, min(1, count($items)), 0, [[
+            'key' => 'excel-import', 'label' => 'Excel Import', 'url' => $workbookPath, 'icon' => 'import',
+        ]]);
+    }
     if (!in_array('profile', array_column($items, 'key'), true)) {
         $items[] = ['key' => 'profile', 'label' => 'My Profile', 'url' => '/auth/profile.php', 'icon' => 'profile'];
     }
@@ -609,7 +634,7 @@ function staffDashboardSidebar(string $officeName, array $user, array $items, st
         . '<div class="sidebar-brand"><img src="' . $logo . '" alt="The Lewis College logo"><div class="sidebar-brand-copy"><span>The Lewis College</span><strong>ClearGo</strong></div></div>'
         . '<div class="sidebar-office"><p class="sidebar-kicker">Staff workspace</p><p class="sidebar-office-name">' . escapeHtml($officeName) . '</p></div>'
         . '<nav class="staff-nav">' . $links . '</nav>'
-        . '<div class="sidebar-footer"><div class="sidebar-user">' . $avatar . '<span class="sidebar-user-copy"><strong>' . $email . '</strong><span>Authorized staff</span></span></div>'
+        . '<div class="sidebar-footer"><a class="sidebar-user" href="' . escapeHtml(applicationUrl('/auth/profile.php')) . '" aria-label="Open My Profile">' . $avatar . '<span class="sidebar-user-copy"><strong>' . $email . '</strong><span>Authorized staff</span></span></a>'
         . $logoutForm . '</div></aside><button class="sidebar-overlay" type="button" data-sidebar-close aria-label="Close navigation"></button>';
 }
 

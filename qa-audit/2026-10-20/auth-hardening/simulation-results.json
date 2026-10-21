@@ -1,0 +1,470 @@
+[
+    {
+        "check": "CCS before-open",
+        "dashboard_http": 200,
+        "pdf_http": 404,
+        "office_status": {
+            "ORGANIZATION": "LOCKED",
+            "DEAN": "PENDING",
+            "SASO": "LOCKED",
+            "STUDENT_COUNCIL": "LOCKED",
+            "LIBRARY": "LOCKED",
+            "BOOKSTORE": "LOCKED",
+            "CLINIC": "LOCKED",
+            "FACILITIES": "LOCKED",
+            "ACCOUNTING": "LOCKED",
+            "REGISTRAR": "LOCKED",
+            "COMLAB": "LOCKED"
+        },
+        "signature_count": 0,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "CBE before-open",
+        "dashboard_http": 200,
+        "pdf_http": 404,
+        "office_status": {
+            "ORGANIZATION": "PENDING",
+            "DEAN": "LOCKED",
+            "SASO": "LOCKED",
+            "STUDENT_COUNCIL": "LOCKED",
+            "LIBRARY": "LOCKED",
+            "BOOKSTORE": "LOCKED",
+            "CLINIC": "LOCKED",
+            "FACILITIES": "LOCKED",
+            "ACCOUNTING": "LOCKED",
+            "REGISTRAR": "LOCKED",
+            "COMLAB": "LOCKED"
+        },
+        "signature_count": 0,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "CTE before-open",
+        "dashboard_http": 200,
+        "pdf_http": 404,
+        "office_status": {
+            "ORGANIZATION": "LOCKED",
+            "DEAN": "PENDING",
+            "SASO": "LOCKED",
+            "STUDENT_COUNCIL": "LOCKED",
+            "LIBRARY": "LOCKED",
+            "BOOKSTORE": "LOCKED",
+            "CLINIC": "LOCKED",
+            "FACILITIES": "LOCKED",
+            "ACCOUNTING": "LOCKED",
+            "REGISTRAR": "LOCKED",
+            "COMLAB": "LOCKED"
+        },
+        "signature_count": 0,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "CCS opened",
+        "dashboard_http": 200,
+        "pdf_http": 200,
+        "office_status": {
+            "ORGANIZATION": "LOCKED",
+            "DEAN": "PENDING",
+            "SASO": "LOCKED",
+            "STUDENT_COUNCIL": "LOCKED",
+            "LIBRARY": "LOCKED",
+            "BOOKSTORE": "LOCKED",
+            "CLINIC": "LOCKED",
+            "FACILITIES": "LOCKED",
+            "ACCOUNTING": "LOCKED",
+            "REGISTRAR": "LOCKED",
+            "COMLAB": "LOCKED"
+        },
+        "signature_count": 0,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "CCS first office",
+        "expected": "DEAN",
+        "pending": [
+            "DEAN"
+        ]
+    },
+    {
+        "check": "CCS premature Registrar approval rejected",
+        "status": "LOCKED"
+    },
+    {
+        "check": "CCS dean-and-org",
+        "dashboard_http": 200,
+        "pdf_http": 200,
+        "office_status": {
+            "ORGANIZATION": "APPROVED",
+            "DEAN": "APPROVED",
+            "SASO": "LOCKED",
+            "STUDENT_COUNCIL": "PENDING",
+            "LIBRARY": "PENDING",
+            "BOOKSTORE": "PENDING",
+            "CLINIC": "PENDING",
+            "FACILITIES": "LOCKED",
+            "ACCOUNTING": "LOCKED",
+            "REGISTRAR": "LOCKED",
+            "COMLAB": "LOCKED"
+        },
+        "signature_count": 2,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "CCS suboffices",
+        "dashboard_http": 200,
+        "pdf_http": 200,
+        "office_status": {
+            "ORGANIZATION": "APPROVED",
+            "DEAN": "APPROVED",
+            "SASO": "PENDING",
+            "STUDENT_COUNCIL": "APPROVED",
+            "LIBRARY": "APPROVED",
+            "BOOKSTORE": "APPROVED",
+            "CLINIC": "APPROVED",
+            "FACILITIES": "LOCKED",
+            "ACCOUNTING": "LOCKED",
+            "REGISTRAR": "LOCKED",
+            "COMLAB": "LOCKED"
+        },
+        "signature_count": 6,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "CCS accounting-ready",
+        "dashboard_http": 200,
+        "pdf_http": 200,
+        "office_status": {
+            "ORGANIZATION": "APPROVED",
+            "DEAN": "APPROVED",
+            "SASO": "APPROVED",
+            "STUDENT_COUNCIL": "APPROVED",
+            "LIBRARY": "APPROVED",
+            "BOOKSTORE": "APPROVED",
+            "CLINIC": "APPROVED",
+            "FACILITIES": "APPROVED",
+            "ACCOUNTING": "PENDING",
+            "REGISTRAR": "LOCKED",
+            "COMLAB": "APPROVED"
+        },
+        "signature_count": 9,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "CCS Accounting upload",
+        "http": 303,
+        "receipt_id": 1,
+        "redirect": "http://127.0.0.1:46103/student/dashboard.php?station=ACCOUNTING"
+    },
+    {
+        "check": "CCS accounting-returned",
+        "dashboard_http": 200,
+        "pdf_http": 200,
+        "office_status": {
+            "ORGANIZATION": "APPROVED",
+            "DEAN": "APPROVED",
+            "SASO": "APPROVED",
+            "STUDENT_COUNCIL": "APPROVED",
+            "LIBRARY": "APPROVED",
+            "BOOKSTORE": "APPROVED",
+            "CLINIC": "APPROVED",
+            "FACILITIES": "APPROVED",
+            "ACCOUNTING": "RETURNED",
+            "REGISTRAR": "LOCKED",
+            "COMLAB": "APPROVED"
+        },
+        "signature_count": 9,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "CCS completed",
+        "dashboard_http": 200,
+        "pdf_http": 200,
+        "office_status": {
+            "ORGANIZATION": "APPROVED",
+            "DEAN": "APPROVED",
+            "SASO": "APPROVED",
+            "STUDENT_COUNCIL": "APPROVED",
+            "LIBRARY": "APPROVED",
+            "BOOKSTORE": "APPROVED",
+            "CLINIC": "APPROVED",
+            "FACILITIES": "APPROVED",
+            "ACCOUNTING": "APPROVED",
+            "REGISTRAR": "APPROVED",
+            "COMLAB": "APPROVED"
+        },
+        "signature_count": 11,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "CCS final result",
+        "status": "COMPLETED"
+    },
+    {
+        "check": "CBE opened",
+        "dashboard_http": 200,
+        "pdf_http": 200,
+        "office_status": {
+            "ORGANIZATION": "PENDING",
+            "DEAN": "LOCKED",
+            "SASO": "LOCKED",
+            "STUDENT_COUNCIL": "LOCKED",
+            "LIBRARY": "LOCKED",
+            "BOOKSTORE": "LOCKED",
+            "CLINIC": "LOCKED",
+            "FACILITIES": "LOCKED",
+            "ACCOUNTING": "LOCKED",
+            "REGISTRAR": "LOCKED",
+            "COMLAB": "LOCKED"
+        },
+        "signature_count": 0,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "CBE first office",
+        "expected": "ORGANIZATION",
+        "pending": [
+            "ORGANIZATION"
+        ]
+    },
+    {
+        "check": "CBE premature Registrar approval rejected",
+        "status": "LOCKED"
+    },
+    {
+        "check": "CBE dean-and-org",
+        "dashboard_http": 200,
+        "pdf_http": 200,
+        "office_status": {
+            "ORGANIZATION": "APPROVED",
+            "DEAN": "APPROVED",
+            "SASO": "LOCKED",
+            "STUDENT_COUNCIL": "PENDING",
+            "LIBRARY": "PENDING",
+            "BOOKSTORE": "PENDING",
+            "CLINIC": "PENDING",
+            "FACILITIES": "LOCKED",
+            "ACCOUNTING": "LOCKED",
+            "REGISTRAR": "LOCKED",
+            "COMLAB": "LOCKED"
+        },
+        "signature_count": 2,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "CBE suboffices",
+        "dashboard_http": 200,
+        "pdf_http": 200,
+        "office_status": {
+            "ORGANIZATION": "APPROVED",
+            "DEAN": "APPROVED",
+            "SASO": "PENDING",
+            "STUDENT_COUNCIL": "APPROVED",
+            "LIBRARY": "APPROVED",
+            "BOOKSTORE": "APPROVED",
+            "CLINIC": "APPROVED",
+            "FACILITIES": "LOCKED",
+            "ACCOUNTING": "LOCKED",
+            "REGISTRAR": "LOCKED",
+            "COMLAB": "LOCKED"
+        },
+        "signature_count": 6,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "CBE accounting-ready",
+        "dashboard_http": 200,
+        "pdf_http": 200,
+        "office_status": {
+            "ORGANIZATION": "APPROVED",
+            "DEAN": "APPROVED",
+            "SASO": "APPROVED",
+            "STUDENT_COUNCIL": "APPROVED",
+            "LIBRARY": "APPROVED",
+            "BOOKSTORE": "APPROVED",
+            "CLINIC": "APPROVED",
+            "FACILITIES": "APPROVED",
+            "ACCOUNTING": "PENDING",
+            "REGISTRAR": "LOCKED",
+            "COMLAB": "APPROVED"
+        },
+        "signature_count": 9,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "CBE Accounting upload",
+        "http": 303,
+        "receipt_id": 3,
+        "redirect": "http://127.0.0.1:46103/student/dashboard.php?station=ACCOUNTING"
+    },
+    {
+        "check": "CBE completed",
+        "dashboard_http": 200,
+        "pdf_http": 200,
+        "office_status": {
+            "ORGANIZATION": "APPROVED",
+            "DEAN": "APPROVED",
+            "SASO": "APPROVED",
+            "STUDENT_COUNCIL": "APPROVED",
+            "LIBRARY": "APPROVED",
+            "BOOKSTORE": "APPROVED",
+            "CLINIC": "APPROVED",
+            "FACILITIES": "APPROVED",
+            "ACCOUNTING": "APPROVED",
+            "REGISTRAR": "APPROVED",
+            "COMLAB": "APPROVED"
+        },
+        "signature_count": 11,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "CBE final result",
+        "status": "COMPLETED"
+    },
+    {
+        "check": "CTE opened",
+        "dashboard_http": 200,
+        "pdf_http": 200,
+        "office_status": {
+            "ORGANIZATION": "LOCKED",
+            "DEAN": "PENDING",
+            "SASO": "LOCKED",
+            "STUDENT_COUNCIL": "LOCKED",
+            "LIBRARY": "LOCKED",
+            "BOOKSTORE": "LOCKED",
+            "CLINIC": "LOCKED",
+            "FACILITIES": "LOCKED",
+            "ACCOUNTING": "LOCKED",
+            "REGISTRAR": "LOCKED",
+            "COMLAB": "LOCKED"
+        },
+        "signature_count": 0,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "CTE first office",
+        "expected": "DEAN",
+        "pending": [
+            "DEAN"
+        ]
+    },
+    {
+        "check": "CTE premature Registrar approval rejected",
+        "status": "LOCKED"
+    },
+    {
+        "check": "CTE dean-and-org",
+        "dashboard_http": 200,
+        "pdf_http": 200,
+        "office_status": {
+            "ORGANIZATION": "APPROVED",
+            "DEAN": "APPROVED",
+            "SASO": "LOCKED",
+            "STUDENT_COUNCIL": "PENDING",
+            "LIBRARY": "PENDING",
+            "BOOKSTORE": "PENDING",
+            "CLINIC": "PENDING",
+            "FACILITIES": "LOCKED",
+            "ACCOUNTING": "LOCKED",
+            "REGISTRAR": "LOCKED",
+            "COMLAB": "LOCKED"
+        },
+        "signature_count": 2,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "CTE suboffices",
+        "dashboard_http": 200,
+        "pdf_http": 200,
+        "office_status": {
+            "ORGANIZATION": "APPROVED",
+            "DEAN": "APPROVED",
+            "SASO": "PENDING",
+            "STUDENT_COUNCIL": "APPROVED",
+            "LIBRARY": "APPROVED",
+            "BOOKSTORE": "APPROVED",
+            "CLINIC": "APPROVED",
+            "FACILITIES": "LOCKED",
+            "ACCOUNTING": "LOCKED",
+            "REGISTRAR": "LOCKED",
+            "COMLAB": "LOCKED"
+        },
+        "signature_count": 6,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "CTE accounting-ready",
+        "dashboard_http": 200,
+        "pdf_http": 200,
+        "office_status": {
+            "ORGANIZATION": "APPROVED",
+            "DEAN": "APPROVED",
+            "SASO": "APPROVED",
+            "STUDENT_COUNCIL": "APPROVED",
+            "LIBRARY": "APPROVED",
+            "BOOKSTORE": "APPROVED",
+            "CLINIC": "APPROVED",
+            "FACILITIES": "APPROVED",
+            "ACCOUNTING": "PENDING",
+            "REGISTRAR": "LOCKED",
+            "COMLAB": "APPROVED"
+        },
+        "signature_count": 9,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "CTE Accounting upload",
+        "http": 303,
+        "receipt_id": 4,
+        "redirect": "http://127.0.0.1:46103/student/dashboard.php?station=ACCOUNTING"
+    },
+    {
+        "check": "CTE completed",
+        "dashboard_http": 200,
+        "pdf_http": 200,
+        "office_status": {
+            "ORGANIZATION": "APPROVED",
+            "DEAN": "APPROVED",
+            "SASO": "APPROVED",
+            "STUDENT_COUNCIL": "APPROVED",
+            "LIBRARY": "APPROVED",
+            "BOOKSTORE": "APPROVED",
+            "CLINIC": "APPROVED",
+            "FACILITIES": "APPROVED",
+            "ACCOUNTING": "APPROVED",
+            "REGISTRAR": "APPROVED",
+            "COMLAB": "APPROVED"
+        },
+        "signature_count": 11,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "CTE final result",
+        "status": "COMPLETED"
+    },
+    {
+        "check": "CCS fully-signed",
+        "dashboard_http": 200,
+        "pdf_http": 200,
+        "office_status": {
+            "ORGANIZATION": "APPROVED",
+            "DEAN": "APPROVED",
+            "SASO": "APPROVED",
+            "STUDENT_COUNCIL": "APPROVED",
+            "LIBRARY": "APPROVED",
+            "BOOKSTORE": "APPROVED",
+            "CLINIC": "APPROVED",
+            "FACILITIES": "APPROVED",
+            "ACCOUNTING": "APPROVED",
+            "REGISTRAR": "APPROVED",
+            "COMLAB": "APPROVED"
+        },
+        "signature_count": 11,
+        "missing_signature_warning": false
+    },
+    {
+        "check": "Archived completed clearance",
+        "history_http": 200,
+        "pdf_http": 404
+    }
+]

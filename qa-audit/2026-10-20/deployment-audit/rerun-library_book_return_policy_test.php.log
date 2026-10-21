@@ -1,0 +1,33 @@
+PASS: A verified card cannot clear two outstanding books from an earlier date.
+PASS: Eligibility explains which books remain outstanding.
+PASS: Returned books and another student borrowing do not block eligibility.
+PASS: An approved exception cannot waive unreturned books.
+PASS: Generic individual approval rejects outstanding books.
+PASS: Ready-only approval rechecks book returns.
+PASS: Physical-card direct clearance cannot bypass outstanding books.
+PASS: Workbook clearance rejects unreturned books.
+PASS: Bulk readiness excludes both outstanding books and missing cards.
+PASS: Blocked attempts preserve Library status and do not unlock SASO.
+PASS: Manual physical-card verification still clears a student with no books.
+PASS: Library dashboard identifies unreturned books and escapes titles.
+PASS: Library dashboard disables clearance for the affected student.
+PASS: Staff can mark each outstanding book returned from the review panel.
+PASS: Student dashboard shows the book-return blocker with escaped titles.
+PASS: Direct HTTP library_clear cannot bypass book returns.
+PASS: Direct HTTP approve cannot bypass book returns.
+PASS: HTTP bulk approval clears only students with no unreturned books.
+PASS: Card review confirms the card but leaves clearance blocked by books.
+PASS: Card review still clears a student whose books are returned.
+PASS: A return request cannot change another student book.
+PASS: Students cannot mark their own books returned.
+PASS: Mark Returned records the return date and Library staff verifier.
+PASS: Returning only one of two books does not permit clearance.
+PASS: Returning every book restores individual and bulk eligibility.
+PASS: Individual HTTP clearance succeeds after all books return.
+PASS: SASO unlocks only after the Library signature is saved.
+PASS: Repeated Library approval remains idempotent.
+PASS: Workbook import accepts the returned and already cleared student.
+PASS: Student book warning disappears after all returns.
+PASS: Existing library_workbook_test.php passes in the disposable database.
+PASS: Existing dashboard_summary_test.php passes in the disposable database.
+All 32 Library book-return checks passed.

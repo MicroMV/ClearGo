@@ -1,0 +1,385 @@
+{
+  "date": "2026-10-21",
+  "verdict": "LOCAL_CHECKS_PASSED_HOSTING_AND_RELEASE_BLOCKED",
+  "hosting": "InfinityFree free",
+  "concurrent_users_tested_5000": false,
+  "php_suites": [
+    {
+      "file": "attendance_sanctions_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "auth_recovery_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "bookstore_event_workbook_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "bookstore_ready_lock_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "bookstore_workbook_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "bookstore_workflow_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "bulk_clearance_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "bulk_dashboard_render_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "cbe_dean_workflow_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "cbe_fourth_year_single_approval_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "ccs_completion_workbook_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "clearance_report_workbook_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "clinic_workbook_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "comlab_violations_modal_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "csrf_request_validation_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "dashboard_summary_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "debug_console_test.php",
+      "status": "NOT RUN"
+    },
+    {
+      "file": "facilities_items_modal_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "facilities_return_query_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "http_test_access_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "library_book_return_policy_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "library_workbook_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "notification_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "office_remarks_action_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "office_remarks_report_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "office_remarks_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "office_workbook_design_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "phase1_clearance_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "phase2_dean_clearance_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "phase3_office_workflow_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "profile_picture_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "qr_attendance_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "readiness_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "registrar_cbe_initial_order_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "registrar_staff_error_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "semester_notifications_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "signature_drawing_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "simple_pdf_preview_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "simple_pdf_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "staff_navigation_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "student_dashboard_history_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "student_import_mysql_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "student_import_preview_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "student_import_scale_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "student_import_test.php",
+      "status": "PASS"
+    },
+    {
+      "file": "student_section_removal_test.php",
+      "status": "PASS"
+    }
+  ],
+  "browser_suites": [
+    {
+      "file": "auth_recovery_browser_test.mjs",
+      "status": "PASS",
+      "summary": "All 102 authentication UI browser checks passed."
+    },
+    {
+      "file": "attendance_sanctions_browser_test.mjs",
+      "status": "PASS",
+      "summary": "All 62 attendance sanction browser checks passed."
+    },
+    {
+      "file": "clearance_live_browser_test.mjs",
+      "status": "PASS",
+      "summary": "All 22 live-clearance browser checks passed."
+    },
+    {
+      "file": "clearance_preview_browser_test.mjs",
+      "status": "PASS",
+      "summary": "All 66 clearance preview browser checks passed; zoomable paper responses received."
+    },
+    {
+      "file": "logout_confirmation_browser_test.mjs",
+      "status": "PASS",
+      "summary": "All 54 logout confirmation browser checks passed."
+    },
+    {
+      "file": "signature_pad_browser_test.mjs",
+      "status": "PASS",
+      "summary": "All 92 signature drawing browser checks passed."
+    },
+    {
+      "file": "pwa_browser_test.mjs",
+      "status": "PASS",
+      "summary": "All 19 PWA browser checks passed."
+    }
+  ],
+  "camera_checks": {
+    "total": 19,
+    "passed": 19,
+    "physical_devices_tested": false
+  },
+  "account_checks": {
+    "total": 132,
+    "passed": 132
+  },
+  "javascript_unit_tests": {
+    "passed": 18
+  },
+  "web_and_syntax": {
+    "syntaxFiles": 233,
+    "syntaxFailures": 0,
+    "httpProbes": 26,
+    "httpFailures": 0,
+    "oversizedFiles": 0,
+    "preflightFailures": [
+      "Environment",
+      "PHP",
+      "Public HTTPS URL",
+      "Database credentials",
+      "Mail worker",
+      "Database version"
+    ]
+  },
+  "database": {
+    "tables": 47,
+    "foreign_key_relationships": 113,
+    "foreign_key_orphan_rows": 0,
+    "invariants": {
+      "active_periods": 1,
+      "completed_with_unsigned_offices": 0,
+      "approved_without_signature_snapshot": 77,
+      "snapshots_on_nonapproved_offices": 0,
+      "student_accounts_missing_profile": 0,
+      "foreign_station_violation_rows": 0,
+      "multiple_open_semesters": 1,
+      "section_columns_remaining": 0,
+      "retired_tables_remaining": 0
+    },
+    "active_approvals_without_signature": 0,
+    "archived_approvals_without_signature": 77,
+    "referenced_files": 4,
+    "stored_files": 4,
+    "missing_files": 0,
+    "unreferenced_files": 0,
+    "tables_without_direct_application_reference": []
+  },
+  "backup_restore": {
+    "synthetic_only": true,
+    "tables": 47,
+    "compressed_bytes": 19139,
+    "row_and_blob_fingerprints_match": true,
+    "mismatched_tables": [],
+    "private_file_restore_tested": true,
+    "restored_database_reference_matches_file": true,
+    "target_host_restore_tested": false
+  },
+  "release": {
+    "zip": "C:/xamppl/htdocs/ClearGo/.tmp/releases/ClearGo-20261021-093207-e3199563.zip",
+    "entries": 267,
+    "inventory_entries": 267,
+    "bytes": 5223333,
+    "sha256": "1404dce9d233e90571385be17d7b2e3e6ebfba0cf54dab63d07b8391e31984d2",
+    "hash_mismatches": [],
+    "forbidden_entries": [],
+    "missing_current_features": []
+  },
+  "disposable_schema_cleanup": {
+    "remaining_disposable_schema_candidates": [],
+    "read_only": true
+  },
+  "journeys": [
+    {
+      "check": "CCS completed",
+      "dashboard_http": 200,
+      "pdf_http": 200,
+      "office_status": {
+        "ORGANIZATION": "APPROVED",
+        "DEAN": "APPROVED",
+        "SASO": "APPROVED",
+        "STUDENT_COUNCIL": "APPROVED",
+        "LIBRARY": "APPROVED",
+        "BOOKSTORE": "APPROVED",
+        "CLINIC": "APPROVED",
+        "FACILITIES": "APPROVED",
+        "ACCOUNTING": "APPROVED",
+        "REGISTRAR": "APPROVED",
+        "COMLAB": "APPROVED"
+      },
+      "signature_count": 11,
+      "missing_signature_warning": false
+    },
+    {
+      "check": "CCS final result",
+      "status": "COMPLETED"
+    },
+    {
+      "check": "CBE completed",
+      "dashboard_http": 200,
+      "pdf_http": 200,
+      "office_status": {
+        "ORGANIZATION": "APPROVED",
+        "DEAN": "APPROVED",
+        "SASO": "APPROVED",
+        "STUDENT_COUNCIL": "APPROVED",
+        "LIBRARY": "APPROVED",
+        "BOOKSTORE": "APPROVED",
+        "CLINIC": "APPROVED",
+        "FACILITIES": "APPROVED",
+        "ACCOUNTING": "APPROVED",
+        "REGISTRAR": "APPROVED",
+        "COMLAB": "APPROVED"
+      },
+      "signature_count": 11,
+      "missing_signature_warning": false
+    },
+    {
+      "check": "CBE final result",
+      "status": "COMPLETED"
+    },
+    {
+      "check": "CTE completed",
+      "dashboard_http": 200,
+      "pdf_http": 200,
+      "office_status": {
+        "ORGANIZATION": "APPROVED",
+        "DEAN": "APPROVED",
+        "SASO": "APPROVED",
+        "STUDENT_COUNCIL": "APPROVED",
+        "LIBRARY": "APPROVED",
+        "BOOKSTORE": "APPROVED",
+        "CLINIC": "APPROVED",
+        "FACILITIES": "APPROVED",
+        "ACCOUNTING": "APPROVED",
+        "REGISTRAR": "APPROVED",
+        "COMLAB": "APPROVED"
+      },
+      "signature_count": 11,
+      "missing_signature_warning": false
+    },
+    {
+      "check": "CTE final result",
+      "status": "COMPLETED"
+    },
+    {
+      "check": "Archived completed clearance",
+      "history_http": 200,
+      "pdf_http": 404
+    }
+  ],
+  "synthetic_profile_fixtures_archived": 12,
+  "accepted_policy": "BUG-010 remains accepted per user instruction",
+  "target_host_tested": false
+}

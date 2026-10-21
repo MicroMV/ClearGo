@@ -30,12 +30,14 @@ try {
     $insertUser = $database->prepare("INSERT INTO users (email, password_hash, role, status) VALUES (:email, :hash, 'STUDENT', 'ACTIVE')");
     $insertUser->execute(['email' => $oldEmail, 'hash' => password_hash(bin2hex(random_bytes(16)), PASSWORD_DEFAULT)]);
     $existingUserId = (int) $database->lastInsertId();
-    $insertStudent = $database->prepare("INSERT INTO students (user_id, student_number, first_name, last_name, program, year_level, section, organization_id, status) VALUES (:user_id, :number, 'Before', 'Import', 'Old Program', 1, 'TEST', :organization_id, 'ACTIVE')");
+    $insertStudent = $database->prepare("INSERT INTO students (user_id, student_number, first_name, last_name, program, year_level, organization_id, status) VALUES (:user_id, :number, 'Before', 'Import', 'Old Program', 1, :organization_id, 'ACTIVE')");
     $insertStudent->execute(['user_id' => $existingUserId, 'number' => $existingNumber, 'organization_id' => $organization['id']]);
     $existingStudentId = (int) $database->lastInsertId();
 
+    $activePeriod = $database->query("SELECT school_year,semester FROM academic_periods WHERE status='ACTIVE' ORDER BY id LIMIT 1")->fetch();
+    $termHeader = $activePeriod === false ? 'ACADEMIC YEAR 2026-2027 1ST SEMESTER' : 'ACADEMIC YEAR ' . $activePeriod['school_year'] . ' ' . $activePeriod['semester'] . ' SEMESTER';
     $preview = validateStudentImport($database, [
-        ['ACADEMIC YEAR 2026-2027 1ST SEMESTER'],
+        [$termHeader],
         [],
         ['#', 'Student No.', 'Full Name', 'Course', 'Year Level', 'Gsuite Address'],
         ['1', $existingNumber, 'Import, Updated', 'BSCS - Updated Program', 'Second Year', $updatedEmail],
@@ -49,11 +51,11 @@ try {
         $failures[] = 'Live import totals were incorrect.';
     }
 
-    $check = $database->prepare('SELECT s.id, s.first_name, s.last_name, s.program, s.year_level, s.section, u.email FROM students s INNER JOIN users u ON u.id = s.user_id WHERE s.student_number = :number');
+    $check = $database->prepare('SELECT s.id, s.first_name, s.last_name, s.program, s.year_level, u.email FROM students s INNER JOIN users u ON u.id = s.user_id WHERE s.student_number = :number');
     $check->execute(['number' => $existingNumber]);
     $updated = $check->fetch();
-    if ($updated === false || (int) $updated['id'] !== $existingStudentId || $updated['email'] !== $updatedEmail || $updated['first_name'] !== 'Updated' || $updated['last_name'] !== 'Import' || $updated['program'] !== 'BSCS - Updated Program' || (int) $updated['year_level'] !== 2 || $updated['section'] !== 'TEST') {
-        $failures[] = 'The live update did not preserve the student identity/section or update basic information.';
+    if ($updated === false || (int) $updated['id'] !== $existingStudentId || $updated['email'] !== $updatedEmail || $updated['first_name'] !== 'Updated' || $updated['last_name'] !== 'Import' || $updated['program'] !== 'BSCS - Updated Program' || (int) $updated['year_level'] !== 2) {
+        $failures[] = 'The live update did not preserve the student identity or update basic information.';
     }
     $check->execute(['number' => $newNumber]);
     $addedStudent = $check->fetch();

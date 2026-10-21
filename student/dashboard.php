@@ -14,7 +14,7 @@ $profilePictureUrl = userProfilePictureUrl($user);
 try {
     $database = getDatabaseConnection();
     $studentQuery = $database->prepare(
-        'SELECT s.id, s.student_number, s.first_name, s.middle_name, s.last_name, s.program, s.year_level, s.section, s.organization_id,
+        'SELECT s.id, s.student_number, s.first_name, s.middle_name, s.last_name, s.program, s.year_level, s.organization_id,
                 o.name AS organization_name, o.code AS organization_code, u.email
          FROM students s
          INNER JOIN users u ON u.id = s.user_id
@@ -37,9 +37,9 @@ try {
     $libraryBooks = $period !== false && !$isHistoricalRecord
         ? libraryOutstandingBooks($database, (int) $student['id']) : [];
 
-    $comlabQuery = $database->prepare("SELECT violation.description,violation.created_at FROM violations violation INNER JOIN stations station ON station.id=violation.station_id WHERE violation.student_id=:student_id AND station.code='COMLAB' AND violation.status='OPEN' ORDER BY violation.created_at DESC,violation.id DESC");
-    $comlabQuery->execute(['student_id' => $student['id']]);
-    $comlabViolations = $comlabQuery->fetchAll();
+    $violationQuery = $database->prepare("SELECT violation.description,violation.created_at,station.code AS office_code,station.name AS office_name FROM violations violation INNER JOIN stations station ON station.id=violation.station_id WHERE violation.student_id=:student_id AND violation.status='OPEN' ORDER BY violation.created_at DESC,violation.id DESC");
+    $violationQuery->execute(['student_id' => $student['id']]);
+    $openViolations = $violationQuery->fetchAll();
     $facilitiesItems = [];
     if ($period !== false) {
         $facilitiesQuery = $database->prepare(
@@ -176,6 +176,12 @@ try {
     $medicalStatus = 'PENDING';
     $medicalAppointment = false;
     $medicalSchedules = [];
+    $accountingObligations = [];
+    if ($period !== false && !$isHistoricalRecord && $isEnrolled) {
+        $obligationQuery = $database->prepare("SELECT description,amount FROM accounting_obligations WHERE student_id=:student_id AND academic_period_id=:period_id AND status='UNPAID' ORDER BY id");
+        $obligationQuery->execute(['student_id' => $student['id'], 'period_id' => $period['id']]);
+        $accountingObligations = $obligationQuery->fetchAll();
+    }
     if ($clearance !== false) {
         if ($isHistoricalRecord) {
             $allRequirementsQuery = $database->prepare(
@@ -227,7 +233,7 @@ try {
         $accountingReceipt = $receiptQuery->fetch();
     }
 
-    if ($clearance !== false && $period !== false) {
+    if ($period !== false && ($clearance !== false || (!$isHistoricalRecord && $isEnrolled))) {
         $libraryCardQuery = $database->prepare(
             "SELECT card.status AS card_status,submission.status AS submission_status,
                     submission.submitted_at,submission.return_reason
@@ -251,7 +257,10 @@ try {
         );
         $bookstoreFeeQuery->execute(['period_id' => $period['id'], 'student_id' => $student['id'], 'include_archived' => $isHistoricalRecord ? 1 : 0]);
         $bookstoreFees = $bookstoreFeeQuery->fetchAll();
+    }
 
+    // Preparation reminders also need the medical record before clearance opens.
+    if ($period !== false && $isEnrolled) {
         $medicalQuery = $database->prepare("SELECT status FROM medical_requirements WHERE student_id=:student_id AND academic_period_id=:period_id LIMIT 1");
         $medicalQuery->execute(['student_id' => $student['id'], 'period_id' => $period['id']]);
         $medicalStatus = (string) ($medicalQuery->fetchColumn() ?: 'PENDING');
@@ -380,7 +389,8 @@ $semesterLabels = ['1ST' => 'First Semester', '2ND' => 'Second Semester', 'SUMME
 $periodLabel = $period === false
     ? 'No semester record'
     : ($semesterLabels[$period['semester']] ?? $period['semester']) . ' A.Y. ' . $period['school_year'];
-$message = pullFlashMessage();
+$message = ($_GET['live'] ?? null) === '1' ? null : pullFlashMessage();
+if (($_GET['live'] ?? null) === '1') { header('Cache-Control: private, no-store'); }
 $csrfToken = createCsrfToken();
 $logoutForm = dashboardLogoutForm();
 require __DIR__ . '/dashboard_view.php';
@@ -605,7 +615,7 @@ require __DIR__ . '/dashboard_view.php';
             <p class="portal-clearance-preview__help" id="clearance-preview-help">Approved offices show their saved signatures. Complete blank fields and personal signature lines after printing.</p>
             <div class="portal-clearance-preview__viewer" aria-busy="false">
                 <div class="portal-clearance-preview__loading" data-clearance-preview-loading role="status" hidden><span aria-hidden="true"></span>Loading preview&hellip;</div>
-                <iframe class="portal-clearance-preview__paper" title="Your clearance paper" data-clearance-preview-src="<?= escapeHtml($paperUrl . '&view=inline') ?>"></iframe>
+                <iframe class="portal-clearance-preview__paper" title="Your clearance paper" data-clearance-preview-src="<?= escapeHtml($paperUrl . '&view=paper') ?>"></iframe>
             </div>
             <p class="portal-clearance-preview__fallback">Paper not showing? <a href="<?= escapeHtml($paperUrl) ?>">Download the PDF</a> to view it.</p>
         </dialog>

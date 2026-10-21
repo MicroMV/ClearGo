@@ -42,8 +42,9 @@ $csrfToken = createCsrfToken();
 <!doctype html>
 <html lang="en">
 
-<head><?= connectionStatusAssets() ?>
+<head>
     <meta charset="utf-8">
+    <?= connectionStatusAssets() ?>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Confirm Attendance</title>
     <link rel="stylesheet" href="<?= escapeHtml(applicationUrl('/assets/css/attendance-checkin.css')) ?>">

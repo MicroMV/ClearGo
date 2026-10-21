@@ -35,7 +35,7 @@ function completionStudent(PDO $database, int $organizationId, int $periodId, in
     $email = strtolower($number) . '@thelewiscollege.edu.ph';
     $database->prepare("INSERT INTO users(email,password_hash,role,status) VALUES (?,?,'STUDENT','ACTIVE')")->execute([$email, password_hash('Synthetic-Only-2026!', PASSWORD_DEFAULT)]);
     $userId = (int) $database->lastInsertId();
-    $database->prepare("INSERT INTO students(user_id,student_number,first_name,last_name,program,year_level,section,organization_id,status) VALUES (?,?,'Synthetic','Excel Student','Test Program',?,'QA',?,'ACTIVE')")->execute([$userId, $number, $year, $organizationId]);
+    $database->prepare("INSERT INTO students(user_id,student_number,first_name,last_name,program,year_level,organization_id,status) VALUES (?,?,'Synthetic','Excel Student','Test Program',?,?,'ACTIVE')")->execute([$userId, $number, $year, $organizationId]);
     $studentId = (int) $database->lastInsertId();
     $database->prepare("INSERT INTO semester_enrollments(academic_period_id,student_id,status) VALUES (?,?,'ENROLLED')")->execute([$periodId, $studentId]);
     $started = startStudentClearance($database, $userId);
@@ -111,7 +111,7 @@ function completionHttp(CurlHandle $client, string $path, ?array $post = null, b
 
 function completionLogin(string $email): array
 {
-    global $clients;
+    global $clients, $base;
     $handle = curl_init();
     curl_setopt_array($handle, [CURLOPT_COOKIEFILE => '', CURLOPT_FOLLOWLOCATION => false, CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 15]);
     $page = completionHttp($handle, '/login.php');
@@ -119,6 +119,8 @@ function completionLogin(string $email): array
     $client = ['handle' => $handle, 'csrf' => html_entity_decode($match[1])]; $clients[] = $client;
     $response = completionHttp($handle, '/auth/login_process.php', ['csrf_token' => $client['csrf'], 'email' => $email, 'password' => 'Synthetic-Only-2026!']);
     if ($response['status'] !== 303) { throw new RuntimeException('Synthetic login failed.'); }
+    require_once __DIR__ . '/support/http_fixture.php';
+    $client['csrf'] = signedInFixtureCsrf($handle, $base); $clients[array_key_last($clients)] = $client;
     return $client;
 }
 
@@ -138,6 +140,7 @@ try {
     foreach (array_diff(APPLICATION_ROLES, ['STUDENT']) as $role) {
         $database->prepare("INSERT INTO users(email,password_hash,role,status) VALUES (?,?,?,'ACTIVE')")->execute([strtolower($role) . '-excel-test@thelewiscollege.edu.ph', password_hash('Synthetic-Only-2026!', PASSWORD_DEFAULT), $role]);
         $staff[$role] = (int) $database->lastInsertId();
+        if ($role !== 'DEAN') { saveStaffSignature($database, ['id'=>$staff[$role],'role'=>$role], 'Synthetic Office Signer', 'Office Signatory', json_encode([[[0.1,0.4],[0.3,0.6],[0.5,0.3]]])); }
     }
     foreach (['DEAN' => 'DEAN', 'ORG_STAFF' => 'ORGANIZATION'] as $role => $code) {
         $database->prepare("INSERT INTO staff_assignments(user_id,station_id,organization_id,status) SELECT ?,id,?,'ACTIVE' FROM stations WHERE code=?")->execute([$staff[$role], $organizations['CCS'], $code]);
@@ -214,9 +217,36 @@ try {
     for ($attempt = 0; $attempt < 50; $attempt++) { $probe = @stream_socket_client('tcp://' . $address, $errorNumber, $errorText, 0.1); if ($probe !== false) { fclose($probe); break; } usleep(100000); }
     $deanClient = completionLogin('dean-excel-test@thelewiscollege.edu.ph'); $studentClient = completionLogin($students[0]['email']); $wrongClient = completionLogin('wrong-dean-excel-test@thelewiscollege.edu.ph');
     $page = completionHttp($deanClient['handle'], '/dean/dashboard.php');
-    completionCheck($page['status'] === 200 && str_contains($page['body'], 'Download Excel template') && !str_contains($page['body'], 'Submitted Requirements') && !str_contains($page['body'], 'evaluation_image.php'), 'CCS dashboard exposes Excel controls without screenshot-review links.');
+    completionCheck($page['status'] === 200 && str_contains($page['body'], '/dean/excel_import.php') && !str_contains($page['body'], 'name="completion_workbook"') && !str_contains($page['body'], 'Submitted Requirements') && !str_contains($page['body'], 'evaluation_image.php'), 'CCS dashboard links to Excel Import without keeping upload controls or screenshot-review links.');
+    $excelPage = completionHttp($deanClient['handle'], '/dean/excel_import.php');
+    completionCheck($excelPage['status'] === 200 && str_contains($excelPage['body'], 'Download Excel template') && str_contains($excelPage['body'], 'name="completion_workbook"') && str_contains($excelPage['body'], 'class="active" aria-current="page"'), 'The CCS Excel Import page holds the template, upload form and active navigation.');
+    completionSnapshot('excel-import', $excelPage['body']);
+    completionCheck(completionHttp($wrongClient['handle'], '/dean/excel_import.php')['status'] === 403, 'Other colleges cannot open the CCS Excel Import page.');
+    completionCheck(completionHttp($studentClient['handle'], '/dean/excel_import.php')['status'] === 403, 'Students cannot open staff Excel Import pages.');
+    $guest = curl_init();
+    curl_setopt_array($guest, [CURLOPT_RETURNTRANSFER => true, CURLOPT_FOLLOWLOCATION => false, CURLOPT_TIMEOUT => 10]);
+    foreach (['dean', 'library', 'bookstore', 'clinic'] as $office) {
+        completionCheck(completionHttp($guest, '/' . $office . '/excel_import.php')['status'] === 303, 'Anonymous access to ' . $office . ' Excel Import requires sign-in.');
+    }
+    curl_close($guest);
+    foreach (['LIBRARY_STAFF' => ['library', 'submissions.php'], 'BOOKSTORE_STAFF' => ['bookstore', 'fees.php'], 'CLINIC_STAFF' => ['clinic', 'schedules.php']] as $role => [$office, $secondaryPage]) {
+        $officeClient = completionLogin(strtolower($role) . '-excel-test@thelewiscollege.edu.ph');
+        $officeDashboard = completionHttp($officeClient['handle'], '/' . $office . '/dashboard.php');
+        completionCheck($officeDashboard['status'] === 200 && str_contains($officeDashboard['body'], '/' . $office . '/excel_import.php') && !str_contains($officeDashboard['body'], 'name="' . $office . '_workbook"'), $office . ' dashboard links to Excel Import and no longer contains the workbook form.');
+        $officeExcel = completionHttp($officeClient['handle'], '/' . $office . '/excel_import.php');
+        completionCheck($officeExcel['status'] === 200 && str_contains($officeExcel['body'], 'name="' . $office . '_workbook"') && str_contains($officeExcel['body'], '/' . $office . '/workbook_template.php'), $office . ' Excel Import retains its own template and upload field.');
+        completionSnapshot($office . '-excel-import', $officeExcel['body']);
+        $secondary = completionHttp($officeClient['handle'], '/' . $office . '/' . $secondaryPage);
+        $officeProfile = completionHttp($officeClient['handle'], '/auth/profile.php');
+        completionCheck($secondary['status'] === 200 && str_contains($secondary['body'], '/' . $office . '/excel_import.php') && $officeProfile['status'] === 200 && str_contains($officeProfile['body'], '/' . $office . '/excel_import.php'), $office . ' Excel Import remains reachable from the other office pages and profile.');
+        completionCheck(completionHttp($deanClient['handle'], '/' . $office . '/excel_import.php')['status'] === 403 && completionHttp($studentClient['handle'], '/' . $office . '/excel_import.php')['status'] === 403 && completionHttp($officeClient['handle'], '/dean/excel_import.php')['status'] === 403, $office . ' Excel Import rejects students and other office roles.');
+        $download = completionHttp($officeClient['handle'], '/' . $office . '/workbook_template.php');
+        completionCheck($download['status'] === 200 && str_starts_with($download['body'], 'PK'), $office . ' workbook template still downloads.');
+        $invalidImport = completionHttp($officeClient['handle'], '/' . $office . '/workbook_import.php', ['csrf_token' => 'invalid']);
+        completionCheck($invalidImport['status'] === 303 && str_contains($invalidImport['headers'], '/' . $office . '/excel_import.php'), $office . ' failed import returns to Excel Import.');
+    }
     $profile = completionHttp($deanClient['handle'], '/auth/profile.php');
-    completionCheck($profile['status'] === 200 && str_contains($profile['body'], 'CCS Dean Clearance') && !str_contains($profile['body'], 'Submitted Requirements') && !str_contains($profile['body'], '/dean/submitted_requirements.php'), 'The CCS Dean profile has no Submitted Requirements navigation link.');
+    completionCheck($profile['status'] === 200 && str_contains($profile['body'], 'CCS Dean Clearance') && str_contains($profile['body'], '/dean/excel_import.php') && !str_contains($profile['body'], 'Submitted Requirements') && !str_contains($profile['body'], '/dean/submitted_requirements.php'), 'The CCS Dean profile links to Excel Import without the removed Submitted Requirements page.');
     completionSnapshot('open', $page['body']); completionSnapshot('profile', $profile['body']);
     completionCheck(count(completionRosterNumbers($page['body'])) === 30, 'The first dashboard page contains 30 student rows.');
     $secondPage = completionHttp($deanClient['handle'], '/dean/dashboard.php?page=2');
@@ -234,10 +264,18 @@ try {
     $database->prepare("UPDATE academic_periods SET clearance_status='PREPARING' WHERE id=?")->execute([$periodId]);
     completionCheck(completionHttp($studentClient['handle'],'/student/clearance_preview.php?period=' . $periodId)['status'] === 404 && completionHttp($studentClient['handle'],'/student/clearance_pdf.php?period=' . $periodId . '&view=inline')['status'] === 404, 'Preview and inline PDF are unavailable before clearance opens.');
     $preparing = completionHttp($deanClient['handle'], '/dean/dashboard.php');
-    completionCheck($preparing['status'] === 200 && strpos($preparing['body'], '<h2>Semester preparation</h2>') < strpos($preparing['body'], 'id="completion-heading"'), 'The completion panel follows Semester Preparation during preparation.');
+    $preparingImport = completionHttp($deanClient['handle'], '/dean/excel_import.php');
+    completionCheck($preparing['status'] === 200 && !str_contains($preparing['body'], 'id="completion-heading"') && $preparingImport['status'] === 200 && str_contains($preparingImport['body'], 'name="completion_workbook"'), 'During preparation, the dashboard stays focused and the completion form is available on Excel Import.');
     completionSnapshot('preparing', $preparing['body']);
+    completionRejected(fn() => markOfficeReady($database, $deanId, 'DEAN', ''), 'Ready is blocked until the Dean has a selected signature.');
+    $preparationDrawing = json_encode([[[0.1,0.4],[0.3,0.6],[0.5,0.3]]]);
+    saveStaffSignature($database, ['id'=>$deanId,'role'=>'DEAN'], 'Preparation Dean', 'College Dean', $preparationDrawing);
+    $preparationSignatureId = (int) staffSignature($database, $deanId)['saved_signature_id'];
     $ready = completionHttp($deanClient['handle'], '/clearance/readiness_action.php', ['csrf_token'=>$deanClient['csrf'],'action'=>'ready']);
     completionCheck($ready['status'] === 303 && officeReadiness($database, 'DEAN')['readiness_status'] === 'READY', 'Mark Dean Office Ready records readiness during preparation.');
+    completionRejected(fn() => updateStaffSignature($database, ['id'=>$deanId], $preparationSignatureId, 'Changed Name', 'Changed Position', ''), 'Signature edits are blocked while the office is Ready.');
+    completionRejected(fn() => deleteStaffSignature($database, ['id'=>$deanId], $preparationSignatureId), 'Signature deletion is blocked while the office is Ready.');
+    completionRejected(fn() => selectStaffSignature($database, ['id'=>$deanId], $preparationSignatureId), 'Signature selection is locked while Ready.');
     $unready = completionHttp($deanClient['handle'], '/clearance/readiness_action.php', ['csrf_token'=>$deanClient['csrf'],'action'=>'unready']);
     completionCheck($unready['status'] === 303 && officeReadiness($database, 'DEAN')['readiness_status'] === 'NOT_READY', 'Undo Ready restores the preparation state.');
     $database->prepare("UPDATE academic_periods SET clearance_status='OPEN' WHERE id=?")->execute([$periodId]);
@@ -264,6 +302,7 @@ try {
     completionCheck(count(readCcsCompletionWorkbook($httpTemplate)) === 37 && str_contains($downloadResponse['body'], 'Full Name') && str_contains($downloadResponse['body'], 'sheet name="Year 4"'), 'The HTTP download includes full names and all year-level sheets.');
     $portal = completionHttp($studentClient['handle'], '/student/dashboard.php');
     completionSnapshot('student-clearance',$portal['body']);
+    completionSnapshot('student-live-before',$portal['body']);
     completionCheck($portal['status'] === 200 && !str_contains($portal['body'], 'evaluation_proofs') && !str_contains($portal['body'], '/student/evaluation_action.php') && str_contains($portal['body'], 'No upload is needed.'), 'Student dashboard has no evaluation screenshot form.');
     completionCheck(str_contains($portal['body'], '/student/clearance_pdf.php?period=' . $periodId) && str_contains($portal['body'], 'Download PDF'), 'Students can download the digital clearance while the semester is open.');
     completionCheck(str_contains($portal['body'],'/student/clearance_preview.php?period=' . $periodId) && str_contains($portal['body'],'Preview clearance'), 'The student Clearance section has a separate paper preview button.');
@@ -301,7 +340,9 @@ try {
     $studentPost = $post; $studentPost['csrf_token'] = $studentClient['csrf']; $response = completionHttp($studentClient['handle'], '/dean/completion_workbook_import.php', $studentPost);
     completionCheck($response['status'] === 403 && (int) $database->query('SELECT COUNT(*) FROM ccs_evaluation_completions')->fetchColumn() === 0, 'Students cannot import their own completion status.');
     $response = completionHttp($deanClient['handle'], '/dean/completion_workbook_import.php', $post);
-    completionCheck($response['status'] === 303 && bulkReadyClearanceIds($database, 'DEAN', (int) $organizations['CCS']) === [$students[0]['clearance_id']], 'Actual Excel upload marks only the listed completed student ready.');
+    completionCheck($response['status'] === 303 && str_contains($response['headers'], '/dean/excel_import.php') && bulkReadyClearanceIds($database, 'DEAN', (int) $organizations['CCS']) === [$students[0]['clearance_id']], 'Actual Excel upload marks only the listed completed student ready and returns to Excel Import.');
+    $importResultPage = completionHttp($deanClient['handle'], '/dean/excel_import.php');
+    completionCheck($importResultPage['status'] === 200 && str_contains($importResultPage['body'], 'Completion list imported.'), 'Successful import feedback appears on the Excel Import page.');
     completionCheck(officeClearanceContext($database, 'DEAN', $students[0]['clearance_id'])['station_status'] === 'PENDING', 'Import does not automatically approve Dean clearance.');
     $completion = $database->query('SELECT * FROM ccs_evaluation_completions')->fetch();
     completionCheck((int) $completion['recorded_by'] === $deanId && $completion['recorded_at'] !== null, 'Completion import records the Dean and import time.');
@@ -311,6 +352,7 @@ try {
     importCcsCompletionWorkbook($database, $deanId, $periodId, [completionRow($students[0], 'Completed', $context)]);
     $response = completionHttp($deanClient['handle'], '/dean/action.php', ['csrf_token'=>$deanClient['csrf'], 'action'=>'approve_all_ready']);
     completionCheck($response['status'] === 303 && officeClearanceContext($database, 'DEAN', $students[0]['clearance_id'])['station_status'] === 'APPROVED', 'One ready student can be bulk cleared while 36 others remain uncleared.');
+    completionSnapshot('student-live-after', completionHttp($studentClient['handle'], '/student/dashboard.php?live=1&period=' . $periodId)['body']);
     $batchRows = []; foreach (array_slice($students, 1, 35) as $student) { $batchRows[] = completionRow($student, 'Completed', $context); }
     $batchFile = completionFile($batchRows);
     $response = completionHttp($deanClient['handle'], '/dean/completion_workbook_import.php', ['csrf_token'=>$deanClient['csrf'],'period_id'=>$periodId,'completion_workbook'=>new CURLFile($batchFile,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','completion.xlsx')]);
@@ -344,6 +386,7 @@ try {
     completionCheck(completionHttp($studentClient['handle'],'/student/clearance_preview.php?period=' . $periodId)['status'] === 404, 'Closed semesters cannot open the clearance preview.');
     completionRejected(fn() => importCcsCompletionWorkbook($database,$deanId,$periodId,[completionRow($students[0],'YES',$context)]), 'Closed semesters reject completion imports.');
     $database->exec("INSERT INTO academic_periods(school_year,semester,status,clearance_status) VALUES ('2098-2099','2ND','ACTIVE','OPEN')"); $secondPeriod = (int) $database->lastInsertId();
+    $database->prepare("INSERT INTO office_period_readiness(academic_period_id,station_id,status) SELECT ?,id,'NOT_READY' FROM stations WHERE status='ACTIVE' AND code<>'REGISTRAR'")->execute([$secondPeriod]);
     $graduate = completionStudent($database,(int)$organizations['CCS'],$secondPeriod,4,'EXCEL-GRADUATE');
     $graduateContext = ccsCompletionImportContext($database, $deanId);
     $graduateTemplate = tempnam(sys_get_temp_dir(), 'completion-graduate-'); $files[] = $graduateTemplate;
@@ -369,6 +412,7 @@ try {
     completionRejected(fn() => approveDeanClearance($database,$deanId,$graduate['clearance_id']), 'Blank graduation completion blocks individual clearance.');
     importCcsCompletionWorkbook($database, $deanId, $secondPeriod, [completionRow($graduate, 'Incomplete', $graduateContext)]);
     completionCheck(completionRequirement($database, $graduate['clearance_id'], 'CCS_GRADUATION_APPLICATION')['status'] === 'NOT_STARTED', 'Explicit Incomplete leaves the graduation requirement unverified.');
+    deleteStaffSignature($database, ['id'=>$deanId], $preparationSignatureId);
     $signatureDrawing = json_encode(['strokes'=>[[[0.1,0.5],[0.2,0.3],[0.3,0.6],[0.45,0.4],[0.6,0.5]]],'aspect_ratio'=>3.75]);
     $signature = renderStaffSignature($signatureDrawing)['data'];
     $signaturePost = ['csrf_token'=>$deanClient['csrf'],'printed_name'=>'Dr. Synthetic Dean','position_title'=>'College Dean','signature_drawing'=>$signatureDrawing];
@@ -406,7 +450,7 @@ try {
     completionCheck(completionHttp($deanClient['handle'], '/auth/signature_image.php')['body'] === $signature, 'Malformed array input is rejected without replacing the signature.');
     $invalidSignature = $signaturePost; $invalidSignature['csrf_token'] = 'invalid';
     completionHttp($deanClient['handle'], '/auth/signature_action.php', $invalidSignature);
-    completionCheck((int)$database->query("SELECT COUNT(*) FROM audit_logs WHERE action='AUTHORIZED_SIGNATURE_SAVED'")->fetchColumn() === 1, 'Invalid CSRF and drawing requests create no signature save audit.');
+    completionCheck((int)$database->query("SELECT COUNT(*) FROM audit_logs WHERE action='AUTHORIZED_SIGNATURE_SAVED' AND user_id=" . $deanId)->fetchColumn() === 2, 'Invalid CSRF and drawing requests create no signature save audit.');
     $firstSignatureId = (int) staffSignature($database,$deanId)['saved_signature_id'];
     completionCheck(count(staffSavedSignatures($database,$deanId)) === 1 && $firstSignatureId > 0, 'The first saved signature is selected automatically.');
     $studentSignature = $signaturePost; $studentSignature['csrf_token'] = $studentClient['csrf'];
@@ -424,6 +468,9 @@ try {
     completionCheck($graduateAccount['status'] === 200 && str_contains($graduateAccount['body'],'Synthetic Mary Middle Example Excel Student'), 'The student account still displays the full name after middle names are stored separately.');
     completionCheck($signedPdf['status'] === 200 && str_contains($signedPdf['body'], '(Dr. Synthetic Dean)') && str_contains($signedPdf['body'], '(College Dean)') && str_contains($signedPdf['body'], '(Cleared)') && !str_contains($signedPdf['body'], '(Pending clearance)'), 'A cleared office shows its signatory and cleared remark while pending office remarks stay blank.');
     $signedPreview = completionHttp($graduateClient['handle'],'/student/clearance_preview.php?period=' . $secondPeriod);
+    $paperPreview = completionHttp($graduateClient['handle'],'/student/clearance_pdf.php?period=' . $secondPeriod . '&view=paper');
+    completionCheck($paperPreview['status'] === 200 && str_contains($paperPreview['headers'],'text/html') && str_contains($paperPreview['body'],'<svg') && str_contains($paperPreview['body'],'Dr. Synthetic Dean') && str_contains($paperPreview['body'],'data-paper-zoom="fit"'), 'The readable paper preview includes the captured signature and zoom controls from the same document layout.');
+    completionSnapshot('clearance-paper',$paperPreview['body']);
     completionCheck($signedPreview['status'] === 200 && str_contains($signedPreview['body'],'period=' . $secondPeriod), 'The preview opens for a partially signed clearance without requiring completion.');
     if (getenv('CCS_COMPLETION_PREVIEW') === '1') {
         completionSnapshot('clearance-preview',$signedPreview['body']);
@@ -548,6 +595,117 @@ try {
     $auditEmpty = completionHttp($registrarClient['handle'],'/registrar/audit_logs.php?action=QA_AUDIT_PAGE&search=NoMatchingAuditRecord&page=99');
     completionCheck($auditEmpty['status'] === 200 && str_contains($auditEmpty['body'],'No audit records match.') && !str_contains($auditEmpty['body'],'aria-label="Audit log pages"'),'Empty audit filters show a controlled empty state without unusable page links.');
     completionCheck(completionHttp($deanClient['handle'],$auditUrl)['status'] === 403,'Audit pagination remains restricted to the Registrar.');
+    // Signature lifecycle: exercise real form actions, ownership, Ready locks, and historical approvals.
+    $edit = ['csrf_token'=>$deanClient['csrf'],'action'=>'update','signature_id'=>$firstSignatureId,
+        'printed_name'=>'Edited Dean','position_title'=>'Edited Position','signature_drawing'=>''];
+    $oldSignatureHash = hash('sha256', completionHttp($deanClient['handle'], '/auth/signature_image.php')['body']);
+    $editPage = completionHttp($deanClient['handle'], '/auth/profile.php?edit_signature=' . $firstSignatureId);
+    completionCheck(str_contains($editPage['body'],'data-signature-existing') && str_contains($editPage['body'],'value="Dr. Synthetic Dean"'), 'Edit opens the selected signature with its saved name and optional replacement drawing.');
+    completionSnapshot('profile-signature-edit', $editPage['body']);
+    completionHttp($deanClient['handle'], '/auth/signature_action.php', $edit);
+    completionCheck(staffSignature($database, $deanId)['printed_name'] === 'Edited Dean' && hash('sha256', completionHttp($deanClient['handle'], '/auth/signature_image.php')['body']) === $oldSignatureHash, 'Editing name and position keeps the drawing when the box is empty.');
+    foreach (['update','delete'] as $action) {
+        $attempt = array_replace($edit, ['action'=>$action,'csrf_token'=>$wrongClient['csrf']]);
+        completionHttp($wrongClient['handle'], '/auth/signature_action.php', $attempt);
+        $attempt['csrf_token'] = 'invalid';
+        completionHttp($deanClient['handle'], '/auth/signature_action.php', $attempt);
+        $attempt = array_replace($edit, ['action'=>$action]); unset($attempt['signature_id']); $attempt['signature_id[]'] = $firstSignatureId;
+        completionHttp($deanClient['handle'], '/auth/signature_action.php', $attempt);
+        completionCheck(staffSignature($database, $deanId)['printed_name'] === 'Edited Dean', 'Signature ' . $action . ' rejects another owner, invalid CSRF and malformed IDs.');
+    }
+    $edit['signature_drawing'] = json_encode([[[0.15,0.2],[0.4,0.8],[0.8,0.25]]]);
+    completionHttp($deanClient['handle'], '/auth/signature_action.php', $edit);
+    completionCheck(hash('sha256', completionHttp($deanClient['handle'], '/auth/signature_image.php')['body']) !== $oldSignatureHash, 'Editing can replace the signature drawing.');
+    completionCheck(str_contains(completionHttp($graduateClient['handle'], '/student/clearance_pdf.php?period=' . $secondPeriod)['body'], '(Dr. Synthetic Dean)'), 'Editing the selected signature never changes a previous approval.');
+    $database->exec("UPDATE academic_periods SET clearance_status='PREPARING' WHERE id=" . $secondPeriod);
+    markOfficeReady($database, $deanId, 'DEAN', 'Signature lock test');
+    foreach (['update','delete','select'] as $action) {
+        completionHttp($deanClient['handle'], '/auth/signature_action.php', array_replace($edit, ['action'=>$action]));
+        completionCheck(staffSignature($database, $deanId)['printed_name'] === 'Edited Dean' && count(staffSavedSignatures($database,$deanId)) === 2, 'A stale ' . $action . ' POST cannot bypass the Ready lock.');
+    }
+    $lockedProfile = completionHttp($deanClient['handle'], '/auth/profile.php?edit_signature=' . $firstSignatureId);
+    completionCheck(!str_contains($lockedProfile['body'],'data-signature-form') && !str_contains($lockedProfile['body'],'name="action" value="delete"'), 'Ready profiles display signatures without mutation controls.');
+    completionSnapshot('profile-signature-locked', $lockedProfile['body']);
+    markOfficeNotReady($database, $deanId, 'DEAN');
+    foreach ([$firstSignatureId, $secondSignatureId] as $id) {
+        completionHttp($deanClient['handle'], '/auth/signature_action.php', ['csrf_token'=>$deanClient['csrf'],'action'=>'delete','signature_id'=>$id]);
+    }
+    completionCheck(staffSignature($database, $deanId) === false && staffSavedSignatures($database,$deanId) === [], 'Deleting all saved signatures removes the selection.');
+    completionRejected(fn() => markOfficeReady($database, $deanId, 'DEAN', ''), 'Deleting the last signature blocks Ready again.');
+    $database->exec("UPDATE academic_periods SET clearance_status='OPEN' WHERE id=" . $secondPeriod);
+    $legacy = completionStudent($database, (int)$organizations['CCS'], $secondPeriod, 4, 'UNSIGNED-LEGACY');
+    importCcsCompletionWorkbook($database, $deanId, $secondPeriod, [completionRow($legacy, 'Completed', $graduateContext)]);
+    completionRejected(fn() => approveDeanClearance($database, $deanId, $legacy['clearance_id']), 'Even eligible approvals fail without a selected signature.');
+    completionCheck(officeClearanceContext($database,'DEAN',$legacy['clearance_id'])['station_status'] === 'PENDING', 'A missing signature rolls the entire approval back.');
+    // Represent an older approved record that never had a signature captured.
+    $database->exec("UPDATE clearance_stations record JOIN stations station ON station.id=record.station_id SET record.status='APPROVED',record.approved_by=" . $deanId . ",record.approved_at=NOW() WHERE record.clearance_id=" . $legacy['clearance_id'] . " AND station.code='DEAN'");
+    completionHttp($deanClient['handle'], '/auth/signature_action.php', $signaturePost);
+    $legacyClient = completionLogin($legacy['email']);
+    $legacyPdf = completionHttp($legacyClient['handle'], '/student/clearance_pdf.php?period=' . $secondPeriod);
+    completionCheck($legacyPdf['status'] === 200 && !str_contains($legacyPdf['body'],'(Dr. Synthetic Dean)') && (int)$database->query('SELECT COUNT(*) FROM clearance_station_signatures snapshot JOIN clearance_stations record ON record.id=snapshot.clearance_station_id WHERE record.clearance_id=' . $legacy['clearance_id'])->fetchColumn() === 0, 'Saving the first signature later and downloading a PDF never backfill an unsigned historical approval.');
+    completionCheck(str_contains(completionHttp($graduateClient['handle'], '/student/clearance_pdf.php?period=' . $secondPeriod)['body'], '(Dr. Synthetic Dean)'), 'Deleting signatures preserves the original signature on earlier signed PDFs.');
+    $database->exec("UPDATE academic_periods SET clearance_status='PREPARING' WHERE id=" . $secondPeriod);
+    foreach (READINESS_ROLE_STATIONS as $role => $code) {
+        $signerId = $staff[$role];
+        $signatureId = (int)staffSignature($database,$signerId)['saved_signature_id'];
+        $database->prepare('DELETE FROM staff_signatures WHERE user_id=?')->execute([$signerId]);
+        completionRejected(fn() => markOfficeReady($database,$signerId,$code,''), $code . ' cannot mark Ready without a selected signature.');
+        selectStaffSignature($database,['id'=>$signerId],$signatureId);
+        markOfficeReady($database,$signerId,$code,'Signature policy regression');
+        completionRejected(fn() => updateStaffSignature($database,['id'=>$signerId],$signatureId,'Unauthorized Edit','Edited Position',''), $code . ' locks signature editing while Ready.');
+        completionRejected(fn() => deleteStaffSignature($database,['id'=>$signerId],$signatureId), $code . ' locks signature deletion while Ready.');
+        markOfficeNotReady($database,$signerId,$code);
+    }
+    // Registrar-authorized recovery for an older Ready office missing its signature.
+    $database->exec("UPDATE academic_periods SET clearance_status='OPEN' WHERE id=" . $secondPeriod);
+    $database->exec("UPDATE office_period_readiness readiness JOIN stations station ON station.id=readiness.station_id SET readiness.status='READY' WHERE readiness.academic_period_id=" . $secondPeriod . " AND station.code='DEAN'");
+    $recoverySignatureId = (int)staffSignature($database,$deanId)['saved_signature_id'];
+    $database->prepare('DELETE FROM staff_signatures WHERE user_id=?')->execute([$deanId]);
+    $readyBeforeRecovery = officeReadiness($database,'DEAN');
+    $oldSignedPdf = completionHttp($graduateClient['handle'],'/student/clearance_pdf.php?period=' . $secondPeriod)['body'];
+    $recoveryPost = ['csrf_token'=>$registrarClient['csrf'],'action'=>'signature_recovery','user_id'=>$deanId,'reason'=>'Restore a missing signature selection for this Ready office.'];
+    completionRejected(fn() => authorizeStaffSignatureRecovery($database,$wrongDean,$deanId,'Test recovery'), 'A non-Registrar cannot authorize signature recovery.');
+    completionHttp($registrarClient['handle'],'/registrar/staff_action.php',array_replace($recoveryPost,['csrf_token'=>'invalid']));
+    completionCheck(staffSignatureRecovery($database,$deanId) === false, 'Invalid CSRF cannot authorize a recovery grant.');
+    completionRejected(fn() => selectStaffSignature($database,['id'=>$deanId],$recoverySignatureId), 'Ready signature setup stays blocked until the Registrar grants recovery.');
+    $directory = completionHttp($registrarClient['handle'],'/registrar/staff_accounts.php');
+    completionCheck(str_contains($directory['body'],'Allow signature setup'), 'The Registrar sees a recovery action for a Ready account missing its signature.');
+    completionSnapshot('registrar-signature-recovery',$directory['body']);
+    completionHttp($registrarClient['handle'],'/registrar/staff_action.php',$recoveryPost);
+    completionCheck(staffSignatureRecovery($database,$deanId) !== false && officeReadiness($database,'DEAN') === $readyBeforeRecovery, 'Registrar recovery creates an expiring grant without changing office readiness.');
+    completionRejected(fn() => selectStaffSignature($database,['id'=>$wrongDean],$recoverySignatureId), 'Another account cannot use the target account recovery permission.');
+    $recoveryProfile = completionHttp($deanClient['handle'],'/auth/profile.php');
+    completionCheck(str_contains($recoveryProfile['body'],'one-time signature setup') && str_contains($recoveryProfile['body'],'Use this signature') && !str_contains($recoveryProfile['body'],'name="action" value="delete"'), 'Recovery exposes setup and selection while keeping edit/delete locked.');
+    completionSnapshot('profile-signature-recovery',$recoveryProfile['body']);
+    if (getenv('CCS_COMPLETION_PREVIEW') === '1') {
+        file_put_contents(__DIR__ . '/../.tmp/ccs-dean-check/signature-' . $recoverySignatureId . '.png',completionHttp($deanClient['handle'],'/auth/signature_image.php?id=' . $recoverySignatureId)['body']);
+    }
+    completionRejected(fn() => updateStaffSignature($database,['id'=>$deanId],$recoverySignatureId,'Changed Signer','New Position',''), 'A recovery grant never permits editing an existing signature.');
+    completionRejected(fn() => deleteStaffSignature($database,['id'=>$deanId],$recoverySignatureId), 'A recovery grant never permits deleting an existing signature.');
+    completionRejected(fn() => selectStaffSignature($database,['id'=>$deanId],PHP_INT_MAX), 'Invalid recovery selection rolls back without using the grant.');
+    completionCheck(staffSignatureRecovery($database,$deanId) !== false, 'A failed signature setup preserves the unused recovery grant.');
+    completionHttp($deanClient['handle'],'/auth/signature_action.php',['csrf_token'=>$deanClient['csrf'],'action'=>'select','signature_id'=>$recoverySignatureId]);
+    completionCheck(staffSignatureRecovery($database,$deanId) === false && (int)staffSignature($database,$deanId)['saved_signature_id'] === $recoverySignatureId, 'Selecting an owned signature consumes recovery exactly once.');
+    completionRejected(fn() => saveStaffSignature($database,['id'=>$deanId,'role'=>'DEAN'],'Another Signer','New Position',$preparationDrawing), 'A consumed recovery cannot add or change signatures while Ready.');
+    completionRejected(fn() => authorizeStaffSignatureRecovery($database,$staff['REGISTRAR'],$deanId,'Test unnecessary recovery'), 'An account with a selected signature cannot receive a recovery grant.');
+    completionCheck($oldSignedPdf === completionHttp($graduateClient['handle'],'/student/clearance_pdf.php?period=' . $secondPeriod)['body'] && officeReadiness($database,'DEAN') === $readyBeforeRecovery, 'Recovery preserves the earlier signed PDF and office readiness exactly.');
+    completionCheck((int)$database->query('SELECT COUNT(*) FROM clearance_station_signatures snapshot JOIN clearance_stations record ON record.id=snapshot.clearance_station_id WHERE record.clearance_id=' . $legacy['clearance_id'])->fetchColumn() === 0, 'Recovery never backfills an older unsigned approval.');
+    $database->prepare('DELETE FROM staff_signatures WHERE user_id=?')->execute([$deanId]);
+    authorizeStaffSignatureRecovery($database,$staff['REGISTRAR'],$deanId,'Restore signature after test loss.');
+    $database->prepare('UPDATE staff_signature_recoveries SET expires_at=DATE_SUB(NOW(),INTERVAL 1 SECOND) WHERE user_id=?')->execute([$deanId]);
+    completionRejected(fn() => selectStaffSignature($database,['id'=>$deanId],$recoverySignatureId), 'An expired recovery grant cannot unlock setup.');
+    authorizeStaffSignatureRecovery($database,$staff['REGISTRAR'],$deanId,'Restore signature with a newly drawn signatory.');
+    completionHttp($deanClient['handle'],'/auth/signature_action.php',$signaturePost);
+    completionCheck(staffSignature($database,$deanId) !== false && staffSignatureRecovery($database,$deanId) === false, 'Drawing and saving a signature also completes one-time recovery.');
+    completionCheck((int)$database->query("SELECT COUNT(*) FROM audit_logs WHERE user_id=" . $staff['REGISTRAR'] . " AND action='SIGNATURE_RECOVERY_AUTHORIZED'")->fetchColumn() === 3 && (int)$database->query("SELECT COUNT(*) FROM audit_logs WHERE user_id=" . $deanId . " AND action='SIGNATURE_RECOVERY_COMPLETED'")->fetchColumn() === 2, 'Recovery authorization and completion are audited separately with the correct actors.');
+    $selectedRecoveryId = (int)staffSignature($database,$deanId)['saved_signature_id'];
+    $database->prepare('DELETE FROM staff_signatures WHERE user_id=?')->execute([$deanId]);
+    authorizeStaffSignatureRecovery($database,$staff['REGISTRAR'],$deanId,'Test the recovery semester boundary.');
+    $database->exec("UPDATE academic_periods SET status='CLOSED',clearance_status='CLOSED' WHERE id=" . $secondPeriod);
+    $database->exec("INSERT INTO academic_periods(school_year,semester,status,clearance_status) VALUES ('2099-2100','1ST','ACTIVE','OPEN')");
+    $recoveryNextPeriod = (int)$database->lastInsertId();
+    $database->prepare("INSERT INTO office_period_readiness(academic_period_id,station_id,status) SELECT ?,id,'READY' FROM stations WHERE code='DEAN'")->execute([$recoveryNextPeriod]);
+    completionRejected(fn() => selectStaffSignature($database,['id'=>$deanId],$selectedRecoveryId), 'A recovery grant from a different semester cannot unlock setup.');
     echo "All {$checks} CCS Excel completion and unrestricted clearing checks passed.\n";
 } finally {
     if ($database->inTransaction()) { $database->rollBack(); }

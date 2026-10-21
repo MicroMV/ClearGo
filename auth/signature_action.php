@@ -16,11 +16,22 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCsrfToken($_POST['csrf_token
 }
 try {
     $action = $_POST['action'] ?? 'save';
-    if ($action === 'select') {
+    if (in_array($action, ['select', 'update', 'delete'], true)) {
         $signatureId = filter_var($_POST['signature_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         if ($signatureId === false) { throw new RuntimeException('Choose one of your saved signatures.'); }
-        selectStaffSignature(getDatabaseConnection(), $user, $signatureId);
-        setFlashMessage('Signature selected for future clearance approvals.');
+        if ($action === 'select') {
+            selectStaffSignature(getDatabaseConnection(), $user, $signatureId);
+            setFlashMessage('Signature selected for future clearance approvals.');
+        } elseif ($action === 'delete') {
+            deleteStaffSignature(getDatabaseConnection(), $user, $signatureId);
+            setFlashMessage('Signature deleted. Select a remaining signature before marking Ready.');
+        } else {
+            updateStaffSignature(getDatabaseConnection(), $user, $signatureId,
+                is_string($_POST['printed_name'] ?? null) ? $_POST['printed_name'] : '',
+                is_string($_POST['position_title'] ?? null) ? $_POST['position_title'] : '',
+                $_POST['signature_drawing'] ?? '');
+            setFlashMessage('Signature updated. Earlier approvals keep their original signatures.');
+        }
     } elseif ($action === 'save') {
         saveStaffSignature(
             getDatabaseConnection(),

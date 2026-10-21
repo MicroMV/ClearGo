@@ -34,7 +34,7 @@ session_write_close();
 try {
     // GET requests render a synthetic preview; no import is submitted and no student data is changed.
     foreach (['' => 1, '2' => 2, '78' => 78, '99999' => 78, '-1' => 1, 'invalid' => 1] as $requestedPage => $expectedPage) {
-        $url = 'http://localhost/ClearGo/registrar/student_import.php' . ($requestedPage === '' ? '' : '?page=' . rawurlencode((string) $requestedPage));
+        $url = (getenv('CLEAR_GO_TEST_BASE_URL') ?: 'http://localhost/ClearGo') . '/registrar/student_import.php' . ($requestedPage === '' ? '' : '?page=' . rawurlencode((string) $requestedPage));
         $curl = curl_init($url);
         curl_setopt_array($curl, [CURLOPT_RETURNTRANSFER => true, CURLOPT_FOLLOWLOCATION => false, CURLOPT_TIMEOUT => 10,
             CURLOPT_COOKIE => 'clear_go_session=' . $sessionId]);

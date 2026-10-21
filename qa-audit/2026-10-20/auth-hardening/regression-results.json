@@ -1,0 +1,459 @@
+[
+  {
+    "file": "attendance_sanctions_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 18246,
+    "tail": [
+      "PASS: The organization can manually clear the student after sanction verification.",
+      "PASS: Student Council can bulk clear a ready student with verified Council sanctions.",
+      "PASS: Students cannot invoke staff sanction verification.",
+      "PASS: Closed semesters reject sanction review.",
+      "All 97 attendance and sanction checks passed."
+    ]
+  },
+  {
+    "file": "auth_recovery_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 10764,
+    "tail": [
+      "PASS: A Registrar-style office password change revokes the old office session.",
+      "PASS: Normal password change keeps the current student session active.",
+      "PASS: Normal password change revokes other sessions and remembered devices.",
+      "PASS: A reset grant can change the password only once under concurrent requests.",
+      "All 55 authentication recovery, SMTP and saved sign-in checks passed."
+    ]
+  },
+  {
+    "file": "bookstore_event_workbook_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 197,
+    "tail": [
+      "Bookstore active/closed event export test passed."
+    ]
+  },
+  {
+    "file": "bookstore_ready_lock_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 5884,
+    "tail": [
+      "PASS: Missing readiness configuration fails safely without adding fees.",
+      "PASS: Existing bookstore_workflow_test.php passes in the disposable database.",
+      "PASS: Existing bookstore_workbook_test.php passes in the disposable database.",
+      "PASS: Existing bookstore_event_workbook_test.php passes in the disposable database.",
+      "All 30 Bookstore readiness, payment and completion checks passed."
+    ]
+  },
+  {
+    "file": "bookstore_workbook_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 138,
+    "tail": [
+      "Bookstore three-sheet workbook test passed."
+    ]
+  },
+  {
+    "file": "bookstore_workflow_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 129,
+    "tail": [
+      "Bookstore obligation workflow test passed."
+    ]
+  },
+  {
+    "file": "bulk_clearance_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 118,
+    "tail": [
+      "Bulk clearance test passed for all 11 approving offices.",
+      "CCS unrestricted batch-size, completion-list readiness and roster-scope checks passed."
+    ]
+  },
+  {
+    "file": "bulk_dashboard_render_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 201,
+    "tail": [
+      "COMLAB_STAFF dashboard bulk button rendered successfully."
+    ]
+  },
+  {
+    "file": "cbe_dean_workflow_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 355,
+    "tail": [
+      "CBE YBC-to-Dean workflow checks passed."
+    ]
+  },
+  {
+    "file": "cbe_fourth_year_single_approval_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 323,
+    "tail": [
+      "CBE fourth-year single approval test passed."
+    ]
+  },
+  {
+    "file": "ccs_completion_workbook_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 37647,
+    "tail": [
+      "PASS: An expired recovery grant cannot unlock setup.",
+      "PASS: Drawing and saving a signature also completes one-time recovery.",
+      "PASS: Recovery authorization and completion are audited separately with the correct actors.",
+      "PASS: A recovery grant from a different semester cannot unlock setup.",
+      "All 244 CCS Excel completion and unrestricted clearing checks passed."
+    ]
+  },
+  {
+    "file": "clearance_report_workbook_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 119,
+    "tail": [
+      "Clearance report workbook test passed."
+    ]
+  },
+  {
+    "file": "clinic_workbook_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 303,
+    "tail": [
+      "Clinic three-sheet workbook test passed."
+    ]
+  },
+  {
+    "file": "comlab_violations_modal_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 69,
+    "tail": [
+      "Comlab violation modal checks passed."
+    ]
+  },
+  {
+    "file": "csrf_request_validation_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 1088,
+    "tail": [
+      "PASS: Web bootstrap disables error display and enables logging even when server defaults are unsafe.",
+      "PASS: An internal exception uses HTTP 500 without exposing technical details.",
+      "PASS: Internal warnings and exception details are written to the server log.",
+      "PASS: Invalid login requests never reach the database or cast arrays to strings.",
+      "All 47 CSRF and malformed-request checks passed."
+    ]
+  },
+  {
+    "file": "dashboard_summary_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 736,
+    "tail": [
+      "Dashboard summary consistency test passed."
+    ]
+  },
+  {
+    "file": "debug_console_test.php",
+    "status": "NOT RUN",
+    "reason": "Debug is disabled."
+  },
+  {
+    "file": "facilities_items_modal_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 73,
+    "tail": [
+      "Facilities borrowing modal checks passed."
+    ]
+  },
+  {
+    "file": "facilities_return_query_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 86,
+    "tail": [
+      "Facilities return query checks passed."
+    ]
+  },
+  {
+    "file": "http_test_access_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 2272,
+    "tail": [
+      "PASS: 94 unauthenticated GET/POST requests denied by PHP guards without .htaccess.",
+      "No test body, session initialization or database connection was reached."
+    ]
+  },
+  {
+    "file": "library_book_return_policy_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 5443,
+    "tail": [
+      "PASS: Workbook import accepts the returned and already cleared student.",
+      "PASS: Student book warning disappears after all returns.",
+      "PASS: Existing library_workbook_test.php passes in the disposable database.",
+      "PASS: Existing dashboard_summary_test.php passes in the disposable database.",
+      "All 32 Library book-return checks passed."
+    ]
+  },
+  {
+    "file": "library_workbook_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 112,
+    "tail": [
+      "Library three-sheet workbook test passed."
+    ]
+  },
+  {
+    "file": "notification_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 109,
+    "tail": [
+      "Notification deduplication test passed."
+    ]
+  },
+  {
+    "file": "office_remarks_action_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 96,
+    "tail": [
+      "Office remarks POST save check passed; all database changes rolled back."
+    ]
+  },
+  {
+    "file": "office_remarks_report_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 162,
+    "tail": [
+      "DEAN Excel export contains saved remarks in its final column; changes rolled back."
+    ]
+  },
+  {
+    "file": "office_remarks_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 213,
+    "tail": [
+      "Office remarks save, removal, ownership, semester protection, notifications and pending workbook imports passed for all 11 offices.",
+      "Multiline remarks, final template columns and older workbook compatibility passed."
+    ]
+  },
+  {
+    "file": "office_workbook_design_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 221,
+    "tail": [
+      "All four office workbook designs and readbacks passed."
+    ]
+  },
+  {
+    "file": "phase1_clearance_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 274,
+    "tail": [
+      "Phase 1 clearance checks passed."
+    ]
+  },
+  {
+    "file": "phase2_dean_clearance_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 2202,
+    "tail": [
+      "Phase 2 Dean clearance checks passed."
+    ]
+  },
+  {
+    "file": "phase3_office_workflow_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 501,
+    "tail": [
+      "Phase 3 office workflow checks passed."
+    ]
+  },
+  {
+    "file": "profile_picture_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 2275,
+    "tail": [
+      "Profile upload, replacement, ownership and audit-context checks passed for all 12 account roles."
+    ]
+  },
+  {
+    "file": "qr_attendance_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 156,
+    "tail": [
+      "QR attendance test passed."
+    ]
+  },
+  {
+    "file": "readiness_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 120,
+    "tail": [
+      "Office Ready and Undo Ready checks passed."
+    ]
+  },
+  {
+    "file": "registrar_cbe_initial_order_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 3449,
+    "tail": [
+      "PASS: Migration does not alter a completed clearance.",
+      "PASS: Migration does not alter archived clearances.",
+      "PASS: Migration preserves actual Organization approvals.",
+      "PASS: Migration is safe to repeat.",
+      "All 17 Registrar CBE initialization and repair checks passed."
+    ]
+  },
+  {
+    "file": "registrar_staff_error_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 4301,
+    "tail": [
+      "PASS: An invalid CSRF token cannot create an account.",
+      "PASS: Non-Registrar staff cannot create accounts.",
+      "PASS: Rejected role access leaves accounts unchanged.",
+      "PASS: Technical duplicate and foreign-key errors remain in the private server log.",
+      "All 35 Registrar staff error checks passed."
+    ]
+  },
+  {
+    "file": "semester_notifications_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 795,
+    "tail": [
+      "Semester notification rollover, archive selection, unread isolation, ownership and HTTP checks passed."
+    ]
+  },
+  {
+    "file": "signature_drawing_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 278,
+    "tail": [
+      "All 21 signature drawing validation and PDF checks passed."
+    ]
+  },
+  {
+    "file": "simple_pdf_preview_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 409,
+    "tail": [
+      "PASS: Text is escaped and cannot create markup",
+      "PASS: Lines use the matching top-down coordinate conversion",
+      "PASS: Signature images are embedded without public file links",
+      "PASS: Preview is well-formed SVG",
+      "All 6 PDF/preview rendering checks passed."
+    ]
+  },
+  {
+    "file": "simple_pdf_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 1842,
+    "tail": [
+      "PASS: Text is included in the page content.",
+      "PASS: The PDF contains its cross-reference table.",
+      "PASS: The PDF has a valid end marker.",
+      "PASS: The generated PDF contains the embedded logo data.",
+      "8 PDF renderer checks passed."
+    ]
+  },
+  {
+    "file": "staff_navigation_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 81,
+    "tail": [
+      "All 11 office return paths preserve filters and pagination; unrelated paths and invalid context are ignored."
+    ]
+  },
+  {
+    "file": "student_dashboard_history_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 92,
+    "tail": [
+      "Student dashboard history and completion consistency tests passed."
+    ]
+  },
+  {
+    "file": "student_import_mysql_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 341,
+    "tail": [
+      "MySQL student import test passed."
+    ]
+  },
+  {
+    "file": "student_import_preview_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 260,
+    "tail": [
+      "Import preview pagination passed: 2,319 rows, page limits, row numbers and full-file confirmation preserved."
+    ]
+  },
+  {
+    "file": "student_import_scale_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 236,
+    "tail": [
+      "Student import scale test passed: 2,500 students in 0.08 seconds."
+    ]
+  },
+  {
+    "file": "student_import_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 312,
+    "tail": [
+      "Student import tests passed."
+    ]
+  },
+  {
+    "file": "student_section_removal_test.php",
+    "status": "PASS",
+    "exit": 0,
+    "ms": 6254,
+    "tail": [
+      "PASS: Clearance preview loads without a section column.",
+      "PASS: Clearance PDF generates without a section column.",
+      "MySQL student import test passed.",
+      "PASS: MySQL student import adds and updates profiles without section.",
+      "All 14 student section removal checks passed."
+    ]
+  }
+]

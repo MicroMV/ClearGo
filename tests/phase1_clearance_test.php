@@ -86,9 +86,9 @@ try {
 
     $studentInsert = $database->prepare(
         "INSERT INTO students
-            (user_id, student_number, first_name, last_name, program, year_level, section, organization_id, status)
+            (user_id, student_number, first_name, last_name, program, year_level, organization_id, status)
          VALUES
-            (:user_id, :student_number, 'Phase One', 'Test Student', 'Test Program', 1, 'TEST', :organization_id, 'ACTIVE')"
+            (:user_id, :student_number, 'Phase One', 'Test Student', 'Test Program', 1, :organization_id, 'ACTIVE')"
     );
     $studentInsert->execute([
         'user_id' => $testUserId,
@@ -143,7 +143,7 @@ try {
         $deleteAudit->execute(['user_id' => $testUserId, 'student_id' => $testStudentId]);
         $deleteClearance = $database->prepare('DELETE FROM clearances WHERE student_id = :student_id');
         $deleteClearance->execute(['student_id' => $testStudentId]);
-        foreach (['library_cards', 'medical_requirements', 'student_bookstore_fees', 'student_documents'] as $sourceTable) {
+        foreach (['library_cards', 'medical_requirements', 'student_bookstore_fees'] as $sourceTable) {
             $deleteSource = $database->prepare("DELETE FROM {$sourceTable} WHERE student_id = :student_id");
             $deleteSource->execute(['student_id' => $testStudentId]);
         }

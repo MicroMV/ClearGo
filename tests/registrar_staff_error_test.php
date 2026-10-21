@@ -35,6 +35,8 @@ function staffErrorLogin(string $email): array {
     $clients[$clientIndex]['csrf'] = $token;
     $response = staffErrorHttp($client,'/auth/login_process.php',['email'=>$email,'password'=>'Synthetic-Only-2026!','csrf_token'=>$token]);
     if ($response['status'] !== 303) { throw new RuntimeException('Synthetic login failed.'); }
+    require_once __DIR__ . '/support/http_fixture.php'; global $base;
+    $token = signedInFixtureCsrf($client, $base); $clients[$clientIndex]['csrf'] = $token;
     return ['client'=>$client,'csrf'=>$token];
 }
 function staffErrorFeedback(array $registrar, array $post, string $expected): void {

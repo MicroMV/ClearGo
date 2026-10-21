@@ -12,6 +12,10 @@ require_once __DIR__ . '/../clearance/clearance_functions.php';
 require_once __DIR__ . '/../dean/completion_workbook_functions.php';
 
 $database = getDatabaseConnection();
+$sourceSchema = (string) $database->query('SELECT DATABASE()')->fetchColumn();
+if (!preg_match('/\A[a-zA-Z0-9_]+\z/', $sourceSchema)) { throw new RuntimeException('Unsafe test template.'); }
+$testSchema = 'cleargo_phase2_test_' . bin2hex(random_bytes(6));
+$testSchemaCreated = false;
 $failures = [];
 $token = strtoupper(bin2hex(random_bytes(4)));
 $studentUserId = null;
@@ -29,6 +33,17 @@ function phaseTwoCheck(bool $condition, string $message): void
 }
 
 try {
+    $database->exec("CREATE DATABASE `$testSchema` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"); $testSchemaCreated = true;
+    $database->exec("USE `$testSchema`"); $database->exec('SET FOREIGN_KEY_CHECKS=0');
+    foreach ($database->query("SHOW FULL TABLES FROM `$sourceSchema` WHERE Table_type='BASE TABLE'")->fetchAll(PDO::FETCH_COLUMN) as $table) {
+        if (!preg_match('/\A[a-zA-Z0-9_]+\z/', $table)) { throw new RuntimeException('Unsafe test table.'); }
+        $database->exec($database->query("SHOW CREATE TABLE `$sourceSchema`.`$table`")->fetch(PDO::FETCH_NUM)[1]);
+    }
+    foreach (['organizations', 'stations', 'requirements'] as $table) { $database->exec("INSERT INTO `$table` SELECT * FROM `$sourceSchema`.`$table`"); }
+    $database->exec('SET FOREIGN_KEY_CHECKS=1');
+    $database->exec("INSERT INTO academic_periods(school_year,semester,status,clearance_status) VALUES('2098-2099','1ST','ACTIVE','PREPARING')");
+    $fixturePeriod = (int) $database->lastInsertId();
+    $database->prepare("INSERT INTO office_period_readiness(academic_period_id,station_id,status) SELECT ?,id,'NOT_READY' FROM stations WHERE code<>'REGISTRAR'")->execute([$fixturePeriod]);
     $passwordHash = password_hash(bin2hex(random_bytes(16)), PASSWORD_DEFAULT);
     $userInsert = $database->prepare(
         "INSERT INTO users (email, password_hash, role, status)
@@ -46,6 +61,7 @@ try {
         'role' => 'DEAN',
     ]);
     $deanUserId = (int) $database->lastInsertId();
+    saveStaffSignature($database, ['id'=>$deanUserId,'role'=>'DEAN'], 'Synthetic Test Dean', 'College Dean', json_encode([[[0.1,0.4],[0.3,0.6],[0.5,0.3]]]));
 
     $organizationId = $database->query(
         "SELECT id FROM organizations WHERE status = 'ACTIVE' AND code='CCS' LIMIT 1"
@@ -66,9 +82,9 @@ try {
 
     $studentInsert = $database->prepare(
         "INSERT INTO students
-            (user_id, student_number, first_name, last_name, program, year_level, section, organization_id, status)
+            (user_id, student_number, first_name, last_name, program, year_level, organization_id, status)
          VALUES
-            (:user_id, :student_number, 'Phase Two', 'Test Student', 'Test Program', 1, 'TEST', :organization_id, 'ACTIVE')"
+            (:user_id, :student_number, 'Phase Two', 'Test Student', 'Test Program', 1, :organization_id, 'ACTIVE')"
     );
     $studentInsert->execute([
         'user_id' => $studentUserId,
@@ -123,31 +139,8 @@ try {
 } catch (Throwable $exception) {
     $failures[] = 'Phase 2 integration setup failed: ' . $exception->getMessage();
 } finally {
-    $deleteStaffNotifications = $database->prepare('DELETE FROM notifications WHERE message LIKE :token');
-    $deleteStaffNotifications->execute(['token' => '%PHASE2-' . $token . '%']);
-    if ($studentId !== null) {
-        $deleteAudit = $database->prepare('DELETE FROM audit_logs WHERE student_id = :student_id');
-        $deleteAudit->execute(['student_id' => $studentId]);
-        $deleteClearance = $database->prepare('DELETE FROM clearances WHERE student_id = :student_id');
-        $deleteClearance->execute(['student_id' => $studentId]);
-        foreach (['library_cards', 'medical_requirements', 'student_bookstore_fees', 'student_documents'] as $sourceTable) {
-            $deleteSource = $database->prepare("DELETE FROM {$sourceTable} WHERE student_id = :student_id");
-            $deleteSource->execute(['student_id' => $studentId]);
-        }
-        $database->prepare('DELETE FROM semester_enrollments WHERE student_id=?')->execute([$studentId]);
-        $deleteStudent = $database->prepare('DELETE FROM students WHERE id = :student_id');
-        $deleteStudent->execute(['student_id' => $studentId]);
-    }
-    foreach ([$studentUserId, $deanUserId] as $userId) {
-        if ($userId !== null) {
-            $deleteUser = $database->prepare('DELETE FROM users WHERE id = :user_id');
-            $deleteUser->execute(['user_id' => $userId]);
-        }
-    }
-    if ($activePeriodId !== null && $originalClearanceStatus !== null) {
-        $restorePeriod = $database->prepare('UPDATE academic_periods SET clearance_status=:status WHERE id=:id');
-        $restorePeriod->execute(['status' => $originalClearanceStatus, 'id' => $activePeriodId]);
-    }
+    if ($database->inTransaction()) { $database->rollBack(); }
+    if ($testSchemaCreated) { $database->exec("USE `$sourceSchema`"); $database->exec("DROP DATABASE `$testSchema`"); }
 }
 
 if ($failures !== []) {

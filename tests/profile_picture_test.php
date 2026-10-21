@@ -7,7 +7,7 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../auth/profile_picture_functions.php';
 
 // Run against the local Apache app. Only temporary test accounts and pictures are changed.
-const PROFILE_TEST_BASE_URL = 'http://localhost/ClearGo';
+define('PROFILE_TEST_BASE_URL', getenv('CLEAR_GO_TEST_BASE_URL') ?: 'http://localhost/ClearGo');
 $database = getDatabaseConnection();
 $token = bin2hex(random_bytes(6));
 $accounts = [];
@@ -27,6 +27,7 @@ function testProfilePng(int $red, int $blue): string
 
 function profileRequest(string $path, ?array $account = null, ?array $fields = null): array
 {
+    if (session_status() === PHP_SESSION_ACTIVE) { session_write_close(); }
     $curl = curl_init(PROFILE_TEST_BASE_URL . $path);
     $options = [CURLOPT_RETURNTRANSFER => true, CURLOPT_HEADER => true, CURLOPT_FOLLOWLOCATION => false, CURLOPT_TIMEOUT => 10];
     if ($account !== null) { $options[CURLOPT_COOKIE] = 'clear_go_session=' . $account['session_id']; }
@@ -73,9 +74,11 @@ try {
                 ->execute(['user' => $id, 'station' => $deanStationId, 'organization' => $organizationId]);
         }
         if ($role === 'STUDENT') {
-            $database->prepare("INSERT INTO students (user_id,student_number,first_name,last_name,program,year_level,section,organization_id,status) VALUES (:user,:number,'Profile','Test','BSCS',1,'TEST',:organization,'ACTIVE')")
+            $database->prepare("INSERT INTO students (user_id,student_number,first_name,last_name,program,year_level,organization_id,status) VALUES (:user,:number,'Profile','Test','BSCS',1,:organization,'ACTIVE')")
                 ->execute(['user' => $id, 'number' => 'PROFILE-STUDENT-' . strtoupper($token), 'organization' => $organizationId]);
         }
+        if (session_status() === PHP_SESSION_ACTIVE) { session_write_close(); }
+        ini_set('session.use_strict_mode', '0');
         session_name('clear_go_session');
         session_save_path(__DIR__ . '/../storage/sessions');
         session_id($account['session_id']);

@@ -10,5 +10,5 @@ try {
 } catch (Throwable $exception) {
     error_log('CCS completion download failed: ' . $exception->getMessage());
     setFlashMessage($exception instanceof RuntimeException ? $exception->getMessage() : 'Unable to download the completion list.');
-    redirectTo('/dean/dashboard.php');
+    redirectTo('/dean/excel_import.php');
 }

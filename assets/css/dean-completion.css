@@ -1,3 +1,7 @@
+.staff-dashboard .completion-panel {
+    border-top: 1px solid var(--cg-border);
+}
+
 .staff-dashboard .completion-panel .section-heading {
     align-items: center;
     margin-bottom: 20px;
@@ -6,6 +10,27 @@
 .completion-form {
     display: grid;
     gap: 18px;
+}
+
+.completion-instructions {
+    margin: 0 0 20px;
+    padding: 12px 14px;
+    border: 1px solid var(--cg-border);
+    border-radius: 8px;
+    background: #f9fbfd;
+    color: var(--cg-muted);
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+.completion-instructions summary {
+    color: var(--cg-blue);
+    font-weight: 650;
+    cursor: pointer;
+}
+
+.completion-instructions p {
+    margin: 10px 0 0;
 }
 
 .completion-upload {

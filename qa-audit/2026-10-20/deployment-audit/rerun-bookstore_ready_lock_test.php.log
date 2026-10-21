@@ -1,0 +1,31 @@
+PASS: Bookstore can edit while preparing and Not Ready.
+PASS: Event creation assigns the fee before Ready.
+PASS: Event closing is available before Ready.
+PASS: Individual obligations can be prepared before Ready.
+PASS: Mark Ready waits for an obligation preparation transaction.
+PASS: Ready blocks direct obligation creation.
+PASS: Ready blocks direct event creation.
+PASS: Ready blocks direct event changes.
+PASS: Synthetic Bookstore account signs in through the real handler.
+PASS: Ready dashboard disables adding obligations.
+PASS: A direct POST cannot bypass the Ready obligation lock.
+PASS: Ready event-fee page disables creating and closing fees.
+PASS: A direct POST cannot create an event after Ready.
+PASS: A direct POST cannot close an event after Ready.
+PASS: Receipt confirmation remains available after Ready.
+PASS: Individual payment recording remains available after Ready.
+PASS: Workbook payment settlement and student approval remain available after Ready.
+PASS: Undo Ready restores preparation access before opening.
+PASS: An already cleared student cannot receive a new obligation even before Ready.
+PASS: New semester fees cannot invalidate existing Bookstore signatures.
+PASS: Completion cannot be recorded while other offices remain unresolved.
+PASS: A fully signed clearance can still complete.
+PASS: The original completed-clearance bug is rejected without changing approvals.
+PASS: Rejected additions preserve a completed clearance and its Bookstore approval.
+PASS: Opening freezes fees even if readiness data is Not Ready.
+PASS: Undo Ready cannot reopen preparation after clearance opens.
+PASS: Missing readiness configuration fails safely without adding fees.
+PASS: Existing bookstore_workflow_test.php passes in the disposable database.
+PASS: Existing bookstore_workbook_test.php passes in the disposable database.
+PASS: Existing bookstore_event_workbook_test.php passes in the disposable database.
+All 30 Bookstore readiness, payment and completion checks passed.

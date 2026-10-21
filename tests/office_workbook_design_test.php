@@ -41,7 +41,7 @@ foreach ($workbooks as $office => [$workbook, $lastColumn, $reader]) {
             if (count($xml->xpath('//*[local-name()="pane"][@state="frozen"]')) !== 1
                 || !str_contains($worksheet, 'A1:' . $lastColumn . '1')
                 || !str_contains($worksheet, 'A3:' . $lastColumn)
-                || !str_contains($worksheet, 'Search by name or ID')
+                || !str_contains($worksheet, $office === 'Registrar' ? 'Ctrl+F' : 'Search by name or ID')
                 || !str_contains($worksheet, 's="4"')) {
                 throw new RuntimeException($office . ': worksheet design is incomplete.');
             }

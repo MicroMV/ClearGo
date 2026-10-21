@@ -101,6 +101,7 @@ function refreshStudentNotifications(announce = true) {
                 notificationWrap.dataset.latestNotificationId = String(Math.max(...payload.notifications.map((item) => item.id)));
             }
             if (announce && fresh.length > 0) showStudentNotificationToast(fresh[0], fresh.length - 1);
+            refreshStudentClearance();
         })
         .catch(() => {});
 }
@@ -158,8 +159,12 @@ function closeRequirementsModal() {
     requirementsModalTrigger?.focus();
     activeRequirementsModal = null;
     requirementsModalTrigger = null;
+    applyPendingRequirementsUpdates();
 }
-document.querySelectorAll('[data-requirements-modal]').forEach(function (button) {
+function initializeRequirementsControls(root = document) {
+root.querySelectorAll('[data-requirements-modal]').forEach(function (button) {
+    if (button.dataset.requirementsBound) return;
+    button.dataset.requirementsBound = 'true';
     button.addEventListener('click', function () {
         const modal = document.getElementById(button.dataset.requirementsModal);
         if (modal === null) return;
@@ -177,9 +182,13 @@ document.querySelectorAll('[data-requirements-modal]').forEach(function (button)
         modal.querySelector('.requirements-modal__dialog').focus();
     });
 });
-document.querySelectorAll('[data-close-requirements-modal]').forEach(function (button) {
+root.querySelectorAll('[data-close-requirements-modal]').forEach(function (button) {
+    if (button.dataset.requirementsBound) return;
+    button.dataset.requirementsBound = 'true';
     button.addEventListener('click', closeRequirementsModal);
 });
+}
+initializeRequirementsControls();
 document.addEventListener('keydown', function (event) {
     if (event.key === 'Escape' && activeRequirementsModal !== null) {
         event.preventDefault();
@@ -354,9 +363,23 @@ clearancePreviewFrame?.addEventListener('load', () => {
     setClearancePreviewLoading(false);
 });
 
-function closeClearancePreview() {
-    if (clearancePreview?.open) clearancePreview.close();
+function cleanupClearancePreview() {
+    setClearancePreviewLoading(false);
+    if (clearancePreviewFrame) clearancePreviewFrame.src = 'about:blank';
+    document.body.classList.remove('portal-clearance-preview-open');
+    clearancePreviewTrigger?.focus({ preventScroll: true });
+    clearancePreviewTrigger = null;
 }
+function closeClearancePreview() {
+    if (!clearancePreview?.open) return;
+    clearancePreview.close();
+    // close queues its event. Finish cleanup now so an immediate reopen starts cleanly.
+    cleanupClearancePreview();
+}
+window.addEventListener('message', event => {
+    if (event.origin === window.location.origin && event.source === clearancePreviewFrame?.contentWindow
+        && event.data?.type === 'cleargo-close-clearance-preview') closeClearancePreview();
+});
 
 document.querySelectorAll('[data-open-clearance-preview]').forEach((trigger) => {
     trigger.addEventListener('click', (event) => {
@@ -380,11 +403,12 @@ document.querySelectorAll('[data-open-clearance-preview]').forEach((trigger) => 
 
 clearancePreview?.querySelector('[data-close-clearance-preview]').addEventListener('click', closeClearancePreview);
 clearancePreview?.addEventListener('close', () => {
-    setClearancePreviewLoading(false);
-    clearancePreviewFrame.src = 'about:blank';
-    document.body.classList.remove('portal-clearance-preview-open');
-    clearancePreviewTrigger?.focus({ preventScroll: true });
-    clearancePreviewTrigger = null;
+    // An earlier close event must never clear a newly reopened paper.
+    if (!clearancePreview.open) cleanupClearancePreview();
+});
+clearancePreview?.addEventListener('cancel', event => {
+    event.preventDefault();
+    closeClearancePreview();
 });
 clearancePreview?.addEventListener('click', (event) => {
     if (event.target !== clearancePreview) return;
@@ -392,7 +416,10 @@ clearancePreview?.addEventListener('click', (event) => {
     if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) closeClearancePreview();
 });
 
-document.querySelectorAll('[data-file-input]').forEach(function (input) {
+function initializeStudentFileInputs(root = document) {
+root.querySelectorAll('[data-file-input]').forEach(function (input) {
+    if (input.dataset.fileInputBound) return;
+    input.dataset.fileInputBound = 'true';
     const form = input.closest('form');
     const status = form?.querySelector('[data-file-status]');
     input.addEventListener('change', function () {
@@ -419,6 +446,8 @@ document.querySelectorAll('[data-file-input]').forEach(function (input) {
         status.classList.add('has-file');
     });
 });
+}
+initializeStudentFileInputs();
 
 const dashboardViews = Array.from(document.querySelectorAll('[data-dashboard-view]'));
 const dashboardLinks = Array.from(document.querySelectorAll('[data-dashboard-link]'));
@@ -444,16 +473,16 @@ function switchDashboardView(name, focus = false) {
 if (dashboardViews.length > 0) {
     document.body.classList.add('dashboard-enhanced');
     switchDashboardView(window.location.hash.slice(1) || currentDashboardView);
-    dashboardLinks.forEach((link) => {
-        link.addEventListener('click', (event) => {
-            if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-            event.preventDefault();
-            const name = link.dataset.dashboardLink;
-            if (currentDashboardView !== name || window.location.hash !== '#' + name) {
-                window.history.pushState(null, '', '#' + name);
-            }
-            switchDashboardView(name, true);
-        });
+    document.addEventListener('click', (event) => {
+        const link = event.target.closest('[data-dashboard-link]');
+        if (!link) return;
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        const name = link.dataset.dashboardLink;
+        if (currentDashboardView !== name || window.location.hash !== '#' + name) {
+            window.history.pushState(null, '', '#' + name);
+        }
+        switchDashboardView(name, true);
     });
     const restoreDashboardView = () => switchDashboardView(window.location.hash.slice(1), true);
     window.addEventListener('popstate', restoreDashboardView);
@@ -467,11 +496,9 @@ if (dashboardViews.length > 0) {
 
 const stationFilters = Array.from(document.querySelectorAll('[data-station-filter]'));
 const stationCards = Array.from(document.querySelectorAll('[data-station-status]'));
-stationFilters.forEach((button) => {
-    button.addEventListener('click', () => {
-        const filter = button.dataset.stationFilter;
+function filterStationCards(filter) {
         stationFilters.forEach((item) => {
-            const selected = item === button;
+            const selected = item.dataset.stationFilter === filter;
             item.classList.toggle('is-active', selected);
             item.setAttribute('aria-pressed', String(selected));
         });
@@ -485,8 +512,96 @@ stationFilters.forEach((button) => {
         });
         const empty = document.querySelector('[data-filter-empty]');
         if (empty !== null) empty.hidden = visible > 0;
+}
+stationFilters.forEach((button) => button.addEventListener('click', () => filterStationCards(button.dataset.stationFilter)));
+
+let clearanceRefreshPending = false;
+const pendingRequirementsUpdates = new Map();
+const clearanceModalMarkup = new Map();
+
+function applyPendingRequirementsUpdates() {
+    pendingRequirementsUpdates.forEach((replacement, id) => {
+        const existing = document.getElementById(id);
+        if (existing && (existing === activeRequirementsModal || existing.querySelector('[data-student-draft]'))) return;
+        if (existing) existing.replaceWith(replacement);
+        else document.querySelector('main')?.appendChild(replacement);
+        pendingRequirementsUpdates.delete(id);
     });
+    initializeRequirementsControls();
+    initializeStudentFileInputs();
+    window.initializeLibraryCardCameras?.();
+}
+
+// Never discard a photo selection, typed form, or camera capture during a background refresh.
+['input', 'change'].forEach((name) => document.addEventListener(name, (event) => {
+    const form = event.target.closest('.requirements-modal form');
+    if (form) form.dataset.studentDraft = 'true';
+}));
+document.addEventListener('click', (event) => {
+    const camera = event.target.closest('.requirements-modal [data-open-camera]');
+    if (camera) camera.closest('form').dataset.studentDraft = 'true';
 });
+
+async function refreshStudentClearance() {
+    const endpoint = document.body.dataset.clearanceLiveUrl;
+    if (!endpoint || clearanceRefreshPending || document.hidden) return;
+    clearanceRefreshPending = true;
+    try {
+        const response = await fetch(endpoint, {credentials: 'same-origin', cache: 'no-store', headers: {Accept: 'text/html'}});
+        if (!response.ok || response.redirected) return;
+        const page = new DOMParser().parseFromString(await response.text(), 'text/html');
+        if (page.body.dataset.studentId !== document.body.dataset.studentId || page.body.dataset.periodId !== document.body.dataset.periodId) return;
+        // Keep navigation controls and their listeners; update only their displayed values.
+        ['.portal-progress-content', '.portal-progress-heading', '.portal-progress-footer > span',
+            '#clearance .portal-summary-pill',
+            '.portal-next-card h2', '.portal-next-card > p', '.portal-next-card > .portal-card-eyebrow', '.portal-next-icon']
+            .forEach((selector) => {
+                const current = document.querySelector(selector), fresh = page.querySelector(selector);
+                if (current && fresh && current.innerHTML !== fresh.innerHTML) current.innerHTML = fresh.innerHTML;
+            });
+        const reminders = document.querySelector('[data-clearance-live="reminders"]');
+        const freshReminders = page.querySelector('[data-clearance-live="reminders"]');
+        if (reminders && freshReminders && reminders.dataset.remindersVersion !== freshReminders.dataset.remindersVersion
+            && !reminders.contains(document.activeElement)
+            && !(activeRequirementsModal && reminders.contains(requirementsModalTrigger))) {
+            const expanded = new Set(Array.from(reminders.querySelectorAll('details[open]'), item => item.dataset.reminderKey));
+            reminders.innerHTML = freshReminders.innerHTML;
+            reminders.hidden = freshReminders.hidden;
+            reminders.dataset.remindersVersion = freshReminders.dataset.remindersVersion;
+            if (freshReminders.hasAttribute('aria-labelledby')) reminders.setAttribute('aria-labelledby', freshReminders.getAttribute('aria-labelledby'));
+            else reminders.removeAttribute('aria-labelledby');
+            reminders.querySelectorAll('details').forEach(item => { item.open = expanded.has(item.dataset.reminderKey); });
+        }
+        const next = document.querySelector('.portal-next-card'), freshNext = page.querySelector('.portal-next-card');
+        if (next && freshNext) {
+            next.classList.toggle('is-complete', freshNext.classList.contains('is-complete'));
+            const currentAction = next.querySelector('.portal-action-button'), freshAction = freshNext.querySelector('.portal-action-button');
+            if (currentAction && freshAction && (currentAction.tagName !== freshAction.tagName
+                || currentAction.innerHTML !== freshAction.innerHTML
+                || currentAction.dataset.requirementsModal !== freshAction.dataset.requirementsModal
+                || currentAction.getAttribute('href') !== freshAction.getAttribute('href'))) currentAction.replaceWith(freshAction.cloneNode(true));
+        }
+        const freshCards = Array.from(page.querySelectorAll('[data-station-status]'));
+        stationCards.forEach((card, index) => {
+            const fresh = freshCards[index];
+            if (!fresh || card.querySelector('h3')?.textContent !== fresh.querySelector('h3')?.textContent) return;
+            if (card.dataset.stationStatus !== fresh.dataset.stationStatus) {
+                card.className = fresh.className;
+                card.dataset.stationStatus = fresh.dataset.stationStatus;
+                card.innerHTML = fresh.innerHTML;
+            }
+        });
+        page.querySelectorAll('.requirements-modal[id]').forEach((modal) => {
+            if (clearanceModalMarkup.get(modal.id) === modal.innerHTML) return;
+            clearanceModalMarkup.set(modal.id, modal.innerHTML);
+            pendingRequirementsUpdates.set(modal.id, modal);
+        });
+        applyPendingRequirementsUpdates();
+        filterStationCards(document.querySelector('[data-station-filter][aria-pressed="true"]')?.dataset.stationFilter || 'all');
+    } catch { /* Keep the current page and retry on the next poll. */ }
+    finally { clearanceRefreshPending = false; }
+}
+document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshStudentNotifications(false); });
 
 // Action redirects return students directly to the relevant office dialog.
 if (currentDashboardView === 'clearance' && document.body.dataset.initialModal) {
